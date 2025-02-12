@@ -1,0 +1,173 @@
+version: '3.9'
+services:
+  discord-media-bot:
+    container_name: media_bot
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+      - '9090:9090'
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - COMMAND_PREFIX=${COMMAND_PREFIX}
+      - VOICE_CHANNEL_ID=${VOICE_CHANNEL_ID}
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - FFMPEG_THREAD_QUEUE_SIZE=512
+      - FFMPEG_HWACCEL=auto
+      - FFMPEG_PRESET=veryfast
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9090/health']
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    networks:
+      - app-network
+    restart: always
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '200m'
+        max-file: '10'
+        tag: '{{.Name}}'
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=256M
+
+  redis:
+    container_name: media_redis
+    image: redis:7
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - app-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+
+  dashboard:
+    container_name: dashboard
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    command: python -m src.ui.dashboard
+    ports:
+      - '8080:8080'
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app-network
+    restart: always
+
+  discord-media-selfbot:
+    container_name: discord-media-selfbot
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - '9091:9090' # different external port for selfbot
+    environment:
+      - STREAMING_BOT_TOKEN=your_streaming_selfbot_token
+      - SERVICE_MODE=selfbot
+      # ...other necessary environment variables...
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1.5G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - app-network
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=256M
+    volumes:
+      - media-cache:/var/cache/media
+
+  media-processor:
+    build:
+      context: ..
+      dockerfile: Dockerfile.media
+    environment:
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - FFMPEG_HWACCEL=auto
+    volumes:
+      - media-cache:/var/cache/media
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - '9091:9090'
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+
+volumes:
+  redis-data:
+    driver: local
+  prometheus_data:
+  grafana_data:
+  media-cache:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+
+networks:
+  app-network:
+    driver: bridge

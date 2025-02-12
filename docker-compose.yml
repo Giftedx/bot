@@ -1,0 +1,80 @@
+version: '3.9'
+services:
+  bot:
+    build: .
+    container_name: media_bot
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - REDIS_URL=redis://redis:6379
+      - VOICE_CHANNEL_ID=${VOICE_CHANNEL_ID}
+    ports:
+      - '8080:8080'
+    depends_on:
+      - redis
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - bot_data:/app/data
+      - bot_logs:/app/logs
+
+  selfbot:
+    build: .
+    container_name: media_selfbot
+    environment:
+      - DISCORD_SELFBOT_TOKEN=${DISCORD_SELFBOT_TOKEN}
+      - PLEX_URL=${PLEX_URL}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - REDIS_URL=redis://redis:6379
+      - VOICE_CHANNEL_ID=${VOICE_CHANNEL_ID}
+    command: ['python', '-m', 'src.discord_selfbot']
+    ports:
+      - '9090:9090'
+    depends_on:
+      - redis
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9090/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - selfbot_data:/app/data
+      - selfbot_logs:/app/logs
+
+  redis:
+    image: redis:7
+    container_name: media_redis
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  test-env:
+    build: .
+    container_name: media_test_env
+    depends_on:
+      - redis
+    volumes:
+      - ./test_videos:/app/test_videos # Mount a volume for video files
+      - ./test_scripts:/app/test_scripts # Mount a volume for test scripts
+      - ./test_results:/app/test_results # Mount a volume for test results
+    command: ["/app/test_scripts/run_tests.sh"] # Command to run the tests
+
+volumes:
+  bot_data:
+  bot_logs:
+  selfbot_data:
+  selfbot_logs:
+  redis_data:
+  test_results:

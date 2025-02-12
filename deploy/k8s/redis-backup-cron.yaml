@@ -1,0 +1,173 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: redis-backup
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9091'
+    backup.kubernetes.io/deltas: 'daily=7,weekly=4,monthly=6'
+spec:
+  schedule: '0 */4 * * *' # Every 4 hours
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 3600
+      backoffLimit: 2
+      template:
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            fsGroup: 999
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: redis-backup
+              image: redis:7.0-alpine
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ['ALL']
+                readOnlyRootFilesystem: true
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -euo pipefail
+
+                  # Enhanced error handling
+                  trap 'echo "Error on line $LINENO"; exit 1' ERR
+
+                  if [ -z "${BACKUP_KEY:-}" ]; then
+                    echo "BACKUP_KEY is not set"
+                    exit 1
+                  fi
+
+                  BACKUP_DATE=$(date +%Y%m%d-%H%M%S)
+                  BACKUP_FILE="dump-${BACKUP_DATE}.rdb"
+
+                  TEMP_DIR=$(mktemp -d)
+                  trap 'rm -rf ${TEMP_DIR}' EXIT
+
+                  # Initial backup with compression and encryption
+                  redis-cli --rdb ${TEMP_DIR}/${BACKUP_FILE}
+                  pigz -9 -p 2 ${TEMP_DIR}/${BACKUP_FILE}
+                  gpg --batch --yes --symmetric --cipher-algo AES256 \
+                      --passphrase "${BACKUP_KEY}" \
+                      -o /backup/${BACKUP_FILE}.gpg \
+                      ${TEMP_DIR}/${BACKUP_FILE}.gz
+
+                  # Validate backup
+                  if ! gpg --batch --quiet --decrypt --passphrase "${BACKUP_KEY}" /backup/${BACKUP_FILE}.gpg > /dev/null; then
+                    echo "Backup validation failed"
+                    exit 1
+                  fi
+
+                  # Remove old backups (only once)
+                  find /backup -name "dump-*.rdb.gpg" -mtime +7 -delete
+
+                  LOCK_KEY="backup_lock:$(date +%Y%m%d)"
+                  if ! redis-cli -h ${REDIS_HOST} SET $LOCK_KEY $HOSTNAME NX EX 7200; then
+                    echo "Backup already in progress or lock exists"
+                    exit 1
+                  fi
+
+                  cleanup() {
+                    redis-cli -h ${REDIS_HOST} DEL $LOCK_KEY
+                    rm -rf ${TEMP_DIR}
+                    if [ $? -eq 0 ]; then
+                      echo "backup_cleanup_success 1" > /tmp/metrics
+                    else
+                      echo "backup_cleanup_failure 1" > /tmp/metrics
+                    fi
+                  }
+                  trap cleanup EXIT
+
+                  if ! timeout 5s redis-cli -h ${REDIS_HOST} INFO | grep -q "role:master"; then
+                    echo "Redis not ready or not master, aborting backup"
+                    exit 1
+                  fi
+
+                  backup_with_retry() {
+                    local attempts=3
+                    local wait_time=5
+                    
+                    for ((i=1; i<=$attempts; i++)); do
+                      if timeout 30m redis-cli -h ${REDIS_HOST} --rdb /backup/temp.rdb; then
+                        return 0
+                      fi
+                      echo "Backup attempt $i failed, waiting ${wait_time}s..."
+                      sleep $wait_time
+                      wait_time=$((wait_time * 2))
+                    done
+                    return 1
+                  }
+
+                  compress_and_encrypt() {
+                    pigz -9 -p 4 | \
+                    gpg --batch --yes --symmetric \
+                        --cipher-algo AES256 \
+                        --compress-algo none \
+                        --passphrase "${BACKUP_KEY}"
+                  }
+
+                  # Perform backup with improved compression
+                  timeout 30m redis-cli -h ${REDIS_HOST} -p ${REDIS_PORT} --rdb ${TEMP_DIR}/dump.rdb
+
+                  # Better compression and encryption
+                  gpg --symmetric --cipher-algo AES256 --batch --passphrase "${BACKUP_KEY}" \
+                      --compress-algo zlib -o ${TEMP_DIR}/dump.rdb.gpg ${TEMP_DIR}/dump.rdb
+
+                  mv ${TEMP_DIR}/dump.rdb.gpg /backup/dump-${BACKUP_DATE}.rdb.gpg
+
+                  # Calculate and store checksum
+                  sha256sum /backup/dump-${BACKUP_DATE}.rdb.gpg > /backup/dump-${BACKUP_DATE}.rdb.gpg.sha256
+
+                  # Enhanced metrics
+                  echo "backup_success_timestamp $(date +%s)" > /tmp/metrics
+                  echo "backup_size_bytes $(stat -f%z /backup/*.gpg | sort -n | tail -1)" >> /tmp/metrics
+                  echo "backup_compression_ratio $(echo "scale=2; $(stat -f%z ${TEMP_DIR}/dump.rdb) / $(stat -f%z /backup/*.gpg | sort -n | tail -1)" | bc)" >> /tmp/metrics
+                  echo "backup_completion_time $(date +%s)" >> /tmp/metrics
+
+                  # Upload metrics to Prometheus
+                  curl -s -XPOST http://localhost:9091/metrics/job/redis_backup < /tmp/metrics
+
+                  # Add backup validation
+                  if ! redis-cli -h ${REDIS_HOST} PING; then
+                    echo "Backup validation failed"
+                    exit 1
+                  fi
+
+                  echo "Backup process completed successfully"
+              resources:
+                requests:
+                  memory: '256Mi'
+                  cpu: '250m'
+                limits:
+                  memory: '512Mi'
+                  cpu: '500m'
+              ports:
+                - containerPort: 9091
+                  name: metrics
+              volumeMounts:
+                - name: backup-volume
+                  mountPath: /backup
+              env:
+                - name: REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: redis-backup-config
+                      key: REDIS_HOST
+                - name: BACKUP_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: redis-backup-secret
+                      key: backup-key
+          volumes:
+            - name: backup-volume
+              persistentVolumeClaim:
+                claimName: redis-backup-data
+          restartPolicy: OnFailure
