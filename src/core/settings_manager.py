@@ -56,6 +56,8 @@ class SettingsManager:
         parser.add_argument("--FFMPEG_PATH", type=str, help="FFmpeg path")
         parser.add_argument("--BOT_TYPE", type=str, default="regular",
                             help="Bot type (regular or selfbot)")
+        parser.add_argument("--COMMAND_PREFIX", type=str, default="!",
+                            help="Bot type (regular or selfbot)")
         return parser
 
     def load_settings(self) -> None:
