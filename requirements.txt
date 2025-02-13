@@ -1,3 +1,4 @@
-discord.py
-plexapi
-python-dotenv
+discord.py==1.7.3
+plexapi==4.14.0
+python-dotenv==0.21.1
+pywin32==308
