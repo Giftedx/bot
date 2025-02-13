@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This project is a robust and scalable media server built using Python, designed for streaming and managing media content.  It leverages modern technologies like FFmpeg, Redis, asyncio, and Discord integration to provide a high-performance and feature-rich experience. The server supports adaptive bitrate streaming, background task processing, health checks, comprehensive metrics, and secure operation.  It includes both a REST API for general management and a Discord bot interface for convenient user interaction. The UI part with dashboards is clearly defined and split in 'static', 'templates', and some python files named `widgets`.
+This project is a robust and scalable media server built using Python, designed for streaming and managing media content.  It leverages modern technologies like FFmpeg, Redis, asyncio, and Discord integration to provide a high-performance and feature-rich experience. The server supports adaptive bitrate streaming, background task processing, health checks, comprehensive metrics, and secure operation.  It includes both a REST API for general management and a Discord bot interface for convenient user interaction. 
 
 
 ## Features
@@ -37,6 +37,8 @@ This project is a robust and scalable media server built using Python, designed 
 
 UPDATED PROJECT STRUCTURE HERE
 ```
+Structural changes have been made to improve project organization.
+Please refer to the file listing below for the updated structure.
 .
 UPDATED PROJECT STRUCTURE HERE
 ├── Dockerfile                     # Docker build file.

@@ -1,19 +1,13 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
-
 import pytest
-import asyncio
-from unittest.mock import patch, Mock
-from src.core.ffmpeg_manager import FFmpegManager, FFmpegConfig
-from src.core.plex_manager import PlexManager  # Keep this import for conftest.py
+from unittest.mock import Mock
+# Keep PlexManager import
+from src.core.plex_manager import PlexManager 
 from src.core.exceptions import StreamingError
 
-@pytest.fixture
-def ffmpeg_manager():
-    with patch('subprocess.run') as mock_run:
-        mock_run.return_value.returncode = 0
-        yield FFmpegManager()
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+
 
 @pytest.fixture
 def mock_process():
