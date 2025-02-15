@@ -1,60 +1,67 @@
-# Discord Bot Multi-Tool
+# OSRS Discord Bot
 
-A comprehensive Discord bot project that combines repository analysis capabilities with Plex media integration.
+A feature-rich Discord bot that brings Old School RuneScape gameplay elements to your Discord server.
 
-## Core Features
+## Features
 
-### Repository Analysis
-- Repository categorization and analysis
-- Data parsing and organization
-- Search and filter capabilities
-- Repository analysis tools
+### Character System
+- Create and manage OSRS characters
+- Level up skills through various activities
+- Track character progress and stats
+- Equipment and inventory management
+- Bank system for item storage
 
-### Plex Integration
-- Stream movies and TV shows from your Plex server in Discord voice channels
-- Search your Plex library directly from Discord
-- Basic playback controls (pause/resume, stop)
-- Watch together with friends in voice channels
+### Combat System
+- PvE and PvP combat mechanics
+- Different combat styles (Accurate, Aggressive, Defensive, Controlled)
+- Combat training with XP gains
+- Equipment bonuses and combat calculations
+- Combat level calculation
 
-## Project Structure
-- `src/` - Source code directory
-  - `bot/` - Core bot functionality
-  - `core/` - Core utilities and systems
-  - `data/` - Repository data and categories
-  - `utils/` - Utility functions and helpers
-  - `plex/` - Plex integration components
+### Quest System
+- Multiple quests with varying difficulty levels
+- Quest requirements (skills, items, quest points)
+- Quest rewards (XP, items, quest points)
+- Track quest progress and completion status
 
-## Categories
-- Core Discord Libraries
-- AI Integration Bots
-- Multi-Purpose Bots
-- Study Tools
-- Media & Voice
-- Game Integration
-- Image & Media Processing
-- Utility Tools
-- Plex Integration
+### Trading System
+- Player-to-player trading
+- Trade offers with expiration
+- Safe trading interface
+- Trade history tracking
 
-## Requirements
+### World System
+- Multiple game worlds
+- Different world types (regular, PvP, skill total)
+- World hopping functionality
+- World-specific features and restrictions
 
+### Bank System
+- Store and manage items
+- View bank contents by category
+- Deposit and withdraw items
+- Search bank contents
+
+## Setup
+
+### Prerequisites
 - Python 3.8 or higher
-- VLC Media Player (for Plex streaming)
-- A Plex Media Server (for Plex features)
-- Discord account token
-- Plex server URL and token (for Plex features)
+- PostgreSQL database
+- Discord Bot Token
 
-## Installation
+### Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd discord-bot-multitool
+git clone https://github.com/yourusername/osrs-discord-bot.git
+cd osrs-discord-bot
 ```
 
-2. Create a virtual environment and activate it:
+2. Create a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 ```
 
 3. Install dependencies:
@@ -62,82 +69,74 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Create a `.env` file with your configuration:
-```env
-# Required for all features
-DISCORD_TOKEN=your_discord_token
+4. Set up the database:
+- Create a PostgreSQL database
+- Copy `.env.example` to `.env`
+- Update the database URL in `.env`
 
-# Required for Plex integration
-PLEX_URL=your_plex_server_url
-PLEX_TOKEN=your_plex_token
+5. Configure the bot:
+- Add your Discord bot token to `.env`
+- Customize other settings in `config.yaml` if needed
+
+6. Initialize the database:
+```bash
+python run.py --init-db
+```
+
+7. Start the bot:
+```bash
+python run.py
 ```
 
 ## Usage
 
-### Repository Analysis
-```bash
-python src/main.py
-```
+### Basic Commands
+- `!osrs create <name>` - Create a new character
+- `!osrs stats` - View character stats
+- `!osrs train <skill>` - Train a skill
+- `!osrs inventory` - View inventory
 
-### Plex Integration
-1. Start the Plex integration:
-```bash
-python src/run_selfbot.py
-```
+### Combat Commands
+- `!combat train <style>` - Train combat skills
+- `!combat stats` - View combat stats
+- `!combat styles` - View combat styles
+- `!combat attack <player>` - Attack another player
 
-2. Join a voice channel in Discord
+### Quest Commands
+- `!quest list` - List all quests
+- `!quest info <quest>` - View quest details
+- `!quest start <quest>` - Start a quest
+- `!quest progress` - View quest progress
 
-3. Available Plex commands:
-- `!search <query>` - Search for media on your Plex server
-- `!stream <query>` - Start streaming media in the voice channel
-- `!pause` - Pause/Resume the current stream
-- `!stop` - Stop the current stream
+### Trading Commands
+- `!trade offer <player> <item> <amount>` - Offer a trade
+- `!trade accept <trade_id>` - Accept a trade
+- `!trade decline <trade_id>` - Decline a trade
+- `!trade cancel <trade_id>` - Cancel your trade offer
+- `!trade list` - List your active trades
 
-## Getting Your Tokens
+### Bank Commands
+- `!osrs bank` - View bank commands
+- `!osrs bank view` - View bank contents
+- `!osrs bank deposit <item> [amount]` - Deposit items
+- `!osrs bank withdraw <item> [amount]` - Withdraw items
+- `!osrs bank search <query>` - Search bank items
 
-### Discord Token
-1. Open Discord in your browser
-2. Press Ctrl+Shift+I to open developer tools
-3. Go to Network tab
-4. Type anything in any channel
-5. Look for a request starting with "messages"
-6. Find the "authorization" header in the request headers
+## Contributing
 
-### Plex Token
-1. Sign in to Plex
-2. Visit https://plex.tv/claim
-3. Copy your token
-
-## Important Notes
-
-- The Plex integration uses a selfbot, which runs on your personal Discord account
-- Be aware that selfbots are against Discord's Terms of Service
-- Use responsibly and at your own risk
-- Make sure your Plex server has enough bandwidth for streaming
-- VLC must be installed on your system for Plex streaming
-
-## Troubleshooting
-
-### Repository Analysis Issues
-- Verify your internet connection
-- Check if the repositories are accessible
-- Ensure you have the required permissions
-
-### Plex Integration Issues
-1. If VLC doesn't start:
-   - Make sure VLC is installed and in your system PATH
-   - Try reinstalling VLC
-
-2. If media doesn't play:
-   - Check your Plex server is running and accessible
-   - Verify your Plex token is correct
-   - Ensure the media exists in your Plex library
-
-3. If the bot doesn't connect:
-   - Verify your Discord token is correct
-   - Make sure you're in a voice channel
-   - Check your internet connection
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Old School RuneScape for inspiration
+- Discord.py library
+- PostgreSQL
+- All contributors and users of the bot
