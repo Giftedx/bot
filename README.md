@@ -1,43 +1,74 @@
-# OSRS Discord Bot
+# Media Server Bot with OSRS Integration
 
-A Discord bot that simulates Old School RuneScape gameplay, featuring world management, combat, skills, and media playback capabilities.
+A multi-functional Discord bot that combines Old School RuneScape gameplay simulation, media server capabilities, and a virtual pet system.
 
-## Features
+## Core Features
 
-- **OSRS Simulation**
+- **Discord Bot Integration**
+  - Command system with multiple functionality groups
+  - Voice channel support
+  - User management and permissions
+
+- **OSRS Gameplay Simulation**
   - Character creation and management
   - Combat system
   - Skill progression
-  - World hopping
-  - Item management
+  - World management
+  - Item system
 
-- **Media Features**
-  - Voice channel support
-  - Music playback
-  - Queue management
+- **Media Server Features**
+  - Plex media integration
+  - Music playback and queue management
   - Volume control
+  - Media browsing capabilities
 
-## Requirements
+- **Virtual Pet System**
+  - Pet management
+  - Task/reward system integration
+  - Pet interaction features
 
-- Python 3.8 or higher
-- Discord.py 2.3.2 or higher
-- Redis server (for caching and rate limiting)
-- SQLite (for persistent storage)
+## Technical Stack
+
+- Python 3.8+
+- Discord.py 2.3.2+
+- Redis (caching & rate limiting)
+- SQLite (persistent storage)
+- Docker support for containerized deployment
+- Prometheus & Grafana for monitoring
+
+## Project Structure
+
+```
+src/
+├── api/          # REST API endpoints
+├── application.py# Main application entry
+├── bot/          # Discord bot core
+├── config/       # Configuration management
+├── core/         # Core utilities
+├── pets/         # Pet system
+├── services/     # External integrations
+└── utils/        # Utility functions
+
+deploy/           # Deployment configurations
+├── docker-compose.yaml
+├── kubernetes/
+└── monitoring/
+
+tests/            # Comprehensive test suite
+├── integration/
+├── unit/
+└── playwright/   # UI tests
+```
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/osrs-discord-bot.git
-cd osrs-discord-bot
-```
-
-2. Create and activate a virtual environment:
+1. Clone the repository
+2. Set up virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/macOS
 # or
-venv\Scripts\activate  # Windows
+venv\Scripts\activate     # Windows
 ```
 
 3. Install dependencies:
@@ -45,112 +76,54 @@ venv\Scripts\activate  # Windows
 pip install -e ".[dev]"
 ```
 
-4. Create a `.env` file with your configuration:
+4. Configure environment variables (see notes/environment_variables.md for full list):
 ```env
-DISCORD_TOKEN=your_discord_token
+DISCORD_TOKEN=your_token
 REDIS_URL=redis://localhost:6379/0
-COMMAND_PREFIX=!
+PLEX_SERVER_URL=your_plex_url
 ```
-
-## Usage
-
-1. Start the bot:
-```bash
-python -m src.main
-```
-
-2. In Discord, use the following commands:
-- `!create <name>` - Create a new OSRS character
-- `!stats` - View your character's stats
-- `!world` - View your current world
-- `!worlds` - List available worlds
-- `!join <world_id>` - Join a different world
-- `!join` - Join a voice channel
-- `!play <query>` - Play music
-- `!queue` - View music queue
-- `!stop` - Stop music playback
-- `!leave` - Leave voice channel
 
 ## Development
 
 ### Running Tests
-
-Run all tests:
 ```bash
-pytest
-```
-
-Run specific test categories:
-```bash
-pytest tests/unit  # Unit tests
+pytest                    # All tests
+pytest tests/unit         # Unit tests
 pytest tests/integration  # Integration tests
-```
-
-Generate coverage report:
-```bash
-pytest --cov=src --cov-report=html
+pytest --cov=src         # Coverage report
 ```
 
 ### Code Quality
-
-Format code:
 ```bash
-black src tests
-isort src tests
+black src tests          # Formatting
+isort src tests         # Import sorting
+mypy src tests          # Type checking
+flake8 src tests        # Linting
 ```
 
-Type checking:
+### Monitoring
+
+The project includes Prometheus and Grafana dashboards for monitoring:
+- Application metrics
+- Discord bot performance
+- Media server statistics
+- System resources
+
+## Docker Deployment
+
 ```bash
-mypy src tests
-```
-
-Linting:
-```bash
-flake8 src tests
-```
-
-## Project Structure
-
-```
-src/
-├── bot/
-│   ├── cogs/
-│   │   ├── media_commands.py
-│   │   └── osrs_commands.py
-│   └── core/
-│       └── bot.py
-├── osrs/
-│   ├── core/
-│   │   ├── game_math.py
-│   │   └── world_manager.py
-│   ├── database/
-│   │   └── models.py
-│   └── models.py
-└── main.py
-
-tests/
-├── integration/
-│   └── test_bot_integration.py
-├── unit/
-│   ├── test_media_commands.py
-│   └── test_osrs_commands.py
-└── conftest.py
+docker-compose up -d           # Development
+docker-compose -f docker-compose.prod.yaml up -d  # Production
 ```
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and the development process.
+
+## Security
+
+For security concerns and vulnerability reporting, please refer to [SECURITY.md](SECURITY.md).
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [discord.py](https://github.com/Rapptz/discord.py) - Discord API wrapper
-- [RuneLite](https://github.com/runelite/runelite) - OSRS client and game data
-- [OSRS Wiki](https://oldschool.runescape.wiki/) - Game information and mechanics
