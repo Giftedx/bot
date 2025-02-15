@@ -73,6 +73,10 @@ dump.rdb
 docs/_build/
 docs/api/
 
+# Analysis and Sensitive Data
+bot_analysis.json
+bot_analysis.md
+
 # Misc
 .DS_Store
 Thumbs.db
