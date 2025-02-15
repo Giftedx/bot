@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "error": "Please provide a query parameter with either \"id\" or \"name\""
+}

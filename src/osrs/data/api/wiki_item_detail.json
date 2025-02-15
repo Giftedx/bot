@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "error": "Invalid sort provided. Must be one of: last90d, sample, all"
+}

@@ -1,8 +1,9 @@
+from typing import Tuple, List, Optional
 import re
 from pathlib import Path
 from data.repositories import Repository, RepositoryManager
 
-def parse_repo_line(line: str) -> tuple[str, str, list[str]]:
+def parse_repo_line(line: str, next_lines: List[str]) -> Optional[Tuple[str, str, str, List[str]]]:
     # Extract repo name and description
     match = re.match(r'\d+\.\s+([^(]+)\s*(?:\(([^)]+)\))?\s*-?\s*(.*)', line.strip())
     if not match:
@@ -10,10 +11,21 @@ def parse_repo_line(line: str) -> tuple[str, str, list[str]]:
     
     name = match.group(1).strip()
     url = match.group(2).strip() if match.group(2) else None
-    description_features = match.group(3).strip().split('\n')
+    description = match.group(3).strip()
+    features = []
     
-    description = description_features[0]
-    features = [f.strip('- ') for f in description_features[1:]]
+    # Extract features from indented lines
+    for next_line in next_lines:
+        if re.match(r'\s*-\s+', next_line):
+            feature = next_line.strip('- ').strip()
+            if feature:
+                # If this is the first feature and no description, use it as description
+                if not description and not features:
+                    description = feature
+                else:
+                    features.append(feature)
+        else:
+            break
     
     return name, url, description, features
 
@@ -36,23 +48,35 @@ def parse_markdown_file(file_path: str) -> RepositoryManager:
         'Plex Integration': 'plex_integration'
     }
     
-    for line in lines:
-        line = line.strip()
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
         if not line:
+            i += 1
             continue
             
         # Check if line is a category header
         if line.startswith('##'):
             category_name = line.lstrip('#').strip()
             current_category = category_mapping.get(category_name)
+            i += 1
             continue
         
         # Skip lines that don't start with a number (not a repository entry)
         if not re.match(r'\d+\.', line):
+            i += 1
             continue
             
         if current_category:
-            parsed = parse_repo_line(line)
+            # Get next lines for feature extraction
+            next_lines = []
+            j = i + 1
+            while j < len(lines) and (not lines[j].strip() or lines[j].strip().startswith('-')):
+                if lines[j].strip():
+                    next_lines.append(lines[j])
+                j += 1
+            
+            parsed = parse_repo_line(line, next_lines)
             if parsed:
                 name, url, description, features = parsed
                 repo = Repository(
@@ -63,6 +87,9 @@ def parse_markdown_file(file_path: str) -> RepositoryManager:
                     features=features
                 )
                 manager.add_repository(repo)
+            i = j
+        else:
+            i += 1
     
     return manager
 
