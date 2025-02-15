@@ -1,0 +1,74 @@
+groups:
+  - name: bot_alerts
+    rules:
+      - alert: BotDown
+        expr: up{job="osrs-discord-bot"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Bot is down"
+          description: "The OSRS Discord bot has been down for more than 1 minute."
+
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes{job="osrs-discord-bot"} > 500000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Bot is using more than 500MB of memory."
+
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total{job="osrs-discord-bot"}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "Bot is using more than 80% CPU."
+
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is down"
+          description: "Redis has been down for more than 1 minute."
+
+      - alert: HighRedisMemory
+        expr: redis_memory_used_bytes > 500000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis is using more than 500MB of memory."
+
+      - alert: HighCommandLatency
+        expr: bot:command_latency:avg5m > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High command latency"
+          description: "Average command latency is above 1 second."
+
+      - alert: HighErrorRate
+        expr: bot:errors_total:rate5m > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate"
+          description: "Bot is experiencing more than 0.1 errors per second."
+
+      - alert: TooManyVoiceConnections
+        expr: bot:active_voice_connections:avg5m > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Too many voice connections"
+          description: "Bot is connected to more than 100 voice channels."

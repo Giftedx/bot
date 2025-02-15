@@ -1,0 +1,287 @@
+name: Security Scanning
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Daily at midnight
+  push:
+    branches: [main, develop]
+    paths:
+      - "**.py"
+      - "requirements*.txt"
+      - "Dockerfile*"
+      - ".github/workflows/security.yml"
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      scan_type:
+        description: "Type of security scan"
+        required: true
+        type: choice
+        options:
+          - all
+          - code
+          - dependencies
+          - secrets
+          - container
+
+jobs:
+  prepare:
+    name: Prepare Security Environment
+    runs-on: ubuntu-latest
+    outputs:
+      scan_id: ${{ steps.setup.outputs.scan_id }}
+
+    steps:
+      - name: Generate scan ID
+        id: setup
+        run: |
+          echo "scan_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install bandit safety detect-secrets trivy
+
+  code-scan:
+    name: Code Security Scan
+    needs: prepare
+    if: github.event.inputs.scan_type == 'code' || github.event.inputs.scan_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Bandit
+        run: |
+          bandit -r src/ -f json -o bandit_results.json
+
+      - name: Run CodeQL
+        uses: github/codeql-action/analyze@v2
+        with:
+          languages: python
+          queries: security-and-quality
+
+      - name: Run Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/python
+
+      - name: Generate code scan report
+        run: |
+          {
+            echo "# Code Security Report"
+            echo "## Bandit Results"
+            cat bandit_results.json | jq -r '.results[] | "- " + .issue_text'
+            echo "## CodeQL Results"
+            cat codeql_results.json | jq -r '.results[] | "- " + .message'
+            echo "## Semgrep Results"
+            cat semgrep_results.json | jq -r '.results[] | "- " + .extra.message'
+          } > code-security-report.md
+
+  dependency-scan:
+    name: Dependency Security Scan
+    needs: prepare
+    if: github.event.inputs.scan_type == 'dependencies' || github.event.inputs.scan_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Safety check
+        run: |
+          safety check --json > safety_results.json
+
+      - name: Run pip-audit
+        run: |
+          pip-audit --format json > pip_audit_results.json
+
+      - name: Check with Snyk
+        uses: snyk/actions/python@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Generate dependency scan report
+        run: |
+          {
+            echo "# Dependency Security Report"
+            echo "## Safety Results"
+            cat safety_results.json | jq -r '.[] | "- " + .[2]'
+            echo "## Pip-audit Results"
+            cat pip_audit_results.json | jq -r '.[] | "- " + .vulnerability_id + ": " + .advisory'
+            echo "## Snyk Results"
+            cat snyk_results.json | jq -r '.vulnerabilities[] | "- " + .title'
+          } > dependency-security-report.md
+
+  secret-scan:
+    name: Secret Detection
+    needs: prepare
+    if: github.event.inputs.scan_type == 'secrets' || github.event.inputs.scan_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run detect-secrets
+        run: |
+          detect-secrets scan > secrets_results.json
+
+      - name: Run GitLeaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run trufflehog
+        uses: trufflesecurity/trufflehog-actions-scan@master
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+
+      - name: Generate secret scan report
+        run: |
+          {
+            echo "# Secret Detection Report"
+            echo "## Detect-secrets Results"
+            cat secrets_results.json | jq -r '.results[] | "- " + .type + " in " + .filename'
+            echo "## GitLeaks Results"
+            cat gitleaks_results.json | jq -r '.[] | "- " + .Description'
+            echo "## Trufflehog Results"
+            cat trufflehog_results.json | jq -r '.[] | "- Secret found in: " + .path'
+          } > secret-detection-report.md
+
+  container-scan:
+    name: Container Security Scan
+    needs: prepare
+    if: github.event.inputs.scan_type == 'container' || github.event.inputs.scan_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          format: "json"
+          output: "trivy-results.json"
+          severity: "CRITICAL,HIGH"
+
+      - name: Run Dockle
+        uses: goodwithtech/dockle-action@v1
+        with:
+          format: "json"
+          output: "dockle-results.json"
+
+      - name: Generate container scan report
+        run: |
+          {
+            echo "# Container Security Report"
+            echo "## Trivy Results"
+            cat trivy-results.json | jq -r '.Results[] | .Vulnerabilities[] | "- " + .VulnerabilityID + ": " + .Title'
+            echo "## Dockle Results"
+            cat dockle-results.json | jq -r '.details[] | "- " + .code + ": " + .title'
+          } > container-security-report.md
+
+  analyze:
+    name: Analyze Results
+    needs: [prepare, code-scan, dependency-scan, secret-scan, container-scan]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Calculate risk score
+        run: |
+          python scripts/security/calculate_risk.py \
+            --scan-id ${{ needs.prepare.outputs.scan_id }} \
+            --output risk_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Security Analysis Report"
+            echo "## Risk Assessment"
+            cat risk_analysis.json | jq -r '.risks[] | "- " + .'
+            
+            echo "## Recommendations"
+            python scripts/security/generate_recommendations.py \
+              --analysis risk_analysis.json \
+              --output recommendations.md
+            cat recommendations.md
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        code-scan,
+        dependency-scan,
+        secret-scan,
+        container-scan,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Security Scan Report"
+            echo "Scan ID: ${{ needs.prepare.outputs.scan_id }}"
+            
+            echo "## Code Security"
+            cat code-security-report.md
+            
+            echo "## Dependency Security"
+            cat dependency-security-report.md
+            
+            echo "## Secret Detection"
+            cat secret-detection-report.md
+            
+            echo "## Container Security"
+            cat container-security-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+          } > security-report.md
+
+      - name: Create security issue
+        if: contains(needs.*.result, 'failure') || contains(steps.*.outputs.has_vulnerabilities, 'true')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('security-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Security Vulnerabilities Detected',
+              body: report,
+              labels: ['security', 'vulnerability']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "security_scan_completion $(date +%s)"
+            echo "vulnerabilities_found $(python scripts/security/count_vulnerabilities.py security-report.md)"
+            echo "risk_score $(python scripts/security/get_risk_score.py risk_analysis.json)"
+          } > security_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/security_scanning \
+            --data-binary "@security_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Security Scan Complete"
+          description: |
+            Scan ID: ${{ needs.prepare.outputs.scan_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Vulnerabilities Found' || '✅ No Vulnerabilities' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Security Bot"

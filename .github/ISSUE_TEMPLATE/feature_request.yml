@@ -1,0 +1,141 @@
+name: Feature Request
+description: Suggest an idea for this project
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - project-maintainer
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature!
+        Please fill out the information below to help us understand your suggestion.
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature are you suggesting?
+      options:
+        - OSRS Game Feature
+        - Discord Integration
+        - Bot Command
+        - Performance Improvement
+        - User Interface
+        - Documentation
+        - Monitoring/Analytics
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Problem Description
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: |
+        A clear and concise description of what the problem is.
+        Example: I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: |
+        A clear and concise description of what you want to happen.
+        Include any specific implementation details you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered
+      placeholder: |
+        What other approaches could solve this problem?
+        Why is your proposed solution better?
+    validations:
+      required: false
+
+  - type: textarea
+    id: example-usage
+    attributes:
+      label: Example Usage
+      description: Provide examples of how this feature would be used
+      placeholder: |
+        Command syntax:
+        !new-command <param1> <param2>
+
+        Example interactions:
+        User: !new-command value1 value2
+        Bot: Expected response...
+    validations:
+      required: false
+
+  - type: textarea
+    id: implementation-details
+    attributes:
+      label: Implementation Details
+      description: If you have specific technical details in mind, share them here
+      placeholder: |
+        - Required dependencies
+        - API endpoints needed
+        - Database changes
+        - Performance considerations
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Critical (Blocking Usage)
+        - High (Major Enhancement)
+        - Medium (Nice to Have)
+        - Low (Minor Enhancement)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Feature Requirements
+      description: Please confirm the following
+      options:
+        - label: This feature aligns with the project's scope and goals
+          required: true
+        - label: I have searched for similar feature requests
+          required: true
+        - label: I am willing to help implement this feature
+          required: false
+        - label: This feature would benefit multiple users
+          required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here
+      placeholder: |
+        - Screenshots/mockups
+        - Similar features in other bots
+        - User impact
+        - Implementation timeline
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this feature request, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

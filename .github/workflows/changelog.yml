@@ -1,0 +1,262 @@
+name: Changelog Management
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "CHANGELOG.md"
+  pull_request:
+    types: [closed]
+    branches: [main]
+  release:
+    types: [created, edited]
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      update_type:
+        description: "Type of changelog update"
+        required: true
+        type: choice
+        options:
+          - all
+          - features
+          - fixes
+          - breaking
+          - dependencies
+      version:
+        description: "Version to update"
+        required: false
+        type: string
+
+jobs:
+  prepare:
+    name: Prepare Changelog Environment
+    runs-on: ubuntu-latest
+    outputs:
+      update_id: ${{ steps.setup.outputs.update_id }}
+
+    steps:
+      - name: Generate update ID
+        id: setup
+        run: |
+          echo "update_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install gitchangelog conventional-changelog
+
+  collect:
+    name: Collect Changes
+    needs: prepare
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect commit messages
+        run: |
+          python scripts/changelog/collect_commits.py \
+            --since-tag $(git describe --tags --abbrev=0) \
+            --output commits.json
+
+      - name: Collect pull requests
+        run: |
+          python scripts/changelog/collect_prs.py \
+            --since-tag $(git describe --tags --abbrev=0) \
+            --output prs.json
+
+      - name: Generate collection report
+        run: |
+          {
+            echo "# Change Collection Report"
+            echo "## Commit Messages"
+            cat commits.json | jq -r '.commits[] | "- " + .'
+            echo "## Pull Requests"
+            cat prs.json | jq -r '.prs[] | "- " + .'
+          } > collection-report.md
+
+  categorize:
+    name: Categorize Changes
+    needs: [prepare, collect]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Categorize changes
+        run: |
+          python scripts/changelog/categorize_changes.py \
+            --commits commits.json \
+            --prs prs.json \
+            --output categorized_changes.json
+
+      - name: Identify breaking changes
+        run: |
+          python scripts/changelog/identify_breaking.py \
+            --changes categorized_changes.json \
+            --output breaking_changes.json
+
+      - name: Generate categorization report
+        run: |
+          {
+            echo "# Change Categorization Report"
+            echo "## Categorized Changes"
+            cat categorized_changes.json | jq -r '.categories[] | "- " + .'
+            echo "## Breaking Changes"
+            cat breaking_changes.json | jq -r '.changes[] | "- " + .'
+          } > categorization-report.md
+
+  format:
+    name: Format Changelog
+    needs: [prepare, categorize]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Format changes
+        run: |
+          python scripts/changelog/format_changes.py \
+            --categorized categorized_changes.json \
+            --breaking breaking_changes.json \
+            --output formatted_changes.md
+
+      - name: Update version
+        if: github.event.inputs.version
+        run: |
+          python scripts/changelog/update_version.py \
+            --version ${{ github.event.inputs.version }} \
+            --changes formatted_changes.md \
+            --output versioned_changes.md
+
+      - name: Generate format report
+        run: |
+          {
+            echo "# Change Format Report"
+            echo "## Formatted Changes"
+            cat formatted_changes.md
+            if [ -f "versioned_changes.md" ]; then
+              echo "## Versioned Changes"
+              cat versioned_changes.md
+            fi
+          } > format-report.md
+
+  update:
+    name: Update Changelog
+    needs: [prepare, format]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update CHANGELOG.md
+        run: |
+          python scripts/changelog/update_changelog.py \
+            --changes formatted_changes.md \
+            --output update_results.json
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: update changelog"
+          title: "📝 Update Changelog"
+          body: |
+            Automated changelog update.
+
+            ## Changes Added
+            $(cat formatted_changes.md)
+          branch: docs/changelog-update
+          labels: documentation
+
+  verify:
+    name: Verify Changes
+    needs: [prepare, update]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify format
+        run: |
+          python scripts/changelog/verify_format.py \
+            --changelog CHANGELOG.md \
+            --output format_verification.json
+
+      - name: Verify links
+        run: |
+          python scripts/changelog/verify_links.py \
+            --changelog CHANGELOG.md \
+            --output link_verification.json
+
+      - name: Generate verification report
+        run: |
+          {
+            echo "# Changelog Verification Report"
+            echo "## Format Verification"
+            cat format_verification.json | jq -r '.verifications[] | "- " + .'
+            echo "## Link Verification"
+            cat link_verification.json | jq -r '.verifications[] | "- " + .'
+          } > verification-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, collect, categorize, format, update, verify]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Changelog Management Report"
+            echo "Update ID: ${{ needs.prepare.outputs.update_id }}"
+            
+            echo "## Change Collection"
+            cat collection-report.md
+            
+            echo "## Change Categorization"
+            cat categorization-report.md
+            
+            echo "## Change Formatting"
+            cat format-report.md
+            
+            echo "## Change Verification"
+            cat verification-report.md
+          } > changelog-report.md
+
+      - name: Create changelog issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('changelog-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📝 Changelog Update Issues',
+              body: report,
+              labels: ['documentation', 'needs-review']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "changelog_update_completion $(date +%s)"
+            echo "changes_added $(python scripts/changelog/count_changes.py formatted_changes.md)"
+          } > changelog_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/changelog_management \
+            --data-binary "@changelog_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Changelog Update Complete"
+          description: |
+            Update ID: ${{ needs.prepare.outputs.update_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Issues Found' || '✅ Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Changelog Bot"

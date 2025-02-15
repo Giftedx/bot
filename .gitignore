@@ -1,32 +1,81 @@
-# Dependencies
-node_modules/
-package-lock.json
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Environment variables
+# Coverage
+.coverage
+coverage.xml
+coverage.json
+coverage_html/
+htmlcov/
+
+# Virtual Environment
 .env
-.env.local
-.env.*.local
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
 
 # Logs
 logs/
 *.log
-npm-debug.log*
 
-# Runtime data
-pids/
-*.pid
-*.seed
-*.pid.lock
+# Testing
+.pytest_cache/
+.mypy_cache/
+.tox/
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
-# Output files
-output.txt
+# Discord Bot
+osrs_bot.db
+*.db
+*.db-journal
 
-# IDE specific files
-.vscode/
-.idea/
-*.swp
-*.swo
+# Redis
+dump.rdb
+*.rdb
 
-# Operating System
+# Documentation
+docs/_build/
+docs/api/
+
+# Misc
 .DS_Store
 Thumbs.db
+*.bak
+*.tmp
+*.temp

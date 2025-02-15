@@ -1,0 +1,153 @@
+# Core bot functionality
+'bot':
+  - 'src/bot/**/*'
+  - 'src/core/**/*'
+
+# OSRS specific functionality
+'osrs':
+  - 'src/osrs/**/*'
+  - 'src/bot/cogs/osrs_commands.py'
+
+# Media functionality
+'media':
+  - 'src/bot/cogs/media_commands.py'
+  - 'src/core/audio_manager.py'
+
+# Documentation changes
+'documentation':
+  - 'docs/**/*'
+  - '**/*.md'
+  - '**/*.rst'
+  - '**/docstring/**/*'
+
+# Testing related changes
+'testing':
+  - 'tests/**/*'
+  - 'pytest.ini'
+  - '.coveragerc'
+  - '**/test_*.py'
+
+# Infrastructure changes
+'infrastructure':
+  - '.github/**/*'
+  - 'deploy/**/*'
+  - 'docker-compose*.yml'
+  - 'Dockerfile*'
+  - 'kubernetes/**/*'
+
+# Monitoring and metrics
+'monitoring':
+  - 'prometheus/**/*'
+  - 'grafana/**/*'
+  - 'src/core/metrics.py'
+  - 'src/core/health_monitor.py'
+
+# Configuration changes
+'config':
+  - '*.toml'
+  - '*.yml'
+  - '*.yaml'
+  - '*.ini'
+  - '*.cfg'
+  - '.env*'
+
+# Dependencies
+'dependencies':
+  - 'requirements*.txt'
+  - 'pyproject.toml'
+  - 'setup.py'
+  - 'setup.cfg'
+
+# Security related changes
+'security':
+  - 'security/**/*'
+  - '.github/workflows/security.yml'
+  - 'src/core/security/**/*'
+  - 'SECURITY.md'
+
+# Database changes
+'database':
+  - 'src/database/**/*'
+  - 'alembic/**/*'
+  - '**/migrations/**/*'
+  - 'src/**/models.py'
+
+# Performance related changes
+'performance':
+  - 'src/core/backpressure.py'
+  - 'src/utils/performance.py'
+  - 'src/core/caching.py'
+  - 'benchmarks/**/*'
+
+# CI/CD changes
+'ci':
+  - '.github/workflows/**/*'
+  - '.github/actions/**/*'
+  - '.gitlab-ci.yml'
+  - 'scripts/ci/**/*'
+
+# Development tools
+'dev-tools':
+  - '.vscode/**/*'
+  - '.idea/**/*'
+  - '.editorconfig'
+  - '.pre-commit-config.yaml'
+  - 'scripts/dev/**/*'
+
+# Type definitions
+'types':
+  - 'src/**/*.pyi'
+  - 'src/**/py.typed'
+  - 'typings/**/*'
+
+# Size labels based on changes
+'size/XS':
+  - size-below: 10
+'size/S':
+  - size-below: 50
+  - size-above: 10
+'size/M':
+  - size-below: 200
+  - size-above: 50
+'size/L':
+  - size-below: 500
+  - size-above: 200
+'size/XL':
+  - size-above: 500
+
+# Maintenance
+'maintenance':
+  - '.github/workflows/cleanup.yml'
+  - '.github/workflows/stale.yml'
+  - 'scripts/maintenance/**/*'
+
+# Core changes requiring careful review
+'core':
+  - 'src/core/**/*'
+  - 'src/bot/core/**/*'
+  - 'src/osrs/core/**/*'
+
+# Utils and helpers
+'utils':
+  - 'src/utils/**/*'
+  - 'scripts/utils/**/*'
+
+# API related changes
+'api':
+  - 'src/api/**/*'
+  - 'src/**/api/**/*'
+  - 'docs/api/**/*'
+
+# Frontend changes (if any)
+'frontend':
+  - 'frontend/**/*'
+  - 'static/**/*'
+  - 'templates/**/*'
+  - '**/*.html'
+  - '**/*.css'
+  - '**/*.js'
+
+# Experimental features
+'experimental':
+  - 'src/experimental/**/*'
+  - 'tests/experimental/**/*'

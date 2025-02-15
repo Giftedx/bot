@@ -1,0 +1,271 @@
+name: Branch Protection
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      protection_type:
+        description: "Type of protection check"
+        required: true
+        type: choice
+        options:
+          - all
+          - status
+          - signatures
+          - reviews
+          - policies
+
+jobs:
+  prepare:
+    name: Prepare Protection Environment
+    runs-on: ubuntu-latest
+    outputs:
+      check_id: ${{ steps.setup.outputs.check_id }}
+
+    steps:
+      - name: Generate check ID
+        id: setup
+        run: |
+          echo "check_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+  status:
+    name: Status Checks
+    needs: prepare
+    if: github.event.inputs.protection_type == 'status' || github.event.inputs.protection_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check branch status
+        run: |
+          python scripts/protection/check_status.py \
+            --branch ${{ github.ref }} \
+            --output status_check.json
+
+      - name: Verify required checks
+        run: |
+          python scripts/protection/verify_checks.py \
+            --branch ${{ github.ref }} \
+            --output check_verification.json
+
+      - name: Generate status report
+        run: |
+          {
+            echo "# Status Check Report"
+            echo "## Branch Status"
+            cat status_check.json | jq -r '.status[] | "- " + .'
+            echo "## Required Checks"
+            cat check_verification.json | jq -r '.checks[] | "- " + .'
+          } > status-report.md
+
+  signatures:
+    name: Commit Signatures
+    needs: prepare
+    if: github.event.inputs.protection_type == 'signatures' || github.event.inputs.protection_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify commit signatures
+        run: |
+          python scripts/protection/verify_signatures.py \
+            --commits "${{ toJSON(github.event.commits) }}" \
+            --output signature_verification.json
+
+      - name: Check GPG keys
+        run: |
+          python scripts/protection/check_gpg.py \
+            --commits "${{ toJSON(github.event.commits) }}" \
+            --output gpg_check.json
+
+      - name: Generate signature report
+        run: |
+          {
+            echo "# Signature Verification Report"
+            echo "## Commit Signatures"
+            cat signature_verification.json | jq -r '.signatures[] | "- " + .'
+            echo "## GPG Keys"
+            cat gpg_check.json | jq -r '.keys[] | "- " + .'
+          } > signature-report.md
+
+  reviews:
+    name: Review Requirements
+    needs: prepare
+    if: github.event.inputs.protection_type == 'reviews' || github.event.inputs.protection_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check review requirements
+        run: |
+          python scripts/protection/check_reviews.py \
+            --pr ${{ github.event.pull_request.number }} \
+            --output review_check.json
+
+      - name: Verify approvals
+        run: |
+          python scripts/protection/verify_approvals.py \
+            --pr ${{ github.event.pull_request.number }} \
+            --output approval_verification.json
+
+      - name: Generate review report
+        run: |
+          {
+            echo "# Review Requirements Report"
+            echo "## Review Status"
+            cat review_check.json | jq -r '.status[] | "- " + .'
+            echo "## Approval Status"
+            cat approval_verification.json | jq -r '.approvals[] | "- " + .'
+          } > review-report.md
+
+  policies:
+    name: Branch Policies
+    needs: prepare
+    if: github.event.inputs.protection_type == 'policies' || github.event.inputs.protection_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check branch policies
+        run: |
+          python scripts/protection/check_policies.py \
+            --branch ${{ github.ref }} \
+            --output policy_check.json
+
+      - name: Verify compliance
+        run: |
+          python scripts/protection/verify_compliance.py \
+            --branch ${{ github.ref }} \
+            --output compliance_verification.json
+
+      - name: Generate policy report
+        run: |
+          {
+            echo "# Branch Policy Report"
+            echo "## Policy Status"
+            cat policy_check.json | jq -r '.policies[] | "- " + .'
+            echo "## Compliance Status"
+            cat compliance_verification.json | jq -r '.compliance[] | "- " + .'
+          } > policy-report.md
+
+  enforce:
+    name: Enforce Protection
+    needs: [prepare, status, signatures, reviews, policies]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Update branch protection
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.repos.updateBranchProtection({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: context.ref.replace('refs/heads/', ''),
+              required_status_checks: {
+                strict: true,
+                contexts: ['ci/tests', 'security/scan']
+              },
+              enforce_admins: true,
+              required_pull_request_reviews: {
+                dismissal_restrictions: {
+                  users: [],
+                  teams: []
+                },
+                dismiss_stale_reviews: true,
+                require_code_owner_reviews: true,
+                required_approving_review_count: 2
+              },
+              restrictions: null
+            });
+
+      - name: Generate enforcement report
+        run: |
+          {
+            echo "# Protection Enforcement Report"
+            echo "## Applied Rules"
+            echo "- Required status checks enabled"
+            echo "- Admin enforcement enabled"
+            echo "- Required reviews: 2"
+            echo "- Code owner review required"
+            echo "- Stale review dismissal enabled"
+          } > enforcement-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, status, signatures, reviews, policies, enforce]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Branch Protection Report"
+            echo "Check ID: ${{ needs.prepare.outputs.check_id }}"
+            
+            echo "## Status Checks"
+            cat status-report.md
+            
+            echo "## Signatures"
+            cat signature-report.md
+            
+            echo "## Reviews"
+            cat review-report.md
+            
+            echo "## Policies"
+            cat policy-report.md
+            
+            echo "## Enforcement"
+            cat enforcement-report.md
+          } > protection-report.md
+
+      - name: Create protection issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('protection-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🛡️ Branch Protection Issues',
+              body: report,
+              labels: ['security', 'protection']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "protection_check_completion $(date +%s)"
+            echo "protection_violations $(python scripts/protection/count_violations.py protection-report.md)"
+          } > protection_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/branch_protection \
+            --data-binary "@protection_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Branch Protection Check Complete"
+          description: |
+            Check ID: ${{ needs.prepare.outputs.check_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Protection Issues' || '✅ Protection Enforced' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Protection Bot"

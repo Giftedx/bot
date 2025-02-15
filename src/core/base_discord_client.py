@@ -1,46 +1,82 @@
-from typing import Optional
+from typing import Optional, Set, Dict, Any, Callable, Coroutine, TypeVar
 import logging
+import asyncio
+import signal
+from datetime import datetime
 import discord
 from discord.ext import commands
-from dependency_injector.wiring import inject, provide
+from dependency_injector.wiring import inject, Provide
 
-from src.config import Config
+from src.core.config_manager import BotConfig
+from src.core.health_monitor import HealthMonitor
+from src.core.metrics_manager import MetricsManager
 from src.services.plex_server import PlexServer
-
 from src.utils.redis_manager import RedisManager
+from src.utils.error_handler import ErrorHandler
+from src.utils.performance import measure_latency
+from src.core.command_processor import CommandProcessor
 
 logger = logging.getLogger(__name__)
 
+COGS = [
+    'cogs.error_handler',
+    'cogs.help_command',
+    'cogs.fun_commands',
+    'cogs.fun_extras',
+    'cogs.game_commands',
+    'cogs.audio_commands',
+    'cogs.utility_commands'
+]
+
 class BaseDiscordClient(commands.Bot):
-    @inject
-    def __init__(self, config: Config):
+    """Base Discord client with cog loading and core services."""
+
+    def __init__(self, config: BotConfig):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.voice_states = True
+        intents.reactions = True
+        intents.members = True
+
         super().__init__(
             command_prefix=config.COMMAND_PREFIX,
-            intents=discord.Intents.all()
+            intents=intents,
+            description="Discord bot for media management."
         )
+        
         self.config = config
-        self._setup_error_handlers()
-
+        self.command_processor = CommandProcessor(self)
+        self.error_handler = ErrorHandler(self)
+        self._health_monitor = HealthMonitor()
+        self._metrics = MetricsManager()
+        
     async def setup_hook(self) -> None:
-        await self._initialize_services()
+        """Initialize bot services and load cogs"""
+        try:
+            # Load all cogs
+            for cog in COGS:
+                try:
+                    await self.load_extension(cog)
+                    logger.info(f"Loaded cog: {cog}")
+                except Exception as e:
+                    logger.error(f"Failed to load cog {cog}: {e}")
+                    
+            # Initialize services
+            await self._metrics.start()
+            await self._health_monitor.start()
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize bot: {e}", exc_info=True)
+            raise
 
-    @inject
-    async def _initialize_services(self, 
-        redis_manager: RedisManager = provide("redis_manager"),
-        plex_server: PlexServer = provide("plex_server"),
-        
-    ) -> None:
-        self.redis_manager = redis_manager
-        self.plex_server = plex_server
-        
-        
-    def _setup_error_handlers(self) -> None:
-        @self.event
-        async def on_error(event: str, *args, **kwargs) -> None:
-            logger.exception(f"Error in {event}")
-
-        @self.event
-        async def on_command_error(ctx: commands.Context, error: Exception) -> None:
-            if isinstance(error, commands.CommandNotFound):
-                return
-            logger.exception(f"Command error: {error}")
+    async def close(self) -> None:
+        """Clean shutdown of bot services"""
+        try:
+            await self._metrics.stop()
+            await self._health_monitor.stop()
+        finally:
+            await super().close()
+            
+    async def process_commands(self, message: discord.Message) -> None:
+        """Process commands through command processor"""
+        await self.command_processor.process_message(message)

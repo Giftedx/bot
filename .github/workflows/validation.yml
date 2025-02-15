@@ -1,0 +1,276 @@
+name: Validation Testing
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/validation/**"
+      - ".github/workflows/validation.yml"
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 2" # Weekly on Tuesday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      validation_type:
+        description: "Type of validation"
+        required: true
+        type: choice
+        options:
+          - all
+          - data
+          - rules
+          - constraints
+          - consistency
+
+jobs:
+  prepare:
+    name: Prepare Validation Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install cerberus jsonschema pydantic marshmallow
+
+  data-validation:
+    name: Data Validation
+    needs: prepare
+    if: github.event.inputs.validation_type == 'data' || github.event.inputs.validation_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate data structures
+        run: |
+          python tests/validation/test_data_structures.py \
+            --output structure_validation.json
+
+      - name: Validate data types
+        run: |
+          python tests/validation/test_data_types.py \
+            --output type_validation.json
+
+      - name: Generate data validation report
+        run: |
+          {
+            echo "# Data Validation Report"
+            echo "## Structure Validation"
+            cat structure_validation.json | jq -r '.validations[] | "- " + .'
+            echo "## Type Validation"
+            cat type_validation.json | jq -r '.validations[] | "- " + .'
+          } > data-validation-report.md
+
+  rules-validation:
+    name: Business Rules Validation
+    needs: prepare
+    if: github.event.inputs.validation_type == 'rules' || github.event.inputs.validation_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate game rules
+        run: |
+          python tests/validation/test_game_rules.py \
+            --output game_rules.json
+
+      - name: Validate user rules
+        run: |
+          python tests/validation/test_user_rules.py \
+            --output user_rules.json
+
+      - name: Generate rules validation report
+        run: |
+          {
+            echo "# Business Rules Validation Report"
+            echo "## Game Rules"
+            cat game_rules.json | jq -r '.validations[] | "- " + .'
+            echo "## User Rules"
+            cat user_rules.json | jq -r '.validations[] | "- " + .'
+          } > rules-validation-report.md
+
+  constraint-validation:
+    name: Constraint Validation
+    needs: prepare
+    if: github.event.inputs.validation_type == 'constraints' || github.event.inputs.validation_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate system constraints
+        run: |
+          python tests/validation/test_system_constraints.py \
+            --output system_constraints.json
+
+      - name: Validate resource constraints
+        run: |
+          python tests/validation/test_resource_constraints.py \
+            --output resource_constraints.json
+
+      - name: Generate constraint validation report
+        run: |
+          {
+            echo "# Constraint Validation Report"
+            echo "## System Constraints"
+            cat system_constraints.json | jq -r '.validations[] | "- " + .'
+            echo "## Resource Constraints"
+            cat resource_constraints.json | jq -r '.validations[] | "- " + .'
+          } > constraint-validation-report.md
+
+  consistency-validation:
+    name: Consistency Validation
+    needs: prepare
+    if: github.event.inputs.validation_type == 'consistency' || github.event.inputs.validation_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate data consistency
+        run: |
+          python tests/validation/test_data_consistency.py \
+            --output data_consistency.json
+
+      - name: Validate state consistency
+        run: |
+          python tests/validation/test_state_consistency.py \
+            --output state_consistency.json
+
+      - name: Generate consistency validation report
+        run: |
+          {
+            echo "# Consistency Validation Report"
+            echo "## Data Consistency"
+            cat data_consistency.json | jq -r '.validations[] | "- " + .'
+            echo "## State Consistency"
+            cat state_consistency.json | jq -r '.validations[] | "- " + .'
+          } > consistency-validation-report.md
+
+  analyze:
+    name: Analyze Results
+    needs:
+      [
+        prepare,
+        data-validation,
+        rules-validation,
+        constraint-validation,
+        consistency-validation,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze validation patterns
+        run: |
+          python scripts/validation/analyze_patterns.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output pattern_analysis.json
+
+      - name: Analyze validation coverage
+        run: |
+          python scripts/validation/analyze_coverage.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output coverage_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Validation Analysis Report"
+            echo "## Validation Patterns"
+            cat pattern_analysis.json | jq -r '.patterns[] | "- " + .'
+            echo "## Validation Coverage"
+            cat coverage_analysis.json | jq -r '.coverage[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        data-validation,
+        rules-validation,
+        constraint-validation,
+        consistency-validation,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Validation Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            
+            echo "## Data Validation"
+            cat data-validation-report.md
+            
+            echo "## Business Rules Validation"
+            cat rules-validation-report.md
+            
+            echo "## Constraint Validation"
+            cat constraint-validation-report.md
+            
+            echo "## Consistency Validation"
+            cat consistency-validation-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/validation/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > validation-report.md
+
+      - name: Create issue for violations
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('validation-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '✅ Validation Issues Detected',
+              body: report,
+              labels: ['validation', 'bug']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "validation_completion $(date +%s)"
+            echo "validation_score $(python scripts/validation/calculate_score.py analysis-report.md)"
+          } > validation_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/validation_testing \
+            --data-binary "@validation_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Validation Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Violations Found' || '✅ All Validations Passed' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Validation Bot"

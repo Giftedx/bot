@@ -1,0 +1,279 @@
+name: Repository Cleanup
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sunday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      cleanup_type:
+        description: "Type of cleanup"
+        required: true
+        type: choice
+        options:
+          - all
+          - artifacts
+          - branches
+          - workflows
+          - packages
+      dry_run:
+        description: "Dry run (no actual deletions)"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  prepare:
+    name: Prepare Cleanup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      cleanup_id: ${{ steps.setup.outputs.cleanup_id }}
+
+    steps:
+      - name: Generate cleanup ID
+        id: setup
+        run: |
+          echo "cleanup_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install gitpython
+
+  artifact-cleanup:
+    name: Artifact Cleanup
+    needs: prepare
+    if: github.event.inputs.cleanup_type == 'artifacts' || github.event.inputs.cleanup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List old artifacts
+        run: |
+          python scripts/cleanup/list_old_artifacts.py \
+            --days 30 \
+            --output artifacts_list.json
+
+      - name: Remove old artifacts
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          python scripts/cleanup/remove_artifacts.py \
+            --list artifacts_list.json \
+            --output cleanup_results.json
+
+      - name: Generate artifact report
+        run: |
+          {
+            echo "# Artifact Cleanup Report"
+            echo "## Identified Artifacts"
+            cat artifacts_list.json | jq -r '.artifacts[] | "- " + .'
+            if [ "${{ github.event.inputs.dry_run }}" != "true" ]; then
+              echo "## Cleanup Results"
+              cat cleanup_results.json | jq -r '.results[] | "- " + .'
+            fi
+          } > artifact-report.md
+
+  branch-cleanup:
+    name: Branch Cleanup
+    needs: prepare
+    if: github.event.inputs.cleanup_type == 'branches' || github.event.inputs.cleanup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List stale branches
+        run: |
+          python scripts/cleanup/list_stale_branches.py \
+            --days 90 \
+            --output branches_list.json
+
+      - name: Remove stale branches
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          python scripts/cleanup/remove_branches.py \
+            --list branches_list.json \
+            --output cleanup_results.json
+
+      - name: Generate branch report
+        run: |
+          {
+            echo "# Branch Cleanup Report"
+            echo "## Identified Branches"
+            cat branches_list.json | jq -r '.branches[] | "- " + .'
+            if [ "${{ github.event.inputs.dry_run }}" != "true" ]; then
+              echo "## Cleanup Results"
+              cat cleanup_results.json | jq -r '.results[] | "- " + .'
+            fi
+          } > branch-report.md
+
+  workflow-cleanup:
+    name: Workflow Cleanup
+    needs: prepare
+    if: github.event.inputs.cleanup_type == 'workflows' || github.event.inputs.cleanup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List old workflow runs
+        run: |
+          python scripts/cleanup/list_old_workflows.py \
+            --days 30 \
+            --output workflows_list.json
+
+      - name: Remove old workflow runs
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          python scripts/cleanup/remove_workflows.py \
+            --list workflows_list.json \
+            --output cleanup_results.json
+
+      - name: Generate workflow report
+        run: |
+          {
+            echo "# Workflow Cleanup Report"
+            echo "## Identified Workflows"
+            cat workflows_list.json | jq -r '.workflows[] | "- " + .'
+            if [ "${{ github.event.inputs.dry_run }}" != "true" ]; then
+              echo "## Cleanup Results"
+              cat cleanup_results.json | jq -r '.results[] | "- " + .'
+            fi
+          } > workflow-report.md
+
+  package-cleanup:
+    name: Package Cleanup
+    needs: prepare
+    if: github.event.inputs.cleanup_type == 'packages' || github.event.inputs.cleanup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List old packages
+        run: |
+          python scripts/cleanup/list_old_packages.py \
+            --days 90 \
+            --output packages_list.json
+
+      - name: Remove old packages
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          python scripts/cleanup/remove_packages.py \
+            --list packages_list.json \
+            --output cleanup_results.json
+
+      - name: Generate package report
+        run: |
+          {
+            echo "# Package Cleanup Report"
+            echo "## Identified Packages"
+            cat packages_list.json | jq -r '.packages[] | "- " + .'
+            if [ "${{ github.event.inputs.dry_run }}" != "true" ]; then
+              echo "## Cleanup Results"
+              cat cleanup_results.json | jq -r '.results[] | "- " + .'
+            fi
+          } > package-report.md
+
+  analyze:
+    name: Analyze Results
+    needs:
+      [
+        prepare,
+        artifact-cleanup,
+        branch-cleanup,
+        workflow-cleanup,
+        package-cleanup,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Calculate space savings
+        run: |
+          python scripts/cleanup/calculate_savings.py \
+            --cleanup-id ${{ needs.prepare.outputs.cleanup_id }} \
+            --output savings_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Cleanup Analysis Report"
+            echo "## Space Savings"
+            cat savings_analysis.json | jq -r '.savings[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        artifact-cleanup,
+        branch-cleanup,
+        workflow-cleanup,
+        package-cleanup,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Repository Cleanup Report"
+            echo "Cleanup ID: ${{ needs.prepare.outputs.cleanup_id }}"
+            echo "Mode: ${{ github.event.inputs.dry_run && 'Dry Run' || 'Actual Cleanup' }}"
+            
+            echo "## Artifact Cleanup"
+            cat artifact-report.md
+            
+            echo "## Branch Cleanup"
+            cat branch-report.md
+            
+            echo "## Workflow Cleanup"
+            cat workflow-report.md
+            
+            echo "## Package Cleanup"
+            cat package-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+          } > cleanup-report.md
+
+      - name: Create summary issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('cleanup-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🧹 Repository Cleanup Summary',
+              body: report,
+              labels: ['cleanup', 'maintenance']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "cleanup_completion $(date +%s)"
+            echo "space_saved $(python scripts/cleanup/get_total_savings.py savings_analysis.json)"
+          } > cleanup_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/cleanup \
+            --data-binary "@cleanup_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Repository Cleanup Complete"
+          description: |
+            Cleanup ID: ${{ needs.prepare.outputs.cleanup_id }}
+            Mode: ${{ github.event.inputs.dry_run && 'Dry Run' || 'Actual Cleanup' }}
+
+            Check the workflow run for detailed results.
+          color: "0x00ff00"
+          username: "Cleanup Bot"

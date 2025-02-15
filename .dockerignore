@@ -1,0 +1,194 @@
+# Version Control
+.git
+.gitignore
+.gitattributes
+.github/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+.env
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+*.sublime-workspace
+*.sublime-project
+.vs/
+.atom/
+.eclipse/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+*.cover
+.hypothesis/
+.tox/
+nosetests.xml
+coverage/
+htmlcov/
+.mypy_cache/
+
+# Documentation
+docs/_build/
+site/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yml
+!docker-compose.monitoring.yml
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+data/
+
+# Monitoring
+prometheus/data/
+grafana/data/
+redis-data/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+node_modules/
+*.env
+!.env.example
+*.pem
+*.key
+*.crt
+*.csr
+*.srl
+*.p12
+*.pfx
+
+# Build artifacts
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.dll
+*.dylib
+
+# Backup files
+*.bak
+*.backup
+*~
+*.old
+
+# Local development
+local_settings.py
+local_config.py
+local.py
+
+# Security
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.out
+*.app
+
+# Packaging
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Media files
+*.mp3
+*.mp4
+*.wav
+*.flac
+*.ogg
+*.m4a
+*.wma
+
+# Temporary development files
+TODO
+NOTES
+*.scratch
+*.draft

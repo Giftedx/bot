@@ -1,0 +1,34 @@
+[run]
+source = src
+branch = True
+omit = 
+    src/main.py
+    src/*/__init__.py
+    src/*/migrations/*
+    src/*/tests/*
+    src/*/conftest.py
+
+[report]
+exclude_lines = 
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass
+    raise ImportError
+    except ImportError:
+    raise AssertionError
+    def __str__
+    @abstractmethod
+
+[html]
+directory = coverage_html
+title = OSRS Discord Bot Coverage Report
+
+[xml]
+output = coverage.xml
+
+[json]
+output = coverage.json
+pretty_print = true

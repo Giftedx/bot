@@ -1,80 +1,95 @@
-version: '3.9'
+version: '3.8'
+
 services:
   bot:
-    build: .
-    container_name: media_bot
-    environment:
-      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
-      - PLEX_URL=${PLEX_URL}
-      - PLEX_TOKEN=${PLEX_TOKEN}
-      - REDIS_URL=redis://redis:6379
-      - VOICE_CHANNEL_ID=${VOICE_CHANNEL_ID}
-    ports:
-      - '8080:8080'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: osrs-discord-bot
+    restart: unless-stopped
     depends_on:
       - redis
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8080/health']
-      interval: 30s
-      timeout: 5s
-      retries: 3
-    restart: unless-stopped
-    volumes:
-      - bot_data:/app/data
-      - bot_logs:/app/logs
-
-  selfbot:
-    build: .
-    container_name: media_selfbot
     environment:
-      - DISCORD_SELFBOT_TOKEN=${DISCORD_SELFBOT_TOKEN}
-      - PLEX_URL=${PLEX_URL}
-      - PLEX_TOKEN=${PLEX_TOKEN}
-      - REDIS_URL=redis://redis:6379
-      - VOICE_CHANNEL_ID=${VOICE_CHANNEL_ID}
-    command: ['python', '-m', 'src.discord_selfbot']
-    ports:
-      - '9090:9090'
-    depends_on:
-      - redis
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9090/health']
-      interval: 30s
-      timeout: 5s
-      retries: 3
-    restart: unless-stopped
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - REDIS_URL=redis://redis:6379/0
+      - COMMAND_PREFIX=${COMMAND_PREFIX:-!}
     volumes:
-      - selfbot_data:/app/data
-      - selfbot_logs:/app/logs
+      - ./data:/app/data
+      - ./logs:/app/logs
+    networks:
+      - bot-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
   redis:
-    image: redis:7
-    container_name: media_redis
-    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    image: redis:6-alpine
+    container_name: osrs-discord-bot-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - bot-network
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 30s
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
       timeout: 5s
       retries: 3
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
 
-  test-env:
-    build: .
-    container_name: media_test_env
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: osrs-discord-bot-redis-commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
     depends_on:
       - redis
+    networks:
+      - bot-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: osrs-discord-bot-prometheus
     volumes:
-      - ./test_videos:/app/test_videos # Mount a volume for video files
-      - ./test_scripts:/app/test_scripts # Mount a volume for test scripts
-      - ./test_results:/app/test_results # Mount a volume for test results
-    command: ["/app/test_scripts/run_tests.sh"] # Command to run the tests
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    networks:
+      - bot-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: osrs-discord-bot-grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
 
 volumes:
-  bot_data:
-  bot_logs:
-  selfbot_data:
-  selfbot_logs:
-  redis_data:
-  test_results:
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local

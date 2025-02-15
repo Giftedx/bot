@@ -1,0 +1,284 @@
+name: Deployment
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  release:
+    types: [published]
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: "Version to deploy"
+        required: true
+        type: string
+      rollback:
+        description: "Enable automatic rollback"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  prepare:
+    name: Prepare Deployment
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_id: ${{ steps.setup.outputs.deploy_id }}
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Generate deployment ID
+        id: setup
+        run: |
+          echo "deploy_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          fi
+
+  validate:
+    name: Validate Deployment
+    needs: prepare
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.prepare.outputs.version }}
+
+      - name: Validate configuration
+        run: |
+          python scripts/deploy/validate_config.py \
+            --env ${{ github.event.inputs.environment || 'production' }} \
+            --output config_validation.json
+
+      - name: Check dependencies
+        run: |
+          python scripts/deploy/check_dependencies.py \
+            --output dependency_check.json
+
+      - name: Generate validation report
+        run: |
+          {
+            echo "# Deployment Validation Report"
+            echo "## Configuration Check"
+            cat config_validation.json | jq -r '.validations[] | "- " + .'
+            echo "## Dependency Check"
+            cat dependency_check.json | jq -r '.checks[] | "- " + .'
+          } > validation-report.md
+
+  build:
+    name: Build Artifacts
+    needs: [prepare, validate]
+    runs-on: ubuntu-latest
+    if: needs.validate.result == 'success'
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build container
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: bot:${{ needs.prepare.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save artifacts
+        run: |
+          docker save bot:${{ needs.prepare.outputs.version }} > bot.tar
+          python scripts/deploy/package_artifacts.py \
+            --version ${{ needs.prepare.outputs.version }} \
+            --output artifacts.json
+
+      - name: Generate build report
+        run: |
+          {
+            echo "# Build Report"
+            echo "## Container Build"
+            docker images bot:${{ needs.prepare.outputs.version }} --format "- Size: {{.Size}}"
+            echo "## Artifacts"
+            cat artifacts.json | jq -r '.artifacts[] | "- " + .'
+          } > build-report.md
+
+  deploy:
+    name: Deploy Application
+    needs: [prepare, validate, build]
+    runs-on: ubuntu-latest
+    if: needs.build.result == 'success'
+    environment: ${{ github.event.inputs.environment || 'production' }}
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to ECS
+        run: |
+          python scripts/deploy/deploy_ecs.py \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --service ${{ secrets.ECS_SERVICE }} \
+            --version ${{ needs.prepare.outputs.version }} \
+            --output deployment.json
+
+      - name: Update database
+        run: |
+          python scripts/deploy/update_database.py \
+            --version ${{ needs.prepare.outputs.version }} \
+            --output database_update.json
+
+      - name: Generate deployment report
+        run: |
+          {
+            echo "# Deployment Report"
+            echo "## ECS Deployment"
+            cat deployment.json | jq -r '.deployment[] | "- " + .'
+            echo "## Database Update"
+            cat database_update.json | jq -r '.updates[] | "- " + .'
+          } > deployment-report.md
+
+  verify:
+    name: Verify Deployment
+    needs: [prepare, deploy]
+    runs-on: ubuntu-latest
+    if: needs.deploy.result == 'success'
+
+    steps:
+      - name: Health check
+        run: |
+          python scripts/deploy/health_check.py \
+            --environment ${{ github.event.inputs.environment || 'production' }} \
+            --output health_check.json
+
+      - name: Smoke tests
+        run: |
+          python scripts/deploy/smoke_tests.py \
+            --environment ${{ github.event.inputs.environment || 'production' }} \
+            --output smoke_tests.json
+
+      - name: Generate verification report
+        run: |
+          {
+            echo "# Verification Report"
+            echo "## Health Check"
+            cat health_check.json | jq -r '.checks[] | "- " + .'
+            echo "## Smoke Tests"
+            cat smoke_tests.json | jq -r '.tests[] | "- " + .'
+          } > verification-report.md
+
+  rollback:
+    name: Rollback Deployment
+    needs: [prepare, deploy, verify]
+    runs-on: ubuntu-latest
+    if: |
+      needs.verify.result == 'failure' && 
+      (github.event.inputs.rollback == 'true' || github.event_name != 'workflow_dispatch')
+
+    steps:
+      - name: Perform rollback
+        run: |
+          python scripts/deploy/rollback.py \
+            --deploy-id ${{ needs.prepare.outputs.deploy_id }} \
+            --output rollback.json
+
+      - name: Generate rollback report
+        run: |
+          {
+            echo "# Rollback Report"
+            echo "## Rollback Details"
+            cat rollback.json | jq -r '.rollback[] | "- " + .'
+          } > rollback-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, validate, build, deploy, verify, rollback]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Deployment Report"
+            echo "Deploy ID: ${{ needs.prepare.outputs.deploy_id }}"
+            echo "Version: ${{ needs.prepare.outputs.version }}"
+            echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
+            
+            echo "## Validation"
+            cat validation-report.md
+            
+            echo "## Build"
+            cat build-report.md
+            
+            echo "## Deployment"
+            cat deployment-report.md
+            
+            echo "## Verification"
+            cat verification-report.md
+            
+            if [ -f "rollback-report.md" ]; then
+              echo "## Rollback"
+              cat rollback-report.md
+            fi
+          } > deployment-report.md
+
+      - name: Create deployment issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('deployment-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚀 Deployment Summary',
+              body: report,
+              labels: ['deployment', contains(needs.*.result, 'failure') ? 'failed' : 'successful']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "deployment_completion $(date +%s)"
+            echo "deployment_success ${{ !contains(needs.*.result, 'failure') }}"
+            echo "deployment_duration ${{ steps.duration.outputs.duration }}"
+          } > deployment_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/deployment \
+            --data-binary "@deployment_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Deployment Complete"
+          description: |
+            Deploy ID: ${{ needs.prepare.outputs.deploy_id }}
+            Version: ${{ needs.prepare.outputs.version }}
+            Environment: ${{ github.event.inputs.environment || 'production' }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Failed' || '✅ Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Deployment Bot"

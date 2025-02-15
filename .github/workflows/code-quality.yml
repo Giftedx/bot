@@ -1,0 +1,282 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+      - "setup.cfg"
+      - ".github/workflows/code-quality.yml"
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 1" # Weekly on Monday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      check_type:
+        description: "Type of quality check"
+        required: true
+        type: choice
+        options:
+          - all
+          - style
+          - complexity
+          - typing
+          - docstrings
+
+jobs:
+  prepare:
+    name: Prepare Quality Environment
+    runs-on: ubuntu-latest
+    outputs:
+      check_id: ${{ steps.setup.outputs.check_id }}
+
+    steps:
+      - name: Generate check ID
+        id: setup
+        run: |
+          echo "check_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install black flake8 pylint mypy pydocstyle radon xenon
+
+  style-check:
+    name: Style Checks
+    needs: prepare
+    if: github.event.inputs.check_type == 'style' || github.event.inputs.check_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Black
+        run: |
+          black --check --diff src/ tests/ > black_results.txt
+
+      - name: Run Flake8
+        run: |
+          flake8 src/ tests/ --output-file=flake8_results.txt
+
+      - name: Run Pylint
+        run: |
+          pylint src/ tests/ --output-format=json > pylint_results.json
+
+      - name: Generate style report
+        run: |
+          {
+            echo "# Style Check Report"
+            echo "## Black Formatting"
+            cat black_results.txt
+            echo "## Flake8 Results"
+            cat flake8_results.txt
+            echo "## Pylint Results"
+            cat pylint_results.json | jq -r '.[] | "- " + .message'
+          } > style-report.md
+
+  complexity-check:
+    name: Complexity Checks
+    needs: prepare
+    if: github.event.inputs.check_type == 'complexity' || github.event.inputs.check_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Radon
+        run: |
+          radon cc src/ tests/ --json > radon_results.json
+
+      - name: Run Xenon
+        run: |
+          xenon --max-absolute B --max-modules B --max-average A src/ tests/ \
+            --json > xenon_results.json
+
+      - name: Check cognitive complexity
+        run: |
+          python scripts/quality/check_cognitive_complexity.py \
+            --threshold 15 \
+            --output cognitive_results.json
+
+      - name: Generate complexity report
+        run: |
+          {
+            echo "# Complexity Report"
+            echo "## Cyclomatic Complexity"
+            cat radon_results.json | jq -r '.[] | "- " + .name + ": " + (.complexity | tostring)'
+            echo "## Maintainability Index"
+            cat xenon_results.json | jq -r '.[] | "- " + .module + ": " + .score'
+            echo "## Cognitive Complexity"
+            cat cognitive_results.json | jq -r '.results[] | "- " + .'
+          } > complexity-report.md
+
+  typing-check:
+    name: Type Checks
+    needs: prepare
+    if: github.event.inputs.check_type == 'typing' || github.event.inputs.check_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run MyPy
+        run: |
+          mypy src/ tests/ --json-report --json-report-file mypy_results.json
+
+      - name: Check type coverage
+        run: |
+          python scripts/quality/check_type_coverage.py \
+            --threshold 90 \
+            --output coverage_results.json
+
+      - name: Generate typing report
+        run: |
+          {
+            echo "# Type Check Report"
+            echo "## MyPy Results"
+            cat mypy_results.json | jq -r '.[] | "- " + .message'
+            echo "## Type Coverage"
+            cat coverage_results.json | jq -r '.results[] | "- " + .'
+          } > typing-report.md
+
+  docstring-check:
+    name: Docstring Checks
+    needs: prepare
+    if: github.event.inputs.check_type == 'docstrings' || github.event.inputs.check_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run pydocstyle
+        run: |
+          pydocstyle src/ tests/ --count > pydocstyle_results.txt
+
+      - name: Check docstring coverage
+        run: |
+          python scripts/quality/check_docstring_coverage.py \
+            --threshold 90 \
+            --output coverage_results.json
+
+      - name: Generate docstring report
+        run: |
+          {
+            echo "# Docstring Report"
+            echo "## Docstring Style"
+            cat pydocstyle_results.txt
+            echo "## Docstring Coverage"
+            cat coverage_results.json | jq -r '.results[] | "- " + .'
+          } > docstring-report.md
+
+  analyze:
+    name: Analyze Results
+    needs:
+      [prepare, style-check, complexity-check, typing-check, docstring-check]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Calculate quality metrics
+        run: |
+          python scripts/quality/calculate_metrics.py \
+            --check-id ${{ needs.prepare.outputs.check_id }} \
+            --output quality_metrics.json
+
+      - name: Generate trend analysis
+        run: |
+          python scripts/quality/analyze_trends.py \
+            --metrics quality_metrics.json \
+            --output trend_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Quality Analysis Report"
+            echo "## Quality Metrics"
+            cat quality_metrics.json | jq -r '.metrics[] | "- " + .'
+            echo "## Trends"
+            cat trend_analysis.json | jq -r '.trends[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        style-check,
+        complexity-check,
+        typing-check,
+        docstring-check,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Code Quality Report"
+            echo "Check ID: ${{ needs.prepare.outputs.check_id }}"
+            
+            echo "## Style Checks"
+            cat style-report.md
+            
+            echo "## Complexity Checks"
+            cat complexity-report.md
+            
+            echo "## Type Checks"
+            cat typing-report.md
+            
+            echo "## Docstring Checks"
+            cat docstring-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/quality/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > quality-report.md
+
+      - name: Create quality issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('quality-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📊 Code Quality Issues Detected',
+              body: report,
+              labels: ['quality', 'needs-review']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "quality_check_completion $(date +%s)"
+            echo "quality_score $(python scripts/quality/calculate_score.py quality_metrics.json)"
+          } > quality_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/code_quality \
+            --data-binary "@quality_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Code Quality Check Complete"
+          description: |
+            Check ID: ${{ needs.prepare.outputs.check_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Issues Found' || '✅ All Checks Passed' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Quality Bot"

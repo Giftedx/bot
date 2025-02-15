@@ -1,0 +1,271 @@
+name: Metrics Collection
+
+on:
+  schedule:
+    - cron: "*/15 * * * *" # Every 15 minutes
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      metric_type:
+        description: "Type of metrics to collect"
+        required: true
+        type: choice
+        options:
+          - all
+          - performance
+          - usage
+          - errors
+          - resources
+      collection_period:
+        description: "Collection period in minutes"
+        required: true
+        type: number
+        default: 15
+
+jobs:
+  prepare:
+    name: Prepare Metrics Environment
+    runs-on: ubuntu-latest
+    outputs:
+      collection_id: ${{ steps.setup.outputs.collection_id }}
+
+    steps:
+      - name: Generate collection ID
+        id: setup
+        run: |
+          echo "collection_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install prometheus_client grafana_api psutil
+
+  performance:
+    name: Performance Metrics
+    needs: prepare
+    if: github.event.inputs.metric_type == 'performance' || github.event.inputs.metric_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect response times
+        run: |
+          python scripts/metrics/collect_response_times.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output response_metrics.json
+
+      - name: Collect throughput
+        run: |
+          python scripts/metrics/collect_throughput.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output throughput_metrics.json
+
+      - name: Generate performance report
+        run: |
+          {
+            echo "# Performance Metrics Report"
+            echo "## Response Times"
+            cat response_metrics.json | jq -r '.metrics[] | "- " + .'
+            echo "## Throughput"
+            cat throughput_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > performance-metrics-report.md
+
+  usage:
+    name: Usage Metrics
+    needs: prepare
+    if: github.event.inputs.metric_type == 'usage' || github.event.inputs.metric_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect command usage
+        run: |
+          python scripts/metrics/collect_command_usage.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output command_metrics.json
+
+      - name: Collect user activity
+        run: |
+          python scripts/metrics/collect_user_activity.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output activity_metrics.json
+
+      - name: Generate usage report
+        run: |
+          {
+            echo "# Usage Metrics Report"
+            echo "## Command Usage"
+            cat command_metrics.json | jq -r '.metrics[] | "- " + .'
+            echo "## User Activity"
+            cat activity_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > usage-metrics-report.md
+
+  errors:
+    name: Error Metrics
+    needs: prepare
+    if: github.event.inputs.metric_type == 'errors' || github.event.inputs.metric_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect error rates
+        run: |
+          python scripts/metrics/collect_error_rates.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output error_metrics.json
+
+      - name: Collect error patterns
+        run: |
+          python scripts/metrics/collect_error_patterns.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output pattern_metrics.json
+
+      - name: Generate error report
+        run: |
+          {
+            echo "# Error Metrics Report"
+            echo "## Error Rates"
+            cat error_metrics.json | jq -r '.metrics[] | "- " + .'
+            echo "## Error Patterns"
+            cat pattern_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > error-metrics-report.md
+
+  resources:
+    name: Resource Metrics
+    needs: prepare
+    if: github.event.inputs.metric_type == 'resources' || github.event.inputs.metric_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Collect system resources
+        run: |
+          python scripts/metrics/collect_system_resources.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output system_metrics.json
+
+      - name: Collect database metrics
+        run: |
+          python scripts/metrics/collect_database_metrics.py \
+            --duration ${{ github.event.inputs.collection_period || 15 }} \
+            --output database_metrics.json
+
+      - name: Generate resource report
+        run: |
+          {
+            echo "# Resource Metrics Report"
+            echo "## System Resources"
+            cat system_metrics.json | jq -r '.metrics[] | "- " + .'
+            echo "## Database Metrics"
+            cat database_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > resource-metrics-report.md
+
+  analyze:
+    name: Analyze Metrics
+    needs: [prepare, performance, usage, errors, resources]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze trends
+        run: |
+          python scripts/metrics/analyze_trends.py \
+            --collection-id ${{ needs.prepare.outputs.collection_id }} \
+            --output trend_analysis.json
+
+      - name: Detect anomalies
+        run: |
+          python scripts/metrics/detect_anomalies.py \
+            --collection-id ${{ needs.prepare.outputs.collection_id }} \
+            --output anomaly_detection.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Metrics Analysis Report"
+            echo "## Trends"
+            cat trend_analysis.json | jq -r '.trends[] | "- " + .'
+            echo "## Anomalies"
+            cat anomaly_detection.json | jq -r '.anomalies[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, performance, usage, errors, resources, analyze]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Metrics Report"
+            echo "Collection ID: ${{ needs.prepare.outputs.collection_id }}"
+            echo "Period: ${{ github.event.inputs.collection_period || 15 }} minutes"
+            
+            echo "## Performance Metrics"
+            cat performance-metrics-report.md
+            
+            echo "## Usage Metrics"
+            cat usage-metrics-report.md
+            
+            echo "## Error Metrics"
+            cat error-metrics-report.md
+            
+            echo "## Resource Metrics"
+            cat resource-metrics-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/metrics/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > metrics-report.md
+
+      - name: Push to Prometheus
+        run: |
+          python scripts/metrics/push_to_prometheus.py \
+            --collection-id ${{ needs.prepare.outputs.collection_id }} \
+            --metrics metrics-report.md \
+            --gateway ${{ secrets.PROMETHEUS_PUSHGATEWAY }}
+
+      - name: Update Grafana
+        run: |
+          python scripts/metrics/update_grafana.py \
+            --collection-id ${{ needs.prepare.outputs.collection_id }} \
+            --metrics metrics-report.md \
+            --api-key ${{ secrets.GRAFANA_API_KEY }}
+
+      - name: Create alert issue
+        if: contains(needs.*.result, 'failure') || contains(steps.*.outputs.has_alerts, 'true')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('metrics-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📊 Metric Alerts Detected',
+              body: report,
+              labels: ['metrics', 'alert']
+            });
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Metrics Collection Complete"
+          description: |
+            Collection ID: ${{ needs.prepare.outputs.collection_id }}
+            Period: ${{ github.event.inputs.collection_period || 15 }} minutes
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Collection Failed' || '✅ Collection Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Metrics Bot"

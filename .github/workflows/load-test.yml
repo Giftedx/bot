@@ -1,0 +1,287 @@
+name: Load Testing
+
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Weekly on Monday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      test_type:
+        description: "Type of load test"
+        required: true
+        type: choice
+        options:
+          - all
+          - baseline
+          - capacity
+          - stability
+          - breakpoint
+      duration:
+        description: "Test duration in minutes"
+        required: true
+        type: number
+        default: 15
+      users:
+        description: "Number of concurrent users"
+        required: true
+        type: number
+        default: 100
+
+jobs:
+  prepare:
+    name: Prepare Load Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install locust k6 artillery vegeta
+
+  baseline:
+    name: Baseline Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'baseline' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run baseline test
+        run: |
+          python scripts/load/baseline_test.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --users ${{ github.event.inputs.users || 100 }} \
+            --output baseline_results.json
+
+      - name: Collect metrics
+        run: |
+          python scripts/load/collect_metrics.py \
+            --test baseline \
+            --output baseline_metrics.json
+
+      - name: Generate baseline report
+        run: |
+          {
+            echo "# Baseline Test Report"
+            echo "## Test Results"
+            cat baseline_results.json | jq -r '.results[] | "- " + .'
+            echo "## Performance Metrics"
+            cat baseline_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > baseline-report.md
+
+  capacity:
+    name: Capacity Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'capacity' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run capacity test
+        run: |
+          python scripts/load/capacity_test.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --users ${{ github.event.inputs.users || 100 }} \
+            --output capacity_results.json
+
+      - name: Monitor resources
+        run: |
+          python scripts/load/monitor_resources.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --output resource_metrics.json
+
+      - name: Generate capacity report
+        run: |
+          {
+            echo "# Capacity Test Report"
+            echo "## Test Results"
+            cat capacity_results.json | jq -r '.results[] | "- " + .'
+            echo "## Resource Usage"
+            cat resource_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > capacity-report.md
+
+  stability:
+    name: Stability Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'stability' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run stability test
+        run: |
+          python scripts/load/stability_test.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --users ${{ github.event.inputs.users || 100 }} \
+            --output stability_results.json
+
+      - name: Monitor errors
+        run: |
+          python scripts/load/monitor_errors.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --output error_metrics.json
+
+      - name: Generate stability report
+        run: |
+          {
+            echo "# Stability Test Report"
+            echo "## Test Results"
+            cat stability_results.json | jq -r '.results[] | "- " + .'
+            echo "## Error Metrics"
+            cat error_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > stability-report.md
+
+  breakpoint:
+    name: Breakpoint Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'breakpoint' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run breakpoint test
+        run: |
+          python scripts/load/breakpoint_test.py \
+            --duration ${{ github.event.inputs.duration || 15 }} \
+            --users ${{ github.event.inputs.users || 100 }} \
+            --output breakpoint_results.json
+
+      - name: Analyze failures
+        run: |
+          python scripts/load/analyze_failures.py \
+            --results breakpoint_results.json \
+            --output failure_analysis.json
+
+      - name: Generate breakpoint report
+        run: |
+          {
+            echo "# Breakpoint Test Report"
+            echo "## Test Results"
+            cat breakpoint_results.json | jq -r '.results[] | "- " + .'
+            echo "## Failure Analysis"
+            cat failure_analysis.json | jq -r '.failures[] | "- " + .'
+          } > breakpoint-report.md
+
+  analyze:
+    name: Analyze Results
+    needs: [prepare, baseline, capacity, stability, breakpoint]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Compare with baseline
+        run: |
+          python scripts/load/compare_baseline.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output comparison.json
+
+      - name: Analyze performance
+        run: |
+          python scripts/load/analyze_performance.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output performance_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Load Analysis Report"
+            echo "## Baseline Comparison"
+            cat comparison.json | jq -r '.comparisons[] | "- " + .'
+            echo "## Performance Analysis"
+            cat performance_analysis.json | jq -r '.analysis[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, baseline, capacity, stability, breakpoint, analyze]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Load Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            echo "Duration: ${{ github.event.inputs.duration || 15 }} minutes"
+            echo "Users: ${{ github.event.inputs.users || 100 }}"
+            
+            if [ -f "baseline-report.md" ]; then
+              echo "## Baseline Testing"
+              cat baseline-report.md
+            fi
+            
+            if [ -f "capacity-report.md" ]; then
+              echo "## Capacity Testing"
+              cat capacity-report.md
+            fi
+            
+            if [ -f "stability-report.md" ]; then
+              echo "## Stability Testing"
+              cat stability-report.md
+            fi
+            
+            if [ -f "breakpoint-report.md" ]; then
+              echo "## Breakpoint Testing"
+              cat breakpoint-report.md
+            fi
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/load/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > load-report.md
+
+      - name: Create load issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('load-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔨 Load Test Issues',
+              body: report,
+              labels: ['load-test', 'performance']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "load_test_completion $(date +%s)"
+            echo "performance_score $(python scripts/load/calculate_score.py analysis-report.md)"
+          } > load_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/load_testing \
+            --data-binary "@load_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Load Tests Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Duration: ${{ github.event.inputs.duration || 15 }} minutes
+            Users: ${{ github.event.inputs.users || 100 }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Issues Found' || '✅ Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Load Test Bot"

@@ -1,0 +1,246 @@
+name: Audit Logging
+
+on:
+  schedule:
+    - cron: "0 0 * * 6" # Weekly on Saturday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      audit_type:
+        description: "Type of audit to perform"
+        required: true
+        type: choice
+        options:
+          - all
+          - access
+          - changes
+          - security
+          - compliance
+      time_range:
+        description: "Time range for audit (in days)"
+        required: false
+        type: number
+        default: 7
+
+jobs:
+  access-audit:
+    name: Access Audit
+    if: github.event.inputs.audit_type == 'access' || github.event.inputs.audit_type == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Audit repository access
+        id: repo-access
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const collaborators = await github.rest.repos.listCollaborators({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const accessLog = collaborators.data.map(user => ({
+              username: user.login,
+              permissions: user.permissions,
+              lastActive: user.updated_at
+            }));
+
+            console.log('Access Log:', JSON.stringify(accessLog, null, 2));
+            return accessLog;
+
+      - name: Audit workflow runs
+        run: |
+          gh api repos/${{ github.repository }}/actions/runs \
+            --paginate \
+            --jq '.workflow_runs[] | {id, name, event, actor: .actor.login, status, conclusion, created_at}' \
+            > workflow_audit.json
+
+      - name: Generate access report
+        run: |
+          {
+            echo "# Access Audit Report"
+            
+            echo "## Repository Access"
+            echo "\`\`\`json"
+            echo "${{ steps.repo-access.outputs.result }}"
+            echo "\`\`\`"
+            
+            echo "## Workflow Access"
+            echo "\`\`\`json"
+            cat workflow_audit.json
+            echo "\`\`\`"
+          } > access-report.md
+
+  change-audit:
+    name: Change Audit
+    if: github.event.inputs.audit_type == 'changes' || github.event.inputs.audit_type == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Audit code changes
+        run: |
+          # Get changes in the specified time range
+          SINCE_DATE=$(date -d "${{ github.event.inputs.time_range || 7 }} days ago" +%Y-%m-%d)
+
+          git log --since="$SINCE_DATE" --pretty=format:'{%n  "commit": "%H",%n  "author": "%an",%n  "date": "%ad",%n  "message": "%s"%n},' \
+            | sed '$ s/,$//' \
+            | echo "[$(cat)]" > commit_audit.json
+
+      - name: Audit pull requests
+        run: |
+          gh api repos/${{ github.repository }}/pulls \
+            --paginate \
+            --jq '.[] | {number, title, user: .user.login, state, merged, created_at, updated_at}' \
+            > pr_audit.json
+
+      - name: Generate change report
+        run: |
+          {
+            echo "# Change Audit Report"
+            
+            echo "## Commit History"
+            echo "\`\`\`json"
+            cat commit_audit.json
+            echo "\`\`\`"
+            
+            echo "## Pull Request Activity"
+            echo "\`\`\`json"
+            cat pr_audit.json
+            echo "\`\`\`"
+          } > change-report.md
+
+  security-audit:
+    name: Security Audit
+    if: github.event.inputs.audit_type == 'security' || github.event.inputs.audit_type == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Audit security alerts
+        run: |
+          gh api repos/${{ github.repository }}/security/alerts \
+            --paginate \
+            --jq '.[] | {number, state, severity, security_advisory: .security_advisory.summary, created_at, updated_at}' \
+            > security_alerts.json
+
+      - name: Audit security events
+        run: |
+          gh api repos/${{ github.repository }}/security-events \
+            --paginate \
+            --jq '.[] | {type, severity, created_at, state}' \
+            > security_events.json
+
+      - name: Generate security report
+        run: |
+          {
+            echo "# Security Audit Report"
+            
+            echo "## Security Alerts"
+            echo "\`\`\`json"
+            cat security_alerts.json
+            echo "\`\`\`"
+            
+            echo "## Security Events"
+            echo "\`\`\`json"
+            cat security_events.json
+            echo "\`\`\`"
+          } > security-report.md
+
+  compliance-audit:
+    name: Compliance Audit
+    if: github.event.inputs.audit_type == 'compliance' || github.event.inputs.audit_type == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Audit workflow compliance
+        run: |
+          gh api repos/${{ github.repository }}/actions/workflows \
+            --paginate \
+            --jq '.workflows[] | {name, path, state, created_at, updated_at}' \
+            > workflow_compliance.json
+
+      - name: Audit branch protection
+        run: |
+          gh api repos/${{ github.repository }}/branches/main/protection \
+            --jq '{required_status_checks, enforce_admins, required_pull_request_reviews, restrictions}' \
+            > branch_protection.json
+
+      - name: Generate compliance report
+        run: |
+          {
+            echo "# Compliance Audit Report"
+            
+            echo "## Workflow Compliance"
+            echo "\`\`\`json"
+            cat workflow_compliance.json
+            echo "\`\`\`"
+            
+            echo "## Branch Protection"
+            echo "\`\`\`json"
+            cat branch_protection.json
+            echo "\`\`\`"
+          } > compliance-report.md
+
+  report:
+    name: Generate Audit Report
+    needs: [access-audit, change-audit, security-audit, compliance-audit]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Comprehensive Audit Report"
+            echo "Generated: $(date -u)"
+            
+            echo "## Access Audit"
+            cat access-report.md
+            
+            echo "## Change Audit"
+            cat change-report.md
+            
+            echo "## Security Audit"
+            cat security-report.md
+            
+            echo "## Compliance Audit"
+            cat compliance-report.md
+          } > audit-report.md
+
+      - name: Create audit issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('audit-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📋 Weekly Audit Report',
+              body: report,
+              labels: ['audit', 'documentation']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "audit_completion $(date +%s)"
+            echo "audit_findings $(grep -c 'Finding:' audit-report.md || true)"
+          } > audit_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/audit_logging \
+            --data-binary "@audit_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Audit Report Generated"
+          description: |
+            The weekly audit report has been generated.
+            Check the latest issue for details.
+          color: "0x00ff00"
+          username: "Audit Bot"

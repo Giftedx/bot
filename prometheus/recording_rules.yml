@@ -1,0 +1,60 @@
+groups:
+  - name: bot_metrics
+    interval: 1m
+    rules:
+      - record: bot:command_latency:avg5m
+        expr: rate(discord_command_latency_seconds_sum[5m]) / rate(discord_command_latency_seconds_count[5m])
+
+      - record: bot:commands_total:rate5m
+        expr: rate(discord_commands_total[5m])
+
+      - record: bot:errors_total:rate5m
+        expr: rate(discord_errors_total[5m])
+
+      - record: bot:active_voice_connections:avg5m
+        expr: avg_over_time(discord_voice_connections[5m])
+
+      - record: bot:active_players:avg5m
+        expr: avg_over_time(osrs_active_players[5m])
+
+      - record: bot:world_population:avg5m
+        expr: avg_over_time(osrs_world_population[5m])
+
+      - record: bot:combat_events:rate5m
+        expr: rate(osrs_combat_events_total[5m])
+
+      - record: bot:skill_events:rate5m
+        expr: rate(osrs_skill_events_total[5m])
+
+      - record: bot:trade_events:rate5m
+        expr: rate(osrs_trade_events_total[5m])
+
+  - name: redis_metrics
+    interval: 1m
+    rules:
+      - record: redis:memory_usage:avg5m
+        expr: avg_over_time(redis_memory_used_bytes[5m])
+
+      - record: redis:connected_clients:avg5m
+        expr: avg_over_time(redis_connected_clients[5m])
+
+      - record: redis:commands:rate5m
+        expr: rate(redis_commands_total[5m])
+
+      - record: redis:keyspace_hits_ratio:5m
+        expr: rate(redis_keyspace_hits_total[5m]) / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m]))
+
+  - name: system_metrics
+    interval: 1m
+    rules:
+      - record: system:cpu_usage:avg5m
+        expr: avg(rate(process_cpu_seconds_total[5m]))
+
+      - record: system:memory_usage:avg5m
+        expr: avg(process_resident_memory_bytes)
+
+      - record: system:open_fds:avg5m
+        expr: avg(process_open_fds)
+
+      - record: system:network_io:rate5m
+        expr: rate(node_network_transmit_bytes_total[5m]) + rate(node_network_receive_bytes_total[5m])

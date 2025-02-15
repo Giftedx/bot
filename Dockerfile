@@ -1,92 +1,59 @@
-# Builder stage with security scanning
-FROM python:3.11-slim-bullseye as builder
+# Use multi-stage build for smaller final image
+FROM python:3.8-slim as builder
 
-# Security and build optimizations
-ENV PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    POETRY_VERSION=1.5.1 \
-    PYTHONOPTIMIZE=2
-
-WORKDIR /install
-
-COPY requirements.txt .
-COPY security/scan_requirements.sh .
-
-# Enhanced build with security checks
-RUN set -ex \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends gcc libc6-dev \
-    && pip install --no-cache-dir -U pip setuptools wheel \
-    && pip install --prefix=/install --no-cache-dir -r requirements.txt \
-    && pip install --prefix=/install safety bandit \
-    && chmod +x scan_requirements.sh \
-    && ./scan_requirements.sh \
-    && apt-get purge -y gcc libc6-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Add FFmpeg optimization layer
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ffmpeg \
-        libavcodec-extra \
-        libavfilter-extra \
-        libavformat-extra \
-        libavutil-extra \
-        libavutil-extra \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Production stage
-FROM python:3.11-slim-bullseye
-
-# Add security hardening
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ffmpeg \
-        libsm6 \
-        libxext6 \
-        curl \
-        tini \
-        dumb-init \
-        ca-certificates \
-        iproute2 \
-    && rm -rf /var/lib/apt/lists/* \
-    && adduser --system --group --no-create-home appuser \
-    && mkdir -p /app /app/data /app/logs \
-    && chown -R appuser:appuser /app \
-    && chmod -R 755 /app
-
+# Set working directory
 WORKDIR /app
-USER appuser
 
-COPY --chown=appuser:appuser . .
-COPY --from=builder /install /usr/local
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
-# Runtime optimizations
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    MALLOC_ARENA_MAX=2 \
-    PYTHONMALLOC=malloc
+# Final stage
+FROM python:3.8-slim
 
-# Add media processing optimizations
-ENV FFMPEG_THREAD_QUEUE_SIZE=512 \
-    FFMPEG_HWACCEL=auto \
-    FFMPEG_PRESET=veryfast
+# Create non-root user
+RUN useradd -m -u 1000 botuser
 
-# Use tini as init system
-ENTRYPOINT ["/usr/bin/tini", "--", "dumb-init"]
+# Set working directory
+WORKDIR /app
 
-# Enhanced healthcheck with media service check
-COPY src/healthcheck.py /app/healthcheck.py
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python /app/healthcheck.py
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    opus-tools \
+    && rm -rf /var/lib/apt/lists/*
 
-CMD ["python", "-m", "src.bot"]
+# Copy wheels from builder
+COPY --from=builder /app/wheels /wheels
+RUN pip install --no-cache /wheels/*
 
-# Expose metrics and API ports
-EXPOSE 9090
-EXPOSE 8000
+# Copy application code
+COPY . .
+
+# Set ownership to non-root user
+RUN chown -R botuser:botuser /app
+
+# Switch to non-root user
+USER botuser
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV DISCORD_TOKEN=""
+ENV REDIS_URL="redis://redis:6379/0"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8080/health')"
+
+# Command to run the application
+CMD ["python", "-m", "src.main"]

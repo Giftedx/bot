@@ -1,0 +1,34 @@
+# These are supported funding model platforms
+
+github: # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
+  - project-maintainer
+
+patreon: # Replace with a single Patreon username
+  osrs-discord-bot
+
+open_collective: # Replace with a single Open Collective username
+  osrs-bot-collective
+
+ko_fi: # Replace with a single Ko-fi username
+  osrs_bot
+
+tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
+  pypi/osrs-discord-bot
+
+community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
+  osrs-bot-project
+
+liberapay: # Replace with a single Liberapay username
+  osrs_bot
+
+issuehunt: # Replace with a single IssueHunt username
+  osrs-bot
+
+otechie: # Replace with a single Otechie username
+  osrs-bot
+
+custom: # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
+  - https://www.buymeacoffee.com/osrsbot
+  - https://opencollective.com/osrs-bot/donate
+  - https://www.paypal.me/osrsbot
+  - https://ethereum.org/donate/osrsbot

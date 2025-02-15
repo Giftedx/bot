@@ -1,31 +1,137 @@
-[tool.isort]
-profile = "black"
-line_length = 120
-multi_line_output = 3
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/_version.py"
 
 [tool.black]
-line-length = 120
-target-version = ['py39']
+line-length = 88
+target-version = ["py38"]
 include = '\.pyi?$'
+extend-exclude = '''
+# A regex preceded with ^/ will apply only to files and directories
+# in the root of the project.
+^/tests/fixtures/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+known_first_party = ["src"]
+known_third_party = ["discord", "pytest", "redis"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+disallow_incomplete_defs = true
 check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_optional = true
+plugins = "numpy.typing.mypy_plugin"
 
-[tool.flake8]
-max-line-length = 120
-exclude = ['.venv', '.git', '__pycache__', 'docs', 'build', 'dist']
-extend-ignore = ["E203", "W503"] # Corrected line 21
-
-[tool.coverage.run]
-branch = true
-source = ["src"]
+[[tool.mypy.overrides]]
+module = [
+    "discord.*",
+    "redis.*",
+    "setuptools.*"
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = "-ra -q --cov=src --cov-report term-missing"
-python_files = "test_*.py"
+minversion = "6.0"
+addopts = """
+    --strict-markers
+    --strict-config
+    --tb=short
+    -v
+    --durations=10
+    --maxfail=3
+    --cov=src
+    --cov-report=term-missing
+    --cov-report=html
+"""
 testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
 asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "src/main.py",
+    "src/*/__init__.py",
+    "src/*/migrations/*",
+    "src/*/tests/*",
+    "src/*/conftest.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+    "except ImportError:",
+    "raise AssertionError",
+    "def __str__",
+    "@abstractmethod"
+]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring
+    "C0103",  # invalid-name
+    "C0330",  # bad-continuation
+    "C0326",  # bad-whitespace
+    "W0621",  # redefined-outer-name
+    "W0212",  # protected-access
+    "R0903",  # too-few-public-methods
+    "R0913",  # too-many-arguments
+    "R0914",  # too-many-locals
+]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.bandit]
+exclude_dirs = ["tests", "scripts"]
+skips = ["B101"]  # skip assert warnings
+
+[tool.pyright]
+include = ["src"]
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    "src/experimental",
+    "src/typestubs"
+]
+defineConstant = { DEBUG = true }
+venvPath = "."
+venv = "venv"
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.8"
+pythonPlatform = "All"
+
+executionEnvironments = [
+  { root = "src" }
+]

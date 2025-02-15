@@ -1,0 +1,303 @@
+name: Testing
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - ".github/workflows/testing.yml"
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * *" # Daily at midnight
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      test_type:
+        description: "Type of tests to run"
+        required: true
+        type: choice
+        options:
+          - all
+          - unit
+          - integration
+          - functional
+          - coverage
+
+jobs:
+  prepare:
+    name: Prepare Test Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install pytest pytest-cov pytest-xdist pytest-asyncio pytest-mock
+
+  unit:
+    name: Unit Tests
+    needs: prepare
+    if: github.event.inputs.test_type == 'unit' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ \
+            -v \
+            --junitxml=unit-test-results.xml \
+            --cov=src \
+            --cov-report=xml:unit-coverage.xml
+
+      - name: Run mock tests
+        run: |
+          pytest tests/mocks/ \
+            -v \
+            --junitxml=mock-test-results.xml
+
+      - name: Generate unit test report
+        run: |
+          {
+            echo "# Unit Test Report"
+            echo "## Test Results"
+            cat unit-test-results.xml | xq '.'
+            echo "## Mock Test Results"
+            cat mock-test-results.xml | xq '.'
+            echo "## Coverage Report"
+            cat unit-coverage.xml | xq '.'
+          } > unit-report.md
+
+  integration:
+    name: Integration Tests
+    needs: prepare
+    if: github.event.inputs.test_type == 'integration' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:6-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ \
+            -v \
+            --junitxml=integration-test-results.xml \
+            --cov=src \
+            --cov-report=xml:integration-coverage.xml
+
+      - name: Run API tests
+        run: |
+          pytest tests/api/ \
+            -v \
+            --junitxml=api-test-results.xml
+
+      - name: Generate integration test report
+        run: |
+          {
+            echo "# Integration Test Report"
+            echo "## Test Results"
+            cat integration-test-results.xml | xq '.'
+            echo "## API Test Results"
+            cat api-test-results.xml | xq '.'
+            echo "## Coverage Report"
+            cat integration-coverage.xml | xq '.'
+          } > integration-report.md
+
+  functional:
+    name: Functional Tests
+    needs: prepare
+    if: github.event.inputs.test_type == 'functional' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run functional tests
+        run: |
+          pytest tests/functional/ \
+            -v \
+            --junitxml=functional-test-results.xml \
+            --cov=src \
+            --cov-report=xml:functional-coverage.xml
+
+      - name: Run behavior tests
+        run: |
+          pytest tests/behavior/ \
+            -v \
+            --junitxml=behavior-test-results.xml
+
+      - name: Generate functional test report
+        run: |
+          {
+            echo "# Functional Test Report"
+            echo "## Test Results"
+            cat functional-test-results.xml | xq '.'
+            echo "## Behavior Test Results"
+            cat behavior-test-results.xml | xq '.'
+            echo "## Coverage Report"
+            cat functional-coverage.xml | xq '.'
+          } > functional-report.md
+
+  coverage:
+    name: Coverage Analysis
+    needs: [prepare, unit, integration, functional]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Combine coverage reports
+        run: |
+          coverage combine \
+            unit-coverage.xml \
+            integration-coverage.xml \
+            functional-coverage.xml
+
+      - name: Generate coverage report
+        run: |
+          coverage report --fail-under=80
+          coverage xml -o combined-coverage.xml
+          coverage html -d coverage-html
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports
+          path: |
+            combined-coverage.xml
+            coverage-html/
+
+      - name: Generate coverage report
+        run: |
+          {
+            echo "# Coverage Report"
+            echo "## Overall Coverage"
+            coverage report
+            echo "## Coverage Details"
+            cat combined-coverage.xml | xq '.'
+          } > coverage-report.md
+
+  analyze:
+    name: Analyze Results
+    needs: [prepare, unit, integration, functional, coverage]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze test patterns
+        run: |
+          python scripts/testing/analyze_patterns.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output pattern_analysis.json
+
+      - name: Analyze flaky tests
+        run: |
+          python scripts/testing/analyze_flaky_tests.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output flaky_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Test Analysis Report"
+            echo "## Test Patterns"
+            cat pattern_analysis.json | jq -r '.patterns[] | "- " + .'
+            echo "## Flaky Tests"
+            cat flaky_analysis.json | jq -r '.tests[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, unit, integration, functional, coverage, analyze]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            
+            echo "## Unit Tests"
+            cat unit-report.md
+            
+            echo "## Integration Tests"
+            cat integration-report.md
+            
+            echo "## Functional Tests"
+            cat functional-report.md
+            
+            echo "## Coverage"
+            cat coverage-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/testing/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > test-report.md
+
+      - name: Create test issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('test-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🧪 Test Failures Detected',
+              body: report,
+              labels: ['testing', 'bug']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "test_completion $(date +%s)"
+            echo "test_success_rate $(python scripts/testing/calculate_rate.py test-report.md)"
+            echo "test_coverage $(python scripts/testing/get_coverage.py coverage-report.md)"
+          } > test_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/testing \
+            --data-binary "@test_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Tests Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Tests Failed' || '✅ All Tests Passed' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Test Bot"

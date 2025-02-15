@@ -1,0 +1,234 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "title": "Bot Status",
+      "type": "stat",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "up{job=\"osrs-discord-bot\"}",
+          "legendFormat": "Bot Status"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.7",
+      "mappings": [
+        {
+          "type": "value",
+          "options": {
+            "0": {
+              "text": "Down",
+              "color": "red"
+            },
+            "1": {
+              "text": "Up",
+              "color": "green"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Command Latency",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "bot:command_latency:avg5m",
+          "legendFormat": "Average Latency"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 6,
+        "y": 0
+      },
+      "options": {
+        "alertThreshold": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "title": "Active Players",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "bot:active_players:avg5m",
+          "legendFormat": "Players"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "title": "World Population",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "bot:world_population:avg5m",
+          "legendFormat": "{{world}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "title": "Event Rates",
+      "type": "graph",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "bot:combat_events:rate5m",
+          "legendFormat": "Combat"
+        },
+        {
+          "expr": "bot:skill_events:rate5m",
+          "legendFormat": "Skilling"
+        },
+        {
+          "expr": "bot:trade_events:rate5m",
+          "legendFormat": "Trading"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "title": "System Resources",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      }
+    },
+    {
+      "title": "CPU Usage",
+      "type": "gauge",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "system:cpu_usage:avg5m * 100",
+          "legendFormat": "CPU %"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 25
+      },
+      "options": {
+        "maxValue": 100,
+        "minValue": 0,
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true,
+        "thresholds": [
+          { "color": "green", "value": null },
+          { "color": "yellow", "value": 60 },
+          { "color": "red", "value": 80 }
+        ]
+      }
+    },
+    {
+      "title": "Memory Usage",
+      "type": "gauge",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "system:memory_usage:avg5m / 1024 / 1024",
+          "legendFormat": "Memory (MB)"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 25
+      },
+      "options": {
+        "maxValue": 1024,
+        "minValue": 0,
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true,
+        "thresholds": [
+          { "color": "green", "value": null },
+          { "color": "yellow", "value": 512 },
+          { "color": "red", "value": 768 }
+        ]
+      }
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": ["osrs", "discord", "bot"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "OSRS Discord Bot",
+  "uid": "osrs_bot",
+  "version": 1
+}

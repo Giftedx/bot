@@ -1,0 +1,298 @@
+name: Migration Testing
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "migrations/**"
+      - "alembic/**"
+      - "src/models/**"
+      - ".github/workflows/migration.yml"
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      migration_type:
+        description: "Type of migration test"
+        required: true
+        type: choice
+        options:
+          - all
+          - schema
+          - data
+          - rollback
+          - performance
+      database:
+        description: "Target database"
+        required: true
+        type: choice
+        options:
+          - sqlite
+          - postgres
+          - mysql
+
+jobs:
+  prepare:
+    name: Prepare Migration Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install alembic sqlalchemy pytest-alembic data-migration-validator
+
+  schema-migration:
+    name: Schema Migration Tests
+    needs: prepare
+    if: github.event.inputs.migration_type == 'schema' || github.event.inputs.migration_type == 'all'
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Test forward migrations
+        run: |
+          python scripts/migration/test_forward_migrations.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output forward_results.json
+
+      - name: Validate schema changes
+        run: |
+          python scripts/migration/validate_schema.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output schema_validation.json
+
+      - name: Generate schema report
+        run: |
+          {
+            echo "# Schema Migration Report"
+            echo "## Forward Migration Results"
+            cat forward_results.json | jq -r '.results[] | "- " + .'
+            echo "## Schema Validation"
+            cat schema_validation.json | jq -r '.validations[] | "- " + .'
+          } > schema-report.md
+
+  data-migration:
+    name: Data Migration Tests
+    needs: prepare
+    if: github.event.inputs.migration_type == 'data' || github.event.inputs.migration_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test data transformations
+        run: |
+          python scripts/migration/test_data_transformations.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output transformation_results.json
+
+      - name: Validate data integrity
+        run: |
+          python scripts/migration/validate_data_integrity.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output integrity_validation.json
+
+      - name: Generate data report
+        run: |
+          {
+            echo "# Data Migration Report"
+            echo "## Transformation Results"
+            cat transformation_results.json | jq -r '.results[] | "- " + .'
+            echo "## Data Integrity"
+            cat integrity_validation.json | jq -r '.validations[] | "- " + .'
+          } > data-report.md
+
+  rollback:
+    name: Rollback Tests
+    needs: prepare
+    if: github.event.inputs.migration_type == 'rollback' || github.event.inputs.migration_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test rollback migrations
+        run: |
+          python scripts/migration/test_rollbacks.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output rollback_results.json
+
+      - name: Validate state after rollback
+        run: |
+          python scripts/migration/validate_rollback_state.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output rollback_validation.json
+
+      - name: Generate rollback report
+        run: |
+          {
+            echo "# Rollback Test Report"
+            echo "## Rollback Results"
+            cat rollback_results.json | jq -r '.results[] | "- " + .'
+            echo "## State Validation"
+            cat rollback_validation.json | jq -r '.validations[] | "- " + .'
+          } > rollback-report.md
+
+  performance:
+    name: Performance Tests
+    needs: prepare
+    if: github.event.inputs.migration_type == 'performance' || github.event.inputs.migration_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test migration performance
+        run: |
+          python scripts/migration/test_performance.py \
+            --database ${{ github.event.inputs.database || 'sqlite' }} \
+            --output performance_results.json
+
+      - name: Analyze execution times
+        run: |
+          python scripts/migration/analyze_execution_times.py \
+            --results performance_results.json \
+            --output timing_analysis.json
+
+      - name: Generate performance report
+        run: |
+          {
+            echo "# Performance Test Report"
+            echo "## Migration Times"
+            cat performance_results.json | jq -r '.results[] | "- " + .'
+            echo "## Timing Analysis"
+            cat timing_analysis.json | jq -r '.analysis[] | "- " + .'
+          } > performance-report.md
+
+  analyze:
+    name: Analyze Results
+    needs: [prepare, schema-migration, data-migration, rollback, performance]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze migration patterns
+        run: |
+          python scripts/migration/analyze_patterns.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output pattern_analysis.json
+
+      - name: Identify risks
+        run: |
+          python scripts/migration/identify_risks.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output risk_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Migration Analysis Report"
+            echo "## Migration Patterns"
+            cat pattern_analysis.json | jq -r '.patterns[] | "- " + .'
+            echo "## Risk Analysis"
+            cat risk_analysis.json | jq -r '.risks[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        schema-migration,
+        data-migration,
+        rollback,
+        performance,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Migration Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            echo "Database: ${{ github.event.inputs.database || 'sqlite' }}"
+            
+            echo "## Schema Migration"
+            cat schema-report.md
+            
+            echo "## Data Migration"
+            cat data-report.md
+            
+            echo "## Rollback Tests"
+            cat rollback-report.md
+            
+            echo "## Performance Tests"
+            cat performance-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/migration/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > migration-report.md
+
+      - name: Create issue for failures
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('migration-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔄 Migration Test Failures',
+              body: report,
+              labels: ['migration', 'database']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "migration_completion $(date +%s)"
+            echo "migration_success_rate $(python scripts/migration/calculate_rate.py analysis-report.md)"
+          } > migration_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/migration_testing \
+            --data-binary "@migration_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Migration Tests Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Database: ${{ github.event.inputs.database || 'sqlite' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Migration Bot"

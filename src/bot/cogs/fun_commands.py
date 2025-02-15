@@ -6,6 +6,8 @@ from typing import List, Dict
 class FunCommands(commands.Cog):
     """A collection of fun commands for entertainment"""
     
+
+
     def __init__(self, bot):
         self.bot = bot
         # Move all constants here from main file
@@ -51,6 +53,7 @@ class FunCommands(commands.Cog):
         for reaction in reactions:
             await ctx.message.add_reaction(reaction)
         await ctx.send(embed=embed)
+
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(FunCommands(bot))

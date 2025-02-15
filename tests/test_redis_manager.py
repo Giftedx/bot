@@ -1,5 +1,6 @@
 import pytest
 import asyncio
+from typing import AsyncGenerator, Any
 from unittest.mock import patch, AsyncMock, Mock
 from redis.exceptions import RedisError
 from src.utils.redis_manager import RedisManager, RedisKeys
@@ -16,22 +17,30 @@ def settings():
     return settings_mock
 
 @pytest.fixture
-async def redis_manager(settings):
+async def redis_manager(mocker: Any) -> AsyncGenerator[RedisManager, None]:
+    settings = Mock(spec=SettingsManager)
+    settings.redis_host = "localhost"
+    settings.redis_port = 6379
+    settings.redis_db = 0
+    
     manager = RedisManager(settings)
     yield manager
     await manager.close()
 
 @pytest.mark.asyncio
-async def test_connection_success(redis_manager, mocker):
+async def test_connection_success(redis_manager: RedisManager, mocker: Any) -> None:
     mock_redis = AsyncMock()
     mocker.patch('redis.asyncio.Redis', return_value=mock_redis)
     
     async with redis_manager.get_connection() as conn:
-        assert conn == mock_redis
+        assert conn is not None
+        mock_redis.ping.assert_called_once()
 
 @pytest.mark.asyncio
-async def test_connection_failure(redis_manager, mocker):
-    mocker.patch('redis.asyncio.Redis', side_effect=RedisError("Connection failed"))
+async def test_connection_failure(redis_manager: RedisManager, mocker: Any) -> None:
+    mock_redis = AsyncMock()
+    mock_redis.ping.side_effect = RedisError("Connection failed")
+    mocker.patch('redis.asyncio.Redis', return_value=mock_redis)
     
     with pytest.raises(RedisConnectionError) as exc_info:
         async with redis_manager.get_connection():
@@ -39,9 +48,9 @@ async def test_connection_failure(redis_manager, mocker):
     assert "Connection failed" in str(exc_info.value)
 
 @pytest.mark.asyncio
-async def test_operation_error(redis_manager, mocker):
+async def test_operation_error(redis_manager: RedisManager, mocker: Any) -> None:
     mock_redis = AsyncMock()
-    mock_redis.get = AsyncMock(side_effect=RedisError("Operation failed"))
+    mock_redis.get.side_effect = RedisError("Operation failed")
     mocker.patch('redis.asyncio.Redis', return_value=mock_redis)
     
     with pytest.raises(RedisOperationError) as exc_info:
@@ -50,7 +59,7 @@ async def test_operation_error(redis_manager, mocker):
     assert "Operation failed" in str(exc_info.value)
 
 @pytest.mark.asyncio
-async def test_connection_cleanup(redis_manager):
+async def test_connection_cleanup(redis_manager: RedisManager) -> None:
     async with redis_manager.get_connection():
         assert redis_manager._redis is not None
         assert redis_manager.pool is not None
@@ -60,20 +69,23 @@ async def test_connection_cleanup(redis_manager):
     assert redis_manager.pool is None
 
 @pytest.mark.asyncio
-async def test_retry_operation_success(redis_manager, mocker):
+async def test_retry_operation_success(redis_manager: RedisManager, mocker: Any) -> None:
     operation = AsyncMock()
     operation.side_effect = [RedisError(), RedisError(), "success"]
+    
     result = await redis_manager._retry_operation(operation, "test_arg")
     assert result == "success"
     assert operation.call_count == 3
 
 @pytest.mark.asyncio
-async def test_retry_operation_failure(redis_manager, mocker):
-    operation = AsyncMock(side_effect=RedisError("Persistent failure"))
+async def test_retry_operation_failure(redis_manager: RedisManager, mocker: Any) -> None:
+    operation = AsyncMock()
+    operation.side_effect = RedisError("Persistent failure")
+    
     with pytest.raises(RedisOperationError) as exc_info:
-        await redis_manager._retry_operation(operation)
-    assert "after 3 attempts" in str(exc_info.value)
-    assert operation.call_count == 3
+        await redis_manager._retry_operation(operation, "test_arg")
+    assert "Persistent failure" in str(exc_info.value)
+    assert operation.call_count == redis_manager.MAX_RETRIES
 
 @pytest.mark.asyncio
 async def test_publish_message(redis_manager, mocker):

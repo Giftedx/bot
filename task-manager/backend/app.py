@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask import request, jsonify  # Added imports for request, jsonify
+from flask import request, jsonify
 import os
 
 
@@ -25,14 +25,14 @@ class Task(db.Model):  # type: ignore
     def __repr__(self) -> str:
         return f"<Task id={self.id}>"
 
-    
+
 @app.route('/')
 def hello_world() -> str:
     return 'Hello, World!'
 
 
 @app.route('/tasks', methods=['POST'])
-def create_task() -> tuple[flask.Response, int]:
+def create_task() -> tuple[Response, int]:
     data = request.get_json()
     if not data or 'title' not in data:
         return jsonify({'message': 'Title is required'}), 400
@@ -65,7 +65,7 @@ def list_tasks() -> str:
 
 
 @app.route('/test_task')  # Simple route for quick testing
-def test_task() -> tuple[flask.Response, int]:
+def test_task() -> tuple[Response, int]:
     new_task = Task(title='Test Task', description='Test task for route')
     db.session.add(new_task)
     db.session.commit()
@@ -75,4 +75,4 @@ def test_task() -> tuple[flask.Response, int]:
 if __name__ == '__main__':  # this is the standard boilerplate
     with app.app_context():  # type: ignore
         db.create_all()
-    app.run(debug=True, port=8080)
+    app.run(debug=False, port=8080)

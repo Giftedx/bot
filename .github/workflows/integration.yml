@@ -1,0 +1,225 @@
+name: Integration Testing
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/integration/**"
+      - ".github/workflows/integration.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/integration/**"
+  schedule:
+    - cron: "0 */12 * * *" # Every 12 hours
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      test_scope:
+        description: "Integration test scope"
+        required: true
+        type: choice
+        options:
+          - all
+          - discord
+          - redis
+          - database
+          - external-apis
+
+jobs:
+  setup:
+    name: Setup Test Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.config.outputs.test_id }}
+
+    steps:
+      - name: Configure test environment
+        id: config
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+          echo "TEST_SCOPE=${{ github.event.inputs.test_scope || 'all' }}" >> $GITHUB_ENV
+
+  test-discord:
+    name: Discord Integration
+    needs: setup
+    if: github.event.inputs.test_scope == 'discord' || github.event.inputs.test_scope == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install pytest-asyncio discord.py-test
+
+      - name: Run Discord integration tests
+        env:
+          DISCORD_TOKEN: ${{ secrets.TEST_DISCORD_TOKEN }}
+          TEST_GUILD_ID: ${{ secrets.TEST_GUILD_ID }}
+        run: |
+          pytest tests/integration/test_discord.py -v --log-cli-level=INFO
+
+  test-redis:
+    name: Redis Integration
+    needs: setup
+    if: github.event.inputs.test_scope == 'redis' || github.event.inputs.test_scope == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:6-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run Redis integration tests
+        run: |
+          pytest tests/integration/test_redis.py -v --log-cli-level=INFO
+
+  test-database:
+    name: Database Integration
+    needs: setup
+    if: github.event.inputs.test_scope == 'database' || github.event.inputs.test_scope == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run database migrations
+        run: |
+          alembic upgrade head
+
+      - name: Run database integration tests
+        run: |
+          pytest tests/integration/test_database.py -v --log-cli-level=INFO
+
+  test-external:
+    name: External APIs Integration
+    needs: setup
+    if: github.event.inputs.test_scope == 'external-apis' || github.event.inputs.test_scope == 'all' || github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install vcrpy requests-mock
+
+      - name: Run external API tests
+        env:
+          OSRS_API_KEY: ${{ secrets.OSRS_API_KEY }}
+        run: |
+          pytest tests/integration/test_external_apis.py -v --log-cli-level=INFO
+
+  report:
+    name: Generate Report
+    needs: [setup, test-discord, test-redis, test-database, test-external]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Generate integration report
+        run: |
+          {
+            echo "# Integration Test Report"
+            echo "## Test ID: ${{ needs.setup.outputs.test_id }}"
+            echo "## Test Results"
+            echo "- Discord Integration: ${{ needs.test-discord.result }}"
+            echo "- Redis Integration: ${{ needs.test-redis.result }}"
+            echo "- Database Integration: ${{ needs.test-database.result }}"
+            echo "- External APIs: ${{ needs.test-external.result }}"
+          } > integration-report.md
+
+      - name: Create issue for failures
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('integration-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '❌ Integration Tests Failed',
+              body: report,
+              labels: ['integration', 'test-failure']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "integration_tests_total $(date +%s)"
+            echo "integration_tests_failed $(echo '${{ needs.*.result }}' | grep -c failure || true)"
+          } > integration_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/integration_testing \
+            --data-binary "@integration_metrics.txt"
+
+      - name: Notify status
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Integration Tests Complete"
+          description: |
+            Test ID: ${{ needs.setup.outputs.test_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Failed' || '✅ Passed' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Integration Test Bot"

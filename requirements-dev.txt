@@ -1,8 +1,72 @@
 -r requirements.txt
-flake8
-mypy
-pytest
-coverage
-black
-isort
-pytest-cov
+
+# Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-timeout>=2.1.0
+pytest-xdist>=3.3.1  # Parallel test execution
+pytest-randomly>=3.13.0  # Random test order
+pytest-sugar>=0.9.7  # Better test progress display
+pytest-clarity>=1.0.1  # Better test failure messages
+
+# Type checking
+mypy>=1.5.1
+types-setuptools>=68.0.0
+types-redis>=4.6.0.5
+types-aiofiles>=23.1.0.5
+types-python-dateutil>=2.8.19.14
+types-requests>=2.31.0.2
+types-urllib3>=1.26.25.14
+
+# Linting and formatting
+flake8>=6.1.0
+black>=23.7.0
+isort>=5.12.0
+pylint>=2.17.5
+autopep8>=2.0.4
+yapf>=0.40.1
+pycodestyle>=2.11.0
+pydocstyle>=6.3.0
+flake8-docstrings>=1.7.0
+flake8-bugbear>=23.7.10  # Find likely bugs
+flake8-comprehensions>=3.14.0  # Better list/dict/set comprehensions
+flake8-simplify>=0.20.0  # Simplify code
+flake8-eradicate>=1.5.0  # Find commented out code
+
+# Documentation
+sphinx>=7.1.0
+sphinx-rtd-theme>=1.3.0
+sphinx-autodoc-typehints>=1.24.0
+sphinx-copybutton>=0.5.2  # Add copy button to code blocks
+sphinx-design>=0.5.0  # Better documentation design
+myst-parser>=2.0.0  # Markdown support in Sphinx
+
+# Security
+bandit>=1.7.5
+safety>=2.3.5
+pip-audit>=2.6.1
+detect-secrets>=1.4.0
+
+# Debug tools
+ipython>=8.14.0
+ipdb>=0.13.13
+rich>=13.5.2
+icecream>=2.1.3  # Better print debugging
+better-exceptions>=0.3.3  # Better exception formatting
+
+# Development tools
+pre-commit>=3.3.3  # Git hooks
+bump2version>=1.0.1  # Version management
+tox>=4.8.0  # Test automation
+coverage[toml]>=7.3.0  # Coverage with TOML support
+
+# Performance profiling
+py-spy>=0.3.14  # Sampling profiler
+memory_profiler>=0.61.0  # Memory profiling
+scalene>=1.5.21  # CPU and memory profiler
+pyinstrument>=4.5.1  # Python profiler
+
+# Git hooks
+pre-commit-hooks>=4.4.0

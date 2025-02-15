@@ -1,0 +1,158 @@
+# Repository Configuration File
+
+# PR and Issue Labels Configuration
+labels:
+  # Type Labels
+  - name: "bug"
+    color: "d73a4a"
+    description: "Something isn't working"
+  - name: "enhancement"
+    color: "a2eeef"
+    description: "New feature or request"
+  - name: "documentation"
+    color: "0075ca"
+    description: "Documentation improvements"
+  - name: "security"
+    color: "ee0701"
+    description: "Security related issues"
+  
+  # Priority Labels
+  - name: "priority: critical"
+    color: "b60205"
+    description: "Needs immediate attention"
+  - name: "priority: high"
+    color: "d93f0b"
+    description: "Needs attention soon"
+  - name: "priority: medium"
+    color: "fbca04"
+    description: "Normal priority"
+  - name: "priority: low"
+    color: "0e8a16"
+    description: "Low priority task"
+
+  # Status Labels
+  - name: "status: in progress"
+    color: "9149d1"
+    description: "Work in progress"
+  - name: "status: needs review"
+    color: "fbca04"
+    description: "Ready for review"
+  - name: "status: blocked"
+    color: "d73a4a"
+    description: "Blocked by other work"
+  - name: "status: duplicate"
+    color: "cfd3d7"
+    description: "This issue or PR already exists"
+
+  # Component Labels
+  - name: "component: bot"
+    color: "bfdadc"
+    description: "Related to bot core"
+  - name: "component: osrs"
+    color: "bfd4f2"
+    description: "Related to OSRS features"
+  - name: "component: monitoring"
+    color: "d4c5f9"
+    description: "Related to monitoring"
+
+# PR Settings
+pulls:
+  # PR title validation
+  title:
+    pattern: '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z]+\))?: .{1,50}$'
+    message: "PR title must follow conventional commits format"
+  
+  # PR body validation
+  body:
+    required:
+      - "## Description"
+      - "## Testing"
+    message: "PR description and testing sections are required"
+  
+  # PR review settings
+  review:
+    required: true
+    request_teams:
+      - "core-team"
+    request_users:
+      - "project-maintainer"
+
+# Issue Settings
+issues:
+  # Issue title validation
+  title:
+    pattern: '^(Bug|Feature|Documentation|Question): .{1,100}$'
+    message: "Issue title must start with type and follow format"
+
+# Welcome message for new contributors
+firstPRMergeComment: >
+  Thanks for your contribution! 🎉
+  
+  Your PR has been merged and will be included in the next release.
+  We appreciate your help in making this project better!
+
+# Auto-close issues marked as stale
+stale:
+  daysUntilStale: 60
+  daysUntilClose: 7
+  exemptLabels:
+    - "pinned"
+    - "security"
+  staleLabel: "stale"
+  markComment: >
+    This issue has been automatically marked as stale because it has not had
+    recent activity. It will be closed if no further activity occurs.
+  closeComment: >
+    This issue has been automatically closed due to inactivity.
+    Please feel free to reopen it if you still need help.
+
+# Branch protection rules
+branch_protection:
+  main:
+    required_status_checks:
+      - "tests"
+      - "lint"
+      - "type-check"
+    enforce_admins: true
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+    restrictions:
+      users: []
+      teams: ["core-team"]
+
+# Repository settings
+repository:
+  # General settings
+  description: "OSRS Discord Bot with monitoring and media features"
+  homepage: "https://github.com/yourusername/osrs-discord-bot"
+  topics:
+    - "discord-bot"
+    - "osrs"
+    - "python"
+    - "monitoring"
+    - "media-bot"
+  
+  # Feature settings
+  has_issues: true
+  has_projects: true
+  has_wiki: true
+  has_downloads: true
+  
+  # Security settings
+  security:
+    enableVulnerabilityAlerts: true
+    enableAutomatedSecurityFixes: true
+
+# Project board settings
+project:
+  name: "OSRS Bot Development"
+  columns:
+    - name: "To Do"
+      type: "todo"
+    - name: "In Progress"
+      type: "in_progress"
+    - name: "Review"
+      type: "review"
+    - name: "Done"
+      type: "done"

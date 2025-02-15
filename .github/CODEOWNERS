@@ -1,0 +1,98 @@
+# CODEOWNERS file
+#
+# This file defines who is responsible for reviewing changes to different parts of the codebase.
+# For more information, see: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# These users will be requested for review when someone opens a pull request
+* @project-maintainer
+
+# Bot core functionality
+/src/bot/ @bot-core-team
+/src/core/ @bot-core-team
+/src/utils/ @bot-core-team
+
+# OSRS specific functionality
+/src/osrs/ @osrs-team
+/src/bot/cogs/osrs_commands.py @osrs-team
+
+# Media playback functionality
+/src/bot/cogs/media_commands.py @media-team
+/src/core/audio_manager.py @media-team
+
+# Testing
+/tests/ @qa-team
+/tests/integration/ @qa-team @devops-team
+
+# Infrastructure and deployment
+/deploy/ @devops-team
+/docker-compose*.yml @devops-team
+/Dockerfile* @devops-team
+/.github/workflows/ @devops-team
+
+# Monitoring and metrics
+/prometheus/ @monitoring-team
+/grafana/ @monitoring-team
+/src/core/metrics.py @monitoring-team
+
+# Documentation
+/docs/ @docs-team
+/*.md @docs-team
+/.github/ISSUE_TEMPLATE/ @docs-team
+
+# Configuration files
+/pyproject.toml @project-maintainer
+/setup.py @project-maintainer
+/setup.cfg @project-maintainer
+/requirements*.txt @project-maintainer
+
+# Security-sensitive files
+/src/core/config.py @security-team
+/.env.example @security-team
+/security/ @security-team
+
+# GitHub specific files
+/.github/ @project-maintainer
+/.github/workflows/ @devops-team @project-maintainer
+
+# Database
+/src/database/ @database-team
+/alembic/ @database-team
+
+# Type definitions
+/src/**/py.typed @type-team
+/**/*.pyi @type-team
+
+# Performance critical code
+/src/core/backpressure.py @performance-team
+/src/utils/performance.py @performance-team
+/src/core/caching.py @performance-team
+
+# Dependencies
+/requirements*.txt @security-team @project-maintainer
+/pyproject.toml @security-team @project-maintainer
+
+# CI/CD
+/.github/workflows/ @devops-team
+/.pre-commit-config.yaml @devops-team
+
+# Development tools
+/.vscode/ @dev-tools-team
+/.editorconfig @dev-tools-team
+/scripts/ @dev-tools-team
+
+# Multiple owners for critical files
+/src/main.py @project-maintainer @bot-core-team
+/src/bot/core/bot.py @project-maintainer @bot-core-team
+/src/core/config.py @project-maintainer @security-team
+
+# Specific file types
+*.py @python-team
+*.yml @devops-team
+*.json @devops-team
+*.md @docs-team
+
+# Prevent certain files from being modified without explicit approval
+/LICENSE @project-maintainer
+/SECURITY.md @security-team
+/CODE_OF_CONDUCT.md @project-maintainer

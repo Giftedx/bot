@@ -1,0 +1,287 @@
+name: Scaling Tests
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Weekly on Sunday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      test_type:
+        description: "Type of scaling test"
+        required: true
+        type: choice
+        options:
+          - all
+          - load
+          - stress
+          - spike
+          - endurance
+      duration:
+        description: "Test duration in minutes"
+        required: true
+        type: number
+        default: 30
+      load_factor:
+        description: "Load multiplication factor"
+        required: true
+        type: number
+        default: 2
+
+jobs:
+  prepare:
+    name: Prepare Test Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install locust k6 artillery
+
+  load:
+    name: Load Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'load' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run gradual load test
+        run: |
+          python scripts/scaling/gradual_load.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --factor ${{ github.event.inputs.load_factor || 2 }} \
+            --output gradual_results.json
+
+      - name: Monitor resources
+        run: |
+          python scripts/scaling/monitor_resources.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output resource_metrics.json
+
+      - name: Generate load report
+        run: |
+          {
+            echo "# Load Test Report"
+            echo "## Load Results"
+            cat gradual_results.json | jq -r '.results[] | "- " + .'
+            echo "## Resource Usage"
+            cat resource_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > load-report.md
+
+  stress:
+    name: Stress Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'stress' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run stress test
+        run: |
+          python scripts/scaling/stress_test.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --factor ${{ github.event.inputs.load_factor || 2 }} \
+            --output stress_results.json
+
+      - name: Monitor system limits
+        run: |
+          python scripts/scaling/monitor_limits.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output limit_metrics.json
+
+      - name: Generate stress report
+        run: |
+          {
+            echo "# Stress Test Report"
+            echo "## Stress Results"
+            cat stress_results.json | jq -r '.results[] | "- " + .'
+            echo "## System Limits"
+            cat limit_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > stress-report.md
+
+  spike:
+    name: Spike Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'spike' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run spike test
+        run: |
+          python scripts/scaling/spike_test.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --factor ${{ github.event.inputs.load_factor || 2 }} \
+            --output spike_results.json
+
+      - name: Monitor recovery
+        run: |
+          python scripts/scaling/monitor_recovery.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output recovery_metrics.json
+
+      - name: Generate spike report
+        run: |
+          {
+            echo "# Spike Test Report"
+            echo "## Spike Results"
+            cat spike_results.json | jq -r '.results[] | "- " + .'
+            echo "## Recovery Metrics"
+            cat recovery_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > spike-report.md
+
+  endurance:
+    name: Endurance Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'endurance' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run endurance test
+        run: |
+          python scripts/scaling/endurance_test.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --factor ${{ github.event.inputs.load_factor || 2 }} \
+            --output endurance_results.json
+
+      - name: Monitor stability
+        run: |
+          python scripts/scaling/monitor_stability.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output stability_metrics.json
+
+      - name: Generate endurance report
+        run: |
+          {
+            echo "# Endurance Test Report"
+            echo "## Endurance Results"
+            cat endurance_results.json | jq -r '.results[] | "- " + .'
+            echo "## Stability Metrics"
+            cat stability_metrics.json | jq -r '.metrics[] | "- " + .'
+          } > endurance-report.md
+
+  analyze:
+    name: Analyze Results
+    needs: [prepare, load, stress, spike, endurance]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze performance
+        run: |
+          python scripts/scaling/analyze_performance.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output performance_analysis.json
+
+      - name: Identify bottlenecks
+        run: |
+          python scripts/scaling/identify_bottlenecks.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output bottleneck_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Performance Analysis Report"
+            echo "## Performance Metrics"
+            cat performance_analysis.json | jq -r '.metrics[] | "- " + .'
+            echo "## Bottlenecks"
+            cat bottleneck_analysis.json | jq -r '.bottlenecks[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, load, stress, spike, endurance, analyze]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Scaling Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            echo "Duration: ${{ github.event.inputs.duration || 30 }} minutes"
+            echo "Load Factor: ${{ github.event.inputs.load_factor || 2 }}x"
+            
+            if [ -f "load-report.md" ]; then
+              echo "## Load Testing"
+              cat load-report.md
+            fi
+            
+            if [ -f "stress-report.md" ]; then
+              echo "## Stress Testing"
+              cat stress-report.md
+            fi
+            
+            if [ -f "spike-report.md" ]; then
+              echo "## Spike Testing"
+              cat spike-report.md
+            fi
+            
+            if [ -f "endurance-report.md" ]; then
+              echo "## Endurance Testing"
+              cat endurance-report.md
+            fi
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/scaling/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > scaling-report.md
+
+      - name: Create scaling issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('scaling-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📈 Scaling Test Issues',
+              body: report,
+              labels: ['scaling', 'performance']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "scaling_test_completion $(date +%s)"
+            echo "performance_score $(python scripts/scaling/calculate_score.py analysis-report.md)"
+          } > scaling_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/scaling_tests \
+            --data-binary "@scaling_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Scaling Tests Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Duration: ${{ github.event.inputs.duration || 30 }} minutes
+            Load Factor: ${{ github.event.inputs.load_factor || 2 }}x
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Issues Found' || '✅ Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Scaling Bot"

@@ -1,0 +1,256 @@
+name: Backup
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Daily at midnight
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      backup_type:
+        description: "Type of backup"
+        required: true
+        type: choice
+        options:
+          - all
+          - database
+          - files
+          - config
+      retention_days:
+        description: "Backup retention period (days)"
+        required: true
+        type: number
+        default: 30
+
+jobs:
+  prepare:
+    name: Prepare Backup Environment
+    runs-on: ubuntu-latest
+    outputs:
+      backup_id: ${{ steps.setup.outputs.backup_id }}
+
+    steps:
+      - name: Generate backup ID
+        id: setup
+        run: |
+          echo "backup_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install boto3 cryptography
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+  database:
+    name: Database Backup
+    needs: prepare
+    if: github.event.inputs.backup_type == 'database' || github.event.inputs.backup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Backup SQLite database
+        run: |
+          python scripts/backup/backup_sqlite.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output sqlite_backup.json
+
+      - name: Backup Redis data
+        run: |
+          python scripts/backup/backup_redis.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output redis_backup.json
+
+      - name: Upload database backups
+        run: |
+          aws s3 cp sqlite_backup.db.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/database/sqlite_${{ needs.prepare.outputs.backup_id }}.db.gz
+
+          aws s3 cp redis_backup.rdb.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/database/redis_${{ needs.prepare.outputs.backup_id }}.rdb.gz
+
+      - name: Generate database backup report
+        run: |
+          {
+            echo "# Database Backup Report"
+            echo "## SQLite Backup"
+            cat sqlite_backup.json | jq -r '.backup[] | "- " + .'
+            echo "## Redis Backup"
+            cat redis_backup.json | jq -r '.backup[] | "- " + .'
+          } > database-backup-report.md
+
+  files:
+    name: File Backup
+    needs: prepare
+    if: github.event.inputs.backup_type == 'files' || github.event.inputs.backup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Backup source code
+        run: |
+          python scripts/backup/backup_source.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output source_backup.json
+
+      - name: Backup assets
+        run: |
+          python scripts/backup/backup_assets.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output assets_backup.json
+
+      - name: Upload file backups
+        run: |
+          aws s3 cp source_backup.tar.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/files/source_${{ needs.prepare.outputs.backup_id }}.tar.gz
+
+          aws s3 cp assets_backup.tar.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/files/assets_${{ needs.prepare.outputs.backup_id }}.tar.gz
+
+      - name: Generate file backup report
+        run: |
+          {
+            echo "# File Backup Report"
+            echo "## Source Code Backup"
+            cat source_backup.json | jq -r '.backup[] | "- " + .'
+            echo "## Assets Backup"
+            cat assets_backup.json | jq -r '.backup[] | "- " + .'
+          } > file-backup-report.md
+
+  config:
+    name: Configuration Backup
+    needs: prepare
+    if: github.event.inputs.backup_type == 'config' || github.event.inputs.backup_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Backup environment variables
+        run: |
+          python scripts/backup/backup_env.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output env_backup.json
+
+      - name: Backup configuration files
+        run: |
+          python scripts/backup/backup_config.py \
+            --backup-id ${{ needs.prepare.outputs.backup_id }} \
+            --output config_backup.json
+
+      - name: Upload configuration backups
+        run: |
+          aws s3 cp env_backup.tar.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/config/env_${{ needs.prepare.outputs.backup_id }}.tar.gz
+
+          aws s3 cp config_backup.tar.gz \
+            s3://${{ secrets.BACKUP_BUCKET }}/config/config_${{ needs.prepare.outputs.backup_id }}.tar.gz
+
+      - name: Generate config backup report
+        run: |
+          {
+            echo "# Configuration Backup Report"
+            echo "## Environment Variables"
+            cat env_backup.json | jq -r '.backup[] | "- " + .'
+            echo "## Configuration Files"
+            cat config_backup.json | jq -r '.backup[] | "- " + .'
+          } > config-backup-report.md
+
+  cleanup:
+    name: Cleanup Old Backups
+    needs: [prepare, database, files, config]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Remove old backups
+        run: |
+          python scripts/backup/cleanup_backups.py \
+            --retention-days ${{ github.event.inputs.retention_days || 30 }} \
+            --output cleanup_results.json
+
+      - name: Generate cleanup report
+        run: |
+          {
+            echo "# Backup Cleanup Report"
+            echo "## Removed Backups"
+            cat cleanup_results.json | jq -r '.removed[] | "- " + .'
+          } > cleanup-report.md
+
+  report:
+    name: Generate Report
+    needs: [prepare, database, files, config, cleanup]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Backup Report"
+            echo "Backup ID: ${{ needs.prepare.outputs.backup_id }}"
+            
+            echo "## Database Backups"
+            cat database-backup-report.md
+            
+            echo "## File Backups"
+            cat file-backup-report.md
+            
+            echo "## Configuration Backups"
+            cat config-backup-report.md
+            
+            echo "## Cleanup"
+            cat cleanup-report.md
+            
+            echo "## Summary"
+            python scripts/backup/generate_summary.py \
+              --backup-id ${{ needs.prepare.outputs.backup_id }} \
+              --output summary.md
+            cat summary.md
+          } > backup-report.md
+
+      - name: Create backup issue
+        if: contains(needs.*.result, 'failure')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('backup-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '💾 Backup Issues Detected',
+              body: report,
+              labels: ['backup', 'needs-attention']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "backup_completion $(date +%s)"
+            echo "backup_success ${{ !contains(needs.*.result, 'failure') }}"
+            echo "backup_size $(python scripts/backup/calculate_size.py backup-report.md)"
+          } > backup_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/backup \
+            --data-binary "@backup_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Backup Complete"
+          description: |
+            Backup ID: ${{ needs.prepare.outputs.backup_id }}
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Backup Failed' || '✅ Backup Successful' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Backup Bot"

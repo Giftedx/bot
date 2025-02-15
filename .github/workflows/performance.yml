@@ -1,0 +1,286 @@
+name: Performance Testing
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/performance/**"
+      - ".github/workflows/performance.yml"
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 5" # Weekly on Friday
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      test_type:
+        description: "Type of performance test"
+        required: true
+        type: choice
+        options:
+          - all
+          - latency
+          - throughput
+          - resource
+          - baseline
+      duration:
+        description: "Test duration in minutes"
+        required: true
+        type: number
+        default: 30
+
+jobs:
+  prepare:
+    name: Prepare Performance Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_id: ${{ steps.setup.outputs.test_id }}
+
+    steps:
+      - name: Generate test ID
+        id: setup
+        run: |
+          echo "test_id=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install locust pytest-benchmark memory-profiler psutil
+
+  latency-test:
+    name: Latency Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'latency' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test response times
+        run: |
+          python scripts/performance/test_response_times.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output response_times.json
+
+      - name: Test command latency
+        run: |
+          python scripts/performance/test_command_latency.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output command_latency.json
+
+      - name: Generate latency report
+        run: |
+          {
+            echo "# Latency Test Report"
+            echo "## Response Times"
+            cat response_times.json | jq -r '.results[] | "- " + .'
+            echo "## Command Latency"
+            cat command_latency.json | jq -r '.results[] | "- " + .'
+          } > latency-report.md
+
+  throughput-test:
+    name: Throughput Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'throughput' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test request throughput
+        run: |
+          python scripts/performance/test_request_throughput.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output request_throughput.json
+
+      - name: Test concurrent users
+        run: |
+          python scripts/performance/test_concurrent_users.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output concurrent_users.json
+
+      - name: Generate throughput report
+        run: |
+          {
+            echo "# Throughput Test Report"
+            echo "## Request Throughput"
+            cat request_throughput.json | jq -r '.results[] | "- " + .'
+            echo "## Concurrent Users"
+            cat concurrent_users.json | jq -r '.results[] | "- " + .'
+          } > throughput-report.md
+
+  resource-test:
+    name: Resource Usage Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'resource' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test CPU usage
+        run: |
+          python scripts/performance/test_cpu_usage.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output cpu_usage.json
+
+      - name: Test memory usage
+        run: |
+          python scripts/performance/test_memory_usage.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output memory_usage.json
+
+      - name: Generate resource report
+        run: |
+          {
+            echo "# Resource Usage Report"
+            echo "## CPU Usage"
+            cat cpu_usage.json | jq -r '.results[] | "- " + .'
+            echo "## Memory Usage"
+            cat memory_usage.json | jq -r '.results[] | "- " + .'
+          } > resource-report.md
+
+  baseline-test:
+    name: Baseline Testing
+    needs: prepare
+    if: github.event.inputs.test_type == 'baseline' || github.event.inputs.test_type == 'all'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run baseline tests
+        run: |
+          python scripts/performance/run_baseline_tests.py \
+            --duration ${{ github.event.inputs.duration || 30 }} \
+            --output baseline_results.json
+
+      - name: Compare with previous
+        run: |
+          python scripts/performance/compare_baseline.py \
+            --current baseline_results.json \
+            --previous baseline_history.json \
+            --output baseline_comparison.json
+
+      - name: Generate baseline report
+        run: |
+          {
+            echo "# Baseline Test Report"
+            echo "## Current Results"
+            cat baseline_results.json | jq -r '.results[] | "- " + .'
+            echo "## Historical Comparison"
+            cat baseline_comparison.json | jq -r '.comparison[] | "- " + .'
+          } > baseline-report.md
+
+  analyze:
+    name: Analyze Results
+    needs:
+      [prepare, latency-test, throughput-test, resource-test, baseline-test]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Analyze performance trends
+        run: |
+          python scripts/performance/analyze_trends.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output trend_analysis.json
+
+      - name: Identify bottlenecks
+        run: |
+          python scripts/performance/identify_bottlenecks.py \
+            --test-id ${{ needs.prepare.outputs.test_id }} \
+            --output bottleneck_analysis.json
+
+      - name: Generate analysis report
+        run: |
+          {
+            echo "# Performance Analysis Report"
+            echo "## Performance Trends"
+            cat trend_analysis.json | jq -r '.trends[] | "- " + .'
+            echo "## Bottlenecks"
+            cat bottleneck_analysis.json | jq -r '.bottlenecks[] | "- " + .'
+          } > analysis-report.md
+
+  report:
+    name: Generate Report
+    needs:
+      [
+        prepare,
+        latency-test,
+        throughput-test,
+        resource-test,
+        baseline-test,
+        analyze,
+      ]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Combine reports
+        run: |
+          {
+            echo "# Performance Test Report"
+            echo "Test ID: ${{ needs.prepare.outputs.test_id }}"
+            echo "Duration: ${{ github.event.inputs.duration || 30 }} minutes"
+            
+            echo "## Latency Tests"
+            cat latency-report.md
+            
+            echo "## Throughput Tests"
+            cat throughput-report.md
+            
+            echo "## Resource Usage"
+            cat resource-report.md
+            
+            echo "## Baseline Tests"
+            cat baseline-report.md
+            
+            echo "## Analysis"
+            cat analysis-report.md
+            
+            echo "## Recommendations"
+            python scripts/performance/generate_recommendations.py \
+              --analysis analysis-report.md \
+              --output recommendations.md
+            cat recommendations.md
+          } > performance-report.md
+
+      - name: Create performance issue
+        if: contains(needs.*.result, 'failure') || contains(steps.*.outputs.performance_degraded, 'true')
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('performance-report.md', 'utf8');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚡ Performance Issues Detected',
+              body: report,
+              labels: ['performance', 'needs-review']
+            });
+
+      - name: Update metrics
+        run: |
+          {
+            echo "performance_test_completion $(date +%s)"
+            echo "performance_score $(python scripts/performance/calculate_score.py analysis-report.md)"
+          } > performance_metrics.txt
+
+          curl -X POST ${{ secrets.PROMETHEUS_PUSHGATEWAY }}/metrics/job/performance_testing \
+            --data-binary "@performance_metrics.txt"
+
+      - name: Notify team
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "Performance Tests Complete"
+          description: |
+            Test ID: ${{ needs.prepare.outputs.test_id }}
+            Duration: ${{ github.event.inputs.duration || 30 }} minutes
+            Status: ${{ contains(needs.*.result, 'failure') && '❌ Issues Found' || '✅ All Tests Passed' }}
+
+            Check the workflow run for detailed results.
+          color: ${{ contains(needs.*.result, 'failure') && '0xff0000' || '0x00ff00' }}
+          username: "Performance Bot"
