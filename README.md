@@ -1,129 +1,135 @@
-# Media Server Bot with OSRS Integration
+# Discord Bot with OSRS, Pokemon, and Plex Integration
 
-A multi-functional Discord bot that combines Old School RuneScape gameplay simulation, media server capabilities, and a virtual pet system.
-
-## Core Features
+A feature-rich Discord bot that combines OSRS gameplay, Pokemon mechanics, and Plex media streaming capabilities.
 
 - **Discord Bot Integration**
   - Command system with multiple functionality groups
   - Voice channel support
   - User management and permissions
 
-- **OSRS Gameplay Simulation**
-  - Character creation and management
-  - Combat system
-  - Skill progression
-  - World management
-  - Item system
+### Core Features
+- Modular command system
+- Custom command creation
+- Permission management
+- Database integration
+- Error handling and logging
 
-- **Media Server Features**
-  - Plex media integration
-  - Music playback and queue management
-  - Volume control
-  - Media browsing capabilities
+### Game Systems
+- OSRS Simulation
+  - Character creation
+  - Skill training
+  - World system
+  - Basic economy
+- Pokemon Features
+  - Pokemon catching
+  - Battle system
+  - Training and evolution
+  - Trading system
 
-- **Virtual Pet System**
-  - Pet management
-  - Task/reward system integration
-  - Pet interaction features
+### Media Integration
+- Plex Integration
+  - Media browsing and search
+  - Playback controls
+  - Multi-platform support
+  - Voice channel streaming
+- Additional Media
+  - YouTube playback
+  - Spotify integration
+  - GIPHY support
+  - Sound effects
 
-## Technical Stack
+### Fun Commands
+- Social interactions
+- Mini-games
+- Profile customization
+- Pet system
+- Marriage system
 
-- Python 3.8+
-- Discord.py 2.3.2+
-- Redis (caching & rate limiting)
-- SQLite (persistent storage)
-- Docker support for containerized deployment
-- Prometheus & Grafana for monitoring
+## Setup
 
-## Project Structure
+### Prerequisites
+- Python 3.9 or higher
+- PostgreSQL database
+- Plex Media Server
+- Discord Bot Token
+- Plex Token
 
-```
-src/
-├── api/          # REST API endpoints
-├── application.py# Main application entry
-├── bot/          # Discord bot core
-├── config/       # Configuration management
-├── core/         # Core utilities
-├── pets/         # Pet system
-├── services/     # External integrations
-└── utils/        # Utility functions
-
-deploy/           # Deployment configurations
-├── docker-compose.yaml
-├── kubernetes/
-└── monitoring/
-
-tests/            # Comprehensive test suite
-├── integration/
-├── unit/
-└── playwright/   # UI tests
-```
-
-## Installation
-
+### Installation
 1. Clone the repository
-2. Set up virtual environment:
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# or
-venv\Scripts\activate     # Windows
+git clone <repository-url>
+cd discord-bot
 ```
 
-3. Install dependencies:
+2. Install dependencies
 ```bash
-pip install -e ".[dev]"
+pip install -r requirements.txt
 ```
 
-4. Configure environment variables (see notes/environment_variables.md for full list):
-```env
-DISCORD_TOKEN=your_token
-REDIS_URL=redis://localhost:6379/0
-PLEX_SERVER_URL=your_plex_url
+3. Set up configuration
+Create a `config.yaml` file with the following structure:
+```yaml
+discord:
+  token: your_discord_token
+  prefix: "!"
+
+database:
+  url: your_database_url
+  pool_size: 20
+
+plex:
+  url: your_plex_url
+  token: your_plex_token
 ```
 
-## Development
-
-### Running Tests
+4. Initialize database
 ```bash
-pytest                    # All tests
-pytest tests/unit         # Unit tests
-pytest tests/integration  # Integration tests
-pytest --cov=src         # Coverage report
+psql -U your_user -d your_database -f schema.sql
 ```
 
-### Code Quality
+5. Run the bot
 ```bash
-black src tests          # Formatting
-isort src tests         # Import sorting
-mypy src tests          # Type checking
-flake8 src tests        # Linting
+python bot.py
 ```
 
-### Monitoring
+## Commands
 
-The project includes Prometheus and Grafana dashboards for monitoring:
-- Application metrics
-- Discord bot performance
-- Media server statistics
-- System resources
+### OSRS Commands
+- `!create <name>` - Create a new OSRS character
+- `!world` - Show your current world
+- `!worlds [type]` - List available game worlds
+- `!join <world_id>` - Join a different game world
+- `!stats` - Show character stats
 
-## Docker Deployment
+### Pokemon Commands
+- `!pokemon catch <name>` - Attempt to catch a Pokemon
+- `!pokemon battle @user` - Challenge another trainer
+- `!pokemon list` - View your Pokemon
+- `!pokemon train <pokemon> <minutes>` - Train your Pokemon
 
-```bash
-docker-compose up -d           # Development
-docker-compose -f docker-compose.prod.yaml up -d  # Production
-```
+### Plex Commands
+- `!plex search <query>` - Search for media
+- `!plex play <query>` - Play media in voice channel
+- `!plex stop` - Stop playback
+- `!plex pause` - Pause playback
+- `!plex resume` - Resume playback
+- `!plex nowplaying` - Show current media info
+
+### Fun Commands
+- Various social interaction commands
+- Mini-games and activities
+- Profile customization
+- Pet system commands
+- Marriage system commands
 
 ## Contributing
-
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and the development process.
-
-## Security
-
-For security concerns and vulnerability reporting, please refer to [SECURITY.md](SECURITY.md).
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Acknowledgments
+- discord.py - Discord API wrapper
+- plexapi - Plex Media Server API
+- asyncpg - PostgreSQL database driver
+- Various open-source projects for inspiration and code patterns

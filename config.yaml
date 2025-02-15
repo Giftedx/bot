@@ -1,0 +1,11 @@
+discord:
+  token: ${DISCORD_TOKEN}
+  prefix: "!"
+
+database:
+  url: ${DATABASE_URL}
+  pool_size: 20
+
+plex:
+  url: ${PLEX_URL}
+  token: ${PLEX_TOKEN} 
