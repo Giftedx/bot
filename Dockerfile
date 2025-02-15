@@ -1,5 +1,5 @@
 # Use multi-stage build for smaller final image
-FROM python:3.8-slim as builder
+FROM python:3.13-slim as builder
 
 # Set working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
 # Final stage
-FROM python:3.8-slim
+FROM python:3.13-slim
 
 # Create non-root user
 RUN useradd -m -u 1000 botuser
