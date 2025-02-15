@@ -1,6 +1,33 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.0"]
+requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "osrs-discord-bot"
+version = "1.0.0"
+description = "Discord bot with OSRS integration, Plex streaming, and game features"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Project Contributors"}
+]
+
+dependencies = [
+    "discord.py>=2.0.0",
+    "plexapi>=4.0.0",
+    "prometheus-client>=0.9.0",
+    "redis>=4.0.0",
+    "SQLAlchemy>=1.4.0",
+    "aiohttp>=3.8.0",
+    "pytest>=7.0.0",
+    "mypy>=1.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0"
+]
+
+[tool.setuptools]
+packages = ["src"]
 
 [tool.setuptools_scm]
 write_to = "src/_version.py"

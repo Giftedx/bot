@@ -1,0 +1,32 @@
+# Testing dependencies
+pytest>=7.4.2
+pytest-asyncio>=0.21.1
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-timeout>=2.1.0
+pytest-xdist>=3.3.1
+pytest-env>=1.0.1
+
+# Type checking
+mypy>=1.5.1
+types-pytest>=7.4.3
+types-pytest-asyncio>=0.21.1
+
+# Mocking
+asynctest>=0.13.0
+aioresponses>=0.7.4
+
+# Coverage
+coverage>=7.3.1
+coverage-badge>=1.1.0
+
+# Linting
+pylint>=2.17.5
+flake8>=6.1.0
+black>=23.7.0
+
+# Install project dependencies in editable mode
+-e .
+
+# Install Plex-specific requirements
+-r requirements-plex.txt

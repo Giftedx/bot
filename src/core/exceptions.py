@@ -1,46 +1,79 @@
-"""Core exceptions for the application."""
+"""Custom exceptions for battle system."""
 
 
-class ApplicationError(Exception):
-    """Base class for all application exceptions."""
+class BattleSystemError(Exception):
+    """Base exception for battle system errors."""
+
     pass
 
 
-class ConfigurationError(ApplicationError):
-    """Raised when there is a configuration error."""
+class InvalidMoveError(BattleSystemError):
+    """Raised when an invalid move is attempted."""
+
     pass
 
 
-class PlexError(ApplicationError):
-    """Base class for Plex-related exceptions."""
+class InvalidBattleStateError(BattleSystemError):
+    """Raised when battle state is invalid."""
+
     pass
 
 
-class PlexConnectionError(PlexError):
-    """Raised when connection to Plex server fails."""
+class PlayerNotInBattleError(BattleSystemError):
+    """Raised when player is not in an active battle."""
+
     pass
 
 
-class PlexAuthError(PlexError):
-    """Raised when Plex authentication fails."""
+class BattleAlreadyInProgressError(BattleSystemError):
+    """Raised when player is already in a battle."""
+
     pass
 
 
-class MediaNotFoundError(PlexError):
-    """Raised when requested media is not found."""
+class ResourceError(BattleSystemError):
+    """Raised when insufficient resources for move."""
+
     pass
 
 
-class StreamingError(PlexError):
-    """Raised when streaming operations fail."""
+class StatusEffectError(BattleSystemError):
+    """Raised when status effect prevents action."""
+
     pass
 
 
-class ClientNotFoundError(PlexError):
-    """Raised when specified Plex client is not found."""
+class DatabaseError(BattleSystemError):
+    """Raised when database operation fails."""
+
     pass
 
 
-class PlaybackError(PlexError):
-    """Raised when media playback fails."""
+class ValidationError(BattleSystemError):
+    """Raised when input validation fails."""
+
+    pass
+
+
+class RateLimitError(BattleSystemError):
+    """Raised when action rate limit is exceeded."""
+
+    pass
+
+
+class BackpressureError(BattleSystemError):
+    """Raised when system is under too much load."""
+
+    pass
+
+
+class ConfigurationError(BattleSystemError):
+    """Raised when configuration is invalid."""
+
+    pass
+
+
+class LoggingError(BattleSystemError):
+    """Raised when logging operation fails."""
+
     pass

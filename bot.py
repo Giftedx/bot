@@ -1,41 +1,55 @@
-import discord
-from discord.ext import commands
 import asyncio
-import asyncpg
-import yaml
 import logging
+import os
 import platform
 from typing import Dict, List, Optional
+
+import asyncpg
+import discord
+import yaml
+from discord.ext import commands
+from dotenv import load_dotenv
+
+from cogs.database import osrs_db
 
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(), logging.FileHandler("discord.log")],
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("DiscordBot")
+
+# Load environment variables
+load_dotenv()
+
 
 class CustomBot(commands.Bot):
     def __init__(self):
         # Load config
-        with open('config.yaml', 'r') as f:
+        with open("config.yaml", "r") as f:
             self.config = yaml.safe_load(f)
 
         # Set up intents
         intents = discord.Intents.all()
         super().__init__(
-            command_prefix=self.config['discord']['prefix'],
+            command_prefix=self.config["discord"]["prefix"],
             intents=intents,
-            case_insensitive=True
+            case_insensitive=True,
         )
 
         # Initialize attributes
-        self.db = None
+        self.db = osrs_db
         self.initial_extensions = [
-            'cogs.admin',
-            'cogs.games',
-            'cogs.media',
-            'cogs.plex',
-            'cogs.fun'
+            "cogs.admin",
+            "cogs.games",
+            "cogs.media",
+            "cogs.plex",
+            "cogs.fun",
+            "cogs.osrs_commands",
+            "cogs.battle_system",
+            "cogs.game_commands",
+            "cogs.fun_commands",
         ]
 
     async def setup_hook(self):
@@ -43,9 +57,9 @@ class CustomBot(commands.Bot):
         # Connect to database
         try:
             self.db = await asyncpg.create_pool(
-                self.config['database']['url'],
+                self.config["database"]["url"],
                 min_size=5,
-                max_size=self.config['database'].get('pool_size', 20)
+                max_size=self.config["database"].get("pool_size", 20),
             )
             logger.info("Connected to database successfully")
         except Exception as e:
@@ -65,7 +79,7 @@ class CustomBot(commands.Bot):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
         logger.info(f"Discord.py version: {discord.__version__}")
         logger.info(f"Python version: {platform.python_version()}")
-        
+
         # Set activity
         activity = discord.Game(name=f"{self.config['discord']['prefix']}help")
         await self.change_presence(activity=activity)
@@ -74,14 +88,14 @@ class CustomBot(commands.Bot):
         """Global error handler"""
         if isinstance(error, commands.CommandNotFound):
             # Check for custom command
-            command_name = ctx.message.content[len(self.command_prefix):].split()[0]
+            command_name = ctx.message.content[len(self.command_prefix) :].split()[0]
             try:
                 custom_command = await self.db.fetchrow(
-                    'SELECT response FROM custom_commands WHERE name = $1',
-                    command_name.lower()
+                    "SELECT response FROM custom_commands WHERE name = $1",
+                    command_name.lower(),
                 )
                 if custom_command:
-                    return await ctx.send(custom_command['response'])
+                    return await ctx.send(custom_command["response"])
             except Exception as e:
                 logger.error(f"Error checking custom command: {e}")
 
@@ -99,9 +113,7 @@ class CustomBot(commands.Bot):
         else:
             # Log unexpected errors
             logger.error(f"Unexpected error in command {ctx.command}: {error}")
-            await ctx.send(
-                "An unexpected error occurred! The error has been logged."
-            )
+            await ctx.send("An unexpected error occurred! The error has been logged.")
 
     async def on_message(self, message):
         """Event that fires when a message is received"""
@@ -128,6 +140,7 @@ class CustomBot(commands.Bot):
 
         await super().close()
 
+
 async def main():
     """Main entry point for the bot"""
     # Create bot instance
@@ -135,12 +148,17 @@ async def main():
 
     # Start the bot
     try:
-        await bot.start(bot.config['discord']['token'])
+        token = os.getenv("DISCORD_TOKEN")
+        if not token:
+            raise ValueError("DISCORD_TOKEN not found in environment")
+
+        await bot.start(token)
     except Exception as e:
         logger.error(f"Error starting bot: {e}")
     finally:
         await bot.close()
 
+
 if __name__ == "__main__":
     # Run the bot
-    asyncio.run(main()) 
+    asyncio.run(main())
