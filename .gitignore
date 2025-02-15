@@ -21,13 +21,6 @@ wheels/
 *.egg
 MANIFEST
 
-# Coverage
-.coverage
-coverage.xml
-coverage.json
-coverage_html/
-htmlcov/
-
 # Virtual Environment
 venv/
 env/
@@ -46,21 +39,47 @@ ENV/
 
 # Logs
 *.log
+logs/
 
-# Testing
+# Environment variables
+.env
+
+# Cache
+.cache/
 .pytest_cache/
-.mypy_cache/
-.tox/
+
+# Coverage
+htmlcov/
+.coverage
 .coverage.*
-nosetests.xml
 coverage.xml
 *.cover
-.hypothesis/
 
-# Discord Bot
-osrs_bot.db
+# Discord bot specific
+config.yaml
+discord.log
+
+# Database
 *.db
-*.db-journal
+*.sqlite3
+
+# Misc
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.temp
+
+# Media files
+sounds/*.mp3
+sounds/*.wav
+
+# Additional entries
+# MyPy
+.mypy_cache/
+
+# Tox
+.tox/
 
 # Redis
 dump.rdb
@@ -70,24 +89,32 @@ dump.rdb
 docs/_build/
 docs/api/
 
-# Analysis and Sensitive Data
-bot_analysis.json
-bot_analysis.md
+# Node (in case of web components)
+node_modules/
+package-lock.json
 
-# Misc
-.DS_Store
-Thumbs.db
+# Local development
+*.local
+local_settings.py
+
+# Backup files
+*~
+*.swp
+*.swo
+*.swn
 *.bak
-*.tmp
-*.temp
 
-# Database
-*.db
-*.sqlite3
+# System Files
+.directory
+desktop.ini
 
-# Media files
-sounds/*.mp3
-sounds/*.wav
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Configuration
-config.yaml
+# Poetry
+poetry.lock
+
+# Environment directories
+.python-version
+.env.local
+.env.*.local

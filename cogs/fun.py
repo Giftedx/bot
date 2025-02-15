@@ -3,12 +3,22 @@ import discord
 import random
 import asyncio
 from typing import Dict, List, Optional
+import aiohttp
 
 class FunCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.marriages = {}
         self.pet_cooldowns = {}
+        self.eight_ball_responses = [
+            "It is certain.", "It is decidedly so.", "Without a doubt.",
+            "Yes - definitely.", "You may rely on it.", "As I see it, yes.",
+            "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.",
+            "Reply hazy, try again.", "Ask again later.", "Better not tell you now.",
+            "Cannot predict now.", "Concentrate and ask again.",
+            "Don't count on it.", "My reply is no.", "My sources say no.",
+            "Outlook not so good.", "Very doubtful."
+        ]
 
     @commands.command()
     async def hug(self, ctx, member: discord.Member):
@@ -212,6 +222,130 @@ class FunCommands(commands.Cog):
                 await ctx.send(f"Wrong! The answer was {question['answer']}.")
         except asyncio.TimeoutError:
             await ctx.send(f"Time's up! The answer was {question['answer']}.")
+
+    @commands.command(name='8ball')
+    async def eight_ball(self, ctx, *, question: str):
+        """Ask the magic 8-ball a question"""
+        response = random.choice(self.eight_ball_responses)
+        embed = discord.Embed(
+            title="🎱 Magic 8-Ball",
+            description=f"**Q:** {question}\n**A:** {response}",
+            color=discord.Color.blue()
+        )
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def roll(self, ctx, dice: str = "1d6"):
+        """Roll dice in NdN format"""
+        try:
+            rolls, limit = map(int, dice.split('d'))
+        except Exception:
+            return await ctx.send("Format has to be in NdN!")
+        
+        if rolls > 25:
+            return await ctx.send("Too many dice! Maximum is 25")
+        if limit > 100:
+            return await ctx.send("Too many sides! Maximum is 100")
+
+        results = [random.randint(1, limit) for r in range(rolls)]
+        total = sum(results)
+        
+        embed = discord.Embed(
+            title="🎲 Dice Roll",
+            description=f"Rolling {dice}...\n"
+                      f"Results: {', '.join(map(str, results))}\n"
+                      f"Total: {total}",
+            color=discord.Color.green()
+        )
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def choose(self, ctx, *choices: str):
+        """Choose between multiple options"""
+        if len(choices) < 2:
+            return await ctx.send("Please provide at least 2 choices!")
+        
+        embed = discord.Embed(
+            title="🤔 Choice Maker",
+            description=f"Options: {', '.join(choices)}\n"
+                      f"I choose: **{random.choice(choices)}**",
+            color=discord.Color.gold()
+        )
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def poll(self, ctx, question: str, *options: str):
+        """Create a poll"""
+        if len(options) > 10:
+            return await ctx.send("Maximum 10 options allowed!")
+        if len(options) < 2:
+            return await ctx.send("Please provide at least 2 options!")
+
+        # Number emojis for reactions
+        number_emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+
+        # Create the poll message
+        description = [f"{number_emojis[idx]} {option}" for idx, option in enumerate(options)]
+        embed = discord.Embed(
+            title=f"📊 {question}",
+            description="\n".join(description),
+            color=discord.Color.blue()
+        )
+        embed.set_footer(text=f"Poll by {ctx.author.display_name}")
+        
+        poll_msg = await ctx.send(embed=embed)
+
+        # Add reactions
+        for idx in range(len(options)):
+            await poll_msg.add_reaction(number_emojis[idx])
+
+    @commands.command()
+    async def joke(self, ctx):
+        """Tell a random joke"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get('https://official-joke-api.appspot.com/random_joke') as response:
+                if response.status == 200:
+                    joke = await response.json()
+                    embed = discord.Embed(
+                        title="😄 Random Joke",
+                        description=f"{joke['setup']}\n\n||{joke['punchline']}||",
+                        color=discord.Color.orange()
+                    )
+                    await ctx.send(embed=embed)
+                else:
+                    await ctx.send("Couldn't fetch a joke right now!")
+
+    @commands.command()
+    async def countdown(self, ctx, seconds: int):
+        """Start a countdown timer"""
+        if not 0 < seconds <= 300:
+            return await ctx.send("Please specify a time between 1 and 300 seconds!")
+
+        message = await ctx.send(f"⏰ Countdown: {seconds}")
+        
+        while seconds > 0:
+            await asyncio.sleep(1)
+            seconds -= 1
+            if seconds % 5 == 0 or seconds <= 5:  # Update every 5 seconds and last 5 seconds
+                await message.edit(content=f"⏰ Countdown: {seconds}")
+        
+        await message.edit(content="🔔 Time's up!")
+
+    @commands.command()
+    async def emojify(self, ctx, *, text: str):
+        """Convert text to emoji letters"""
+        # Map for letter to emoji conversion
+        emoji_map = {
+            'a': '🇦', 'b': '🇧', 'c': '🇨', 'd': '🇩', 'e': '🇪',
+            'f': '🇫', 'g': '🇬', 'h': '🇭', 'i': '🇮', 'j': '🇯',
+            'k': '🇰', 'l': '🇱', 'm': '🇲', 'n': '🇳', 'o': '🇴',
+            'p': '🇵', 'q': '🇶', 'r': '🇷', 's': '🇸', 't': '🇹',
+            'u': '🇺', 'v': '🇻', 'w': '🇼', 'x': '🇽', 'y': '🇾',
+            'z': '🇿', ' ': '  '
+        }
+        
+        emojified = ' '.join(emoji_map.get(c.lower(), c) for c in text)
+        await ctx.send(emojified)
 
 async def setup(bot):
     await bot.add_cog(FunCommands(bot)) 

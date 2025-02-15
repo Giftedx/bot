@@ -1,28 +1,54 @@
-# Plex Discord Selfbot
+# Discord Bot Multi-Tool
 
-A Discord selfbot that allows you to stream Plex media in voice channels and watch together with friends.
+A comprehensive Discord bot project that combines repository analysis capabilities with Plex media integration.
 
-## Features
+## Core Features
 
+### Repository Analysis
+- Repository categorization and analysis
+- Data parsing and organization
+- Search and filter capabilities
+- Repository analysis tools
+
+### Plex Integration
 - Stream movies and TV shows from your Plex server in Discord voice channels
 - Search your Plex library directly from Discord
 - Basic playback controls (pause/resume, stop)
 - Watch together with friends in voice channels
 
+## Project Structure
+- `src/` - Source code directory
+  - `bot/` - Core bot functionality
+  - `core/` - Core utilities and systems
+  - `data/` - Repository data and categories
+  - `utils/` - Utility functions and helpers
+  - `plex/` - Plex integration components
+
+## Categories
+- Core Discord Libraries
+- AI Integration Bots
+- Multi-Purpose Bots
+- Study Tools
+- Media & Voice
+- Game Integration
+- Image & Media Processing
+- Utility Tools
+- Plex Integration
+
 ## Requirements
 
 - Python 3.8 or higher
-- VLC Media Player installed
-- A Plex Media Server
+- VLC Media Player (for Plex streaming)
+- A Plex Media Server (for Plex features)
 - Discord account token
-- Plex server URL and token
+- Plex server URL and token (for Plex features)
 
 ## Installation
 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd plex-discord-selfbot
+cd discord-bot-multitool
 ```
 
 2. Create a virtual environment and activate it:
@@ -38,10 +64,34 @@ pip install -r requirements.txt
 
 4. Create a `.env` file with your configuration:
 ```env
+# Required for all features
 DISCORD_TOKEN=your_discord_token
+
+# Required for Plex integration
 PLEX_URL=your_plex_server_url
 PLEX_TOKEN=your_plex_token
 ```
+
+## Usage
+
+### Repository Analysis
+```bash
+python src/main.py
+```
+
+### Plex Integration
+1. Start the Plex integration:
+```bash
+python src/run_selfbot.py
+```
+
+2. Join a voice channel in Discord
+
+3. Available Plex commands:
+- `!search <query>` - Search for media on your Plex server
+- `!stream <query>` - Start streaming media in the voice channel
+- `!pause` - Pause/Resume the current stream
+- `!stop` - Stop the current stream
 
 ## Getting Your Tokens
 
@@ -58,37 +108,22 @@ PLEX_TOKEN=your_plex_token
 2. Visit https://plex.tv/claim
 3. Copy your token
 
-## Usage
-
-1. Start the bot:
-```bash
-python src/run_selfbot.py
-```
-
-2. Join a voice channel in Discord
-
-3. Available commands:
-- `!search <query>` - Search for media on your Plex server
-- `!stream <query>` - Start streaming media in the voice channel
-- `!pause` - Pause/Resume the current stream
-- `!stop` - Stop the current stream
-
-4. When streaming:
-   - Start the stream with `!stream <movie name>`
-   - Once VLC opens, start screensharing in Discord
-   - Select the VLC window in your screenshare
-   - Everyone in the voice channel can now watch together!
-
 ## Important Notes
 
-- This is a selfbot, which means it runs on your personal Discord account
+- The Plex integration uses a selfbot, which runs on your personal Discord account
 - Be aware that selfbots are against Discord's Terms of Service
 - Use responsibly and at your own risk
 - Make sure your Plex server has enough bandwidth for streaming
-- VLC must be installed on your system
+- VLC must be installed on your system for Plex streaming
 
 ## Troubleshooting
 
+### Repository Analysis Issues
+- Verify your internet connection
+- Check if the repositories are accessible
+- Ensure you have the required permissions
+
+### Plex Integration Issues
 1. If VLC doesn't start:
    - Make sure VLC is installed and in your system PATH
    - Try reinstalling VLC

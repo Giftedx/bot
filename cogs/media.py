@@ -8,12 +8,22 @@ import giphy_client
 from giphy_client.rest import ApiException
 import random
 from typing import Optional, Dict, List
+from plexapi.server import PlexServer
+from plexapi.myplex import MyPlexAccount
+import asyncio
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class MediaCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.queues: Dict[int, List[wavelink.Track]] = {}
         self.now_playing: Dict[int, wavelink.Track] = {}
+        self.current_track = None
+        self.queue = []
+        self.setup_plex()
         
     async def cog_load(self):
         """Initialize wavelink nodes when cog loads"""
@@ -22,6 +32,21 @@ class MediaCommands(commands.Cog):
             password='youshallnotpass'
         )
         await wavelink.NodePool.connect(client=self.bot, nodes=[node])
+
+    def setup_plex(self):
+        """Initialize Plex connection"""
+        try:
+            account = MyPlexAccount(
+                os.getenv('PLEX_USERNAME'),
+                os.getenv('PLEX_PASSWORD')
+            )
+            self.plex = account.resource(
+                os.getenv('PLEX_SERVER_NAME', 'PlexServer')
+            ).connect()
+            print("Connected to Plex successfully!")
+        except Exception as e:
+            print(f"Failed to connect to Plex: {e}")
+            self.plex = None
 
     @commands.group(invoke_without_command=True)
     async def music(self, ctx):
@@ -147,6 +172,93 @@ class MediaCommands(commands.Cog):
             await ctx.message.add_reaction('🔊')
         except Exception as e:
             await ctx.send(f"Error playing sound effect: {e}")
+
+    @commands.command(name='search')
+    async def search_media(self, ctx, *, query: str):
+        """Search for media on Plex"""
+        if not self.plex:
+            return await ctx.send("Plex connection not available!")
+        
+        results = self.plex.library.search(query, limit=5)
+        if not results:
+            return await ctx.send("No results found!")
+        
+        embed = discord.Embed(title="Search Results", color=discord.Color.blue())
+        for i, item in enumerate(results, 1):
+            embed.add_field(
+                name=f"{i}. {item.title}",
+                value=f"Type: {item.type}\nYear: {getattr(item, 'year', 'N/A')}",
+                inline=False
+            )
+        await ctx.send(embed=embed)
+
+    @commands.command(name='play')
+    async def play_media(self, ctx, *, query: str):
+        """Play media from Plex in voice channel"""
+        if not ctx.author.voice:
+            return await ctx.send("You need to be in a voice channel!")
+        
+        if not self.plex:
+            return await ctx.send("Plex connection not available!")
+
+        # Connect to voice channel if not already connected
+        if not ctx.voice_client:
+            await ctx.author.voice.channel.connect()
+        
+        # Search for the media
+        results = self.plex.library.search(query, limit=1)
+        if not results:
+            return await ctx.send("No results found!")
+        
+        media = results[0]
+        
+        # Get the media URL
+        try:
+            part = media.media[0].parts[0]
+            url = self.plex.url(part.key, includeToken=True)
+            
+            # Play the media
+            ctx.voice_client.stop()
+            
+            FFMPEG_OPTIONS = {
+                'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+                'options': '-vn'
+            }
+            
+            audio_source = discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS)
+            ctx.voice_client.play(audio_source)
+            
+            await ctx.send(f"Now playing: {media.title}")
+            
+        except Exception as e:
+            await ctx.send(f"Error playing media: {str(e)}")
+
+    @commands.command(name='pause')
+    async def pause(self, ctx):
+        """Pause the current playback"""
+        if ctx.voice_client and ctx.voice_client.is_playing():
+            ctx.voice_client.pause()
+            await ctx.send("Playback paused.")
+        else:
+            await ctx.send("Nothing is playing!")
+
+    @commands.command(name='resume')
+    async def resume(self, ctx):
+        """Resume the current playback"""
+        if ctx.voice_client and ctx.voice_client.is_paused():
+            ctx.voice_client.resume()
+            await ctx.send("Playback resumed.")
+        else:
+            await ctx.send("Nothing is paused!")
+
+    @commands.command(name='stop')
+    async def stop_media(self, ctx):
+        """Stop the current playback"""
+        if ctx.voice_client:
+            ctx.voice_client.stop()
+            await ctx.send("Playback stopped.")
+        else:
+            await ctx.send("Nothing is playing!")
 
 async def setup(bot):
     await bot.add_cog(MediaCommands(bot)) 

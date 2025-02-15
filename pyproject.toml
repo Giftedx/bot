@@ -29,18 +29,44 @@ dependencies = [
 [tool.setuptools]
 packages = ["src"]
 
-[tool.setuptools_scm]
-write_to = "src/_version.py"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = [
+    "--verbose",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--asyncio-mode=auto"
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning"
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "tests/*",
+    "**/__init__.py",
+    "**/conftest.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError"
+]
 
 [tool.black]
-line-length = 88
-target-version = ["py38"]
+line-length = 100
+target-version = ['py38']
 include = '\.pyi?$'
-extend-exclude = '''
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-^/tests/fixtures/
-'''
 
 [tool.isort]
 profile = "black"
@@ -48,7 +74,7 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
-line_length = 88
+line_length = 100
 known_first_party = ["src"]
 known_third_party = ["discord", "pytest", "redis"]
 
@@ -65,61 +91,14 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
-strict_optional = true
-plugins = "numpy.typing.mypy_plugin"
 
 [[tool.mypy.overrides]]
-module = [
-    "discord.*",
-    "redis.*",
-    "setuptools.*"
-]
-ignore_missing_imports = true
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = """
-    --strict-markers
-    --strict-config
-    --tb=short
-    -v
-    --durations=10
-    --maxfail=3
-    --cov=src
-    --cov-report=term-missing
-    --cov-report=html
-"""
-testpaths = ["tests"]
-python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"
-asyncio_mode = "auto"
-
-[tool.coverage.run]
-source = ["src"]
-branch = true
-omit = [
-    "src/main.py",
-    "src/*/__init__.py",
-    "src/*/migrations/*",
-    "src/*/tests/*",
-    "src/*/conftest.py"
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug:",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "pass",
-    "raise ImportError",
-    "except ImportError:",
-    "raise AssertionError",
-    "def __str__",
-    "@abstractmethod"
-]
+[tool.setuptools_scm]
+write_to = "src/_version.py"
 
 [tool.pylint.messages_control]
 disable = [
@@ -135,7 +114,7 @@ disable = [
 ]
 
 [tool.pylint.format]
-max-line-length = 88
+max-line-length = 100
 
 [tool.bandit]
 exclude_dirs = ["tests", "scripts"]
