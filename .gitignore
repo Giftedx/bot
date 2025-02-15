@@ -29,10 +29,8 @@ coverage_html/
 htmlcov/
 
 # Virtual Environment
-.env
-.venv
-env/
 venv/
+env/
 ENV/
 
 # IDE
@@ -47,7 +45,6 @@ ENV/
 *.sublime-project
 
 # Logs
-logs/
 *.log
 
 # Testing
@@ -83,3 +80,14 @@ Thumbs.db
 *.bak
 *.tmp
 *.temp
+
+# Database
+*.db
+*.sqlite3
+
+# Media files
+sounds/*.mp3
+sounds/*.wav
+
+# Configuration
+config.yaml
