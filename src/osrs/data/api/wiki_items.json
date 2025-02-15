@@ -1,0 +1,61 @@
+{
+  "batchcomplete": "",
+  "continue": {
+    "cmcontinue": "page|3230544820414e4e495645525341525920424f54544f4d|295499",
+    "continue": "-||"
+  },
+  "query": {
+    "categorymembers": [
+      {
+        "pageid": 2087,
+        "ns": 0,
+        "title": "Items"
+      },
+      {
+        "pageid": 33921,
+        "ns": 0,
+        "title": "1/3rds full jug"
+      },
+      {
+        "pageid": 13809,
+        "ns": 0,
+        "title": "1/5ths full bucket"
+      },
+      {
+        "pageid": 377579,
+        "ns": 0,
+        "title": "10th birthday balloons"
+      },
+      {
+        "pageid": 377580,
+        "ns": 0,
+        "title": "10th birthday cape"
+      },
+      {
+        "pageid": 10440,
+        "ns": 0,
+        "title": "10th squad sigil"
+      },
+      {
+        "pageid": 79028,
+        "ns": 0,
+        "title": "18lb shot"
+      },
+      {
+        "pageid": 33922,
+        "ns": 0,
+        "title": "2/3rds full jug"
+      },
+      {
+        "pageid": 13808,
+        "ns": 0,
+        "title": "2/5ths full bucket"
+      },
+      {
+        "pageid": 295506,
+        "ns": 0,
+        "title": "20th anniversary boots"
+      }
+    ]
+  }
+}

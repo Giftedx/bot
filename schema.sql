@@ -463,6 +463,222 @@ CREATE TABLE IF NOT EXISTS tournament_matches (
     status VARCHAR(50) DEFAULT 'pending'
 );
 
+-- OSRS Tables
+CREATE TABLE IF NOT EXISTS osrs_players (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    game_mode VARCHAR(50) DEFAULT 'normal',
+    world INTEGER DEFAULT 301,
+    combat_level INTEGER DEFAULT 3,
+    total_level INTEGER DEFAULT 32,
+    quest_points INTEGER DEFAULT 0,
+    daily_streak INTEGER DEFAULT 0
+);
+
+-- Skills System
+CREATE TABLE IF NOT EXISTS osrs_skills (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    skill_name VARCHAR(50) NOT NULL,
+    level INTEGER DEFAULT 1,
+    xp BIGINT DEFAULT 0,
+    current_level INTEGER, -- For boosted/reduced stats
+    last_trained TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, skill_name)
+);
+
+-- Items & Equipment
+CREATE TABLE IF NOT EXISTS osrs_items (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    tradeable BOOLEAN DEFAULT true,
+    stackable BOOLEAN DEFAULT false,
+    equipable BOOLEAN DEFAULT false,
+    slot VARCHAR(50),
+    value INTEGER DEFAULT 0,
+    high_alch INTEGER,
+    low_alch INTEGER,
+    weight DECIMAL(10,2),
+    bonuses JSONB DEFAULT '{}'::jsonb,
+    requirements JSONB DEFAULT '{}'::jsonb
+);
+
+CREATE TABLE IF NOT EXISTS osrs_inventory (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    item_id INTEGER REFERENCES osrs_items(id),
+    quantity INTEGER DEFAULT 1,
+    slot INTEGER,
+    noted BOOLEAN DEFAULT false,
+    UNIQUE(user_id, slot)
+);
+
+CREATE TABLE IF NOT EXISTS osrs_equipment (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    slot_name VARCHAR(50) NOT NULL,
+    item_id INTEGER REFERENCES osrs_items(id),
+    UNIQUE(user_id, slot_name)
+);
+
+CREATE TABLE IF NOT EXISTS osrs_bank (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    item_id INTEGER REFERENCES osrs_items(id),
+    quantity INTEGER DEFAULT 1,
+    tab INTEGER DEFAULT 0,
+    UNIQUE(user_id, item_id)
+);
+
+-- Quest System
+CREATE TABLE IF NOT EXISTS osrs_quests (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    difficulty VARCHAR(50),
+    quest_points INTEGER DEFAULT 1,
+    requirements JSONB DEFAULT '{}'::jsonb,
+    rewards JSONB DEFAULT '{}'::jsonb
+);
+
+CREATE TABLE IF NOT EXISTS osrs_player_quests (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    quest_id INTEGER REFERENCES osrs_quests(id),
+    status VARCHAR(50) DEFAULT 'not_started',
+    progress INTEGER DEFAULT 0,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, quest_id)
+);
+
+-- Achievement System
+CREATE TABLE IF NOT EXISTS osrs_achievements (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    category VARCHAR(50) NOT NULL,
+    difficulty VARCHAR(50),
+    points INTEGER DEFAULT 0,
+    requirements JSONB DEFAULT '{}'::jsonb,
+    rewards JSONB DEFAULT '{}'::jsonb
+);
+
+CREATE TABLE IF NOT EXISTS osrs_player_achievements (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    achievement_id INTEGER REFERENCES osrs_achievements(id),
+    progress INTEGER DEFAULT 0,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, achievement_id)
+);
+
+-- Collection Log System
+CREATE TABLE IF NOT EXISTS osrs_collection_categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS osrs_collection_items (
+    id SERIAL PRIMARY KEY,
+    category_id INTEGER REFERENCES osrs_collection_categories(id),
+    item_id INTEGER REFERENCES osrs_items(id),
+    rarity VARCHAR(50),
+    UNIQUE(category_id, item_id)
+);
+
+CREATE TABLE IF NOT EXISTS osrs_player_collection (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    item_id INTEGER REFERENCES osrs_items(id),
+    obtained_at TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, item_id)
+);
+
+-- Minigame System
+CREATE TABLE IF NOT EXISTS osrs_minigames (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    min_combat_level INTEGER DEFAULT 0,
+    requirements JSONB DEFAULT '{}'::jsonb,
+    rewards JSONB DEFAULT '{}'::jsonb
+);
+
+CREATE TABLE IF NOT EXISTS osrs_player_minigames (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    minigame_id INTEGER REFERENCES osrs_minigames(id),
+    points INTEGER DEFAULT 0,
+    wins INTEGER DEFAULT 0,
+    losses INTEGER DEFAULT 0,
+    high_score INTEGER DEFAULT 0,
+    last_played TIMESTAMP WITH TIME ZONE,
+    UNIQUE(user_id, minigame_id)
+);
+
+-- Grand Exchange System
+CREATE TABLE IF NOT EXISTS osrs_ge_items (
+    id SERIAL PRIMARY KEY,
+    item_id INTEGER REFERENCES osrs_items(id),
+    current_price INTEGER NOT NULL,
+    daily_volume INTEGER DEFAULT 0,
+    last_update TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    price_trend VARCHAR(50) DEFAULT 'stable',
+    UNIQUE(item_id)
+);
+
+CREATE TABLE IF NOT EXISTS osrs_ge_orders (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    item_id INTEGER REFERENCES osrs_items(id),
+    type VARCHAR(50) NOT NULL, -- 'buy' or 'sell'
+    quantity INTEGER NOT NULL,
+    price_each INTEGER NOT NULL,
+    quantity_filled INTEGER DEFAULT 0,
+    status VARCHAR(50) DEFAULT 'active',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS osrs_ge_history (
+    id SERIAL PRIMARY KEY,
+    item_id INTEGER REFERENCES osrs_items(id),
+    price INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    buyer_id BIGINT REFERENCES osrs_players(user_id),
+    seller_id BIGINT REFERENCES osrs_players(user_id)
+);
+
+-- World System
+CREATE TABLE IF NOT EXISTS osrs_worlds (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) DEFAULT 'normal',
+    region VARCHAR(50) NOT NULL,
+    player_count INTEGER DEFAULT 0,
+    max_players INTEGER DEFAULT 2000,
+    last_update TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Daily Tasks System
+CREATE TABLE IF NOT EXISTS osrs_daily_tasks (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES osrs_players(user_id),
+    task_type VARCHAR(50) NOT NULL,
+    requirement TEXT NOT NULL,
+    reward_type VARCHAR(50) NOT NULL,
+    reward_amount INTEGER NOT NULL,
+    completed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, created_at::date)
+);
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_osrs_characters_user_id ON osrs_characters(user_id);
 CREATE INDEX IF NOT EXISTS idx_osrs_stats_character_id ON osrs_stats(character_id);
@@ -490,42 +706,78 @@ CREATE INDEX IF NOT EXISTS idx_elite_four_rematches_user ON elite_four_rematches
 CREATE INDEX IF NOT EXISTS idx_tournament_participants_tournament ON tournament_participants(tournament_id);
 CREATE INDEX IF NOT EXISTS idx_tournament_matches_tournament ON tournament_matches(tournament_id);
 
--- Functions and triggers
-CREATE OR REPLACE FUNCTION update_osrs_level()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.level = FLOOR(POWER((NEW.xp / 4), (1.0/3)));
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- Indexes
+CREATE INDEX idx_osrs_skills_user ON osrs_skills(user_id);
+CREATE INDEX idx_osrs_inventory_user ON osrs_inventory(user_id);
+CREATE INDEX idx_osrs_bank_user ON osrs_bank(user_id);
+CREATE INDEX idx_osrs_equipment_user ON osrs_equipment(user_id);
+CREATE INDEX idx_osrs_player_quests_user ON osrs_player_quests(user_id);
+CREATE INDEX idx_osrs_player_achievements_user ON osrs_player_achievements(user_id);
+CREATE INDEX idx_osrs_player_collection_user ON osrs_player_collection(user_id);
+CREATE INDEX idx_osrs_player_minigames_user ON osrs_player_minigames(user_id);
+CREATE INDEX idx_osrs_ge_orders_user ON osrs_ge_orders(user_id);
+CREATE INDEX idx_osrs_ge_orders_status ON osrs_ge_orders(status) WHERE status = 'active';
+CREATE INDEX idx_osrs_ge_history_item ON osrs_ge_history(item_id, timestamp DESC);
+CREATE INDEX idx_osrs_daily_tasks_user ON osrs_daily_tasks(user_id, created_at);
 
 -- Triggers
-CREATE TRIGGER trigger_update_osrs_level
-    BEFORE INSERT OR UPDATE OF xp ON osrs_stats
-    FOR EACH ROW
-    EXECUTE FUNCTION update_osrs_level();
+CREATE OR REPLACE FUNCTION update_combat_level() RETURNS TRIGGER AS $$
+BEGIN
+    -- Update combat level when combat skills change
+    IF NEW.skill_name IN ('attack', 'strength', 'defence', 'hitpoints', 'prayer', 'ranged', 'magic') THEN
+        UPDATE osrs_players
+        SET combat_level = (
+            SELECT FLOOR(
+                (defence_level + hitpoints_level + FLOOR(prayer_level/2))/4 +
+                (
+                    GREATEST(
+                        (attack_level + strength_level) * 0.325,
+                        magic_level * 0.325,
+                        ranged_level * 0.325
+                    )
+                )
+            )
+            FROM (
+                SELECT 
+                    MAX(CASE WHEN skill_name = 'defence' THEN level ELSE 0 END) as defence_level,
+                    MAX(CASE WHEN skill_name = 'hitpoints' THEN level ELSE 0 END) as hitpoints_level,
+                    MAX(CASE WHEN skill_name = 'prayer' THEN level ELSE 0 END) as prayer_level,
+                    MAX(CASE WHEN skill_name = 'attack' THEN level ELSE 0 END) as attack_level,
+                    MAX(CASE WHEN skill_name = 'strength' THEN level ELSE 0 END) as strength_level,
+                    MAX(CASE WHEN skill_name = 'magic' THEN level ELSE 0 END) as magic_level,
+                    MAX(CASE WHEN skill_name = 'ranged' THEN level ELSE 0 END) as ranged_level
+                FROM osrs_skills
+                WHERE user_id = NEW.user_id
+            ) s
+        )
+        WHERE user_id = NEW.user_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_guild_settings_updated_at
-    BEFORE UPDATE ON guild_settings
+CREATE TRIGGER update_combat_level_trigger
+    AFTER INSERT OR UPDATE OF level ON osrs_skills
     FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at_column();
+    EXECUTE FUNCTION update_combat_level();
 
-CREATE TRIGGER update_welcome_settings_updated_at
-    BEFORE UPDATE ON welcome_settings
-    FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at_column();
+CREATE OR REPLACE FUNCTION update_total_level() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE osrs_players
+    SET total_level = (
+        SELECT SUM(level)
+        FROM osrs_skills
+        WHERE user_id = NEW.user_id
+    )
+    WHERE user_id = NEW.user_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_autorole_updated_at
-    BEFORE UPDATE ON autorole
+CREATE TRIGGER update_total_level_trigger
+    AFTER INSERT OR UPDATE OF level ON osrs_skills
     FOR EACH ROW
+<<<<<<< HEAD
     EXECUTE PROCEDURE update_updated_at_column();
 
 CREATE TRIGGER update_user_settings_updated_at
@@ -604,3 +856,6 @@ ALTER TABLE equipment
     FOREIGN KEY (character_id)
     REFERENCES characters(id)
     ON DELETE CASCADE;
+=======
+    EXECUTE FUNCTION update_total_level();
+>>>>>>> aab8a2a4200e6501bf0cfd06f7a7723d0e0b265a

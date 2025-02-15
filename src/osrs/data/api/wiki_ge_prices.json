@@ -1,0 +1,61 @@
+{
+  "batchcomplete": "",
+  "continue": {
+    "cmcontinue": "page|335244204147452046554c4c2048454c4d45540a335244204147452046554c4c2048454c4d4554|62004",
+    "continue": "-||"
+  },
+  "query": {
+    "categorymembers": [
+      {
+        "pageid": 17287,
+        "ns": 0,
+        "title": "Grand Exchange"
+      },
+      {
+        "pageid": 62001,
+        "ns": 114,
+        "title": "Exchange:3rd age amulet"
+      },
+      {
+        "pageid": 75297,
+        "ns": 114,
+        "title": "Exchange:3rd age axe"
+      },
+      {
+        "pageid": 62002,
+        "ns": 114,
+        "title": "Exchange:3rd age bow"
+      },
+      {
+        "pageid": 62003,
+        "ns": 114,
+        "title": "Exchange:3rd age cloak"
+      },
+      {
+        "pageid": 214925,
+        "ns": 114,
+        "title": "Exchange:3rd age druidic cloak"
+      },
+      {
+        "pageid": 214909,
+        "ns": 114,
+        "title": "Exchange:3rd age druidic robe bottoms"
+      },
+      {
+        "pageid": 214903,
+        "ns": 114,
+        "title": "Exchange:3rd age druidic robe top"
+      },
+      {
+        "pageid": 214919,
+        "ns": 114,
+        "title": "Exchange:3rd age druidic staff"
+      },
+      {
+        "pageid": 388250,
+        "ns": 114,
+        "title": "Exchange:3rd age felling axe"
+      }
+    ]
+  }
+}

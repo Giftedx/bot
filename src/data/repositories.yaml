@@ -1,0 +1,620 @@
+metadata:
+  last_updated: '2025-02-15T15:57:10.897373'
+  statistics:
+    total_repositories: 58
+    repositories_by_category:
+      core_libraries: 10
+      ai_integration: 4
+      multi_purpose: 3
+      study_tools: 0
+      media_voice: 3
+      game_integration: 3
+      image_processing: 3
+      utility_tools: 4
+      plex_integration: 28
+    languages: {}
+    total_stars: 0
+    last_updated: 2025-02-15 15:57:10.897373
+categories:
+  core_libraries:
+  - name: discord.py
+    description: Primary Discord API wrapper for Python
+    category: core_libraries
+    features:
+    - Core bot functionality
+    url: Rapptz/discord.py
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: discord.js
+    description: JavaScript Discord API wrapper
+    category: core_libraries
+    features:
+    - Voice support
+    url: discordjs/discord.js
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: nextcord
+    description: Fork of discord.py
+    category: core_libraries
+    features:
+    - Modern feature support
+    url: nextcord/nextcord
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Discord.Net
+    description: .NET Discord API wrapper
+    category: core_libraries
+    features: []
+    url: discord-net/Discord.Net
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: discordrb
+    description: Ruby Discord API wrapper
+    category: core_libraries
+    features: []
+    url: discordrb/discordrb
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Discord4J
+    description: Java Discord API wrapper
+    category: core_libraries
+    features: []
+    url: Discord4J/Discord4J
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: DSharpPlus
+    description: Advanced .NET Discord library
+    category: core_libraries
+    features: []
+    url: DSharpPlus/DSharpPlus
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: disnake
+    description: Discord.py fork with modern features
+    category: core_libraries
+    features: []
+    url: DisnakeDev/disnake
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: interactions.py
+    description: Python library for Discord interactions
+    category: core_libraries
+    features: []
+    url: interactions-py/interactions.py
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Javacord
+    description: Java Discord API wrapper
+    category: core_libraries
+    features: []
+    url: Javacord/Javacord
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  ai_integration:
+  - name: Open-Assistant
+    description: Open-source conversational AI
+    category: ai_integration
+    features: []
+    url: LAION-AI/Open-Assistant
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: chatGPT-discord-bot
+    description: ChatGPT integration
+    category: ai_integration
+    features: []
+    url: Zero6992/chatGPT-discord-bot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: llmcord
+    description: Language model integration
+    category: ai_integration
+    features: []
+    url: jakobdylanc/llmcord
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: TuringAI-Team/chatgpt-discord-bot
+    description: AI chatbot implementation
+    category: ai_integration
+    features: []
+    url: null
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  multi_purpose:
+  - name: Red-DiscordBot
+    description: Modular bot framework
+    category: multi_purpose
+    features:
+    - Plugin system
+    url: Cog-Creators/Red-DiscordBot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: AtlantaBot
+    description: Feature-rich Discord bot
+    category: multi_purpose
+    features: []
+    url: Androz2091/AtlantaBot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: urban-bot/urban-bot
+    description: Cross-platform bot framework
+    category: multi_purpose
+    features: []
+    url: null
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  study_tools: []
+  media_voice:
+  - name: MusicBot
+    description: Audio streaming
+    category: media_voice
+    features:
+    - Queue management
+    url: jagrosh/MusicBot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Voicecord
+    description: Voice recognition
+    category: media_voice
+    features:
+    - Audio processing
+    url: SealedSaucer/Voicecord
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: discordjs/voice
+    description: Voice implementation
+    category: media_voice
+    features:
+    - Audio streaming
+    url: null
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  game_integration:
+  - name: activities
+    description: Discord Activity integration
+    category: game_integration
+    features:
+    - Game activities
+    url: advaith1/activities
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: runebot
+    description: RuneScape integration
+    category: game_integration
+    features: []
+    url: Arham4/runebot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: poketwo
+    description: Pokemon bot implementation
+    category: game_integration
+    features: []
+    url: poketwo/poketwo
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  image_processing:
+  - name: DankMemer/imgen
+    description: Image generation
+    category: image_processing
+    features:
+    - Meme creation
+    url: null
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: esmBot
+    description: Image manipulation
+    category: image_processing
+    features:
+    - Media commands
+    url: esmBot/esmBot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Among-Us-Dumpy-Gif-Maker
+    description: GIF generation
+    category: image_processing
+    features:
+    - Animation processing
+    url: ThatOneCalculator/Among-Us-Dumpy-Gif-Maker
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  utility_tools:
+  - name: embed-generator
+    description: Discord embed creation
+    category: utility_tools
+    features:
+    - Message formatting
+    url: merlinfuchs/embed-generator
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: requestrr
+    description: Media request management
+    category: utility_tools
+    features: []
+    url: darkalfx/requestrr
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: aiode
+    description: Audio/music framework
+    category: utility_tools
+    features: []
+    url: robinfriedli/aiode
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: discord-compiler-bot
+    description: Code compilation
+    category: utility_tools
+    features:
+    - Execution sandbox
+    url: Headline/discord-compiler-bot
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  plex_integration:
+  - name: PlexConnect
+    description: Connection management
+    category: plex_integration
+    features: []
+    url: iBaa/PlexConnect
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plexdrive
+    description: Cloud storage mounting
+    category: plex_integration
+    features: []
+    url: plexdrive/plexdrive
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: JBOPS
+    description: Plex automation scripts
+    category: plex_integration
+    features: []
+    url: blacktwin/JBOPS
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: PlexDBRepair
+    description: Database maintenance
+    category: plex_integration
+    features: []
+    url: ChuckPa/PlexDBRepair
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex_debrid
+    description: Debrid service integration
+    category: plex_integration
+    features: []
+    url: itsToggle/plex_debrid
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: htpc-download-box
+    description: Media download automation
+    category: plex_integration
+    features: []
+    url: sebgl/htpc-download-box
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex-media-player
+    description: Media playback
+    category: plex_integration
+    features: []
+    url: plexinc/plex-media-player
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: PlexRipper
+    description: Content management
+    category: plex_integration
+    features: []
+    url: PlexRipper/PlexRipper
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Tautulli
+    description: Statistics tracking
+    category: plex_integration
+    features: []
+    url: Tautulli/Tautulli
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: RasPlex
+    description: Raspberry Pi implementation
+    category: plex_integration
+    features: []
+    url: RasPlex/RasPlex
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex-nginx-reverseproxy
+    description: Proxy configuration
+    category: plex_integration
+    features: []
+    url: toomuchio/plex-nginx-reverseproxy
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plexWatchWeb
+    description: Web interface
+    category: plex_integration
+    features: []
+    url: ecleese/plexWatchWeb
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: go-plex-client
+    description: Go implementation
+    category: plex_integration
+    features: []
+    url: jrudio/go-plex-client
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Ombi
+    description: Request management
+    category: plex_integration
+    features: []
+    url: Ombi-app/Ombi
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex-api
+    description: API documentation
+    category: plex_integration
+    features: []
+    url: Arcanemagus/plex-api
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: PlexIPTV
+    description: IPTV integration
+    category: plex_integration
+    features: []
+    url: xiaodoudou/PlexIPTV
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Plex-Remote-Transcoder
+    description: Transcoding management
+    category: plex_integration
+    features: []
+    url: wnielson/Plex-Remote-Transcoder
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: YouTubeTV.bundle
+    description: YouTube integration
+    category: plex_integration
+    features: []
+    url: kolsys/YouTubeTV.bundle
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex_assistant
+    description: Voice control
+    category: plex_integration
+    features: []
+    url: maykar/plex_assistant
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: UnicornTranscoder
+    description: Advanced transcoding
+    category: plex_integration
+    features: []
+    url: UnicornTranscoder/UnicornTranscoder
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: node-plex-api
+    description: Node.js implementation
+    category: plex_integration
+    features: []
+    url: phillipj/node-plex-api
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: synclounge
+    description: Synchronized playback
+    category: plex_integration
+    features: []
+    url: synclounge/synclounge
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: plex-sync
+    description: Library synchronization
+    category: plex_integration
+    features: []
+    url: jacobwgillespie/plex-sync
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Plex-Auto-Languages
+    description: Language automation
+    category: plex_integration
+    features: []
+    url: RemiRigal/Plex-Auto-Languages
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: ultimate-plex-stack
+    description: Docker composition
+    category: plex_integration
+    features: []
+    url: DonMcD/ultimate-plex-stack
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: Plex-scripts
+    description: Automation scripts
+    category: plex_integration
+    features: []
+    url: Casvt/Plex-scripts
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: PLAYz-Media-for-PLEX
+    description: Media interface
+    category: plex_integration
+    features: []
+    url: simonjhogan/PLAYz-Media-for-PLEX
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}
+  - name: DreamPlex
+    description: Alternative interface
+    category: plex_integration
+    features: []
+    url: DonDavici/DreamPlex
+    stars: null
+    last_updated: null
+    language: null
+    tags: []
+    metadata: {}

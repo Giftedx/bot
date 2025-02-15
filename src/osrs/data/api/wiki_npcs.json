@@ -1,0 +1,61 @@
+{
+  "batchcomplete": "",
+  "continue": {
+    "cmcontinue": "page|4142595353414c2053495245|65167",
+    "continue": "-||"
+  },
+  "query": {
+    "categorymembers": [
+      {
+        "pageid": 27806,
+        "ns": 0,
+        "title": "A Doubt"
+      },
+      {
+        "pageid": 12869,
+        "ns": 0,
+        "title": "Aberrant spectre"
+      },
+      {
+        "pageid": 80108,
+        "ns": 0,
+        "title": "Abhorrent spectre"
+      },
+      {
+        "pageid": 116831,
+        "ns": 0,
+        "title": "Abomination"
+      },
+      {
+        "pageid": 390356,
+        "ns": 0,
+        "title": "Abyssal antibody"
+      },
+      {
+        "pageid": 12840,
+        "ns": 0,
+        "title": "Abyssal demon"
+      },
+      {
+        "pageid": 24035,
+        "ns": 0,
+        "title": "Abyssal guardian"
+      },
+      {
+        "pageid": 18190,
+        "ns": 0,
+        "title": "Abyssal leech"
+      },
+      {
+        "pageid": 390355,
+        "ns": 0,
+        "title": "Abyssal leech (The Scar)"
+      },
+      {
+        "pageid": 92697,
+        "ns": 0,
+        "title": "Abyssal portal"
+      }
+    ]
+  }
+}

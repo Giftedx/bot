@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ignore all cloned reference repositories
 reference_repos/
 
@@ -68,3 +69,6 @@ testing/
 *.tmp
 *.temp
 .*.swp 
+=======
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+>>>>>>> aab8a2a4200e6501bf0cfd06f7a7723d0e0b265a
