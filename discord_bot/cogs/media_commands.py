@@ -1,103 +1,278 @@
-from discord.ext import commands
+"""Media commands for Plex integration."""
+
 import discord
-import logging
-from typing import Optional
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from plex_api.client import PlexClient
-from config.config import Config
-
-logger = logging.getLogger(__name__)
+from discord.ext import commands
+from plexapi.server import PlexServer
+from plexapi.exceptions import NotFound, Unauthorized
+import asyncio
+from typing import Optional, List
+import datetime
 
 class MediaCommands(commands.Cog):
+    """Commands for interacting with Plex media server."""
+    
     def __init__(self, bot):
         self.bot = bot
-        self.plex_client = PlexClient(Config.PLEX_URL, Config.PLEX_TOKEN)
-        
-    @commands.command(name='libraries')
-    async def list_libraries(self, ctx):
-        """List all available Plex libraries."""
+        self.plex = None
+        self.setup_plex()
+    
+    def setup_plex(self):
+        """Set up connection to Plex server."""
         try:
-            libraries = self.plex_client.get_libraries()
-            if not libraries:
-                await ctx.send("No libraries found.")
-                return
-                
-            embed = discord.Embed(title="Plex Libraries", color=discord.Color.blue())
-            for library in libraries:
-                embed.add_field(name=library.title, value=f"Type: {library.type}", inline=True)
-            await ctx.send(embed=embed)
-        except Exception as e:
-            logger.error(f"Error listing libraries: {e}")
-            await ctx.send("Failed to retrieve libraries. Please try again later.")
+            baseurl = self.bot.config.PLEX_URL
+            token = self.bot.config.PLEX_TOKEN
             
-    @commands.command(name='search')
+            if baseurl and token:
+                self.plex = PlexServer(baseurl, token)
+        except Exception as e:
+            print(f"Error connecting to Plex: {e}")
+    
+    @commands.group(name="plex", invoke_without_command=True)
+    async def plex_group(self, ctx):
+        """Plex media commands. Use subcommands search/play/info."""
+        await ctx.send_help(ctx.command)
+    
+    @plex_group.command(name="search")
     async def search_media(self, ctx, *, query: str):
-        """Search for media across all libraries."""
+        """Search for media on the Plex server."""
+        if not self.plex:
+            await ctx.send("Plex integration is not configured!")
+            return
+            
         try:
-            results = self.plex_client.search(query)
+            # Search all libraries
+            results = self.plex.library.search(query, limit=5)
+            
             if not results:
                 await ctx.send(f"No results found for '{query}'")
                 return
                 
-            embed = discord.Embed(title=f"Search Results for '{query}'", color=discord.Color.green())
-            for item in results[:10]:  # Limit to 10 results
-                embed.add_field(
-                    name=item.title,
-                    value=f"Type: {item.type}\nYear: {getattr(item, 'year', 'N/A')}",
-                    inline=False
-                )
-            await ctx.send(embed=embed)
-        except Exception as e:
-            logger.error(f"Error searching media: {e}")
-            await ctx.send("An error occurred while searching. Please try again later.")
-            
-    @commands.command(name='play')
-    async def play_media(self, ctx, media_id: str):
-        """Start playing media in the voice channel."""
-        if not ctx.author.voice:
-            await ctx.send("You need to be in a voice channel to use this command.")
-            return
-            
-        try:
-            # Get media info and stream URL
-            media_info = self.plex_client.get_media_info(media_id)
-            if not media_info:
-                await ctx.send("Media not found.")
-                return
-                
-            # Join voice channel
-            voice_channel = ctx.author.voice.channel
-            voice_client = await voice_channel.connect()
-            
-            # Start playback
-            stream_url = media_info['stream_url']
-            voice_client.play(
-                discord.FFmpegPCMAudio(stream_url),
-                after=lambda e: print(f'Player error: {e}') if e else None
+            # Create embed
+            embed = discord.Embed(
+                title=f"Search Results: {query}",
+                color=discord.Color.blue()
             )
             
-            await ctx.send(f"Now playing: {media_info['title']}")
-        except Exception as e:
-            logger.error(f"Error playing media: {e}")
-            await ctx.send("Failed to start playback. Please try again later.")
+            for item in results:
+                # Format details based on media type
+                if hasattr(item, 'type'):
+                    if item.type == 'movie':
+                        details = f"Year: {item.year}\nRating: {getattr(item, 'rating', 'N/A')}\nDuration: {item.duration}"
+                    elif item.type == 'show':
+                        details = f"Years: {item.year}-{getattr(item, 'year', 'Present')}\nRating: {getattr(item, 'rating', 'N/A')}\nSeasons: {len(item.seasons())}"
+                    elif item.type == 'episode':
+                        details = f"Show: {item.grandparentTitle}\nSeason {item.parentIndex} Episode {item.index}\nAir Date: {item.originallyAvailableAt}"
+                    else:
+                        details = "No details available"
+                else:
+                    details = "No details available"
+                
+                embed.add_field(
+                    name=f"{item.title} ({getattr(item, 'type', 'Unknown').capitalize()})",
+                    value=details,
+                    inline=False
+                )
             
-    @commands.command(name='stop')
-    async def stop_playback(self, ctx):
-        """Stop the current playback."""
-        if not ctx.voice_client:
-            await ctx.send("No active playback to stop.")
+            await ctx.send(embed=embed)
+            
+        except Exception as e:
+            await ctx.send(f"Error searching Plex: {e}")
+    
+    @plex_group.command(name="play")
+    async def play_media(self, ctx, *, title: str):
+        """Start playing media on the Plex server."""
+        if not self.plex:
+            await ctx.send("Plex integration is not configured!")
             return
             
         try:
-            ctx.voice_client.stop()
-            await ctx.voice_client.disconnect()
-            await ctx.send("Playback stopped.")
+            # Search for the media
+            results = self.plex.library.search(title, limit=1)
+            
+            if not results:
+                await ctx.send(f"No results found for '{title}'")
+                return
+                
+            media = results[0]
+            
+            # Start playback (note: this requires a Plex client to be configured)
+            try:
+                clients = self.plex.clients()
+                if not clients:
+                    await ctx.send("No available Plex clients found!")
+                    return
+                    
+                client = clients[0]  # Use first available client
+                client.playMedia(media)
+                
+                embed = discord.Embed(
+                    title="Now Playing",
+                    description=f"Started playing {media.title}",
+                    color=discord.Color.green()
+                )
+                
+                if hasattr(media, 'type'):
+                    if media.type == 'movie':
+                        embed.add_field(name="Year", value=media.year)
+                        embed.add_field(name="Duration", value=str(datetime.timedelta(milliseconds=media.duration)))
+                    elif media.type == 'episode':
+                        embed.add_field(name="Show", value=media.grandparentTitle)
+                        embed.add_field(name="Season", value=media.parentIndex)
+                        embed.add_field(name="Episode", value=media.index)
+                
+                await ctx.send(embed=embed)
+                
+            except Exception as e:
+                await ctx.send(f"Error starting playback: {e}")
+                
         except Exception as e:
-            logger.error(f"Error stopping playback: {e}")
-            await ctx.send("Failed to stop playback. Please try again later.")
+            await ctx.send(f"Error accessing Plex: {e}")
+    
+    @plex_group.command(name="info")
+    async def media_info(self, ctx, *, title: str):
+        """Get detailed information about media."""
+        if not self.plex:
+            await ctx.send("Plex integration is not configured!")
+            return
+            
+        try:
+            # Search for the media
+            results = self.plex.library.search(title, limit=1)
+            
+            if not results:
+                await ctx.send(f"No results found for '{title}'")
+                return
+                
+            media = results[0]
+            
+            # Create embed with detailed information
+            embed = discord.Embed(
+                title=media.title,
+                description=getattr(media, 'summary', 'No summary available'),
+                color=discord.Color.blue()
+            )
+            
+            if hasattr(media, 'type'):
+                embed.add_field(name="Type", value=media.type.capitalize())
+                
+                if media.type == 'movie':
+                    embed.add_field(name="Year", value=media.year)
+                    embed.add_field(name="Rating", value=getattr(media, 'rating', 'N/A'))
+                    embed.add_field(name="Duration", value=str(datetime.timedelta(milliseconds=media.duration)))
+                    embed.add_field(name="Studio", value=getattr(media, 'studio', 'N/A'))
+                    
+                    if hasattr(media, 'genres'):
+                        genres = ", ".join(genre.tag for genre in media.genres)
+                        embed.add_field(name="Genres", value=genres or "N/A")
+                        
+                elif media.type == 'show':
+                    embed.add_field(name="Years", value=f"{media.year}-{getattr(media, 'year', 'Present')}")
+                    embed.add_field(name="Rating", value=getattr(media, 'rating', 'N/A'))
+                    embed.add_field(name="Seasons", value=len(media.seasons()))
+                    
+                    if hasattr(media, 'genres'):
+                        genres = ", ".join(genre.tag for genre in media.genres)
+                        embed.add_field(name="Genres", value=genres or "N/A")
+                        
+                elif media.type == 'episode':
+                    embed.add_field(name="Show", value=media.grandparentTitle)
+                    embed.add_field(name="Season", value=media.parentIndex)
+                    embed.add_field(name="Episode", value=media.index)
+                    embed.add_field(name="Air Date", value=media.originallyAvailableAt)
+                    embed.add_field(name="Duration", value=str(datetime.timedelta(milliseconds=media.duration)))
+            
+            # Add thumbnail if available
+            if hasattr(media, 'thumb'):
+                embed.set_thumbnail(url=media.thumb)
+            
+            await ctx.send(embed=embed)
+            
+        except Exception as e:
+            await ctx.send(f"Error getting media info: {e}")
+    
+    @plex_group.command(name="recent")
+    async def recent_media(self, ctx, limit: int = 5):
+        """Show recently added media."""
+        if not self.plex:
+            await ctx.send("Plex integration is not configured!")
+            return
+            
+        try:
+            # Get recently added items
+            recent = self.plex.library.recentlyAdded()[:limit]
+            
+            if not recent:
+                await ctx.send("No recent media found!")
+                return
+                
+            embed = discord.Embed(
+                title="Recently Added Media",
+                color=discord.Color.blue()
+            )
+            
+            for item in recent:
+                if hasattr(item, 'type'):
+                    if item.type == 'movie':
+                        details = f"Year: {item.year}\nAdded: {item.addedAt.strftime('%Y-%m-%d')}"
+                    elif item.type == 'episode':
+                        details = f"Show: {item.grandparentTitle}\nSeason {item.parentIndex} Episode {item.index}\nAdded: {item.addedAt.strftime('%Y-%m-%d')}"
+                    else:
+                        details = f"Added: {item.addedAt.strftime('%Y-%m-%d')}"
+                else:
+                    details = f"Added: {item.addedAt.strftime('%Y-%m-%d')}"
+                
+                embed.add_field(
+                    name=f"{item.title} ({getattr(item, 'type', 'Unknown').capitalize()})",
+                    value=details,
+                    inline=False
+                )
+            
+            await ctx.send(embed=embed)
+            
+        except Exception as e:
+            await ctx.send(f"Error getting recent media: {e}")
+    
+    @plex_group.command(name="ondeck")
+    async def on_deck(self, ctx):
+        """Show on deck items (recently watched, in progress)."""
+        if not self.plex:
+            await ctx.send("Plex integration is not configured!")
+            return
+            
+        try:
+            # Get on deck items
+            deck = self.plex.library.onDeck()
+            
+            if not deck:
+                await ctx.send("No items on deck!")
+                return
+                
+            embed = discord.Embed(
+                title="On Deck",
+                description="Continue watching these items:",
+                color=discord.Color.blue()
+            )
+            
+            for item in deck:
+                if hasattr(item, 'type') and item.type == 'episode':
+                    details = (f"Show: {item.grandparentTitle}\n"
+                             f"Season {item.parentIndex} Episode {item.index}\n"
+                             f"Progress: {item.viewOffset // 1000 // 60}/"
+                             f"{item.duration // 1000 // 60} minutes")
+                else:
+                    details = (f"Progress: {item.viewOffset // 1000 // 60}/"
+                             f"{item.duration // 1000 // 60} minutes")
+                
+                embed.add_field(
+                    name=item.title,
+                    value=details,
+                    inline=False
+                )
+            
+            await ctx.send(embed=embed)
+            
+        except Exception as e:
+            await ctx.send(f"Error getting on deck items: {e}")
 
 async def setup(bot):
     """Add the cog to the bot."""

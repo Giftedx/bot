@@ -1,291 +1,171 @@
-# Architecture Overview
+# System Architecture Overview
 
-## System Architecture
+## Introduction
 
-The Discord Plex Player is built using a microservices-inspired architecture with the following main components:
+This document provides a comprehensive overview of the system architecture for our Discord bot that integrates OSRS, Pokemon, and Plex features. The architecture is designed to be modular, scalable, and maintainable while supporting cross-system interactions.
+
+## High-Level Architecture
 
 ```mermaid
 graph TB
-    subgraph Discord["Discord Environment"]
+    subgraph Discord["Discord Layer"]
         DC[Discord Client]
-        DA[Discord Activity/iframe]
-        UI[UI Components]
+        DH[Event Handlers]
+        CM[Command Manager]
     end
 
-    subgraph Backend["Backend Services"]
-        DB[Discord Bot]
-        WS[Web Server]
-        PA[Plex API Client]
+    subgraph Core["Core Systems"]
+        UDL[Universal Data Layer]
+        ES[Event System]
+        CS[Cache System]
+        PS[Profile System]
     end
 
-    subgraph Storage["Data Layer"]
-        PG[PostgreSQL]
-        RD[Redis Cache]
+    subgraph GameSystems["Game Systems"]
+        OSRS[OSRS Integration]
+        PKM[Pokemon Integration]
+        PET[Pet System]
+        BTL[Battle System]
+        ECO[Economy System]
     end
 
-    subgraph Plex["Plex Environment"]
-        PS[Plex Server]
-        PL[Media Libraries]
+    subgraph Media["Media Systems"]
+        PX[Plex Integration]
+        MS[Media Streaming]
+        QC[Quality Control]
     end
 
-    DC --- DA
-    DA --> WS
-    DB --> DC
-    WS <--> PA
-    PA <--> PS
-    PS --- PL
-    WS <--> RD
-    WS <--> PG
+    subgraph Data["Data Layer"]
+        DB[(Database)]
+        RC[(Redis Cache)]
+        MQ[Message Queue]
+    end
+
+    Discord --> Core
+    Core --> GameSystems
+    Core --> Media
+    GameSystems --> Data
+    Media --> Data
+    Core --> Data
 ```
 
 ## Core Components
 
-### 1. Discord Bot
-- Built with discord.py
-- Handles voice channel integration
-- Manages commands and interactions
-- Coordinates playback sessions
+### 1. Discord Layer
+- **Discord Client**: Handles Discord API interactions
+- **Event Handlers**: Processes Discord events
+- **Command Manager**: Manages command registration and execution
 
-### 2. Web Server
-- Flask-based REST API
-- WebSocket server for real-time updates
-- Handles media streaming
-- Manages authentication
+### 2. Core Systems
+- **Universal Data Layer**: Provides unified data access
+- **Event System**: Manages cross-system event propagation
+- **Cache System**: Handles caching and performance optimization
+- **Profile System**: Manages user profiles and progression
 
-### 3. Plex Integration
-- PlexAPI client wrapper
-- Media metadata management
-- Stream URL generation
-- Library browsing
+### 3. Game Systems
+- **OSRS Integration**: Old School RuneScape features
+- **Pokemon Integration**: Pokemon game features
+- **Pet System**: Virtual pet management
+- **Battle System**: Cross-game battle mechanics
+- **Economy System**: Unified virtual economy
 
-### 4. Frontend Player
-- React-based web player
-- Video.js integration
-- WebSocket client
-- Responsive design
+### 4. Media Systems
+- **Plex Integration**: Media server integration
+- **Media Streaming**: Handles media playback
+- **Quality Control**: Manages streaming quality
 
-## Data Flow
+### 5. Data Layer
+- **Database**: Persistent storage (PostgreSQL)
+- **Redis Cache**: In-memory caching
+- **Message Queue**: Async task processing
 
-### 1. Command Flow
-```mermaid
-sequenceDiagram
-    participant User
-    participant Discord
-    participant Bot
-    participant Plex
-    participant Cache
+## Cross-System Integration
 
-    User->>Discord: /play command
-    Discord->>Bot: Command event
-    Bot->>Cache: Check cache
-    Cache-->>Bot: Cache miss
-    Bot->>Plex: Request media
-    Plex-->>Bot: Media data
-    Bot->>Cache: Store data
-    Bot->>Discord: Start playback
-```
+The architecture supports cross-system interactions through:
+1. Universal Data Layer for consistent data access
+2. Event System for cross-system communication
+3. Shared Economy for unified virtual currency
+4. Achievement System spanning all features
 
-### 2. Streaming Flow
-```mermaid
-sequenceDiagram
-    participant Client
-    participant WebServer
-    participant Plex
-    participant Redis
+## Security Considerations
 
-    Client->>WebServer: Request stream
-    WebServer->>Redis: Check cache
-    Redis-->>WebServer: Stream URL
-    WebServer->>Plex: Get stream (if needed)
-    Plex-->>WebServer: Stream data
-    WebServer->>Redis: Cache stream
-    WebServer->>Client: Stream URL
-```
+1. **Authentication**
+   - Discord OAuth2 integration
+   - Role-based access control
+   - Session management
 
-## Security Architecture
+2. **Data Protection**
+   - Encrypted storage
+   - Secure communication
+   - Rate limiting
 
-### 1. Authentication
-- JWT-based authentication
-- Discord OAuth2 integration
-- Secure token storage
-- Role-based access control
+3. **API Security**
+   - Input validation
+   - Request signing
+   - Token management
 
-### 2. Data Protection
-- Encrypted environment variables
-- Secure database connections
-- Token rotation system
-- Rate limiting
+## Performance Optimization
 
-### 3. Network Security
-- HTTPS enforcement
-- WebSocket security
-- API authentication
-- Request validation
+1. **Caching Strategy**
+   - Redis for hot data
+   - Local memory caching
+   - Cache invalidation
 
-## Caching Strategy
+2. **Load Management**
+   - Request throttling
+   - Queue-based processing
+   - Resource pooling
 
-### 1. Redis Cache Layers
-```
-Level 1: Session Cache
-- User sessions
-- Active streams
-- Playback state
-TTL: 24 hours
+## Monitoring and Maintenance
 
-Level 2: Media Cache
-- Stream URLs
-- Media metadata
-- Search results
-TTL: 15-60 minutes
+1. **Health Checks**
+   - Service status monitoring
+   - Performance metrics
+   - Error tracking
 
-Level 3: System Cache
-- Library data
-- User preferences
-- Configuration
-TTL: 5-30 minutes
-```
+2. **Logging**
+   - Structured logging
+   - Error reporting
+   - Audit trails
 
-### 2. Cache Invalidation
-- Time-based expiration
-- Manual invalidation
-- Event-based updates
-- Cascade updates
+## Development Guidelines
 
-## Database Schema
+1. **Code Organization**
+   - Modular architecture
+   - Clear separation of concerns
+   - Consistent coding standards
 
-### 1. Core Tables
-```sql
--- Users
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    discord_id TEXT UNIQUE,
-    settings JSONB
-);
+2. **Testing Strategy**
+   - Unit testing
+   - Integration testing
+   - End-to-end testing
 
--- Sessions
-CREATE TABLE sessions (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    media_id TEXT,
-    status TEXT
-);
+3. **Documentation**
+   - Code documentation
+   - API documentation
+   - System documentation
 
--- Media Cache
-CREATE TABLE media_cache (
-    id SERIAL PRIMARY KEY,
-    plex_id TEXT UNIQUE,
-    metadata JSONB,
-    expires_at TIMESTAMP
-);
-```
+## Future Considerations
 
-### 2. Relationships
-```mermaid
-erDiagram
-    users ||--o{ sessions : has
-    sessions ||--o| media_cache : uses
-    users ||--o{ preferences : has
-```
+1. **Scalability**
+   - Horizontal scaling
+   - Service isolation
+   - Load balancing
 
-## Scaling Considerations
+2. **New Features**
+   - Additional game integrations
+   - Enhanced media features
+   - Extended social features
 
-### 1. Horizontal Scaling
-- Stateless web servers
-- Redis cluster
-- Load balancing
-- Session management
+3. **Technical Debt**
+   - Regular refactoring
+   - Dependency updates
+   - Performance optimization
 
-### 2. Vertical Scaling
-- Database optimization
-- Cache tuning
-- Resource allocation
-- Performance monitoring
+## Related Documentation
+- [Development Guide](../guides/development/README.md)
+- [API Documentation](../api/README.md)
+- [Deployment Guide](../guides/deployment/README.md)
+- [Security Guide](../SECURITY.md)
 
-### 3. Bottlenecks
-- Media transcoding
-- Database connections
-- WebSocket connections
-- Cache invalidation
-
-## Monitoring and Logging
-
-### 1. Metrics
-- Request latency
-- Cache hit rates
-- Error rates
-- Resource usage
-
-### 2. Logging
-- Structured logging
-- Error tracking
-- Audit trails
-- Performance metrics
-
-## Deployment Architecture
-
-### 1. Production Setup
-```mermaid
-graph TB
-    subgraph Production["Production Environment"]
-        LB[Load Balancer]
-        WS1[Web Server 1]
-        WS2[Web Server 2]
-        RC[Redis Cluster]
-        DB[(PostgreSQL)]
-    end
-
-    LB --> WS1
-    LB --> WS2
-    WS1 --> RC
-    WS2 --> RC
-    WS1 --> DB
-    WS2 --> DB
-```
-
-### 2. Development Setup
-```mermaid
-graph TB
-    subgraph Development["Development Environment"]
-        WS[Web Server]
-        RD[Redis]
-        PG[(PostgreSQL)]
-    end
-
-    WS --> RD
-    WS --> PG
-```
-
-## Integration Points
-
-### 1. External Services
-- Discord API
-- Plex Media Server
-- OAuth providers
-- Monitoring services
-
-### 2. Internal Services
-- Cache service
-- Database service
-- Media service
-- Authentication service
-
-## Future Architecture
-
-### 1. Planned Improvements
-- Microservices migration
-- Container orchestration
-- Service mesh
-- Event sourcing
-
-### 2. Scalability Enhancements
-- Database sharding
-- Global distribution
-- Edge caching
-- Async processing
-
-## Additional Resources
-
-- [Component Details](components.md)
-- [Data Flow Documentation](data-flow.md)
-- [Security Model](security.md)
-- [API Documentation](../api/rest-api.md) 
+_Last Updated: February 2024_ 

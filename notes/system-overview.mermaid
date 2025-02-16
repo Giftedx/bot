@@ -1,0 +1,43 @@
+graph TB
+    subgraph Platform["Core Platform"]
+        subgraph Infrastructure["Infrastructure"]
+            DC[Docker/Podman]
+            K3[K3s/Kubernetes]
+            GL[GitLab CI/CD]
+        end
+        
+        subgraph Backend["Backend Services"]
+            GO[Go API Server]
+            PY[Python ML Services]
+            DB[(PostgreSQL)]
+            RD[(Redis)]
+            MQ[NATS Queue]
+        end
+        
+        subgraph Frontend["Frontend"]
+            NX[Next.js]
+            TS[TypeScript]
+            WS[WebSocket]
+        end
+    end
+
+    subgraph Integration["Integration Layer"]
+        subgraph Systems["Target Systems"]
+            LX[Linux]
+            WS[Windows + WSL2]
+            TN[TrueNAS]
+            VB[VirtualBox]
+        end
+        
+        subgraph Monitoring["Monitoring"]
+            PR[Prometheus]
+            GF[Grafana]
+            LG[Logging]
+        end
+    end
+
+    Platform --> Integration
+    Infrastructure --> Backend
+    Infrastructure --> Frontend
+    Backend --> Integration
+    Frontend --> Integration

@@ -3,12 +3,12 @@ import logging
 import sys
 from pathlib import Path
 
-# Add the src directory to the Python path
-src_path = str(Path(__file__).parent.parent / "src")
-if src_path not in sys.path:
-    sys.path.append(src_path)
+# Add the parent directory to the Python path
+root_path = str(Path(__file__).parent.parent)
+if root_path not in sys.path:
+    sys.path.insert(0, root_path)
 
-from data.osrs.enhanced_data_manager import EnhancedDataManager
+from src.data.osrs.enhanced_data_manager import EnhancedDataManager
 
 logging.basicConfig(
     level=logging.INFO,

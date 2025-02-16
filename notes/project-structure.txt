@@ -1,0 +1,159 @@
+# Discord Plex Player Project Overview
+
+## 1. Technology Stack
+
+### Core Infrastructure
+- Containerization: Docker/Podman
+- Orchestration: K3s (lightweight Kubernetes)
+- CI/CD: GitLab CI/CD
+- Version Control: Git
+
+### Backend
+- Primary: Go (Fiber framework)
+- Services: Python (FastAPI)
+- Database: PostgreSQL
+- Cache: Redis
+- Queue: NATS
+
+### Frontend
+- Framework: Next.js
+- Language: TypeScript
+- State: Zustand
+- UI: TailwindCSS + shadcn/ui
+
+## 2. System Architecture
+
+### Core Components
+```
+project-root/
+├── backend/                 # Go API Server
+│   ├── api/                # REST endpoints
+│   ├── services/           # Business logic
+│   └── pkg/                # Shared packages
+├── services/               # Python services
+│   ├── ml/                # Machine learning
+│   └── analytics/         # Data analysis
+├── frontend/              # Next.js frontend
+│   ├── components/        # React components
+│   └── pages/            # Application pages
+└── deploy/               # Deployment configs
+    ├── docker/           # Docker configs
+    ├── k8s/              # Kubernetes manifests
+    └── platform/         # Platform-specific
+```
+
+### Data Flow
+1. Client Request → Discord Activity
+2. Activity → Backend API
+3. Backend → Media Services
+4. Services → Database/Cache
+5. Real-time Updates → WebSocket
+
+## 3. Implementation Plan
+
+### Phase 1: Foundation (45 days)
+- Development environment setup
+- Container infrastructure
+- Core service implementation
+
+### Phase 2: Core Features (63 days)
+- Go backend development
+- Frontend framework setup
+- Database implementation
+
+### Phase 3: Integration (49 days)
+- Message queue integration
+- API layer development
+- Authentication system
+
+### Phase 4: Platform Support (42 days)
+- Linux deployment
+- Windows/WSL2 integration
+- TrueNAS implementation
+
+### Phase 5: Enhancement (49 days)
+- Monitoring setup
+- Performance optimization
+- Documentation & testing
+
+## 4. Platform Deployment
+
+### Linux
+```bash
+# Base requirements
+- Docker/Podman
+- Go 1.21+
+- Node.js 18+
+- PostgreSQL 15+
+```
+
+### Windows + WSL2
+```powershell
+# Setup requirements
+- WSL2 enabled
+- Docker Desktop
+- Windows Terminal
+- VSCode with extensions
+```
+
+### TrueNAS
+```bash
+# Jail configuration
+- Docker jail
+- Network configuration
+- Storage mounts
+```
+
+## 5. Development Workflow
+
+### Local Development
+1. Clone repository
+2. Start development containers
+3. Run local services
+4. Access development environment
+
+### Testing
+- Unit tests (Go/Python/TypeScript)
+- Integration tests
+- End-to-end tests
+- Performance testing
+
+### Deployment
+1. Build containers
+2. Run integration tests
+3. Deploy to staging
+4. Production deployment
+
+## 6. Monitoring & Maintenance
+
+### Metrics
+- System metrics (Prometheus)
+- Application metrics
+- Business metrics
+
+### Logging
+- Application logs
+- System logs
+- Audit logs
+
+### Backup
+- Database backups
+- Configuration backups
+- Media backups
+
+## 7. Documentation
+
+### Technical Documentation
+- API documentation
+- Architecture overview
+- Development guides
+
+### Deployment Documentation
+- Installation guides
+- Configuration guides
+- Troubleshooting guides
+
+### User Documentation
+- User guides
+- Admin guides
+- Feature documentation

@@ -1,0 +1,79 @@
+graph TB
+    subgraph Discord["Discord Environment"]
+        DC[Discord Client]
+        DA[Discord Activity/iframe]
+        subgraph UI["UI Components"]
+            PL[Library Browser]
+            PP[Player Controls]
+            VS[Video Stream]
+            QM[Queue Manager]
+        end
+    end
+
+    subgraph Backend["Backend Services"]
+        subgraph DiscordBot["Discord Bot Service"]
+            DB[Discord Bot Core]
+            CM[Command Manager]
+            EH[Event Handler]
+        end
+        
+        subgraph WebServer["Web Server"]
+            WS[Flask Server]
+            subgraph Endpoints["API Endpoints"]
+                LE[Library Endpoint]
+                SE[Stream Endpoint]
+                AE[Auth Endpoint]
+            end
+            SM[Session Manager]
+            CH[Cache Handler]
+        end
+        
+        subgraph PlexAPI["Plex Integration"]
+            PA[Plex API Client]
+            subgraph PlexHandlers["Media Handlers"]
+                LH[Library Handler]
+                MH[Media Handler]
+                TH[Transcoding Handler]
+            end
+        end
+    end
+
+    subgraph Plex["Plex Server"]
+        PS[Plex Media Server]
+        subgraph PlexServices["Plex Services"]
+            TS[Transcoder Service]
+            MS[Media Scanner]
+            SS[Streaming Service]
+        end
+        PL[Media Libraries]
+        MD[Metadata]
+    end
+
+    subgraph Storage["Data Storage"]
+        RC[Redis Cache]
+        UD[User Data Store]
+    end
+
+    %% Discord Connections
+    DC --- DA
+    DA --> PL & PP & VS & QM
+
+    %% Backend Connections
+    DB <--> CM & EH
+    WS <--> LE & SE & AE
+    SM --- CH
+    
+    %% API Connections
+    PA <--> LH & MH & TH
+    
+    %% Plex Connections
+    PS --- TS & MS & SS
+    PS --- PL & MD
+    
+    %% Cross-System Connections
+    DA <--> WS
+    DB <--> DC
+    PA <--> PS
+    WS <--> PA
+    CH <--> RC
+    SM <--> UD

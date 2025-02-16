@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "timestamp": "2025-02-16T20:17:22.430291",
+    "duration": 30.014113,
+    "collectors": [
+      "pokemon",
+      "repos",
+      "game_repos"
+    ]
+  },
+  "data": {
+    "pokemon": {
+      "error": ""
+    },
+    "repos": {
+      "github": [],
+      "gitlab": []
+    },
+    "game_repos": {
+      "pokemon": {
+        "games": {},
+        "tools": {},
+        "assets": {},
+        "mechanics": {}
+      },
+      "osrs": {
+        "game_data": {},
+        "tools": {}
+      },
+      "fortnite": {
+        "research": {},
+        "tools": {}
+      },
+      "cookie_clicker": {
+        "game": {},
+        "mods": {}
+      }
+    }
+  }
+}

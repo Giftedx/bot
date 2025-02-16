@@ -8,6 +8,7 @@ import logging
 from typing import Dict, List, Optional, Tuple, Any
 import struct
 import json
+import asyncio
 
 from ..base_collector import BaseCollector
 from ..config import API_CONFIG, GAME_DATA_SOURCES
@@ -48,8 +49,30 @@ class PokemonDataCollector(BaseCollector):
         """Collect Pokemon data from all configured sources."""
         data = {
             'api_data': await self._collect_api_data(),
-            'rom_data': await self._collect_rom_data()
+            'rom_data': {}
         }
+        
+        # Check if any ROMs exist before attempting to parse them
+        rom_paths = [
+            self.config['rom_paths'].get('gb', ''),
+            self.config['rom_paths'].get('gbc', ''),
+            self.config['rom_paths'].get('gba', '')
+        ]
+        
+        has_roms = any(
+            os.path.exists(path) and any(os.listdir(path))
+            for path in rom_paths if path
+        )
+        
+        if has_roms:
+            try:
+                data['rom_data'] = await self._collect_rom_data()
+            except Exception as e:
+                logger.warning(f"Failed to collect ROM data: {e}")
+                data['rom_data'] = {}
+        else:
+            logger.info("No ROM files found, skipping ROM data collection")
+        
         return data
     
     async def _collect_api_data(self) -> Dict[str, Any]:
@@ -61,17 +84,37 @@ class PokemonDataCollector(BaseCollector):
             'locations': []
         }
         
-        # Fetch Pokemon data
-        for i in range(1, 152):  # Gen 1 Pokemon
-            pokemon_data = await self.fetch_data(f"{self.config['pokeapi_url']}/pokemon/{i}")
-            if pokemon_data:
-                api_data['pokemon'].append(pokemon_data)
+        # Use smaller batches and add delays to respect rate limits
+        async def fetch_batch(urls: List[str], batch_size: int = 5) -> List[Dict]:
+            results = []
+            for i in range(0, len(urls), batch_size):
+                batch = urls[i:i + batch_size]
+                batch_results = await asyncio.gather(
+                    *[self.fetch_data(url) for url in batch],
+                    return_exceptions=True
+                )
+                results.extend([r for r in batch_results if not isinstance(r, Exception)])
+                await asyncio.sleep(1)  # Rate limiting delay
+            return results
         
-        # Fetch move data
-        for i in range(1, 166):  # Gen 1 moves
-            move_data = await self.fetch_data(f"{self.config['pokeapi_url']}/move/{i}")
-            if move_data:
-                api_data['moves'].append(move_data)
+        # Prepare URLs for batch fetching
+        pokemon_urls = [
+            f"{self.config['pokeapi_url']}/pokemon/{i}"
+            for i in range(1, 152)  # Gen 1 Pokemon
+        ]
+        move_urls = [
+            f"{self.config['pokeapi_url']}/move/{i}"
+            for i in range(1, 166)  # Gen 1 moves
+        ]
+        
+        # Fetch data in batches
+        try:
+            api_data['pokemon'] = await fetch_batch(pokemon_urls)
+            api_data['moves'] = await fetch_batch(move_urls)
+        except Exception as e:
+            logger.error(f"Error fetching API data: {e}")
+            # Return partial data if available
+            return api_data
         
         return api_data
     

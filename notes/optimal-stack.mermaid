@@ -1,0 +1,77 @@
+graph TB
+    subgraph Container["Container Layer"]
+        DK[Docker]
+        KS[Kubernetes]
+        PM[Podman]
+        style DK fill:#f9f,stroke:#333
+        style KS fill:#f9f,stroke:#333
+        style PM fill:#f9f,stroke:#333
+    end
+
+    subgraph Runtime["Runtime Environment"]
+        subgraph Languages["Core Languages"]
+            GO[Go Backend]
+            TS[TypeScript Frontend]
+            PY[Python Services]
+        end
+        
+        subgraph Frameworks["Frameworks"]
+            GF[Gin/Fiber - Go]
+            NX[Next.js]
+            FA[FastAPI]
+        end
+    end
+
+    subgraph Storage["Storage Layer"]
+        subgraph Database["Databases"]
+            PG[PostgreSQL]
+            MG[MongoDB]
+            RD[Redis]
+        end
+        
+        subgraph ObjectStorage["Object Storage"]
+            MC[MinIO]
+            S3[S3 Compatible]
+        end
+    end
+
+    subgraph Platform["Platform Services"]
+        subgraph MessageQueue["Message Queue"]
+            NK[NATS]
+            RK[RabbitMQ]
+        end
+        
+        subgraph Cache["Caching"]
+            RC[Redis Cache]
+            MC[Memcached]
+        end
+        
+        subgraph Search["Search"]
+            ES[Elasticsearch]
+            MES[Meilisearch]
+        end
+    end
+
+    subgraph Deployment["Deployment Options"]
+        subgraph Native["Native OS"]
+            LX[Linux]
+            WIN[Windows]
+            MAC[MacOS]
+        end
+        
+        subgraph Virtual["Virtualization"]
+            VB[VirtualBox]
+            WSL[WSL2]
+            HV[Hyper-V]
+        end
+        
+        subgraph NAS["NAS Systems"]
+            TN[TrueNAS CORE]
+            OMV[OpenMediaVault]
+        end
+    end
+
+    Container --> Runtime
+    Runtime --> Storage
+    Runtime --> Platform
+    Platform --> Deployment

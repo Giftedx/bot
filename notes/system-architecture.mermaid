@@ -1,0 +1,23 @@
+graph TB
+    subgraph Discord["Discord Environment"]
+        DC[Discord Client]
+        DA[Discord Activity/iframe]
+    end
+
+    subgraph Backend["Backend Services"]
+        DB[Discord Bot]
+        WS[Web Server]
+        PA[Plex API Module]
+    end
+
+    subgraph Plex["Plex Environment"]
+        PS[Plex Server]
+        PL[Plex Libraries]
+    end
+
+    DC --- DA
+    DA --> WS
+    DB --> DC
+    WS <--> PA
+    PA <--> PS
+    PS --- PL

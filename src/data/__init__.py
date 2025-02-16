@@ -1,3 +1,9 @@
-from .repositories import Repository, RepositoryManager
+"""Data management modules for the bot."""
 
-__all__ = ['Repository', 'RepositoryManager'] 
+from . import osrs
+from . import pokemon
+
+__all__ = [
+    'osrs',
+    'pokemon',
+] 

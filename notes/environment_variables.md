@@ -69,3 +69,20 @@ WORKERS=4
 3. Consider using Vault for production secrets
 4. Rotate tokens periodically
 5. Use least-privilege tokens when possible
+
+# Essential Environment Variables
+
+## Core Bot Configuration
+- `DISCORD_TOKEN` - Bot authentication token from Discord Developer Portal
+- `COMMAND_PREFIX` - Prefix for bot commands (default: "!")
+- `DISCORD_TEXT_CHANNEL_ID` - Restricted channel for admin commands
+
+## Plex Integration
+- `PLEX_URL` - Plex Media Server URL (default: http://localhost:32400)
+- `PLEX_TOKEN` - Plex authentication token
+- `PLEX_MOVIE_LIBRARY_NAME` - Name of movie library section
+- `PLEX_TV_LIBRARY_NAME` - Name of TV show library section
+
+## Security Configuration
+- `JWT_SECRET_KEY` - Secret for JSON Web Token generation
+- `VAULT_ADDR` - HashiCorp Vault server URL (if using)

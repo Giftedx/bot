@@ -1,136 +1,185 @@
-# Discord Plex Bot
+# Discord Application with OSRS, Pokemon, and Plex Integration
 
-A Discord bot that integrates with Plex Media Server, allowing users to browse and stream media content directly in Discord voice channels.
+A modern Discord application that integrates OSRS (Old School RuneScape) data, Pokemon features, and Plex media playback using Discord's latest application features.
 
-## Features
+## Major Changes
+- Migrated from bot model to Discord application model
+- Implemented slash commands and modern interactions
+- Added proper component handling
+- Improved documentation and structure
 
-- Browse Plex libraries
-- Search for media content
-- Stream media in Discord voice channels
-- Web interface for media browsing
-- Transcoding support for optimal playback
-- Authentication and authorization
-- Cross-platform compatibility
+## Documentation
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Development Guide](docs/DEVELOPMENT.md)
+- [API Documentation](docs/API.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
 
-## Prerequisites
+## Requirements
 
-- Python 3.8 or higher
-- FFmpeg (for media transcoding)
-- Redis (for caching)
-- Plex Media Server
-- Discord Bot Token
-- Node.js and npm (for frontend development)
+- Python 3.12 or higher
+- Redis server (for caching)
+- PostgreSQL (optional, for advanced data storage)
+- FFmpeg (for media features)
 
-## Installation
+## Quick Start
 
-1. Clone the repository:
+1. Create Discord Application:
+   - Go to [Discord Developer Portal](https://discord.com/developers/applications)
+   - Create new application
+   - Get credentials (App ID, Public Key, Token)
+   - Enable required intents
+
+2. Clone and Setup:
 ```bash
+# Clone repository
 git clone <repository-url>
-cd discord-plex-bot
-```
+cd discord-app
 
-2. Create and activate a virtual environment:
-```bash
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Linux/macOS
 .\venv\Scripts\activate   # Windows
-```
 
-3. Install Python dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your credentials
 ```
 
-4. Set up environment variables:
-Create a `.env` file in the project root with the following variables:
-```
-DISCORD_TOKEN=your_discord_bot_token
-DISCORD_CLIENT_ID=your_discord_client_id
-PLEX_URL=your_plex_server_url
+3. Configure Application:
+```env
+# Discord Application
+DISCORD_APP_ID=your_app_id
+DISCORD_PUBLIC_KEY=your_public_key
+DISCORD_TOKEN=your_token
+
+# Plex Configuration (Optional)
+PLEX_URL=your_plex_url
 PLEX_TOKEN=your_plex_token
+
+# Database Configuration
+DATABASE_URL=your_database_url
+
+# Redis Configuration
 REDIS_URL=redis://localhost:6379
-JWT_SECRET_KEY=your_jwt_secret
 ```
 
-5. Install frontend dependencies:
+4. Run Application:
 ```bash
-cd frontend
-npm install
+python -m src.app
 ```
 
-## Usage
+## Features
 
-1. Start the Discord bot:
-```bash
-python discord_bot/bot.py
-```
+### Plex Integration
+- Media playback in Discord
+- Library browsing
+- Search functionality
+- Media controls
+- Quality selection
 
-2. Start the web server:
-```bash
-python web_server/server.py
-```
+### OSRS Features
+- Data collection and tracking
+- Pet statistics
+- Boss information
+- Skill tracking
+- Price monitoring
 
-3. Start the frontend development server:
-```bash
-cd frontend
-npm start
-```
-
-## Discord Commands
-
-- `!libraries` - List all available Plex libraries
-- `!search <query>` - Search for media across libraries
-- `!play <media_id>` - Play media in current voice channel
-- `!stop` - Stop current playback
-
-## API Endpoints
-
-- `GET /api/libraries` - Get all Plex libraries
-- `GET /api/search?q=<query>&library=<library_id>` - Search for media
-- `GET /api/media/<media_id>` - Get media details
-- `GET /api/stream/<media_id>` - Get media stream URL
-- `POST /api/auth` - Authenticate user
+### Pokemon Features
+- ROM data parsing
+- PokeAPI integration
+- Pokemon information
+- Game data collection
 
 ## Development
 
-1. Install development dependencies:
+1. Setup Development Environment:
 ```bash
+# Install development dependencies
 pip install -r requirements-dev.txt
+
+# Set up pre-commit hooks
+pre-commit install
 ```
 
-2. Run tests:
+2. Run Tests:
 ```bash
+# Run all tests
 pytest
+
+# Run with coverage
+coverage run -m pytest
+coverage report
 ```
 
-3. Format code:
+3. Code Quality:
 ```bash
+# Format code
 black .
-```
 
-4. Run linting:
-```bash
+# Check types
+mypy .
+
+# Lint code
 flake8
 ```
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+1. Create Feature Branch:
+```bash
+git checkout -b feature/your-feature-name
+```
+
+2. Development Workflow:
+- Write tests first
+- Implement feature
+- Update documentation
+- Run quality checks
+- Submit pull request
+
+3. Documentation:
+- Update relevant .md files
+- Add API documentation
+- Update architecture docs if needed
+- Add migration notes if applicable
+
+## Deployment
+
+See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions on:
+- Setting up production environment
+- Configuring Discord application
+- Setting up databases
+- Monitoring and logging
+- Backup procedures
+
+## Troubleshooting
+
+Common issues and solutions:
+1. Command Registration:
+   - Verify slash commands are registered
+   - Check application permissions
+   - Verify intents are enabled
+
+2. Media Playback:
+   - Check Plex connectivity
+   - Verify media permissions
+   - Check FFmpeg installation
+
+3. Data Collection:
+   - Verify API access
+   - Check rate limits
+   - Verify database connectivity
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- [discord.py](https://github.com/Rapptz/discord.py)
-- [PlexAPI](https://github.com/pkkid/python-plexapi)
-- [Flask](https://flask.palletsprojects.com/)
-
-## Support
-
-For support, please open an issue in the GitHub repository or contact the maintainers. 
+- Discord.py developers
+- Plex API contributors
+- OSRS Wiki team
+- PokeAPI team 
