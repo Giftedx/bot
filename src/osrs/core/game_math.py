@@ -1,8 +1,8 @@
 """OSRS game mathematics and formulas."""
 from math import floor
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Optional
 
-from ..models import SkillType
+from .constants import SkillType
 
 
 def calculate_combat_level(levels: Dict[str, int]) -> int:

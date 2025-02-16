@@ -1,63 +1,54 @@
-# OSRS Discord Bot
+# Discord Integration Bot
 
-A feature-rich Discord bot that brings Old School RuneScape gameplay elements to your Discord server.
+A powerful Discord bot that integrates various services and games, including Plex media playback, Pokemon game data, and more.
 
 ## Features
 
-### Character System
-- Create and manage OSRS characters
-- Level up skills through various activities
-- Track character progress and stats
-- Equipment and inventory management
-- Bank system for item storage
+### Plex Integration
+- Watch Together: Stream Plex content in Discord voice channels
+- Media Controls: Play, pause, seek, and manage playback
+- Rich Presence: Show what you're watching in Discord
+- Voice Channel Sync: Synchronized playback for group watching
 
-### Combat System
-- PvE and PvP combat mechanics
-- Different combat styles (Accurate, Aggressive, Defensive, Controlled)
-- Combat training with XP gains
-- Equipment bonuses and combat calculations
-- Combat level calculation
+### Game Integrations
+- Pokemon ROM Data:
+  - Parse and analyze Pokemon games (GB, GBC, GBA)
+  - Extract game data (Pokemon, moves, maps, items)
+  - Support for multiple Pokemon generations
+- OSRS Integration:
+  - Item database and Grand Exchange tracking
+  - Player stats and hiscores
+  - Quest and achievement tracking
 
-### Quest System
-- Multiple quests with varying difficulty levels
-- Quest requirements (skills, items, quest points)
-- Quest rewards (XP, items, quest points)
-- Track quest progress and completion status
+### Discord Activities
+- Custom Activity Implementation
+- Rich Presence Integration
+- Voice Channel Activities
+- Group Gaming Features
 
-### Trading System
-- Player-to-player trading
-- Trade offers with expiration
-- Safe trading interface
-- Trade history tracking
-
-### World System
-- Multiple game worlds
-- Different world types (regular, PvP, skill total)
-- World hopping functionality
-- World-specific features and restrictions
-
-### Bank System
-- Store and manage items
-- View bank contents by category
-- Deposit and withdraw items
-- Search bank contents
+### Data Collection
+- Repository Analysis
+- API Integration
+- Game Data Parsing
+- Caching System
 
 ## Setup
 
 ### Prerequisites
-- Python 3.8 or higher
-- PostgreSQL database
-- Discord Bot Token
+- Python 3.7+
+- Redis (optional, for caching)
+- FFmpeg (for voice channel streaming)
+- Git (for repository scanning)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/osrs-discord-bot.git
-cd osrs-discord-bot
+git clone https://github.com/yourusername/discord-integration-bot.git
+cd discord-integration-bot
 ```
 
-2. Create a virtual environment:
+2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -69,74 +60,111 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
-4. Set up the database:
-- Create a PostgreSQL database
-- Copy `.env.example` to `.env`
-- Update the database URL in `.env`
+4. Create a `.env` file with your configuration:
+```env
+# Discord
+DISCORD_TOKEN=your_discord_bot_token
+DISCORD_CLIENT_ID=your_client_id
+DISCORD_CLIENT_SECRET=your_client_secret
 
-5. Configure the bot:
-- Add your Discord bot token to `.env`
-- Customize other settings in `config.yaml` if needed
+# Plex
+PLEX_SERVER_URL=your_plex_server_url
+PLEX_TOKEN=your_plex_token
 
-6. Initialize the database:
-```bash
-python run.py --init-db
-```
+# GitHub/GitLab
+GITHUB_TOKEN=your_github_token
+GITLAB_TOKEN=your_gitlab_token
 
-7. Start the bot:
-```bash
-python run.py
+# Redis (optional)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+
+# Game Data
+POKEMON_GB_ROMS_PATH=path/to/gb/roms
+POKEMON_GBC_ROMS_PATH=path/to/gbc/roms
+POKEMON_GBA_ROMS_PATH=path/to/gba/roms
 ```
 
 ## Usage
 
-### Basic Commands
-- `!osrs create <name>` - Create a new character
-- `!osrs stats` - View character stats
-- `!osrs train <skill>` - Train a skill
-- `!osrs inventory` - View inventory
+### Starting the Bot
+```bash
+python src/bot.py
+```
 
-### Combat Commands
-- `!combat train <style>` - Train combat skills
-- `!combat stats` - View combat stats
-- `!combat styles` - View combat styles
-- `!combat attack <player>` - Attack another player
+### Running Data Collection
+```bash
+python src/data_collection/run_collection.py
+```
 
-### Quest Commands
-- `!quest list` - List all quests
-- `!quest info <quest>` - View quest details
-- `!quest start <quest>` - Start a quest
-- `!quest progress` - View quest progress
+### Discord Commands
 
-### Trading Commands
-- `!trade offer <player> <item> <amount>` - Offer a trade
-- `!trade accept <trade_id>` - Accept a trade
-- `!trade decline <trade_id>` - Decline a trade
-- `!trade cancel <trade_id>` - Cancel your trade offer
-- `!trade list` - List your active trades
+#### Plex Commands
+- `!plex start` - Start a Plex Activity in the current voice channel
+- `!plex play <media_id>` - Play specific media
+- `!plex pause` - Pause playback
+- `!plex resume` - Resume playback
+- `!plex stop` - Stop playback
+- `!plex seek <timestamp>` - Seek to specific time (e.g., "1:30:00")
 
-### Bank Commands
-- `!osrs bank` - View bank commands
-- `!osrs bank view` - View bank contents
-- `!osrs bank deposit <item> [amount]` - Deposit items
-- `!osrs bank withdraw <item> [amount]` - Withdraw items
-- `!osrs bank search <query>` - Search bank items
+#### Pokemon Commands
+- `!pokemon info <pokemon>` - Get Pokemon information
+- `!pokemon move <move>` - Get move information
+- `!pokemon map <location>` - View map data
+- `!pokemon item <item>` - Get item information
+
+#### Repository Commands
+- `!repo scan` - Scan configured repositories
+- `!repo info <repo>` - Get repository information
+- `!repo stats` - View repository statistics
+
+## Development
+
+### Project Structure
+```
+src/
+├── bot.py                    # Main bot file
+├── data_collection/         # Data collection system
+│   ├── config.py           # Configuration
+│   ├── base_collector.py   # Base collector class
+│   ├── run_collection.py   # Collection script
+│   ├── game_data/         # Game data collectors
+│   └── api_integration/   # API integration
+├── cogs/                   # Bot commands
+└── utils/                 # Utility functions
+
+data/
+├── collected/            # Collected data
+├── cache/               # Cache directory
+└── roms/                # ROM files (not included)
+```
+
+### Adding New Features
+1. Create a new collector in the appropriate directory
+2. Implement the collector interface
+3. Add configuration to `config.py`
+4. Update the orchestrator in `run_collection.py`
+5. Create corresponding bot commands in `cogs/`
+
+### Testing
+```bash
+pytest tests/
+```
 
 ## Contributing
-
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
-
-- Old School RuneScape for inspiration
-- Discord.py library
-- PostgreSQL
-- All contributors and users of the bot
+- [Discord.py](https://github.com/Rapptz/discord.py)
+- [PlexAPI](https://github.com/pkkid/python-plexapi)
+- [PokeAPI](https://pokeapi.co/)
+- [OSRSBox](https://github.com/osrsbox/osrsbox-db)
+- All other open-source projects used in this bot

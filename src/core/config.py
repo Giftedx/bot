@@ -1,156 +1,101 @@
-"""Configuration settings module."""
-from typing import Any, List, Optional, Dict
+"""Configuration management for the bot."""
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+from dataclasses import dataclass, field
 
-load_dotenv()
-
-
-class Settings:
-    """Central configuration management for the application."""
+@dataclass
+class Config:
+    """Bot configuration."""
     
-    def __init__(self) -> None:
-        """Initialize settings with environment variables."""
-        self._config: Dict[str, Any] = {
-            "BOT_TYPE": os.getenv("BOT_TYPE", "regular"),
+    # Discord settings
+    DISCORD_TOKEN: str
+    COMMAND_PREFIX: str = "!"
+    BOT_DESCRIPTION: str = "Discord Bot"
+    
+    # Plex settings
+    PLEX_URL: str
+    PLEX_TOKEN: str
+    PLEX_LIBRARIES: List[str] = None
+    
+    # Media settings
+    MAX_SEARCH_RESULTS: int = 10
+    DEFAULT_VOLUME: int = 100
+    STREAM_QUALITY: str = "Original"
+    
+    # Voice settings
+    VOICE_TIMEOUT: int = 300  # 5 minutes
+    AUTO_DISCONNECT: bool = True
+    
+    # Performance settings
+    COMMAND_RATE_LIMIT: int = 5
+    COMMAND_COOLDOWN: float = 3.0
+    MAX_CONCURRENT_STREAMS: int = 3
+    
+    # Logging settings
+    LOG_LEVEL: str = "INFO"
+    LOG_FILE: str = "bot.log"
+    ENABLE_DEBUG: bool = False
+    
+    # Metrics settings
+    ENABLE_METRICS: bool = True
+    METRICS_PORT: int = 9090
+    
+    # Enabled extensions/cogs
+    ENABLED_EXTENSIONS: List[str] = field(default_factory=lambda: [
+        "base",
+        "combat_commands",
+        "economy_commands",
+        "item_commands",
+        "quest_commands",
+        "skills_commands"
+    ])self.config.ENABLED_EXTENSIONS
+    
+    @classmethod
+    def from_env(cls) -> "Config":
+        """Create configuration from environment variables."""
+        required = {
             "DISCORD_TOKEN": os.getenv("DISCORD_TOKEN"),
-            "PLEX_TOKEN": os.getenv("PLEX_TOKEN"),
             "PLEX_URL": os.getenv("PLEX_URL"),
-            "COMMAND_PREFIX": os.getenv("COMMAND_PREFIX", "!"),
-            "REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
-            "GRACEFUL_SHUTDOWN_TIMEOUT": float(
-                os.getenv("GRACEFUL_SHUTDOWN_TIMEOUT", "30.0")
-            ),
-            "HEALTH_CHECK_INTERVAL": float(
-                os.getenv("HEALTH_CHECK_INTERVAL", "60.0")
-            ),
-            "COMMAND_COOLDOWN": float(
-                os.getenv("COMMAND_COOLDOWN", "3.0")
-            ),
-            "MAX_CONCURRENT_STREAMS": int(
-                os.getenv("MAX_CONCURRENT_STREAMS", "5")
-            ),
-            "PLEX_MAX_RETRIES": int(
-                os.getenv("PLEX_MAX_RETRIES", "3")
-            ),
-            "PLEX_RETRY_DELAY": float(
-                os.getenv("PLEX_RETRY_DELAY", "1.0")
-            )
+            "PLEX_TOKEN": os.getenv("PLEX_TOKEN")
         }
-
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
-        """Retrieve configuration value with optional default."""
-        return self._config.get(key, default)
-
-    def get_str(self, key: str, default: str = "") -> str:
-        """
-        Type-safe string retrieval.
         
-        Args:
-            key: Configuration key
-            default: Default value if key not found
+        # Check for missing required values
+        missing = [k for k, v in required.items() if not v]
+        if missing:
+            raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
             
-        Returns:
-            str: Configuration value
-            
-        Raises:
-            ValueError: If value cannot be converted to string
-        """
-        value = self.get(key, default)
-        if value is None:
-            return default
-        return str(value)
-
-    def get_int(self, key: str, default: Optional[int] = None) -> int:
-        """
-        Type-safe integer retrieval.
+        # Create instance with required values
+        config = cls(**required)
         
-        Args:
-            key: Configuration key
-            default: Default value if key not found
-            
-        Returns:
-            int: Configuration value
-            
-        Raises:
-            ValueError: If value cannot be converted to integer
-        """
-        value = self.get(key, default)
-        if value is None:
-            raise ValueError(f"No value or default for {key}")
-        try:
-            return int(value)
-        except (TypeError, ValueError):
-            raise ValueError(
-                f"Value for {key} cannot be converted to integer: {value}"
-            )
-
-    def get_bool(self, key: str, default: Optional[bool] = None) -> bool:
-        """
-        Type-safe boolean retrieval.
-        
-        Args:
-            key: Configuration key
-            default: Default value if key not found
-            
-        Returns:
-            bool: Configuration value
-            
-        Raises:
-            ValueError: If value cannot be converted to boolean
-        """
-        value = self.get(key, default)
-        if value is None:
-            raise ValueError(f"No value or default for {key}")
-            
-        if isinstance(value, bool):
-            return value
-            
-        if isinstance(value, str):
-            value = value.lower()
-            if value in ('true', '1', 'yes', 'on'):
-                return True
-            if value in ('false', '0', 'no', 'off'):
-                return False
+        # Update optional values from environment
+        for field in cls.__dataclass_fields__:
+            if field not in required and (value := os.getenv(field)):
+                setattr(config, field, value)
                 
-        raise ValueError(
-            f"Value for {key} cannot be converted to boolean: {value}"
-        )
-
-    def get_list(
-        self,
-        key: str,
-        default: Optional[List[Any]] = None
-    ) -> List[Any]:
-        """
-        Type-safe list retrieval.
-        
-        Args:
-            key: Configuration key
-            default: Default value if key not found
-            
-        Returns:
-            List[Any]: Configuration value
-            
-        Raises:
-            ValueError: If value cannot be converted to list
-        """
-        value = self.get(key, default)
-        if value is None:
-            raise ValueError(f"No value or default for {key}")
-            
-        if isinstance(value, str):
-            return [x.strip() for x in value.split(',') if x.strip()]
-            
-        if isinstance(value, list):
-            return value
-            
-        raise ValueError(
-            f"Value for {key} cannot be converted to list: {value}"
-        )
+        return config
     
-    def __getattr__(self, name: str) -> Any:
-        """Allow attribute-style access to config values."""
-        if name in self._config:
-            return self._config[name]
-        raise AttributeError(f"'Settings' object has no attribute '{name}'")
+    def validate(self) -> None:
+        """Validate configuration values."""
+        if not self.DISCORD_TOKEN:
+            raise ValueError("Discord token is required")
+            
+        if not self.ENABLED_EXTENSIONS:
+            raise ValueError("At least one extension must be enabled")
+            
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert configuration to dictionary."""
+        return {
+            field: getattr(self, field)
+            for field in self.__dataclass_fields__
+        }
+        
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get configuration value."""
+        return getattr(self, key, default)
+        
+    def update(self, **kwargs: Any) -> None:
+        """Update configuration values."""
+        for key, value in kwargs.items():
+            if key in self.__dataclass_fields__:
+                setattr(self, key, value)

@@ -244,5 +244,12 @@ class EconomyCommands(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
-async def setup(bot):
-    await bot.add_cog(EconomyCommands(bot)) 
+async def setup(bot: commands.Bot) -> None:
+    """Set up the economy commands cog."""
+    from ..lib.cog_utils import CogDependencies
+    
+    # Get dependencies
+    deps = CogDependencies.get_instance()
+    
+    # Add cog to bot
+    await bot.add_cog(EconomyCommands(bot, **deps.get_dependencies())) 

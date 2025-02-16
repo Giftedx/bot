@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Set, Union, Any
 from enum import Enum, auto
 
 from .bank import Bank
-from .skills import SkillType
+from .constants import SkillType
 from ..models.user import User
 
 

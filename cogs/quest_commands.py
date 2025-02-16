@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from dataclasses import dataclass, field
 
-from .models import Player, SkillType, QuestStatus
+from src.osrs.models import Player, SkillType, QuestStatus
 
 
 @dataclass
@@ -346,6 +346,6 @@ class QuestCommands(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
-    """Add the cog to the bot."""
-    bot.add_cog(QuestCommands(bot)) 
+async def setup(bot):
+    """Set up the quest commands cog."""
+    await bot.add_cog(QuestCommands(bot)) 

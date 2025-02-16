@@ -352,5 +352,12 @@ class QuestCommands(commands.Cog):
         # TODO: Implement database retrieval
         return []
 
-async def setup(bot):
-    await bot.add_cog(QuestCommands(bot)) 
+async def setup(bot: commands.Bot) -> None:
+    """Set up the quest commands cog."""
+    from ..lib.cog_utils import CogDependencies
+    
+    # Get dependencies
+    deps = CogDependencies.get_instance()
+    
+    # Add cog to bot
+    await bot.add_cog(QuestCommands(bot, **deps.get_dependencies())) 

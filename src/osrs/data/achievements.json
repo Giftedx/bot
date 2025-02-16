@@ -1,0 +1,73 @@
+{
+    "lumbridge_easy": {
+        "id": "lumbridge_easy",
+        "name": "Lumbridge & Draynor Easy Diary",
+        "difficulty": "easy",
+        "tasks": [
+            {
+                "id": "cook_shrimp",
+                "name": "Cook a shrimp in Lumbridge",
+                "description": "Cook a shrimp on the range in Lumbridge Castle's kitchen.",
+                "requirements": {
+                    "skills": {}
+                }
+            },
+            {
+                "id": "craft_water_rune",
+                "name": "Craft a water rune",
+                "description": "Craft a water rune at the Water Altar.",
+                "requirements": {
+                    "skills": {
+                        "runecraft": 5
+                    },
+                    "quests": ["rune_mysteries"]
+                }
+            }
+        ],
+        "rewards": {
+            "xp_lamp": {
+                "amount": 2500,
+                "level_requirement": 30
+            },
+            "lumbridge_explorer_ring_1": {
+                "id": "lumbridge_explorer_ring_1",
+                "name": "Lumbridge Explorer's Ring 1"
+            }
+        }
+    },
+    "varrock_medium": {
+        "id": "varrock_medium",
+        "name": "Varrock Medium Diary",
+        "difficulty": "medium",
+        "tasks": [
+            {
+                "id": "craft_fire_runes",
+                "name": "Craft 56 fire runes",
+                "description": "Craft 56 fire runes simultaneously.",
+                "requirements": {
+                    "skills": {
+                        "runecraft": 48
+                    }
+                }
+            },
+            {
+                "id": "champions_guild",
+                "name": "Enter the Champions' Guild",
+                "description": "Enter the Champions' Guild.",
+                "requirements": {
+                    "quest_points": 32
+                }
+            }
+        ],
+        "rewards": {
+            "xp_lamp": {
+                "amount": 7500,
+                "level_requirement": 40
+            },
+            "varrock_armour_2": {
+                "id": "varrock_armour_2",
+                "name": "Varrock Armour 2"
+            }
+        }
+    }
+} 

@@ -1,0 +1,2934 @@
+{
+    "jungle_tree_kharazi_jungle": {
+        "id": "jungle_tree_kharazi_jungle",
+        "name": "Jungle tree (Kharazi Jungle)",
+        "type": "OBJECT",
+        "examine": "Looks good for logging.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "[[Legends' Quest]]"
+        ],
+        "location": "[[Kharazi Jungle]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Jungle_tree_(Kharazi_Jungle)"
+    },
+    "prifddinas_north_bank": {
+        "id": "prifddinas_north_bank",
+        "name": "Prifddinas north bank",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "Northwestern [[Prifddinas]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Prifddinas_north_bank"
+    },
+    "keldagrim_bank": {
+        "id": "keldagrim_bank",
+        "name": "Keldagrim bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Western [[Keldagrim]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Keldagrim_bank"
+    },
+    "tree": {
+        "id": "tree",
+        "name": "Tree",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree"
+    },
+    "ent_random_event": {
+        "id": "ent_random_event",
+        "name": "Ent (random event)",
+        "type": "OBJECT",
+        "examine": "Various",
+        "object_type": "TREE",
+        "location": "Random",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Ent_(random_event)"
+    },
+    "spirit_tree": {
+        "id": "spirit_tree",
+        "name": "Spirit tree",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "quest_requirements": [
+            "[[Tree Gnome Village]]"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Spirit_tree"
+    },
+    "gnome_stronghold_north_bank": {
+        "id": "gnome_stronghold_north_bank",
+        "name": "Gnome Stronghold north bank",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Grand Tree]]",
+        "actions": [
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Stronghold_north_bank"
+    },
+    "tree_tutorial_island": {
+        "id": "tree_tutorial_island",
+        "name": "Tree (Tutorial Island)",
+        "type": "OBJECT",
+        "examine": "One of the most common trees in Gielinor.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tutorial Island]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Tutorial_Island)"
+    },
+    "grand_tree": {
+        "id": "grand_tree",
+        "name": "Grand Tree",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Tree Gnome Stronghold]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Grand_Tree"
+    },
+    "palm_tree": {
+        "id": "palm_tree",
+        "name": "Palm tree",
+        "type": "OBJECT",
+        "examine": "This palm tree looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 68
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Palm_tree"
+    },
+    "lumbridge_castle_bank": {
+        "id": "lumbridge_castle_bank",
+        "name": "Lumbridge Castle bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Lumbridge Castle]]",
+        "actions": [
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Lumbridge_Castle_bank"
+    },
+    "oak_tree_farming": {
+        "id": "oak_tree_farming",
+        "name": "Oak tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 15
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree_(Farming)"
+    },
+    "papaya_tree": {
+        "id": "papaya_tree",
+        "name": "Papaya tree",
+        "type": "OBJECT",
+        "examine": "This papaya tree looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 57
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Papaya_tree"
+    },
+    "mos_le_harmless_bank": {
+        "id": "mos_le_harmless_bank",
+        "name": "Mos Le'Harmless bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Central [[Mos Le'Harmless]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mos_Le'Harmless_bank"
+    },
+    "undead_tree": {
+        "id": "undead_tree",
+        "name": "Undead tree",
+        "type": "OBJECT",
+        "examine": "Its bark is worse than its swipe.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 35
+        },
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Undead_tree"
+    },
+    "spirit_tree_farming": {
+        "id": "spirit_tree_farming",
+        "name": "Spirit Tree (Farming)",
+        "type": "OBJECT",
+        "examine": "A Spirit Tree.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 83
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Spirit_Tree_Patch|Spirit Tree Patch]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Spirit_Tree_(Farming)"
+    },
+    "dead_tree_sandy": {
+        "id": "dead_tree_sandy",
+        "name": "Dead tree (sandy)",
+        "type": "OBJECT",
+        "examine": "It's only useful for firewood now.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Hosidius]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(sandy)"
+    },
+    "maple_tree_construction": {
+        "id": "maple_tree_construction",
+        "name": "Maple tree (Construction)",
+        "type": "OBJECT",
+        "examine": "A lovely addition to the garden.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 45
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Maple_tree_(Construction)"
+    },
+    "meat_tree": {
+        "id": "meat_tree",
+        "name": "Meat tree",
+        "type": "OBJECT",
+        "examine": "Grotesque.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Chambers of Xeric]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Meat_tree"
+    },
+    "mature_juniper_tree": {
+        "id": "mature_juniper_tree",
+        "name": "Mature juniper tree",
+        "type": "OBJECT",
+        "examine": "An old matured tree.",
+        "object_type": "MINING_ROCK",
+        "requirements": {
+            "level": 42
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mature_juniper_tree"
+    },
+    "windswept_tree": {
+        "id": "windswept_tree",
+        "name": "Windswept tree",
+        "type": "OBJECT",
+        "examine": "A very strange-looking tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 50
+        },
+        "quest_requirements": [
+            "[[Olaf's Quest]]"
+        ],
+        "location": "[[Brine Rat Cavern]] Entrance,<br/>[[Fossil Island]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Windswept_tree"
+    },
+    "prifddinas_south_bank": {
+        "id": "prifddinas_south_bank",
+        "name": "Prifddinas south bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northwestern [[Prifddinas]]",
+        "actions": [
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Prifddinas_south_bank"
+    },
+    "port_piscarilius_bank": {
+        "id": "port_piscarilius_bank",
+        "name": "Port Piscarilius bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern [[Port Piscarilius]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Port_Piscarilius_bank"
+    },
+    "strong_tree": {
+        "id": "strong_tree",
+        "name": "Strong tree",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Strong_tree"
+    },
+    "acacia_tree": {
+        "id": "acacia_tree",
+        "name": "Acacia tree",
+        "type": "OBJECT",
+        "examine": "A splendid acacia tree.",
+        "object_type": "TREE",
+        "location": "[[Varlamore]]",
+        "actions": [
+            "mine"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Acacia_tree"
+    },
+    "orange_tree": {
+        "id": "orange_tree",
+        "name": "Orange tree",
+        "type": "OBJECT",
+        "examine": "This orange tree looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 39
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Orange_tree"
+    },
+    "sulliuscep": {
+        "id": "sulliuscep",
+        "name": "Sulliuscep",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 65
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tar swamp]], [[Fossil island]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pray-at",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Sulliuscep"
+    },
+    "mahogany_tree": {
+        "id": "mahogany_tree",
+        "name": "Mahogany tree",
+        "type": "OBJECT",
+        "examine": "A beautiful old mahogany tree.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 50
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "North of the [[Farming Guild]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mahogany_tree"
+    },
+    "lunar_isle_bank": {
+        "id": "lunar_isle_bank",
+        "name": "Lunar Isle bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Lunar Isle]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Lunar_Isle_bank"
+    },
+    "nardah_bank": {
+        "id": "nardah_bank",
+        "name": "Nardah bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Nardah]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Nardah_bank"
+    },
+    "warriors_guild_bank": {
+        "id": "warriors_guild_bank",
+        "name": "Warriors' Guild bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Warriors' Guild]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Warriors'_Guild_bank"
+    },
+    "odovacar": {
+        "id": "odovacar",
+        "name": "Odovacar",
+        "type": "OBJECT",
+        "examine": "A roving banker.",
+        "object_type": "ALTAR",
+        "location": "[[The Lair of Tarn Razorlor]]",
+        "actions": [
+            "mine",
+            "open",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Odovacar"
+    },
+    "light_jungle": {
+        "id": "light_jungle",
+        "name": "Light Jungle",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 10
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tai Bwo Wannai]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Light_Jungle"
+    },
+    "evergreen_tree": {
+        "id": "evergreen_tree",
+        "name": "Evergreen tree",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Evergreen_tree"
+    },
+    "tree_shayzien": {
+        "id": "tree_shayzien",
+        "name": "Tree (Shayzien)",
+        "type": "OBJECT",
+        "examine": "A commonly found tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Shayzien]]'s [[Graveyard of Heroes]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Shayzien)"
+    },
+    "dream_tree": {
+        "id": "dream_tree",
+        "name": "Dream tree",
+        "type": "OBJECT",
+        "examine": "Now that's weird!",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 55
+        },
+        "quest_requirements": [
+            "[[Lunar Diplomacy]]"
+        ],
+        "location": "[[Dream World]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dream_tree"
+    },
+    "fortis_west_bank": {
+        "id": "fortis_west_bank",
+        "name": "Fortis west bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Wester [[Civitas illa Fortis]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Fortis_west_bank"
+    },
+    "fossil_island_bank": {
+        "id": "fossil_island_bank",
+        "name": "Fossil Island bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Centre of [[Fossil Island]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Fossil_Island_bank"
+    },
+    "lletya_bank": {
+        "id": "lletya_bank",
+        "name": "Lletya bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Lletya]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Lletya_bank"
+    },
+    "burnt_tree": {
+        "id": "burnt_tree",
+        "name": "Burnt tree",
+        "type": "OBJECT",
+        "examine": "Quite crispy.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fossil Island Volcano]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Burnt_tree"
+    },
+    "dead_tree_burnt": {
+        "id": "dead_tree_burnt",
+        "name": "Dead tree (burnt)",
+        "type": "OBJECT",
+        "examine": "It's only useful for firewood now.",
+        "object_type": "ALTAR",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Wilderness]] south of [[Demonic Ruins]], [[Death Altar]], [[Fishing Hamlet]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(burnt)"
+    },
+    "varrock_east_bank": {
+        "id": "varrock_east_bank",
+        "name": "Varrock east bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Varrock]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Varrock_east_bank"
+    },
+    "dead_tree_swampy": {
+        "id": "dead_tree_swampy",
+        "name": "Dead tree (swampy)",
+        "type": "OBJECT",
+        "examine": "It's only useful for firewood now.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(swampy)"
+    },
+    "sophanem_bank": {
+        "id": "sophanem_bank",
+        "name": "Sophanem bank",
+        "type": "OBJECT",
+        "object_type": "ALTAR",
+        "location": "Eastern [[Sophanem]]",
+        "actions": [
+            "enter",
+            "pray-at",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Sophanem_bank"
+    },
+    "list_of_banks": {
+        "id": "list_of_banks",
+        "name": "List of banks",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/List_of_banks"
+    },
+    "tree_construction": {
+        "id": "tree_construction",
+        "name": "Tree (Construction)",
+        "type": "OBJECT",
+        "examine": "One of the most common trees in RuneScape.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 5
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Construction)"
+    },
+    "gourd_tree": {
+        "id": "gourd_tree",
+        "name": "Gourd tree",
+        "type": "OBJECT",
+        "examine": "A tree bearing a vessel shaped fruit.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Chambers of Xeric]]",
+        "actions": [
+            "mine",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Gourd_tree"
+    },
+    "oak_tree_2024_christmas_event": {
+        "id": "oak_tree_2024_christmas_event",
+        "name": "Oak tree (2024 Christmas event)",
+        "type": "OBJECT",
+        "examine": "A beautiful old oak.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 15
+        },
+        "quest_requirements": [
+            "[[2024 Christmas event]]"
+        ],
+        "location": "[[Falador]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree_(2024_Christmas_event)"
+    },
+    "pear_tree": {
+        "id": "pear_tree",
+        "name": "Pear tree",
+        "type": "OBJECT",
+        "examine": "A pear tree sapling has been planted here.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Lumbridge Castle]]",
+        "actions": [
+            "mine"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Pear_tree"
+    },
+    "willow_tree_construction": {
+        "id": "willow_tree_construction",
+        "name": "Willow tree (Construction)",
+        "type": "OBJECT",
+        "examine": "A lovely addition to the garden.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 30
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Willow_tree_(Construction)"
+    },
+    "lovakengj_bank": {
+        "id": "lovakengj_bank",
+        "name": "Lovakengj bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Lovakengj]]",
+        "actions": [
+            "mine",
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Lovakengj_bank"
+    },
+    "trees": {
+        "id": "trees",
+        "name": "Trees",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "mine",
+            "chop down",
+            "open",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Trees"
+    },
+    "jungle_tree": {
+        "id": "jungle_tree",
+        "name": "Jungle tree",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Jungle_tree"
+    },
+    "willow_tree_farming": {
+        "id": "willow_tree_farming",
+        "name": "Willow tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 30
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Willow_tree_(Farming)"
+    },
+    "stonepine_tree": {
+        "id": "stonepine_tree",
+        "name": "Stonepine tree",
+        "type": "OBJECT",
+        "examine": "A large stonepine tree.",
+        "object_type": "TREE",
+        "location": "[[Varlamore]]",
+        "actions": [
+            "mine"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Stonepine_tree"
+    },
+    "apple_tree": {
+        "id": "apple_tree",
+        "name": "Apple tree",
+        "type": "OBJECT",
+        "examine": "This diseased tree looks like it needs pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 27
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Apple_tree"
+    },
+    "dragonfruit_tree": {
+        "id": "dragonfruit_tree",
+        "name": "Dragonfruit tree",
+        "type": "OBJECT",
+        "examine": "This dragonfruit plant looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 81
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dragonfruit_tree"
+    },
+    "achey_tree": {
+        "id": "achey_tree",
+        "name": "Achey Tree",
+        "type": "OBJECT",
+        "examine": "An interesting tree with long straight branches.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Achey_Tree"
+    },
+    "mahogany_tree_farming": {
+        "id": "mahogany_tree_farming",
+        "name": "Mahogany tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 55
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Hardwood tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mahogany_tree_(Farming)"
+    },
+    "magic_tree_construction": {
+        "id": "magic_tree_construction",
+        "name": "Magic tree (Construction)",
+        "type": "OBJECT",
+        "examine": "The tree shimmers with a magical force.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 75
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Magic_tree_(Construction)"
+    },
+    "fishing_guild_bank": {
+        "id": "fishing_guild_bank",
+        "name": "Fishing Guild bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Fishing Guild]]",
+        "actions": [
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Fishing_Guild_bank"
+    },
+    "banana_tree_red_banana": {
+        "id": "banana_tree_red_banana",
+        "name": "Banana tree (red banana)",
+        "type": "OBJECT",
+        "examine": "A Banana Tree.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Ape Atoll]]",
+        "actions": [
+            "mine",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Banana_tree_(red_banana)"
+    },
+    "leafy_palm_tree": {
+        "id": "leafy_palm_tree",
+        "name": "Leafy Palm Tree",
+        "type": "OBJECT",
+        "examine": "This tree is particularly leafy.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "[[Legends' Quest]]"
+        ],
+        "location": "[[Kharazi Jungle]]",
+        "actions": [
+            "mine",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Leafy_Palm_Tree"
+    },
+    "oak_tree_tutorial_island": {
+        "id": "oak_tree_tutorial_island",
+        "name": "Oak tree (Tutorial Island)",
+        "type": "OBJECT",
+        "examine": "A beautiful old oak.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tutorial Island]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree_(Tutorial_Island)"
+    },
+    "jatizso_bank": {
+        "id": "jatizso_bank",
+        "name": "Jatizso bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Jatizso]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Jatizso_bank"
+    },
+    "port_phasmatys_bank": {
+        "id": "port_phasmatys_bank",
+        "name": "Port Phasmatys bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Port Phasmatys]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Port_Phasmatys_bank"
+    },
+    "special_patches": {
+        "id": "special_patches",
+        "name": "Special patches",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Special_patches"
+    },
+    "dead_tree_snowy": {
+        "id": "dead_tree_snowy",
+        "name": "Dead tree (snowy)",
+        "type": "OBJECT",
+        "examine": "It's only useful for firewood now.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(snowy)"
+    },
+    "mor_ul_rek_north_bank": {
+        "id": "mor_ul_rek_north_bank",
+        "name": "Mor Ul Rek north bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern [[Mor Ul Rek]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mor_Ul_Rek_north_bank"
+    },
+    "dead_tree_old": {
+        "id": "dead_tree_old",
+        "name": "Dead tree (old)",
+        "type": "OBJECT",
+        "examine": "This tree has long been dead.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(old)"
+    },
+    "tree_the_node": {
+        "id": "tree_the_node",
+        "name": "Tree (The Node)",
+        "type": "OBJECT",
+        "examine": "One of the most common trees in Gielinor.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[The Node]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(The_Node)"
+    },
+    "medium_jungle": {
+        "id": "medium_jungle",
+        "name": "Medium Jungle",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 20
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tai Bwo Wannai]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Medium_Jungle"
+    },
+    "magic_tree_farming": {
+        "id": "magic_tree_farming",
+        "name": "Magic tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 75
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Magic_tree_(Farming)"
+    },
+    "dead_tree": {
+        "id": "dead_tree",
+        "name": "Dead tree",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree"
+    },
+    "fruit_tree_patch": {
+        "id": "fruit_tree_patch",
+        "name": "Fruit tree patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Fruit_tree_patch"
+    },
+    "allotment_patch": {
+        "id": "allotment_patch",
+        "name": "Allotment patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Allotment_patch"
+    },
+    "hops_patch": {
+        "id": "hops_patch",
+        "name": "Hops patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Hops_patch"
+    },
+    "tree_prifddinas_agility_course": {
+        "id": "tree_prifddinas_agility_course",
+        "name": "Tree (Prifddinas Agility Course)",
+        "type": "OBJECT",
+        "examine": "A huge common tree infused with crystal.",
+        "object_type": "AGILITY_OBSTACLE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Prifddinas Agility Course]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Prifddinas_Agility_Course)"
+    },
+    "calquat_tree": {
+        "id": "calquat_tree",
+        "name": "Calquat tree",
+        "type": "OBJECT",
+        "examine": "A fully grown Calquat tree stands in this Farming patch.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 72
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Calquat patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Calquat_tree"
+    },
+    "bush_patch": {
+        "id": "bush_patch",
+        "name": "Bush patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Bush_patch"
+    },
+    "yew_tree": {
+        "id": "yew_tree",
+        "name": "Yew tree",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 60
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "open",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Yew_tree"
+    },
+    "darkmeyer_bank": {
+        "id": "darkmeyer_bank",
+        "name": "Darkmeyer bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern [[Darkmeyer]]",
+        "actions": [
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Darkmeyer_bank"
+    },
+    "burgh_de_rott_bank": {
+        "id": "burgh_de_rott_bank",
+        "name": "Burgh de Rott bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Burgh de Rott]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Burgh_de_Rott_bank"
+    },
+    "herb_patch": {
+        "id": "herb_patch",
+        "name": "Herb patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Herb_patch"
+    },
+    "celastrus_tree": {
+        "id": "celastrus_tree",
+        "name": "Celastrus tree",
+        "type": "OBJECT",
+        "examine": "A Celastrus tree has been planted in this patch.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 85
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Celastrus patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Celastrus_tree"
+    },
+    "tree_snow": {
+        "id": "tree_snow",
+        "name": "Tree (snow)",
+        "type": "OBJECT",
+        "examine": "It's thick with snow.",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(snow)"
+    },
+    "aldarin_bank": {
+        "id": "aldarin_bank",
+        "name": "Aldarin bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Aldarin]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Aldarin_bank"
+    },
+    "seers_village_bank": {
+        "id": "seers_village_bank",
+        "name": "Seers' Village bank",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Seers' Village]]",
+        "actions": [
+            "open",
+            "close",
+            "climb"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Seers'_Village_bank"
+    },
+    "teak_tree_farming": {
+        "id": "teak_tree_farming",
+        "name": "Teak tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 35
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Hardwood tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Teak_tree_(Farming)"
+    },
+    "maple_tree": {
+        "id": "maple_tree",
+        "name": "Maple tree",
+        "type": "OBJECT",
+        "examine": "I bet this makes good syrup!",
+        "object_type": "ALTAR",
+        "requirements": {
+            "level": 45
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Corsair Cove Resource Area]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "open",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Maple_tree"
+    },
+    "dorgesh_kaan_bank": {
+        "id": "dorgesh_kaan_bank",
+        "name": "Dorgesh-Kaan bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northeastern [[Dorgesh-Kaan]]",
+        "actions": [
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dorgesh-Kaan_bank"
+    },
+    "piscatoris_bank": {
+        "id": "piscatoris_bank",
+        "name": "Piscatoris bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Centre of [[Piscatoris Fishing Colony]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Piscatoris_bank"
+    },
+    "evergreen_2021_halloween_event": {
+        "id": "evergreen_2021_halloween_event",
+        "name": "Evergreen (2021 Halloween event)",
+        "type": "OBJECT",
+        "examine": "Looks like I could climb this.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "[[2021 Halloween event]]"
+        ],
+        "location": "South of the [[Edgeville Monastery]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "climb",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Evergreen_(2021_Halloween_event)"
+    },
+    "maple_tree_farming": {
+        "id": "maple_tree_farming",
+        "name": "Maple tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 45
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Maple_tree_(Farming)"
+    },
+    "sq_irk_tree": {
+        "id": "sq_irk_tree",
+        "name": "Sq'irk tree",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Sorceress's Garden]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Sq'irk_tree"
+    },
+    "jungle_tree_dense_kharazi_jungle": {
+        "id": "jungle_tree_dense_kharazi_jungle",
+        "name": "Jungle tree (dense Kharazi Jungle)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "[[Legends' Quest]]"
+        ],
+        "location": "[[Kharazi Jungle]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Jungle_tree_(dense_Kharazi_Jungle)"
+    },
+    "mage_arena_bank": {
+        "id": "mage_arena_bank",
+        "name": "Mage Arena bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern [[Wilderness]]",
+        "actions": [
+            "search",
+            "enter",
+            "pray-at",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Arena_bank"
+    },
+    "hollow_tree": {
+        "id": "hollow_tree",
+        "name": "Hollow tree",
+        "type": "OBJECT",
+        "examine": "It's hollow...",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 45
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Hollow_tree"
+    },
+    "ape_atoll_bank": {
+        "id": "ape_atoll_bank",
+        "name": "Ape Atoll bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Marim]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Ape_Atoll_bank"
+    },
+    "void_knights_outpost_bank": {
+        "id": "void_knights_outpost_bank",
+        "name": "Void Knights' Outpost bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Void Knights' Outpost]]",
+        "actions": [
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Void_Knights'_Outpost_bank"
+    },
+    "arctic_pine_tree": {
+        "id": "arctic_pine_tree",
+        "name": "Arctic pine tree",
+        "type": "OBJECT",
+        "examine": "A hardy evergreen pine.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 54
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Arctic_pine_tree"
+    },
+    "crossbow_tree": {
+        "id": "crossbow_tree",
+        "name": "Crossbow Tree",
+        "type": "OBJECT",
+        "examine": "Looks like a way to cross.",
+        "object_type": "AGILITY_OBSTACLE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Catherby]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Crossbow_Tree"
+    },
+    "dead_tree_weathered": {
+        "id": "dead_tree_weathered",
+        "name": "Dead tree (weathered)",
+        "type": "OBJECT",
+        "examine": "An old weather beaten tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dead_tree_(weathered)"
+    },
+    "white_tree_patch": {
+        "id": "white_tree_patch",
+        "name": "White Tree patch",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 25
+        },
+        "quest_requirements": [
+            "[[Garden of Tranquillity]]"
+        ],
+        "location": "[[Varrock Castle]]",
+        "actions": [
+            "mine",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/White_Tree_patch"
+    },
+    "al_kharid_bank": {
+        "id": "al_kharid_bank",
+        "name": "Al Kharid bank",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Al Kharid]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Al_Kharid_bank"
+    },
+    "legends_guild_bank": {
+        "id": "legends_guild_bank",
+        "name": "Legends' Guild bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Top floor of the [[Legends' Guild]]",
+        "actions": [
+            "enter"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Legends'_Guild_bank"
+    },
+    "wintumber_tree": {
+        "id": "wintumber_tree",
+        "name": "Wintumber tree",
+        "type": "OBJECT",
+        "examine": "A wintumber tree for your player-owned house.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Wintumber_tree"
+    },
+    "sapling_chambers_of_xeric": {
+        "id": "sapling_chambers_of_xeric",
+        "name": "Sapling (Chambers of Xeric)",
+        "type": "OBJECT",
+        "examine": "Looks like you could chop some wood off here.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Chambers of Xeric]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Sapling_(Chambers_of_Xeric)"
+    },
+    "kourend_castle_bank": {
+        "id": "kourend_castle_bank",
+        "name": "Kourend Castle bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "{{FloorNumber|uk=2}} of the [[Kourend Castle]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Kourend_Castle_bank"
+    },
+    "arceuus_bank": {
+        "id": "arceuus_bank",
+        "name": "Arceuus bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Arceuus]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Arceuus_bank"
+    },
+    "hosidius_bank": {
+        "id": "hosidius_bank",
+        "name": "Hosidius bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern [[Hosidius]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Hosidius_bank"
+    },
+    "mor_ul_rek_east_bank": {
+        "id": "mor_ul_rek_east_bank",
+        "name": "Mor Ul Rek east bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Mor Ul Rek]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mor_Ul_Rek_east_bank"
+    },
+    "corsair_cove_bank": {
+        "id": "corsair_cove_bank",
+        "name": "Corsair Cove bank",
+        "type": "OBJECT",
+        "object_type": "ALTAR",
+        "location": "[[Corsair Cove]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Corsair_Cove_bank"
+    },
+    "edgeville_bank": {
+        "id": "edgeville_bank",
+        "name": "Edgeville bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Edgeville]]",
+        "actions": [
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Edgeville_bank"
+    },
+    "falador_west_bank": {
+        "id": "falador_west_bank",
+        "name": "Falador west bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Western [[Falador]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Falador_west_bank"
+    },
+    "shilo_village_bank": {
+        "id": "shilo_village_bank",
+        "name": "Shilo Village bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Shilo Village (location)|Shilo Village]]",
+        "actions": [
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Shilo_Village_bank"
+    },
+    "banana_tree_ape_atoll": {
+        "id": "banana_tree_ape_atoll",
+        "name": "Banana tree (Ape Atoll)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Ape Atoll]]",
+        "actions": [
+            "mine",
+            "pick",
+            "search"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Banana_tree_(Ape_Atoll)"
+    },
+    "pineapple_plant_wild": {
+        "id": "pineapple_plant_wild",
+        "name": "Pineapple Plant (wild)",
+        "type": "OBJECT",
+        "examine": "Looks spiky.",
+        "object_type": "AGILITY_OBSTACLE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Ape Atoll]], [[Brimhaven]]",
+        "actions": [
+            "mine",
+            "pick",
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Pineapple_Plant_(wild)"
+    },
+    "pine_tree": {
+        "id": "pine_tree",
+        "name": "Pine tree",
+        "type": "OBJECT",
+        "examine": "A beautiful pine tree.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Shayzien]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Pine_tree"
+    },
+    "tree_prifddinas": {
+        "id": "tree_prifddinas",
+        "name": "Tree (Prifddinas)",
+        "type": "OBJECT",
+        "examine": "A common tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tirannwn]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Prifddinas)"
+    },
+    "crystal_tree": {
+        "id": "crystal_tree",
+        "name": "Crystal tree",
+        "type": "OBJECT",
+        "examine": "A Crystal tree has been planted in this patch.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 74
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Crystal tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Crystal_tree"
+    },
+    "lovakengj_mine_bank": {
+        "id": "lovakengj_mine_bank",
+        "name": "Lovakengj mine bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northwestern [[Lovakengj]]",
+        "actions": [
+            "mine"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Lovakengj_mine_bank"
+    },
+    "teak_tree": {
+        "id": "teak_tree",
+        "name": "Teak tree",
+        "type": "OBJECT",
+        "examine": "A beautiful old teak tree.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 35
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Teak_tree"
+    },
+    "blisterwood_tree": {
+        "id": "blisterwood_tree",
+        "name": "Blisterwood tree",
+        "type": "OBJECT",
+        "examine": "The everlasting bane of the vampyres.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 62
+        },
+        "quest_requirements": [
+            "[[Sins of the Father]]"
+        ],
+        "location": "[[Darkmeyer]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Blisterwood_tree"
+    },
+    "oak_tree_the_node": {
+        "id": "oak_tree_the_node",
+        "name": "Oak tree (The Node)",
+        "type": "OBJECT",
+        "examine": "A beautiful old oak.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 15
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[The Node]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree_(The_Node)"
+    },
+    "tree_patch": {
+        "id": "tree_patch",
+        "name": "Tree patch",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "actions": [
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_patch"
+    },
+    "tree_crystal": {
+        "id": "tree_crystal",
+        "name": "Tree (crystal)",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Prifddinas]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(crystal)"
+    },
+    "neitiznot_bank": {
+        "id": "neitiznot_bank",
+        "name": "Neitiznot bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Neitiznot]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Neitiznot_bank"
+    },
+    "bitternut_tree": {
+        "id": "bitternut_tree",
+        "name": "Bitternut Tree",
+        "type": "OBJECT",
+        "examine": "Where the bitternut grows.",
+        "object_type": "TREE",
+        "location": "[[Trouble Brewing]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Bitternut_Tree"
+    },
+    "cypress_tree": {
+        "id": "cypress_tree",
+        "name": "Cypress Tree",
+        "type": "OBJECT",
+        "examine": "An impressively tall tree, native to Varlamore.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Varlamore]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Cypress_Tree"
+    },
+    "farming_guild_bank": {
+        "id": "farming_guild_bank",
+        "name": "Farming Guild bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northern section of the [[Farming Guild]]",
+        "actions": [
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Farming_Guild_bank"
+    },
+    "fortis_east_bank": {
+        "id": "fortis_east_bank",
+        "name": "Fortis east bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Civitas illa Fortis]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Fortis_east_bank"
+    },
+    "tree_enchanted_valley": {
+        "id": "tree_enchanted_valley",
+        "name": "Tree (Enchanted Valley)",
+        "type": "OBJECT",
+        "examine": "An ancient pine tree.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Enchanted_Valley)"
+    },
+    "tree_isle_of_souls": {
+        "id": "tree_isle_of_souls",
+        "name": "Tree (Isle of Souls)",
+        "type": "OBJECT",
+        "examine": "One of the most common trees in Gielinor.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Isle of Souls]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Isle_of_Souls)"
+    },
+    "tree_stump": {
+        "id": "tree_stump",
+        "name": "Tree stump",
+        "type": "OBJECT",
+        "examine": "This tree has been cut down.",
+        "object_type": "FARMING_PATCH",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_stump"
+    },
+    "ver_sinhaza_bank": {
+        "id": "ver_sinhaza_bank",
+        "name": "Ver Sinhaza bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northeastern [[Ver Sinhaza]]",
+        "actions": [
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Ver_Sinhaza_bank"
+    },
+    "yew_tree_farming": {
+        "id": "yew_tree_farming",
+        "name": "Yew tree (Farming)",
+        "type": "OBJECT",
+        "examine": "To remove all signs of disease, prune the tree with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 60
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Yew_tree_(Farming)"
+    },
+    "willow_tree": {
+        "id": "willow_tree",
+        "name": "Willow tree",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 30
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "open",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Willow_tree"
+    },
+    "yew_tree_construction": {
+        "id": "yew_tree_construction",
+        "name": "Yew tree (Construction)",
+        "type": "OBJECT",
+        "examine": "A lovely addition to the garden.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 60
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Yew_tree_(Construction)"
+    },
+    "young_tree": {
+        "id": "young_tree",
+        "name": "Young tree",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Canifis Hunter area]] and north-west of [[Slepe]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Young_tree"
+    },
+    "curry_tree": {
+        "id": "curry_tree",
+        "name": "Curry tree",
+        "type": "OBJECT",
+        "examine": "This curry tree looks like it could do with pruning with secateurs.",
+        "object_type": "BANK",
+        "requirements": {
+            "level": 42
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Curry_tree"
+    },
+    "dramen_tree": {
+        "id": "dramen_tree",
+        "name": "Dramen tree",
+        "type": "OBJECT",
+        "examine": "An ancient magical tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 36
+        },
+        "quest_requirements": [
+            "[[Lost city]]"
+        ],
+        "location": "[[Entrana Dungeon]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dramen_tree"
+    },
+    "golden_tree": {
+        "id": "golden_tree",
+        "name": "Golden tree",
+        "type": "OBJECT",
+        "examine": "Those golden fruit look good enough to eat!",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "[[The Fremennik Trials]]"
+        ],
+        "location": "South-east of [[Rellekka]]",
+        "actions": [
+            "mine",
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Golden_tree"
+    },
+    "mount_quidamortem_bank": {
+        "id": "mount_quidamortem_bank",
+        "name": "Mount Quidamortem bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Mount Quidamortem]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mount_Quidamortem_bank"
+    },
+    "tree_tutorial_island_2": {
+        "id": "tree_tutorial_island_2",
+        "name": "Tree (Tutorial Island 2)",
+        "type": "OBJECT",
+        "examine": "One of the most common trees in Gielinor.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "[[Tutorial Island]]"
+        ],
+        "location": "[[Tutorial Island]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Tutorial_Island_2)"
+    },
+    "gnome_stronghold_south_bank": {
+        "id": "gnome_stronghold_south_bank",
+        "name": "Gnome Stronghold south bank",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Grand Tree]]",
+        "actions": [
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Stronghold_south_bank"
+    },
+    "redwood_tree_farming": {
+        "id": "redwood_tree_farming",
+        "name": "Redwood tree (Farming)",
+        "type": "OBJECT",
+        "examine": "A Redwood tree has been planted here.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 90
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Redwood tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Redwood_tree_(Farming)"
+    },
+    "pineapple_plant": {
+        "id": "pineapple_plant",
+        "name": "Pineapple plant",
+        "type": "OBJECT",
+        "examine": "This pineapple plant looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 51
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Pineapple_plant"
+    },
+    "zanaris_bank": {
+        "id": "zanaris_bank",
+        "name": "Zanaris bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Zanaris]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Zanaris_bank"
+    },
+    "dense_jungle": {
+        "id": "dense_jungle",
+        "name": "Dense Jungle",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 35
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tai Bwo Wannai]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dense_Jungle"
+    },
+    "dungeon_entrance_brimhaven_dungeon": {
+        "id": "dungeon_entrance_brimhaven_dungeon",
+        "name": "Dungeon entrance (Brimhaven Dungeon)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Brimhaven",
+        "actions": [
+            "mine",
+            "open",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dungeon_entrance_(Brimhaven_Dungeon)"
+    },
+    "etceteria_bank": {
+        "id": "etceteria_bank",
+        "name": "Etceteria bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Northeast [[Etceteria]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Etceteria_bank"
+    },
+    "ardougne_north_bank": {
+        "id": "ardougne_north_bank",
+        "name": "Ardougne north bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "North [[Ardougne]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Ardougne_north_bank"
+    },
+    "tutorial_island_bank": {
+        "id": "tutorial_island_bank",
+        "name": "Tutorial Island bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Tutorial Island]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tutorial_Island_bank"
+    },
+    "swaying_tree": {
+        "id": "swaying_tree",
+        "name": "Swaying tree",
+        "type": "OBJECT",
+        "examine": "The wind makes a musical sound as it blows through it...",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 40
+        },
+        "quest_requirements": [
+            "[[The Fremennik Trials]]"
+        ],
+        "location": "[[Rellekka]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Swaying_tree"
+    },
+    "tree_young": {
+        "id": "tree_young",
+        "name": "Tree (young)",
+        "type": "OBJECT",
+        "examine": "A healthy young tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(young)"
+    },
+    "scrapey_tree": {
+        "id": "scrapey_tree",
+        "name": "Scrapey tree",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Trouble Brewing]]",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Scrapey_tree"
+    },
+    "jungle_bush": {
+        "id": "jungle_bush",
+        "name": "Jungle Bush",
+        "type": "OBJECT",
+        "examine": "A jungle bush, quite common to these areas.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Kharazi Jungle]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Jungle_Bush"
+    },
+    "ardougne_south_bank": {
+        "id": "ardougne_south_bank",
+        "name": "Ardougne south bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Ardougne]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Ardougne_south_bank"
+    },
+    "grand_exchange": {
+        "id": "grand_exchange",
+        "name": "Grand Exchange",
+        "type": "OBJECT",
+        "object_type": "AGILITY_OBSTACLE",
+        "location": "[[Varrock]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Grand_Exchange"
+    },
+    "tree_varrock": {
+        "id": "tree_varrock",
+        "name": "Tree (Varrock)",
+        "type": "OBJECT",
+        "examine": "An elegant tree.",
+        "object_type": "TREE",
+        "location": "[[Varrock Palace]]",
+        "actions": [
+            "mine"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Varrock)"
+    },
+    "strangled_tree": {
+        "id": "strangled_tree",
+        "name": "Strangled Tree",
+        "type": "OBJECT",
+        "examine": "It doesn't look healthy.",
+        "object_type": "TREE",
+        "location": "[[The Stranglewood]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Strangled_Tree"
+    },
+    "witchwood_tree": {
+        "id": "witchwood_tree",
+        "name": "Witchwood tree",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Witchwood_tree"
+    },
+    "oak_tree": {
+        "id": "oak_tree",
+        "name": "Oak tree",
+        "type": "OBJECT",
+        "examine": "A beautiful old oak.",
+        "object_type": "ALTAR",
+        "requirements": {
+            "level": 15
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "close",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree"
+    },
+    "tree_2024_christmas_event": {
+        "id": "tree_2024_christmas_event",
+        "name": "Tree (2024 Christmas event)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "[[2024 Christmas event]]"
+        ],
+        "location": "[[Falador]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(2024_Christmas_event)"
+    },
+    "spirit_tree_incomitatus": {
+        "id": "spirit_tree_incomitatus",
+        "name": "Spirit Tree (Incomitatus)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "[[The Path of Glouphrie]]"
+        ],
+        "location": "East of [[Poison Waste Dungeon]] entrance",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Spirit_Tree_(Incomitatus)"
+    },
+    "tree_great_kourend": {
+        "id": "tree_great_kourend",
+        "name": "Tree (Great Kourend)",
+        "type": "OBJECT",
+        "examine": "A commonly found tree.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Great_Kourend)"
+    },
+    "flower_patch": {
+        "id": "flower_patch",
+        "name": "Flower patch",
+        "type": "OBJECT",
+        "examine": "You can grow flowers in this Farming patch.",
+        "object_type": "BANK",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Various",
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Flower_patch"
+    },
+    "nice_tree": {
+        "id": "nice_tree",
+        "name": "Nice tree",
+        "type": "OBJECT",
+        "examine": "A lovely addition to the garden.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 10
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Nice_tree"
+    },
+    "tree_tirannwn": {
+        "id": "tree_tirannwn",
+        "name": "Tree (Tirannwn)",
+        "type": "OBJECT",
+        "examine": "A tree native to Tirannwn.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Tirannwn]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Tirannwn)"
+    },
+    "tree_2018_christmas_event": {
+        "id": "tree_2018_christmas_event",
+        "name": "Tree (2018 Christmas event)",
+        "type": "OBJECT",
+        "examine": "It's thick with snow.",
+        "object_type": "TREE",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Lumbridge]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(2018_Christmas_event)"
+    },
+    "banana_tree_farming": {
+        "id": "banana_tree_farming",
+        "name": "Banana tree (Farming)",
+        "type": "OBJECT",
+        "examine": "This banana looks like it could do with pruning with secateurs.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 33
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Fruit tree patch]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Banana_tree_(Farming)"
+    },
+    "quetzacalli_gorge_bank": {
+        "id": "quetzacalli_gorge_bank",
+        "name": "Quetzacalli Gorge bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Quetzacalli Gorge]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Quetzacalli_Gorge_bank"
+    },
+    "tree_pest_control": {
+        "id": "tree_pest_control",
+        "name": "Tree (Pest Control)",
+        "type": "OBJECT",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Pest Control Island]]",
+        "actions": [
+            "mine",
+            "chop down"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Tree_(Pest_Control)"
+    },
+    "apple_tree_scenery": {
+        "id": "apple_tree_scenery",
+        "name": "Apple Tree (scenery)",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "quest_requirements": [
+            "None"
+        ],
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Apple_Tree_(scenery)"
+    },
+    "shayzien_bank": {
+        "id": "shayzien_bank",
+        "name": "Shayzien bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Southern [[Shayzien]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Shayzien_bank"
+    },
+    "cam_torum_bank": {
+        "id": "cam_torum_bank",
+        "name": "Cam Torum bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Cam Torum]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Cam_Torum_bank"
+    },
+    "redwood_tree": {
+        "id": "redwood_tree",
+        "name": "Redwood tree",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 90
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Woodcutting Guild]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "close",
+            "climb",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Redwood_tree"
+    },
+    "catherby_bank": {
+        "id": "catherby_bank",
+        "name": "Catherby bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Catherby]]",
+        "actions": [
+            "enter"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Catherby_bank"
+    },
+    "banana_tree": {
+        "id": "banana_tree",
+        "name": "Banana tree",
+        "type": "OBJECT",
+        "examine": "Grows weird yellow fruit.",
+        "object_type": "FARMING_PATCH",
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Banana plantation]], [[Banana plantation (Ape Atoll)]]",
+        "actions": [
+            "mine",
+            "pick",
+            "search",
+            "open",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Banana_tree"
+    },
+    "canifis_bank": {
+        "id": "canifis_bank",
+        "name": "Canifis bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Canifis]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Canifis_bank"
+    },
+    "draynor_bank": {
+        "id": "draynor_bank",
+        "name": "Draynor bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Draynor Village]]",
+        "actions": [
+            "chop down",
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Draynor_bank"
+    },
+    "oak_tree_construction": {
+        "id": "oak_tree_construction",
+        "name": "Oak tree (Construction)",
+        "type": "OBJECT",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 15
+        },
+        "actions": [
+            "mine",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Oak_tree_(Construction)"
+    },
+    "magic_tree": {
+        "id": "magic_tree",
+        "name": "Magic tree",
+        "type": "OBJECT",
+        "examine": "The tree shimmers with a magical force.",
+        "object_type": "FARMING_PATCH",
+        "requirements": {
+            "level": 75
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "Varies",
+        "actions": [
+            "mine",
+            "chop down",
+            "pick",
+            "enter",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Magic_tree"
+    },
+    "varrock_west_bank": {
+        "id": "varrock_west_bank",
+        "name": "Varrock west bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Western [[Varrock]]",
+        "actions": [
+            "open",
+            "close",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Varrock_west_bank"
+    },
+    "mistrock_bank": {
+        "id": "mistrock_bank",
+        "name": "Mistrock bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "[[Mistrock]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Mistrock_bank"
+    },
+    "falador_east_bank": {
+        "id": "falador_east_bank",
+        "name": "Falador east bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Falador]]",
+        "actions": [
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Falador_east_bank"
+    },
+    "dying_tree": {
+        "id": "dying_tree",
+        "name": "Dying tree",
+        "type": "OBJECT",
+        "examine": "Living in the big city isn't easy.",
+        "object_type": "TREE",
+        "requirements": {
+            "level": 1
+        },
+        "quest_requirements": [
+            "No"
+        ],
+        "location": "[[Varrock]], [[Lumber Yard]]",
+        "actions": [
+            "mine",
+            "chop down",
+            "use"
+        ],
+        "wiki_url": "https://oldschool.runescape.wiki/w/Dying_tree"
+    },
+    "yanille_bank": {
+        "id": "yanille_bank",
+        "name": "Yanille bank",
+        "type": "OBJECT",
+        "object_type": "BANK",
+        "location": "Eastern [[Yanille]]",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Yanille_bank"
+    }
+}

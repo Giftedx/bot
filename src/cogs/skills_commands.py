@@ -251,5 +251,12 @@ class SkillsCommands(commands.Cog):
         # Return format: List of (player_id, total_level, total_xp)
         return []
 
-async def setup(bot):
-    await bot.add_cog(SkillsCommands(bot)) 
+async def setup(bot: commands.Bot) -> None:
+    """Set up the skills commands cog."""
+    from ..lib.cog_utils import CogDependencies
+    
+    # Get dependencies
+    deps = CogDependencies.get_instance()
+    
+    # Add cog to bot
+    await bot.add_cog(SkillsCommands(bot, **deps.get_dependencies())) 

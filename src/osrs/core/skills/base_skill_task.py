@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 
 from ..task import Task, TaskRequirements, TaskRewards
-from ..skills import SkillType
+from ..constants import SkillType
 from ...models.user import User
 
 

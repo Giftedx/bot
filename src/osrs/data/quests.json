@@ -1,0 +1,50 @@
+{
+    "cooks_assistant": {
+        "id": "cooks_assistant",
+        "name": "Cook's Assistant",
+        "difficulty": "Novice",
+        "description": "Help the cook make a cake for Duke Horacio.",
+        "requirements": {},
+        "rewards": {
+            "quest_points": 1,
+            "xp_rewards": {
+                "cooking": 300
+            }
+        }
+    },
+    "rune_mysteries": {
+        "id": "rune_mysteries",
+        "name": "Rune Mysteries",
+        "difficulty": "Novice",
+        "description": "Discover the secret of Runecrafting.",
+        "requirements": {},
+        "rewards": {
+            "quest_points": 1,
+            "xp_rewards": {
+                "runecraft": 250
+            }
+        }
+    },
+    "dragon_slayer": {
+        "id": "dragon_slayer",
+        "name": "Dragon Slayer",
+        "difficulty": "Experienced",
+        "description": "Prove yourself a true champion by slaying Elvarg.",
+        "requirements": {
+            "skills": {
+                "attack": 30,
+                "defence": 30
+            },
+            "quests": ["rune_mysteries"],
+            "quest_points": 32
+        },
+        "rewards": {
+            "quest_points": 2,
+            "xp_rewards": {
+                "strength": 18650,
+                "defence": 18650
+            },
+            "gold": 10000
+        }
+    }
+} 

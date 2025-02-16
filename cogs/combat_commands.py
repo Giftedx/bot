@@ -6,8 +6,9 @@ import discord
 from discord.ext import commands
 from datetime import datetime, timedelta
 
-from .models import Player, SkillType, CombatStyle
-from .game_math import calculate_max_hit, calculate_hit_chance
+from src.osrs.models import Player, SkillType
+from src.osrs.core.game_mechanics import CombatStyle
+from src.osrs.core.game_math import calculate_max_hit, calculate_hit_chance
 
 
 class CombatCommands(commands.Cog):
@@ -42,7 +43,6 @@ class CombatCommands(commands.Cog):
                 attack_bonus=1,
                 strength_bonus=1,
                 defence_bonus=1,
-                accuracy_multiplier=1.05,
                 xp_type=SkillType.SHARED
             )
         }
@@ -263,6 +263,6 @@ class CombatCommands(commands.Cog):
         await ctx.send(embed=embed)
 
 
-def setup(bot):
-    """Add the cog to the bot."""
-    bot.add_cog(CombatCommands(bot)) 
+async def setup(bot):
+    """Set up the combat commands cog."""
+    await bot.add_cog(CombatCommands(bot)) 

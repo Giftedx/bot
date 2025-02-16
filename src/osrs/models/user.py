@@ -3,11 +3,11 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union
 from enum import Enum
 import math
+from datetime import datetime
 
 from ..core.bank import Bank
-from ..core.skills import SkillType, SkillLevel
-from ..core.gear import Gear, GearSetup, GearBank
-from ..core.constants import BitField
+from ..core.gear import GearSetup, GearBank
+from ..core.constants import BitField, SkillType, SkillLevel
 
 
 class AttackStyle(Enum):
@@ -53,7 +53,7 @@ class User:
         self._collection_log = Bank(self.collection_log)
         
         # Initialize gear if not provided
-        default_gear = {}
+        default_gear = GearSetup()
         self.gear_melee = self.gear_melee or default_gear
         self.gear_mage = self.gear_mage or default_gear
         self.gear_range = self.gear_range or default_gear
@@ -89,17 +89,17 @@ class User:
         return self._collection_log
 
     @property
-    def gear(self) -> Dict[str, Gear]:
+    def gear(self) -> Dict[str, GearSetup]:
         """Get all gear setups."""
         return {
-            'melee': Gear(self.gear_melee),
-            'mage': Gear(self.gear_mage),
-            'range': Gear(self.gear_range),
-            'misc': Gear(self.gear_misc),
-            'skilling': Gear(self.gear_skilling),
-            'wildy': Gear(self.gear_wildy),
-            'fashion': Gear(self.gear_fashion),
-            'other': Gear(self.gear_other)
+            'melee': self.gear_melee,
+            'mage': self.gear_mage,
+            'range': self.gear_range,
+            'misc': self.gear_misc,
+            'skilling': self.gear_skilling,
+            'wildy': self.gear_wildy,
+            'fashion': self.gear_fashion,
+            'other': self.gear_other
         }
 
     @property

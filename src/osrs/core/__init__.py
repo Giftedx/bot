@@ -1,6 +1,6 @@
 """OSRS core module."""
 from .bank import Bank
-from .constants import BitField
+from .constants import BitField, SkillType, SkillLevel
 from .gear import (
     EquipmentSlot,
     GearStats,
@@ -9,7 +9,6 @@ from .gear import (
     GearSetup,
     GearBank
 )
-from .skills import SkillType, SkillLevel
 from .task import (
     Task,
     TaskStatus,
@@ -21,14 +20,14 @@ from .task_manager import TaskManager
 __all__ = [
     'Bank',
     'BitField',
+    'SkillType',
+    'SkillLevel',
     'EquipmentSlot',
     'GearStats',
     'GearRequirements',
     'GearItem',
     'GearSetup',
     'GearBank',
-    'SkillType',
-    'SkillLevel',
     'Task',
     'TaskStatus',
     'TaskRequirements',

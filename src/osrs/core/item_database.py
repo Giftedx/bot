@@ -2,10 +2,10 @@
 
 import json
 import logging
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 from pathlib import Path
 
-from ..models import Item
+from ..models import Item, ItemType
 
 
 logger = logging.getLogger('ItemDatabase')
@@ -29,14 +29,19 @@ class ItemDatabase:
                 item = Item(
                     id=item_data['id'],
                     name=item_data['name'],
-                    description=item_data['description'],
-                    category=item_data['category'],
+                    type=ItemType(item_data['type']),
                     tradeable=item_data.get('tradeable', True),
                     stackable=item_data.get('stackable', False),
+                    noted=item_data.get('noted', False),
+                    noteable=item_data.get('noteable', True),
                     equipable=item_data.get('equipable', False),
-                    high_alch_value=item_data.get('high_alch_value', 0),
-                    low_alch_value=item_data.get('low_alch_value', 0),
-                    ge_price=item_data.get('ge_price')
+                    high_alch=item_data.get('high_alch', 0),
+                    low_alch=item_data.get('low_alch', 0),
+                    ge_price=item_data.get('ge_price', 0),
+                    weight=item_data.get('weight', 0.0),
+                    buy_limit=item_data.get('buy_limit'),
+                    examine=item_data.get('examine', ''),
+                    wiki_url=item_data.get('wiki_url', '')
                 )
                 
                 self.items[item.id] = item
@@ -54,22 +59,22 @@ class ItemDatabase:
             {
                 'id': 'coins',
                 'name': 'Coins',
-                'description': 'Lovely money!',
-                'category': 'Currency',
-                'stackable': True
+                'type': ItemType.CURRENCY,
+                'stackable': True,
+                'examine': 'Lovely money!'
             },
             {
                 'id': 'bronze_sword',
                 'name': 'Bronze Sword',
-                'description': 'A basic sword made of bronze.',
-                'category': 'Weapons',
-                'equipable': True
+                'type': ItemType.EQUIPMENT,
+                'equipable': True,
+                'examine': 'A basic sword made of bronze.'
             },
             {
                 'id': 'oak_logs',
                 'name': 'Oak Logs',
-                'description': 'Logs cut from an oak tree.',
-                'category': 'Materials'
+                'type': ItemType.MATERIAL,
+                'examine': 'Logs cut from an oak tree.'
             }
         ]
         
@@ -88,7 +93,7 @@ class ItemDatabase:
         """Get an item by its name (case-insensitive)."""
         return self.items_by_name.get(name.lower())
     
-    def search_items(self, query: str) -> list[Item]:
+    def search_items(self, query: str) -> List[Item]:
         """Search for items by name (partial match)."""
         query = query.lower()
         return [

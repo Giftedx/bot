@@ -777,18 +777,17 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_total_level_trigger
     AFTER INSERT OR UPDATE OF level ON osrs_skills
     FOR EACH ROW
-<<<<<<< HEAD
-    EXECUTE PROCEDURE update_updated_at_column();
+    EXECUTE FUNCTION update_total_level();
 
 CREATE TRIGGER update_user_settings_updated_at
     BEFORE UPDATE ON user_settings
     FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at_column();
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_playlists_updated_at
     BEFORE UPDATE ON playlists
     FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at_column();
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- Include clan system schema
 \i clan_schema.sql
@@ -856,6 +855,232 @@ ALTER TABLE equipment
     FOREIGN KEY (character_id)
     REFERENCES characters(id)
     ON DELETE CASCADE;
-=======
-    EXECUTE FUNCTION update_total_level();
->>>>>>> aab8a2a4200e6501bf0cfd06f7a7723d0e0b265a
+
+-- OSRS Game Database Schema
+
+-- Core player tables
+CREATE TABLE IF NOT EXISTS players (
+    id SERIAL PRIMARY KEY,
+    discord_id BIGINT UNIQUE NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP,
+    current_world INT DEFAULT 301,
+    total_level INT DEFAULT 32,
+    combat_level INT DEFAULT 3,
+    quest_points INT DEFAULT 0,
+    is_member BOOLEAN DEFAULT FALSE,
+    is_ironman BOOLEAN DEFAULT FALSE,
+    game_mode VARCHAR(50) DEFAULT 'normal'
+);
+
+-- Skills and experience
+CREATE TABLE IF NOT EXISTS player_skills (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    skill_name VARCHAR(50) NOT NULL,
+    level INT DEFAULT 1,
+    xp BIGINT DEFAULT 0,
+    UNIQUE(player_id, skill_name)
+);
+
+-- Inventory and bank
+CREATE TABLE IF NOT EXISTS player_items (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    item_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    is_bank BOOLEAN DEFAULT FALSE,
+    is_noted BOOLEAN DEFAULT FALSE,
+    slot_index INT,
+    UNIQUE(player_id, item_id, is_bank, is_noted)
+);
+
+-- Equipment loadouts
+CREATE TABLE IF NOT EXISTS player_equipment (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    loadout_name VARCHAR(50) NOT NULL,
+    slot_name VARCHAR(50) NOT NULL,
+    item_id VARCHAR(255),
+    UNIQUE(player_id, loadout_name, slot_name)
+);
+
+-- Quest progress
+CREATE TABLE IF NOT EXISTS quest_progress (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    quest_id VARCHAR(255) NOT NULL,
+    status VARCHAR(50) DEFAULT 'not_started',
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    UNIQUE(player_id, quest_id)
+);
+
+-- Achievement diary progress
+CREATE TABLE IF NOT EXISTS achievement_progress (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    diary_id VARCHAR(255) NOT NULL,
+    task_id VARCHAR(255) NOT NULL,
+    completed_at TIMESTAMP,
+    UNIQUE(player_id, diary_id, task_id)
+);
+
+-- World locations and transportation
+CREATE TABLE IF NOT EXISTS transport_locations (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    transport_type VARCHAR(50) NOT NULL,
+    x INT NOT NULL,
+    y INT NOT NULL,
+    plane INT DEFAULT 0,
+    destination_x INT,
+    destination_y INT,
+    destination_plane INT DEFAULT 0,
+    members_only BOOLEAN DEFAULT FALSE,
+    quest_requirement VARCHAR(255),
+    achievement_requirement VARCHAR(255)
+);
+
+-- Teleport locations
+CREATE TABLE IF NOT EXISTS teleport_locations (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    teleport_type VARCHAR(50) NOT NULL,
+    x INT NOT NULL,
+    y INT NOT NULL,
+    plane INT DEFAULT 0,
+    level_requirement INT,
+    members_only BOOLEAN DEFAULT FALSE,
+    quest_requirement VARCHAR(255),
+    achievement_requirement VARCHAR(255),
+    item_requirement VARCHAR(255)
+);
+
+-- Special locations (fairy rings, obelisks, etc)
+CREATE TABLE IF NOT EXISTS special_locations (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    location_type VARCHAR(50) NOT NULL,
+    x INT NOT NULL,
+    y INT NOT NULL,
+    plane INT DEFAULT 0,
+    code VARCHAR(10),
+    members_only BOOLEAN DEFAULT FALSE,
+    quest_requirement VARCHAR(255),
+    achievement_requirement VARCHAR(255)
+);
+
+-- Combat statistics
+CREATE TABLE IF NOT EXISTS combat_stats (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    kills INT DEFAULT 0,
+    deaths INT DEFAULT 0,
+    damage_dealt BIGINT DEFAULT 0,
+    damage_taken BIGINT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Training sessions
+CREATE TABLE IF NOT EXISTS training_sessions (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    skill_name VARCHAR(50) NOT NULL,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    start_level INT NOT NULL,
+    end_level INT,
+    xp_gained BIGINT,
+    location_x INT,
+    location_y INT,
+    plane INT DEFAULT 0
+);
+
+-- Player transactions
+CREATE TABLE IF NOT EXISTS transactions (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    item_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    price_per_item INT NOT NULL,
+    transaction_type VARCHAR(50) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Player relationships
+CREATE TABLE IF NOT EXISTS player_relationships (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    related_player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    relationship_type VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(player_id, related_player_id, relationship_type)
+);
+
+-- Player statistics
+CREATE TABLE IF NOT EXISTS player_statistics (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    statistic_name VARCHAR(255) NOT NULL,
+    value BIGINT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(player_id, statistic_name)
+);
+
+-- Collection log
+CREATE TABLE IF NOT EXISTS collection_log (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    category VARCHAR(255) NOT NULL,
+    item_id VARCHAR(255) NOT NULL,
+    count INT DEFAULT 0,
+    first_obtained TIMESTAMP,
+    last_obtained TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(player_id, category, item_id)
+);
+
+-- Player titles
+CREATE TABLE IF NOT EXISTS player_titles (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT FALSE,
+    UNIQUE(player_id, title)
+);
+
+-- Minigame scores
+CREATE TABLE IF NOT EXISTS minigame_scores (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    minigame VARCHAR(255) NOT NULL,
+    score INT DEFAULT 0,
+    high_score INT DEFAULT 0,
+    last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(player_id, minigame)
+);
+
+-- Cross-system boosts
+CREATE TABLE IF NOT EXISTS cross_system_boosts (
+    id SERIAL PRIMARY KEY,
+    player_id INT REFERENCES players(id) ON DELETE CASCADE,
+    source_type VARCHAR(255) NOT NULL,
+    target_type VARCHAR(255) NOT NULL,
+    boost_value FLOAT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP
+);
+
+-- Create indexes for frequently accessed columns
+CREATE INDEX IF NOT EXISTS idx_player_skills_player_id ON player_skills(player_id);
+CREATE INDEX IF NOT EXISTS idx_player_items_player_id ON player_items(player_id);
+CREATE INDEX IF NOT EXISTS idx_player_equipment_player_id ON player_equipment(player_id);
+CREATE INDEX IF NOT EXISTS idx_quest_progress_player_id ON quest_progress(player_id);
+CREATE INDEX IF NOT EXISTS idx_achievement_progress_player_id ON achievement_progress(player_id);
+CREATE INDEX IF NOT EXISTS idx_combat_stats_player_id ON combat_stats(player_id);
+CREATE INDEX IF NOT EXISTS idx_training_sessions_player_id ON training_sessions(player_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_player_id ON transactions(player_id);
+CREATE INDEX IF NOT EXISTS idx_collection_log_player_id ON collection_log(player_id);
+CREATE INDEX IF NOT EXISTS idx_minigame_scores_player_id ON minigame_scores(player_id);

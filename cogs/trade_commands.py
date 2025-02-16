@@ -4,9 +4,21 @@ from typing import Dict, Optional
 import discord
 from discord.ext import commands
 from datetime import datetime, timedelta
+from dataclasses import dataclass, field
 
-from .models import Player, TradeOffer, TradeStatus
+from src.osrs.models import Player, TradeStatus
 
+@dataclass
+class TradeOffer:
+    """Represents a trade offer between players."""
+    id: int
+    sender_id: int
+    receiver_id: int
+    item_id: str
+    amount: int
+    status: TradeStatus = TradeStatus.PENDING
+    created_at: datetime = field(default_factory=datetime.now)
+    expires_at: datetime = field(default_factory=lambda: datetime.now() + timedelta(minutes=5))
 
 class TradeCommands(commands.Cog):
     """Trade-related commands for OSRS."""
@@ -75,7 +87,7 @@ class TradeCommands(commands.Cog):
         
         trade = TradeOffer(
             id=trade_id,
-            offerer_id=ctx.author.id,
+            sender_id=ctx.author.id,
             receiver_id=target.id,
             item_id=inventory_item.item.id,
             amount=amount,
@@ -134,7 +146,7 @@ class TradeCommands(commands.Cog):
             return await ctx.send("This trade offer is no longer pending!")
         
         # Get players
-        offerer = self.bot.get_player(trade.offerer_id)
+        offerer = self.bot.get_player(trade.sender_id)
         receiver = self.bot.get_player(trade.receiver_id)
         
         # Check if still in same world
@@ -187,7 +199,7 @@ class TradeCommands(commands.Cog):
         )
         embed.add_field(
             name="From",
-            value=self.bot.get_user(trade.offerer_id).name
+            value=self.bot.get_user(trade.sender_id).name
         )
         embed.add_field(
             name="To",
@@ -311,7 +323,6 @@ class TradeCommands(commands.Cog):
         
         await ctx.send(embed=embed)
 
-
-def setup(bot):
-    """Add the cog to the bot."""
-    bot.add_cog(TradeCommands(bot)) 
+async def setup(bot):
+    """Set up the trade commands cog."""
+    await bot.add_cog(TradeCommands(bot)) 

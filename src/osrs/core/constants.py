@@ -1,5 +1,65 @@
 """Core constants and enums for OSRS."""
 from enum import Enum, auto
+from dataclasses import dataclass
+
+
+class SkillType(Enum):
+    """OSRS skill types."""
+    ATTACK = "attack"
+    STRENGTH = "strength"
+    DEFENCE = "defence"
+    RANGED = "ranged"
+    PRAYER = "prayer"
+    MAGIC = "magic"
+    RUNECRAFT = "runecraft"
+    HITPOINTS = "hitpoints"
+    CRAFTING = "crafting"
+    MINING = "mining"
+    SMITHING = "smithing"
+    FISHING = "fishing"
+    COOKING = "cooking"
+    FIREMAKING = "firemaking"
+    WOODCUTTING = "woodcutting"
+    AGILITY = "agility"
+    HERBLORE = "herblore"
+    THIEVING = "thieving"
+    FLETCHING = "fletching"
+    SLAYER = "slayer"
+    FARMING = "farming"
+    CONSTRUCTION = "construction"
+    HUNTER = "hunter"
+    SHARED = "shared"  # For shared XP gains
+
+
+@dataclass
+class SkillLevel:
+    """Represents a skill's level and experience."""
+    type: SkillType
+    level: int = 1
+    xp: int = 0
+    
+    def add_xp(self, amount: int) -> bool:
+        """Add XP to the skill and return True if leveled up."""
+        self.xp += amount
+        old_level = self.level
+        self.level = self._xp_to_level(self.xp)
+        return self.level > old_level
+        
+    @staticmethod
+    def _xp_to_level(xp: int) -> int:
+        """Convert XP to level using OSRS formula."""
+        for level in range(1, 100):
+            if xp < SkillLevel.xp_for_level(level):
+                return level - 1
+        return 99
+    
+    @staticmethod
+    def xp_for_level(level: int) -> int:
+        """Calculate XP required for a given level using OSRS formula."""
+        total = 0
+        for i in range(1, level):
+            total += int(i + 300 * (2 ** (i / 7.0)))
+        return int(total / 4)
 
 
 class BitField(Enum):

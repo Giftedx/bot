@@ -1,11 +1,14 @@
-from typing import Optional, Union, Dict, List, Any
+from typing import Optional, Union, Dict, List, Any, Tuple
 from enum import Enum
 from datetime import datetime
 import random
 from dataclasses import dataclass
+import logging
 
 from ..config.game_config import Rarity
 from ..features.pets.event_system import EventManager, EventType, GameEvent
+
+logger = logging.getLogger(__name__)
 
 class PetOrigin(Enum):
     OSRS = "osrs"
@@ -82,123 +85,248 @@ class PetStats:
         return int((base_power + skill_power + loyalty_bonus) * happiness_multiplier)
 
 class Pet:
+    """Represents a pet."""
     def __init__(
         self,
-        pet_id: str,
+        id: int,
+        owner_id: int,
         name: str,
-        origin: PetOrigin,
-        rarity: Rarity,
-        owner_id: str,
-        base_stats: Dict[str, int],
-        abilities: List[PetAbility],
-        metadata: Dict = None,
-        event_manager: Optional[EventManager] = None
+        pet_type: str,
+        level: int = 1,
+        experience: int = 0,
+        happiness: int = 100,
+        creation_date: Optional[datetime] = None,
+        attributes: Optional[Dict] = None
     ):
-        self.pet_id = pet_id
-        self.name = name
-        self.origin = origin
-        self.rarity = rarity
+        self.id = id
         self.owner_id = owner_id
-        self.base_stats = base_stats
-        self.abilities = abilities
-        self.stats = PetStats()
-        self.metadata = metadata or {}
-        self.obtained_date = datetime.now()
-        self.event_manager = event_manager
-        self.daily_interaction_count = 0
-        self.last_daily_reset = datetime.now()
+        self.name = name
+        self.pet_type = pet_type
+        self.level = level
+        self.experience = experience
+        self.happiness = happiness
+        self.creation_date = creation_date or datetime.now()
+        self.attributes = attributes or {}
 
-    def interact(self, interaction_type: str) -> Dict[str, Union[str, int, bool]]:
-        """Handle pet interactions and return results"""
-        now = datetime.now()
-        
-        # Reset daily interaction count if it's a new day
-        if (now - self.last_daily_reset).days >= 1:
-            self.daily_interaction_count = 0
-            self.last_daily_reset = now
-        
-        # Check daily interaction limit
-        if self.daily_interaction_count >= 10:
-            return {
-                "success": False,
-                "message": "You've reached the daily interaction limit with this pet!"
-            }
-            
-        self.stats.last_interaction = now
-        self.daily_interaction_count += 1
-        
-        # Basic interaction rewards
-        exp_gain = random.randint(10, 30)
-        happiness_gain = random.randint(5, 15)
-        
-        # Apply rarity bonuses
-        rarity_multiplier = {
-            Rarity.COMMON: 1.0,
-            Rarity.UNCOMMON: 1.2,
-            Rarity.RARE: 1.5,
-            Rarity.EPIC: 2.0,
-            Rarity.LEGENDARY: 3.0
-        }.get(self.rarity, 1.0)
-        
-        exp_gain = int(exp_gain * rarity_multiplier)
-        
-        # Apply loyalty bonus
-        loyalty_bonus = min(self.stats.loyalty * 0.05, 0.5)  # Max 50% bonus
-        exp_gain = int(exp_gain * (1 + loyalty_bonus))
-        
-        leveled_up = self.stats.gain_exp(exp_gain, self.event_manager, {
-            "pet_id": self.pet_id,
-            "owner_id": self.owner_id,
-            "origin": self.origin
-        })
-        
-        self.stats.happiness = min(100, self.stats.happiness + happiness_gain)
-        self.stats.loyalty += 1
+    def add_experience(self, amount: int) -> bool:
+        """Add experience and check for level up."""
+        self.experience += amount
+        old_level = self.level
+        self.level = self._calculate_level()
+        return self.level > old_level
 
-        # Check for ability activation
-        activated_abilities = []
-        for ability in self.abilities:
-            if ability.last_used is None or \
-               (now - ability.last_used).seconds >= ability.cooldown:
-                if random.random() < 0.1:  # 10% chance to activate
-                    ability.last_used = now
-                    activated_abilities.append(ability.name)
+    def _calculate_level(self) -> int:
+        """Calculate level from experience."""
+        for level in range(1, 100):
+            if self.experience < self._experience_for_level(level):
+                return level - 1
+        return 99
+
+    @staticmethod
+    def _experience_for_level(level: int) -> int:
+        """Calculate experience required for a level."""
+        return int((level ** 3) * 0.2)
+
+class PetSystem:
+    """Manages the pet system."""
+    
+    def __init__(self, bot):
+        """Initialize pet system."""
+        self.bot = bot
+        self.active_pets: Dict[int, Pet] = {}  # owner_id -> Pet
+
+    async def initialize(self):
+        """Initialize pet system from database."""
+        async with self.bot.db.pool.acquire() as conn:
+            # Load all pets
+            pets = await conn.fetch("SELECT * FROM osrs_pets")
+            for pet_data in pets:
+                self.active_pets[pet_data['user_id']] = Pet(
+                    id=pet_data['id'],
+                    owner_id=pet_data['user_id'],
+                    name=pet_data['name'],
+                    pet_type=pet_data['pet_type'],
+                    level=pet_data['level'],
+                    experience=pet_data['experience'],
+                    happiness=pet_data['happiness'],
+                    creation_date=pet_data['creation_date'],
+                    attributes=pet_data['attributes']
+                )
+
+    async def create_pet(
+        self,
+        owner_id: int,
+        name: str,
+        pet_type: str,
+        rarity: str = "common"
+    ) -> Optional[Pet]:
+        """Create a new pet."""
+        try:
+            async with self.bot.db.pool.acquire() as conn:
+                pet_id = await conn.fetchval(
+                    """
+                    INSERT INTO osrs_pets (
+                        user_id, name, pet_type, rarity
+                    ) VALUES ($1, $2, $3, $4)
+                    RETURNING id
+                    """,
+                    owner_id, name, pet_type, rarity
+                )
+
+                pet = Pet(
+                    id=pet_id,
+                    owner_id=owner_id,
+                    name=name,
+                    pet_type=pet_type
+                )
+                self.active_pets[owner_id] = pet
+                return pet
+
+        except Exception as e:
+            logger.error(f"Error creating pet: {e}")
+            return None
+
+    async def get_pet(self, owner_id: int) -> Optional[Pet]:
+        """Get a player's active pet."""
+        return self.active_pets.get(owner_id)
+
+    async def train_pet(
+        self,
+        owner_id: int,
+        activity: str,
+        duration: int
+    ) -> Tuple[int, bool]:
+        """
+        Train a pet and gain experience.
+        Returns (xp_gained, leveled_up)
+        """
+        pet = self.active_pets.get(owner_id)
+        if not pet:
+            return (0, False)
+
+        # Calculate experience gain
+        base_xp = {
+            "walking": 5,
+            "playing": 10,
+            "training": 15
+        }.get(activity, 5)
+
+        xp_gained = base_xp * duration
+        leveled_up = pet.add_experience(xp_gained)
+
+        # Update happiness
+        happiness_change = random.randint(5, 15)
+        pet.happiness = min(100, pet.happiness + happiness_change)
+
+        # Update database
+        async with self.bot.db.pool.acquire() as conn:
+            await conn.execute(
+                """
+                UPDATE osrs_pets
+                SET experience = $1,
+                    level = $2,
+                    happiness = $3
+                WHERE id = $4
+                """,
+                pet.experience, pet.level, pet.happiness, pet.id
+            )
+
+        return (xp_gained, leveled_up)
+
+    async def feed_pet(self, owner_id: int, food_type: str) -> int:
+        """
+        Feed a pet to increase happiness.
+        Returns happiness gained.
+        """
+        pet = self.active_pets.get(owner_id)
+        if not pet:
+            return 0
+
+        happiness_gain = {
+            "basic": 10,
+            "premium": 25,
+            "special": 50
+        }.get(food_type, 5)
+
+        old_happiness = pet.happiness
+        pet.happiness = min(100, pet.happiness + happiness_gain)
+        gained = pet.happiness - old_happiness
+
+        # Update database
+        async with self.bot.db.pool.acquire() as conn:
+            await conn.execute(
+                """
+                UPDATE osrs_pets
+                SET happiness = $1
+                WHERE id = $2
+                """,
+                pet.happiness, pet.id
+            )
+
+        return gained
+
+    async def get_pet_stats(self, owner_id: int) -> Optional[Dict]:
+        """Get pet statistics."""
+        pet = self.active_pets.get(owner_id)
+        if not pet:
+            return None
+
+        next_level_xp = pet._experience_for_level(pet.level + 1)
+        xp_to_next = next_level_xp - pet.experience
 
         return {
-            "success": True,
-            "exp_gained": exp_gain,
-            "happiness_gained": happiness_gain,
-            "leveled_up": leveled_up,
-            "current_level": self.stats.level,
-            "power_level": self.stats.calculate_power(),
-            "activated_abilities": activated_abilities,
-            "interactions_remaining": 10 - self.daily_interaction_count
+            "name": pet.name,
+            "type": pet.pet_type,
+            "level": pet.level,
+            "experience": pet.experience,
+            "next_level": next_level_xp,
+            "xp_to_next": xp_to_next,
+            "happiness": pet.happiness,
+            "age_days": (datetime.now() - pet.creation_date).days,
+            "attributes": pet.attributes
         }
 
-    def use_ability(self, ability_name: str) -> Dict[str, Any]:
-        """Use a specific pet ability"""
-        ability = next((a for a in self.abilities if a.name == ability_name), None)
-        if not ability:
-            return {
-                "success": False,
-                "message": f"This pet doesn't have the ability: {ability_name}"
-            }
-            
-        now = datetime.now()
-        if ability.last_used and (now - ability.last_used).seconds < ability.cooldown:
-            cooldown_remaining = ability.cooldown - (now - ability.last_used).seconds
-            return {
-                "success": False,
-                "message": f"Ability on cooldown for {cooldown_remaining} seconds"
-            }
-            
-        ability.last_used = now
-        return {
-            "success": True,
-            "ability_name": ability.name,
-            "effect_type": ability.effect_type,
-            "effect_value": ability.effect_value
-        }
+    async def update_pet_attributes(
+        self,
+        owner_id: int,
+        attributes: Dict
+    ) -> bool:
+        """Update pet attributes."""
+        pet = self.active_pets.get(owner_id)
+        if not pet:
+            return False
+
+        pet.attributes.update(attributes)
+
+        # Update database
+        async with self.bot.db.pool.acquire() as conn:
+            await conn.execute(
+                """
+                UPDATE osrs_pets
+                SET attributes = $1
+                WHERE id = $2
+                """,
+                pet.attributes, pet.id
+            )
+
+        return True
+
+    async def delete_pet(self, owner_id: int) -> bool:
+        """Delete a pet."""
+        if owner_id not in self.active_pets:
+            return False
+
+        try:
+            async with self.bot.db.pool.acquire() as conn:
+                await conn.execute(
+                    "DELETE FROM osrs_pets WHERE user_id = $1",
+                    owner_id
+                )
+            del self.active_pets[owner_id]
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting pet: {e}")
+            return False
 
 class PetManager:
     def __init__(self, event_manager: Optional[EventManager] = None):
@@ -214,7 +342,7 @@ class PetManager:
 
     def register_pet(self, pet: Pet) -> None:
         """Register a new pet in the system"""
-        self.pets[pet.pet_id] = pet
+        self.pets[str(pet.id)] = pet
         
         if self.event_manager:
             self.event_manager.emit(GameEvent(
@@ -222,10 +350,10 @@ class PetManager:
                 user_id=str(pet.owner_id),
                 timestamp=datetime.utcnow(),
                 data={
-                    "pet_id": pet.pet_id,
-                    "pet_type": pet.origin.value,
+                    "pet_id": str(pet.id),
+                    "pet_type": pet.pet_type,
                     "name": pet.name,
-                    "rarity": pet.rarity.value
+                    "rarity": "common"  # Assuming common rarity
                 }
             ))
 
@@ -244,16 +372,16 @@ class PetManager:
 
     def get_pets_by_owner(self, owner_id: str) -> List[Pet]:
         """Get all pets owned by a specific user"""
-        return [pet for pet in self.pets.values() if pet.owner_id == owner_id]
+        return [pet for pet in self.pets.values() if pet.owner_id == int(owner_id)]
 
     def get_pets_by_origin(self, origin: PetOrigin) -> List[Pet]:
         """Get all pets of a specific origin type"""
-        return [pet for pet in self.pets.values() if pet.origin == origin]
+        return [pet for pet in self.pets.values() if pet.pet_type == origin.value]
 
     def get_strongest_pets(self, owner_id: str, limit: int = 5) -> List[Pet]:
         """Get user's strongest pets by power level"""
         user_pets = self.get_pets_by_owner(owner_id)
-        return sorted(user_pets, key=lambda p: p.stats.calculate_power(), reverse=True)[:limit]
+        return sorted(user_pets, key=lambda p: p.level, reverse=True)[:limit]
 
     def transfer_pet(self, pet_id: str, new_owner_id: str) -> bool:
         """Transfer pet ownership to another user"""
@@ -262,8 +390,8 @@ class PetManager:
             return False
             
         old_owner_id = pet.owner_id
-        pet.owner_id = new_owner_id
-        pet.stats.loyalty = max(0, pet.stats.loyalty - 50)  # Loyalty penalty on transfer
+        pet.owner_id = int(new_owner_id)
+        pet.level = 1  # Reset level on transfer
         
         if self.event_manager:
             self.event_manager.emit(GameEvent(

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plex Watch Together</title>
+    <style>
+        :root {
+            --discord-background: #36393f;
+            --discord-text: #dcddde;
+            --discord-secondary: #2f3136;
+            --discord-accent: #5865f2;
+            --discord-danger: #ed4245;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'gg sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--discord-background);
+            color: var(--discord-text);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .header img {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .media-section {
+            background-color: var(--discord-secondary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .media-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .media-thumbnail {
+            width: 160px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .media-details {
+            flex: 1;
+        }
+
+        .media-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+        }
+
+        .media-metadata {
+            font-size: 14px;
+            color: #b9bbbe;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .button {
+            background-color: var(--discord-accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #4752c4;
+        }
+
+        .button.secondary {
+            background-color: #4f545c;
+        }
+
+        .button.secondary:hover {
+            background-color: #686d73;
+        }
+
+        .button.danger {
+            background-color: var(--discord-danger);
+        }
+
+        .button.danger:hover {
+            background-color: #c03537;
+        }
+
+        .participants {
+            background-color: var(--discord-secondary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .participants h2 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .participant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--discord-background);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+
+        .participant img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .status {
+            font-size: 14px;
+            color: #b9bbbe;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        /* Loading state */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 16px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--discord-secondary);
+            border-top-color: var(--discord-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="/plex_logo.png" alt="Plex">
+            <h1>Plex Watch Together</h1>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <div>Initializing Plex Activity...</div>
+        </div>
+
+        <div id="content" class="content" style="display: none;">
+            <div class="media-section">
+                <div class="media-info">
+                    <img id="mediaThumbnail" class="media-thumbnail" src="/placeholder.png" alt="Media thumbnail">
+                    <div class="media-details">
+                        <h2 id="mediaTitle" class="media-title">No media selected</h2>
+                        <div id="mediaMetadata" class="media-metadata">
+                            Select media to start watching together
+                        </div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="playButton" class="button">Play</button>
+                    <button id="pauseButton" class="button secondary" style="display: none;">Pause</button>
+                    <button id="resumeButton" class="button secondary" style="display: none;">Resume</button>
+                    <button id="stopButton" class="button danger">Stop Activity</button>
+                </div>
+            </div>
+
+            <div class="participants">
+                <h2>Participants</h2>
+                <div id="participantList" class="participant-list">
+                    <!-- Participants will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script type="module">
+        import PlexActivityClient from '../plex_activity_client.js';
+
+        const client = new PlexActivityClient(window.DISCORD_CLIENT_ID);
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('content');
+        const status = document.getElementById('status');
+        const playButton = document.getElementById('playButton');
+        const pauseButton = document.getElementById('pauseButton');
+        const resumeButton = document.getElementById('resumeButton');
+        const stopButton = document.getElementById('stopButton');
+
+        // Initialize the activity
+        async function init() {
+            try {
+                const success = await client.initialize();
+                if (success) {
+                    loading.style.display = 'none';
+                    content.style.display = 'block';
+                    updateStatus('Ready to watch!');
+                } else {
+                    updateStatus('Failed to initialize activity');
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+                updateStatus('Error initializing activity');
+            }
+        }
+
+        function updateStatus(message) {
+            status.textContent = message;
+        }
+
+        function updateMediaInfo(mediaInfo) {
+            if (!mediaInfo) return;
+
+            document.getElementById('mediaThumbnail').src = mediaInfo.thumb || '/placeholder.png';
+            document.getElementById('mediaTitle').textContent = mediaInfo.title;
+            document.getElementById('mediaMetadata').textContent = getMediaMetadata(mediaInfo);
+        }
+
+        function getMediaMetadata(mediaInfo) {
+            if (mediaInfo.type === 'episode') {
+                return `${mediaInfo.showTitle} - Season ${mediaInfo.season} Episode ${mediaInfo.episode}`;
+            } else if (mediaInfo.type === 'track') {
+                return `${mediaInfo.artist} - ${mediaInfo.album}`;
+            }
+            return mediaInfo.year ? `${mediaInfo.year}` : '';
+        }
+
+        function updateParticipants(participants) {
+            const list = document.getElementById('participantList');
+            list.innerHTML = '';
+
+            participants.forEach(participant => {
+                const div = document.createElement('div');
+                div.className = 'participant';
+                div.innerHTML = `
+                    <img src="${participant.avatar}" alt="${participant.username}">
+                    <span>${participant.username}</span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // Event listeners
+        playButton.addEventListener('click', () => {
+            // Handle play button click
+            // This should open a media selection dialog
+        });
+
+        pauseButton.addEventListener('click', async () => {
+            const success = await client.pauseMedia();
+            if (success) {
+                pauseButton.style.display = 'none';
+                resumeButton.style.display = 'inline-block';
+            }
+        });
+
+        resumeButton.addEventListener('click', async () => {
+            const success = await client.resumeMedia();
+            if (success) {
+                resumeButton.style.display = 'none';
+                pauseButton.style.display = 'inline-block';
+            }
+        });
+
+        stopButton.addEventListener('click', async () => {
+            const success = await client.endActivity();
+            if (success) {
+                window.close();
+            }
+        });
+
+        // SDK event handlers
+        client.onReady(() => {
+            updateStatus('Connected to Discord');
+        });
+
+        client.onError((error) => {
+            console.error('Activity error:', error);
+            updateStatus('Error: ' + error.message);
+        });
+
+        client.onClose(() => {
+            updateStatus('Activity closed');
+            window.close();
+        });
+
+        // Start initialization
+        init();
+    </script>
+</body>
+</html> 

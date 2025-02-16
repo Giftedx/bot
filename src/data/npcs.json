@@ -1,0 +1,46 @@
+{
+    "wise_old_man": {
+        "id": "wise_old_man",
+        "name": "Wise Old Man",
+        "type": "QUEST",
+        "examine": "He has a cape made from fine silk.",
+        "wiki_url": "https://oldschool.runescape.wiki/w/Wise_Old_Man",
+        "locations": [
+            {
+                "area": "Draynor Village",
+                "coordinates": [
+                    3088,
+                    3253,
+                    0
+                ],
+                "quantity": 1
+            }
+        ],
+        "options": [
+            "Talk-to",
+            "Trade",
+            "Teleport",
+            "View-quest-log"
+        ],
+        "dialogue": {
+            "greeting": "Ah, hello there adventurer.",
+            "topics": [
+                "Quest Cape",
+                "Bank Organization",
+                "Life Story"
+            ]
+        },
+        "shop": {
+            "name": "Wise Old Man's Shop",
+            "items": [
+                {
+                    "id": "quest_cape",
+                    "price": 99000,
+                    "requirements": {
+                        "quest_points": 290
+                    }
+                }
+            ]
+        }
+    }
+}

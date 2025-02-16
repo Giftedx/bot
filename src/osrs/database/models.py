@@ -4,11 +4,84 @@ from datetime import datetime
 from typing import Dict, List, Optional, cast
 import sqlite3
 import logging
+from dataclasses import dataclass
+from enum import Enum
 
-from src.osrs.models import SkillType, Equipment, InventoryItem
-from src.osrs.core.game_math import level_to_xp
+from ..core.constants import SkillType
+from ..models.equipment import Equipment, InventoryItem
+from ..core.game_math import level_to_xp
 
 logger = logging.getLogger(__name__)
+
+
+class TransportationType(Enum):
+    """Types of transportation methods."""
+    SHIP = "ship"
+    FERRY = "ferry"
+    MINECART = "minecart"
+    CANOE = "canoe"
+    GNOME_GLIDER = "gnome_glider"
+    BALLOON = "balloon"
+    SPIRIT_TREE = "spirit_tree"
+    CARPET = "carpet"
+    QUETZAL = "quetzal"
+
+class TeleportType(Enum):
+    """Types of teleportation methods."""
+    STANDARD_MAGIC = "standard_magic"
+    ANCIENT_MAGIC = "ancient_magic"
+    LUNAR_MAGIC = "lunar_magic"
+    ARCEUUS_MAGIC = "arceuus_magic"
+    JEWELLERY = "jewellery"
+    SCROLL = "scroll"
+    DIARY = "diary"
+    MISC = "misc"
+
+@dataclass
+class TransportLocation:
+    """Transportation location in the game world."""
+    id: int
+    name: str
+    transport_type: TransportationType
+    x: int
+    y: int
+    plane: int = 0
+    members_only: bool = False
+    quest_requirement: Optional[str] = None
+    achievement_requirement: Optional[str] = None
+    destination_x: Optional[int] = None
+    destination_y: Optional[int] = None
+    destination_plane: Optional[int] = None
+
+@dataclass
+class TeleportLocation:
+    """Teleportation destination in the game world."""
+    id: int
+    name: str
+    teleport_type: TeleportType
+    x: int
+    y: int
+    plane: int = 0
+    level_requirement: Optional[int] = None
+    members_only: bool = False
+    quest_requirement: Optional[str] = None
+    achievement_requirement: Optional[str] = None
+    item_requirement: Optional[str] = None
+
+@dataclass
+class SpecialLocation:
+    """Special location in the game world (fairy rings, obelisks, etc.)."""
+    id: int
+    name: str
+    location_type: str
+    x: int
+    y: int
+    plane: int = 0
+    code: Optional[str] = None  # For fairy rings
+    members_only: bool = False
+    quest_requirement: Optional[str] = None
+    achievement_requirement: Optional[str] = None
+    level_requirement: Optional[dict] = None  # For skill requirements
 
 
 class Database:
@@ -79,6 +152,61 @@ class Database:
                     player_id INTEGER NOT NULL,
                     item_data TEXT NOT NULL,
                     FOREIGN KEY (player_id) REFERENCES players (id)
+                )
+            """)
+
+            # Transportation table
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS osrs_transportation (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    transport_type TEXT NOT NULL,
+                    x INTEGER NOT NULL,
+                    y INTEGER NOT NULL,
+                    plane INTEGER DEFAULT 0,
+                    members_only BOOLEAN DEFAULT FALSE,
+                    quest_requirement TEXT,
+                    achievement_requirement TEXT,
+                    destination_x INTEGER,
+                    destination_y INTEGER,
+                    destination_plane INTEGER,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+            # Teleport locations table
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS osrs_teleport_locations (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    teleport_type TEXT NOT NULL,
+                    x INTEGER NOT NULL,
+                    y INTEGER NOT NULL,
+                    plane INTEGER DEFAULT 0,
+                    level_requirement INTEGER,
+                    members_only BOOLEAN DEFAULT FALSE,
+                    quest_requirement TEXT,
+                    achievement_requirement TEXT,
+                    item_requirement TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+            # Special locations table
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS osrs_special_locations (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    location_type TEXT NOT NULL,
+                    x INTEGER NOT NULL,
+                    y INTEGER NOT NULL,
+                    plane INTEGER DEFAULT 0,
+                    code TEXT,
+                    members_only BOOLEAN DEFAULT FALSE,
+                    quest_requirement TEXT,
+                    achievement_requirement TEXT,
+                    level_requirement JSON,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
 

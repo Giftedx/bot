@@ -631,8 +631,14 @@ class CombatCommands(commands.Cog):
         # TODO: Implement database update
         return False, {}
 
-async def setup(bot: commands.Bot):
-    """Add the combat commands to the bot"""
-    db = bot.get_cog("Database").db
-    game_data = bot.get_cog("GameData").game_data
+async def setup(bot: commands.Bot) -> None:
+    """Set up the combat commands cog."""
+    from ..lib.database.db_manager import DatabaseManager
+    from ..lib.data.game_data import GameData
+    
+    # Initialize dependencies
+    db = DatabaseManager()
+    game_data = GameData()
+    
+    # Add cog to bot
     await bot.add_cog(CombatCommands(bot, db, game_data)) 

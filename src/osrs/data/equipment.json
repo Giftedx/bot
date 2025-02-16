@@ -1,0 +1,39 @@
+{
+    "bronze_sword": {
+        "id": "bronze_sword",
+        "name": "Bronze Sword",
+        "slot": "weapon",
+        "attack_bonus": 4,
+        "strength_bonus": 3,
+        "requirements": {
+            "attack": 1
+        }
+    },
+    "bronze_platebody": {
+        "id": "bronze_platebody",
+        "name": "Bronze Platebody",
+        "slot": "body",
+        "defence_bonus": 5,
+        "requirements": {
+            "defence": 1
+        }
+    },
+    "bronze_platelegs": {
+        "id": "bronze_platelegs",
+        "name": "Bronze Platelegs",
+        "slot": "legs",
+        "defence_bonus": 4,
+        "requirements": {
+            "defence": 1
+        }
+    },
+    "bronze_full_helm": {
+        "id": "bronze_full_helm",
+        "name": "Bronze Full Helm",
+        "slot": "head",
+        "defence_bonus": 3,
+        "requirements": {
+            "defence": 1
+        }
+    }
+} 

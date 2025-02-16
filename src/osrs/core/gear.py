@@ -1,10 +1,10 @@
-"""OSRS gear and equipment implementation."""
+"""OSRS gear and equipment system."""
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Union
 from enum import Enum, auto
 
+from .constants import SkillType
 from .bank import Bank
-from .skills import SkillType
 
 
 class EquipmentSlot(Enum):
