@@ -1,0 +1,658 @@
+{
+  "Mahogany Homes": {
+    "name": "Mahogany Homes",
+    "type": "MINIGAME",
+    "location": "[[Falador]], [[Varrock]], [[East Ardougne]], [[Hosidius]]",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mahogany_Homes"
+  },
+  "Tackle organised crime": {
+    "name": "Tackle organised crime",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tackle_organised_crime"
+  },
+  "Emir's Arena": {
+    "name": "Emir's Arena",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Emir's_Arena"
+  },
+  "Autumn sq'irk": {
+    "name": "Autumn sq'irk",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Autumn_sq'irk"
+  },
+  "Impetuous Impulses": {
+    "name": "Impetuous Impulses",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Impetuous_Impulses"
+  },
+  "Stone seal": {
+    "name": "Stone seal",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stone_seal"
+  },
+  "Toolkit (Castle Wars)": {
+    "name": "Toolkit (Castle Wars)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Toolkit_(Castle_Wars)"
+  },
+  "Volcanic Mine": {
+    "name": "Volcanic Mine",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Volcanic_Mine"
+  },
+  "Pottery statuette": {
+    "name": "Pottery statuette",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pottery_statuette"
+  },
+  "Spring sq'irkjuice": {
+    "name": "Spring sq'irkjuice",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Spring_sq'irkjuice"
+  },
+  "Penance armour": {
+    "name": "Penance armour",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Penance_armour"
+  },
+  "Pest Control": {
+    "name": "Pest Control",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pest_Control"
+  },
+  "Giants' Foundry": {
+    "name": "Giants' Foundry",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Giants'_Foundry"
+  },
+  "Mess": {
+    "name": "Mess",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mess"
+  },
+  "Shade key": {
+    "name": "Shade key",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shade_key"
+  },
+  "Barricade": {
+    "name": "Barricade",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barricade"
+  },
+  "Stone scarab": {
+    "name": "Stone scarab",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stone_scarab"
+  },
+  "Stealing valuables": {
+    "name": "Stealing valuables",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stealing_valuables"
+  },
+  "Dorgesh-Kaan market trading": {
+    "name": "Dorgesh-Kaan market trading",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dorgesh-Kaan_market_trading"
+  },
+  "Short vine": {
+    "name": "Short vine",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Short_vine"
+  },
+  "Climbing rope": {
+    "name": "Climbing rope",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Climbing_rope"
+  },
+  "Sorceress's Garden": {
+    "name": "Sorceress's Garden",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sorceress's_Garden"
+  },
+  "Castle Wars": {
+    "name": "Castle Wars",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Castle_Wars"
+  },
+  "Autumn sq'irkjuice": {
+    "name": "Autumn sq'irkjuice",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Autumn_sq'irkjuice"
+  },
+  "Rat Pits": {
+    "name": "Rat Pits",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rat_Pits"
+  },
+  "Minigames": {
+    "name": "Minigames",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Minigames"
+  },
+  "Guardians of the Rift": {
+    "name": "Guardians of the Rift",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Guardians_of_the_Rift"
+  },
+  "Gnome Restaurant": {
+    "name": "Gnome Restaurant",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Restaurant"
+  },
+  "Reward token": {
+    "name": "Reward token",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Reward_token"
+  },
+  "Stone statuette": {
+    "name": "Stone statuette",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stone_statuette"
+  },
+  "Fortis Colosseum": {
+    "name": "Fortis Colosseum",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fortis_Colosseum"
+  },
+  "Keldagrim tasks": {
+    "name": "Keldagrim tasks",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Keldagrim_tasks"
+  },
+  "TzHaar Fight Pit": {
+    "name": "TzHaar Fight Pit",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit"
+  },
+  "Fishing Trawler": {
+    "name": "Fishing Trawler",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fishing_Trawler"
+  },
+  "Winter sq'irkjuice": {
+    "name": "Winter sq'irkjuice",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Winter_sq'irkjuice"
+  },
+  "Spring sq'irk": {
+    "name": "Spring sq'irk",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Spring_sq'irk"
+  },
+  "Tithe Farm": {
+    "name": "Tithe Farm",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tithe_Farm"
+  },
+  "Trouble Brewing": {
+    "name": "Trouble Brewing",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Trouble_Brewing"
+  },
+  "Rock (Castle Wars)": {
+    "name": "Rock (Castle Wars)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rock_(Castle_Wars)"
+  },
+  "Clan Wars": {
+    "name": "Clan Wars",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Clan_Wars"
+  },
+  "Rogues' Den": {
+    "name": "Rogues' Den",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rogues'_Den"
+  },
+  "Bones (Soul Wars)": {
+    "name": "Bones (Soul Wars)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bones_(Soul_Wars)"
+  },
+  "Queen help book": {
+    "name": "Queen help book",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Queen_help_book"
+  },
+  "Sq'irkjuice": {
+    "name": "Sq'irkjuice",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sq'irkjuice"
+  },
+  "Temple Trekking": {
+    "name": "Temple Trekking",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Temple_Trekking"
+  },
+  "Golden scarab": {
+    "name": "Golden scarab",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Golden_scarab"
+  },
+  "Barbarian Assault": {
+    "name": "Barbarian Assault",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barbarian_Assault"
+  },
+  "Bounty Hunter": {
+    "name": "Bounty Hunter",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bounty_Hunter"
+  },
+  "Mage Arena": {
+    "name": "Mage Arena",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Arena"
+  },
+  "Gnome Ball": {
+    "name": "Gnome Ball",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Ball"
+  },
+  "Winter sq'irk": {
+    "name": "Winter sq'irk",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Winter_sq'irk"
+  },
+  "Burthorpe Games Room": {
+    "name": "Burthorpe Games Room",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Burthorpe_Games_Room"
+  },
+  "Pottery scarab": {
+    "name": "Pottery scarab",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pottery_scarab"
+  },
+  "Gold seal": {
+    "name": "Gold seal",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gold_seal"
+  },
+  "Pyramid Plunder": {
+    "name": "Pyramid Plunder",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pyramid_Plunder"
+  },
+  "Stealing artefacts": {
+    "name": "Stealing artefacts",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stealing_artefacts"
+  },
+  "Wise Old Man tasks": {
+    "name": "Wise Old Man tasks",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Wise_Old_Man_tasks"
+  },
+  "Mage Training Arena": {
+    "name": "Mage Training Arena",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Training_Arena"
+  },
+  "Mastering Mixology": {
+    "name": "Mastering Mixology",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mastering_Mixology"
+  },
+  "Nightmare Zone": {
+    "name": "Nightmare Zone",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Nightmare_Zone"
+  },
+  "Blast Furnace": {
+    "name": "Blast Furnace",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Blast_Furnace"
+  },
+  "Brimhaven Agility Arena": {
+    "name": "Brimhaven Agility Arena",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Brimhaven_Agility_Arena"
+  },
+  "Summer sq'irkjuice": {
+    "name": "Summer sq'irkjuice",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Summer_sq'irkjuice"
+  },
+  "Last Man Standing": {
+    "name": "Last Man Standing",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Last_Man_Standing"
+  },
+  "TzHaar-Ket-Rak's Challenges": {
+    "name": "TzHaar-Ket-Rak's Challenges",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar-Ket-Rak's_Challenges"
+  },
+  "Duel Arena": {
+    "name": "Duel Arena",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Duel_Arena"
+  },
+  "Explosive potion": {
+    "name": "Explosive potion",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Explosive_potion"
+  },
+  "Shades of Mort'ton (minigame)": {
+    "name": "Shades of Mort'ton (minigame)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shades_of_Mort'ton_(minigame)"
+  },
+  "Summer sq'irk": {
+    "name": "Summer sq'irk",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Summer_sq'irk"
+  },
+  "RuneScape:Grand Exchange Market Watch/Minigames": {
+    "name": "RuneScape:Grand Exchange Market Watch/Minigames",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/RuneScape:Grand_Exchange_Market_Watch/Minigames"
+  },
+  "Long vine": {
+    "name": "Long vine",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Long_vine"
+  },
+  "Hallowed Sepulchre": {
+    "name": "Hallowed Sepulchre",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hallowed_Sepulchre"
+  },
+  "Soul Wars": {
+    "name": "Soul Wars",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Soul_Wars"
+  },
+  "Barricade (Soul Wars)": {
+    "name": "Barricade (Soul Wars)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barricade_(Soul_Wars)"
+  },
+  "Tai Bwo Wannai Cleanup": {
+    "name": "Tai Bwo Wannai Cleanup",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tai_Bwo_Wannai_Cleanup"
+  },
+  "Inferno": {
+    "name": "Inferno",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Inferno"
+  },
+  "Ivory comb": {
+    "name": "Ivory comb",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ivory_comb"
+  },
+  "TzHaar Fight Cave": {
+    "name": "TzHaar Fight Cave",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar_Fight_Cave"
+  },
+  "The Gauntlet": {
+    "name": "The Gauntlet",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Gauntlet"
+  },
+  "Tears of Guthix (minigame)": {
+    "name": "Tears of Guthix (minigame)",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tears_of_Guthix_(minigame)"
+  },
+  "RuneScape:Grand Exchange Market Watch/Combat minigames": {
+    "name": "RuneScape:Grand Exchange Market Watch/Combat minigames",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/RuneScape:Grand_Exchange_Market_Watch/Combat_minigames"
+  },
+  "Golden statuette": {
+    "name": "Golden statuette",
+    "type": "MINIGAME",
+    "location": null,
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Golden_statuette"
+  }
+}

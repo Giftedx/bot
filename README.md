@@ -1,158 +1,120 @@
-# Discord Integration Bot
+# Discord Plex Bot
 
-A powerful Discord bot that integrates various services and games, including Plex media playback, Pokemon game data, and more.
+A Discord bot that integrates with Plex Media Server, allowing users to browse and stream media content directly in Discord voice channels.
 
 ## Features
 
-### Plex Integration
-- Watch Together: Stream Plex content in Discord voice channels
-- Media Controls: Play, pause, seek, and manage playback
-- Rich Presence: Show what you're watching in Discord
-- Voice Channel Sync: Synchronized playback for group watching
+- Browse Plex libraries
+- Search for media content
+- Stream media in Discord voice channels
+- Web interface for media browsing
+- Transcoding support for optimal playback
+- Authentication and authorization
+- Cross-platform compatibility
 
-### Game Integrations
-- Pokemon ROM Data:
-  - Parse and analyze Pokemon games (GB, GBC, GBA)
-  - Extract game data (Pokemon, moves, maps, items)
-  - Support for multiple Pokemon generations
-- OSRS Integration:
-  - Item database and Grand Exchange tracking
-  - Player stats and hiscores
-  - Quest and achievement tracking
+## Prerequisites
 
-### Discord Activities
-- Custom Activity Implementation
-- Rich Presence Integration
-- Voice Channel Activities
-- Group Gaming Features
+- Python 3.8 or higher
+- FFmpeg (for media transcoding)
+- Redis (for caching)
+- Plex Media Server
+- Discord Bot Token
+- Node.js and npm (for frontend development)
 
-### Data Collection
-- Repository Analysis
-- API Integration
-- Game Data Parsing
-- Caching System
-
-## Setup
-
-### Prerequisites
-- Python 3.7+
-- Redis (optional, for caching)
-- FFmpeg (for voice channel streaming)
-- Git (for repository scanning)
-
-### Installation
+## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/discord-integration-bot.git
-cd discord-integration-bot
+git clone <repository-url>
+cd discord-plex-bot
 ```
 
 2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+source venv/bin/activate  # Linux/macOS
+.\venv\Scripts\activate   # Windows
 ```
 
-3. Install dependencies:
+3. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Create a `.env` file with your configuration:
-```env
-# Discord
+4. Set up environment variables:
+Create a `.env` file in the project root with the following variables:
+```
 DISCORD_TOKEN=your_discord_bot_token
-DISCORD_CLIENT_ID=your_client_id
-DISCORD_CLIENT_SECRET=your_client_secret
-
-# Plex
-PLEX_SERVER_URL=your_plex_server_url
+DISCORD_CLIENT_ID=your_discord_client_id
+PLEX_URL=your_plex_server_url
 PLEX_TOKEN=your_plex_token
+REDIS_URL=redis://localhost:6379
+JWT_SECRET_KEY=your_jwt_secret
+```
 
-# GitHub/GitLab
-GITHUB_TOKEN=your_github_token
-GITLAB_TOKEN=your_gitlab_token
-
-# Redis (optional)
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_DB=0
-
-# Game Data
-POKEMON_GB_ROMS_PATH=path/to/gb/roms
-POKEMON_GBC_ROMS_PATH=path/to/gbc/roms
-POKEMON_GBA_ROMS_PATH=path/to/gba/roms
+5. Install frontend dependencies:
+```bash
+cd frontend
+npm install
 ```
 
 ## Usage
 
-### Starting the Bot
+1. Start the Discord bot:
 ```bash
-python src/bot.py
+python discord_bot/bot.py
 ```
 
-### Running Data Collection
+2. Start the web server:
 ```bash
-python src/data_collection/run_collection.py
+python web_server/server.py
 ```
 
-### Discord Commands
+3. Start the frontend development server:
+```bash
+cd frontend
+npm start
+```
 
-#### Plex Commands
-- `!plex start` - Start a Plex Activity in the current voice channel
-- `!plex play <media_id>` - Play specific media
-- `!plex pause` - Pause playback
-- `!plex resume` - Resume playback
-- `!plex stop` - Stop playback
-- `!plex seek <timestamp>` - Seek to specific time (e.g., "1:30:00")
+## Discord Commands
 
-#### Pokemon Commands
-- `!pokemon info <pokemon>` - Get Pokemon information
-- `!pokemon move <move>` - Get move information
-- `!pokemon map <location>` - View map data
-- `!pokemon item <item>` - Get item information
+- `!libraries` - List all available Plex libraries
+- `!search <query>` - Search for media across libraries
+- `!play <media_id>` - Play media in current voice channel
+- `!stop` - Stop current playback
 
-#### Repository Commands
-- `!repo scan` - Scan configured repositories
-- `!repo info <repo>` - Get repository information
-- `!repo stats` - View repository statistics
+## API Endpoints
+
+- `GET /api/libraries` - Get all Plex libraries
+- `GET /api/search?q=<query>&library=<library_id>` - Search for media
+- `GET /api/media/<media_id>` - Get media details
+- `GET /api/stream/<media_id>` - Get media stream URL
+- `POST /api/auth` - Authenticate user
 
 ## Development
 
-### Project Structure
-```
-src/
-├── bot.py                    # Main bot file
-├── data_collection/         # Data collection system
-│   ├── config.py           # Configuration
-│   ├── base_collector.py   # Base collector class
-│   ├── run_collection.py   # Collection script
-│   ├── game_data/         # Game data collectors
-│   └── api_integration/   # API integration
-├── cogs/                   # Bot commands
-└── utils/                 # Utility functions
-
-data/
-├── collected/            # Collected data
-├── cache/               # Cache directory
-└── roms/                # ROM files (not included)
-```
-
-### Adding New Features
-1. Create a new collector in the appropriate directory
-2. Implement the collector interface
-3. Add configuration to `config.py`
-4. Update the orchestrator in `run_collection.py`
-5. Create corresponding bot commands in `cogs/`
-
-### Testing
+1. Install development dependencies:
 ```bash
-pytest tests/
+pip install -r requirements-dev.txt
+```
+
+2. Run tests:
+```bash
+pytest
+```
+
+3. Format code:
+```bash
+black .
+```
+
+4. Run linting:
+```bash
+flake8
 ```
 
 ## Contributing
+
 1. Fork the repository
 2. Create a feature branch
 3. Commit your changes
@@ -160,11 +122,15 @@ pytest tests/
 5. Create a Pull Request
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
-- [Discord.py](https://github.com/Rapptz/discord.py)
+
+- [discord.py](https://github.com/Rapptz/discord.py)
 - [PlexAPI](https://github.com/pkkid/python-plexapi)
-- [PokeAPI](https://pokeapi.co/)
-- [OSRSBox](https://github.com/osrsbox/osrsbox-db)
-- All other open-source projects used in this bot
+- [Flask](https://flask.palletsprojects.com/)
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact the maintainers. 

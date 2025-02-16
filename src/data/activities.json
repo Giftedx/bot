@@ -1,0 +1,631 @@
+{
+  "Distractions and Diversions": {
+    "name": "Distractions and Diversions",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Distractions_and_Diversions"
+  },
+  "Mahogany Homes": {
+    "name": "Mahogany Homes",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mahogany_Homes"
+  },
+  "Tackle organised crime": {
+    "name": "Tackle organised crime",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tackle_organised_crime"
+  },
+  "Enchantment Ritual": {
+    "name": "Enchantment Ritual",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Enchantment_Ritual"
+  },
+  "Emir's Arena": {
+    "name": "Emir's Arena",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [
+      "=="
+    ],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Emir's_Arena"
+  },
+  "Impetuous Impulses": {
+    "name": "Impetuous Impulses",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Impetuous_Impulses"
+  },
+  "Mime (Random Event)": {
+    "name": "Mime (Random Event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mime_(Random_Event)"
+  },
+  "Volcanic Mine": {
+    "name": "Volcanic Mine",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Volcanic_Mine"
+  },
+  "Pest Control": {
+    "name": "Pest Control",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pest_Control"
+  },
+  "Knight Waves": {
+    "name": "Knight Waves",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Knight_Waves"
+  },
+  "Giants' Foundry": {
+    "name": "Giants' Foundry",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Giants'_Foundry"
+  },
+  "Champions' Challenge": {
+    "name": "Champions' Challenge",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Champions'_Challenge"
+  },
+  "Moons of Peril": {
+    "name": "Moons of Peril",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Moons_of_Peril"
+  },
+  "Rising roots": {
+    "name": "Rising roots",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rising_roots"
+  },
+  "Stealing valuables": {
+    "name": "Stealing valuables",
+    "type": "ACTIVITY",
+    "requirements": [
+      "{{SCP|Thieving|50}}"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stealing_valuables"
+  },
+  "PvM Arena": {
+    "name": "PvM Arena",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/PvM_Arena"
+  },
+  "Dorgesh-Kaan market trading": {
+    "name": "Dorgesh-Kaan market trading",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dorgesh-Kaan_market_trading"
+  },
+  "Sled Racing": {
+    "name": "Sled Racing",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sled_Racing"
+  },
+  "Maze": {
+    "name": "Maze",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Maze"
+  },
+  "Sorceress's Garden": {
+    "name": "Sorceress's Garden",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sorceress's_Garden"
+  },
+  "Castle Wars": {
+    "name": "Castle Wars",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Castle_Wars"
+  },
+  "Rat Pits": {
+    "name": "Rat Pits",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rat_Pits"
+  },
+  "Guardians of the Rift": {
+    "name": "Guardians of the Rift",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Guardians_of_the_Rift"
+  },
+  "Flowering Tree (Forestry event)": {
+    "name": "Flowering Tree (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Flowering_Tree_(Forestry_event)"
+  },
+  "Gnome Restaurant": {
+    "name": "Gnome Restaurant",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Restaurant"
+  },
+  "Fortis Colosseum": {
+    "name": "Fortis Colosseum",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fortis_Colosseum"
+  },
+  "Certer": {
+    "name": "Certer",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Certer"
+  },
+  "Keldagrim tasks": {
+    "name": "Keldagrim tasks",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Keldagrim_tasks"
+  },
+  "TzHaar Fight Pit": {
+    "name": "TzHaar Fight Pit",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar_Fight_Pit"
+  },
+  "Fishing Trawler": {
+    "name": "Fishing Trawler",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None <br> {{SCP|Fishing|15|link=yes}} to catch fish"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fishing_Trawler"
+  },
+  "Tithe Farm": {
+    "name": "Tithe Farm",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tithe_Farm"
+  },
+  "Trouble Brewing": {
+    "name": "Trouble Brewing",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Trouble_Brewing"
+  },
+  "Pheasant Control": {
+    "name": "Pheasant Control",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pheasant_Control"
+  },
+  "Struggling sapling (Forestry event)": {
+    "name": "Struggling sapling (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Struggling_sapling_(Forestry_event)"
+  },
+  "Clan Wars": {
+    "name": "Clan Wars",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Clan_Wars"
+  },
+  "Rogues' Den": {
+    "name": "Rogues' Den",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rogues'_Den"
+  },
+  "Poachers (Forestry event)": {
+    "name": "Poachers (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Poachers_(Forestry_event)"
+  },
+  "Jekyll and Hyde": {
+    "name": "Jekyll and Hyde",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Jekyll_and_Hyde"
+  },
+  "Gravedigger": {
+    "name": "Gravedigger",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gravedigger"
+  },
+  "Temple Trekking": {
+    "name": "Temple Trekking",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Temple_Trekking"
+  },
+  "Barbarian Assault": {
+    "name": "Barbarian Assault",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barbarian_Assault"
+  },
+  "Games Zone": {
+    "name": "Games Zone",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Games_Zone"
+  },
+  "Evil twin": {
+    "name": "Evil twin",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Evil_twin"
+  },
+  "Bounty Hunter": {
+    "name": "Bounty Hunter",
+    "type": "ACTIVITY",
+    "requirements": [
+      "{{SCP|Combat|32}} [[combat level]]<br>{{SCP|Time|12}} hours play time"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bounty_Hunter"
+  },
+  "Mage Arena": {
+    "name": "Mage Arena",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Arena"
+  },
+  "Gnome Ball": {
+    "name": "Gnome Ball",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_Ball"
+  },
+  "Beekeeper (Random Event)": {
+    "name": "Beekeeper (Random Event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Beekeeper_(Random_Event)"
+  },
+  "Shooting Stars": {
+    "name": "Shooting Stars",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shooting_Stars"
+  },
+  "Friendly Ent (Forestry event)": {
+    "name": "Friendly Ent (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Friendly_Ent_(Forestry_event)"
+  },
+  "Burthorpe Games Room": {
+    "name": "Burthorpe Games Room",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Burthorpe_Games_Room"
+  },
+  "Pyramid Plunder": {
+    "name": "Pyramid Plunder",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pyramid_Plunder"
+  },
+  "Beehive (Forestry event)": {
+    "name": "Beehive (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Beehive_(Forestry_event)"
+  },
+  "Forestry": {
+    "name": "Forestry",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Forestry"
+  },
+  "Stealing artefacts": {
+    "name": "Stealing artefacts",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Stealing_artefacts"
+  },
+  "Woodcutting Leprechaun (Forestry event)": {
+    "name": "Woodcutting Leprechaun (Forestry event)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Woodcutting_Leprechaun_(Forestry_event)"
+  },
+  "Barrows": {
+    "name": "Barrows",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barrows"
+  },
+  "Mage Training Arena": {
+    "name": "Mage Training Arena",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Training_Arena"
+  },
+  "Wise Old Man tasks": {
+    "name": "Wise Old Man tasks",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Wise_Old_Man_tasks"
+  },
+  "Chambers of Xeric": {
+    "name": "Chambers of Xeric",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [
+      "="
+    ],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Chambers_of_Xeric"
+  },
+  "Mastering Mixology": {
+    "name": "Mastering Mixology",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mastering_Mixology"
+  },
+  "Nightmare Zone": {
+    "name": "Nightmare Zone",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Nightmare_Zone"
+  },
+  "Blast Furnace": {
+    "name": "Blast Furnace",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Blast_Furnace"
+  },
+  "Theatre of Blood": {
+    "name": "Theatre of Blood",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Theatre_of_Blood"
+  },
+  "Brimhaven Agility Arena": {
+    "name": "Brimhaven Agility Arena",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Brimhaven_Agility_Arena"
+  },
+  "Drill Demon": {
+    "name": "Drill Demon",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Drill_Demon"
+  },
+  "Last Man Standing": {
+    "name": "Last Man Standing",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [
+      "=="
+    ],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Last_Man_Standing"
+  },
+  "TzHaar-Ket-Rak's Challenges": {
+    "name": "TzHaar-Ket-Rak's Challenges",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar-Ket-Rak's_Challenges"
+  },
+  "Duel Arena": {
+    "name": "Duel Arena",
+    "type": "ACTIVITY",
+    "requirements": [
+      "None"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Duel_Arena"
+  },
+  "Shades of Mort'ton (minigame)": {
+    "name": "Shades of Mort'ton (minigame)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shades_of_Mort'ton_(minigame)"
+  },
+  "Pinball": {
+    "name": "Pinball",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pinball"
+  },
+  "Lost and Found": {
+    "name": "Lost and Found",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lost_and_Found"
+  },
+  "Surprise Exam": {
+    "name": "Surprise Exam",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Surprise_Exam"
+  },
+  "Kiss the frog": {
+    "name": "Kiss the frog",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Kiss_the_frog"
+  },
+  "Hallowed Sepulchre": {
+    "name": "Hallowed Sepulchre",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [
+      "=="
+    ],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hallowed_Sepulchre"
+  },
+  "Soul Wars": {
+    "name": "Soul Wars",
+    "type": "ACTIVITY",
+    "requirements": [
+      "{{SCP|overall|500}} [[total level]]<br/>{{SCP|combat|40}} [[combat level]]"
+    ],
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Soul_Wars"
+  },
+  "Tombs of Amascut": {
+    "name": "Tombs of Amascut",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tombs_of_Amascut"
+  },
+  "Tai Bwo Wannai Cleanup": {
+    "name": "Tai Bwo Wannai Cleanup",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tai_Bwo_Wannai_Cleanup"
+  },
+  "Capt' Arnav's Chest": {
+    "name": "Capt' Arnav's Chest",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Capt'_Arnav's_Chest"
+  },
+  "Inferno": {
+    "name": "Inferno",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Inferno"
+  },
+  "Blast mine": {
+    "name": "Blast mine",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Blast_mine"
+  },
+  "Pillory": {
+    "name": "Pillory",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pillory"
+  },
+  "TzHaar Fight Cave": {
+    "name": "TzHaar Fight Cave",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/TzHaar_Fight_Cave"
+  },
+  "The Gauntlet": {
+    "name": "The Gauntlet",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Gauntlet"
+  },
+  "Tears of Guthix (minigame)": {
+    "name": "Tears of Guthix (minigame)",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tears_of_Guthix_(minigame)"
+  },
+  "Treasure Trails": {
+    "name": "Treasure Trails",
+    "type": "ACTIVITY",
+    "requirements": {},
+    "rewards": [
+      "=="
+    ],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Treasure_Trails"
+  }
+}

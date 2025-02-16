@@ -1,0 +1,80 @@
+{
+    "hans": {
+        "id": "hans",
+        "name": "Hans",
+        "examine": "Servant of the Duke of Lumbridge.",
+        "location": "lumbridge_castle",
+        "dialogue": {
+            "greeting": "Hello! What are you doing here?",
+            "responses": {
+                "time": "I've been here for {years} years!",
+                "about": "I am a servant to the Duke of Lumbridge."
+            }
+        },
+        "wiki_url": "https://oldschool.runescape.wiki/w/Hans"
+    },
+    "duke_horacio": {
+        "id": "duke_horacio",
+        "name": "Duke Horacio",
+        "examine": "The Duke of Lumbridge.",
+        "location": "lumbridge_castle",
+        "dialogue": {
+            "greeting": "Welcome to Lumbridge Castle!",
+            "responses": {
+                "quest": "Do you seek adventure? I might have a quest for you.",
+                "about": "I am the Duke of Lumbridge, ruler of this region."
+            }
+        },
+        "wiki_url": "https://oldschool.runescape.wiki/w/Duke_Horacio"
+    },
+    "wise_old_man": {
+        "id": "wise_old_man",
+        "name": "Wise Old Man",
+        "examine": "A very wise old man.",
+        "location": "draynor_village",
+        "dialogue": {
+            "greeting": "Ah, an adventurer! What brings you to my humble abode?",
+            "responses": {
+                "quest": "I might have some tasks that need doing...",
+                "about": "I've spent my life gathering knowledge and wisdom.",
+                "bank": "Yes, that bank incident... let's not talk about that."
+            }
+        },
+        "wiki_url": "https://oldschool.runescape.wiki/w/Wise_Old_Man"
+    },
+    "vannaka": {
+        "id": "vannaka",
+        "name": "Vannaka",
+        "examine": "A fearsome looking slayer master.",
+        "location": "edgeville_dungeon",
+        "dialogue": {
+            "greeting": "You seek a challenge, warrior?",
+            "responses": {
+                "task": "I'll assign you a slayer task...",
+                "about": "I am one of the most experienced Slayer masters.",
+                "training": "I can give you some combat training advice."
+            }
+        },
+        "slayer_master": {
+            "combat_requirement": 40,
+            "slayer_requirement": 0,
+            "task_range": [40, 125]
+        },
+        "wiki_url": "https://oldschool.runescape.wiki/w/Vannaka"
+    },
+    "grand_exchange_clerk": {
+        "id": "grand_exchange_clerk",
+        "name": "Grand Exchange Clerk",
+        "examine": "She works at the Grand Exchange.",
+        "location": "grand_exchange",
+        "dialogue": {
+            "greeting": "Welcome to the Grand Exchange! How may I help you?",
+            "responses": {
+                "trade": "I can help you buy and sell items.",
+                "about": "The Grand Exchange is the central trading hub of Gielinor.",
+                "history": "I can show you your trading history."
+            }
+        },
+        "wiki_url": "https://oldschool.runescape.wiki/w/Grand_Exchange_Clerk"
+    }
+} 

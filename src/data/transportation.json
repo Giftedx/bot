@@ -1,0 +1,362 @@
+{
+  "Portal": {
+    "name": "Portal",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Portal"
+  },
+  "Fairy rings": {
+    "name": "Fairy rings",
+    "type": "TRANSPORTATION",
+    "transport_type": "FAIRY_RING",
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fairy_rings"
+  },
+  "Lever (Edgeville)": {
+    "name": "Lever (Edgeville)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(Edgeville)"
+  },
+  "Lever (Mage Arena bank)": {
+    "name": "Lever (Mage Arena bank)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(Mage_Arena_bank)"
+  },
+  "Royal seed pod": {
+    "name": "Royal seed pod",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Royal_seed_pod"
+  },
+  "Canoe": {
+    "name": "Canoe",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Canoe"
+  },
+  "Dwarven Ferryman": {
+    "name": "Dwarven Ferryman",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dwarven_Ferryman"
+  },
+  "Transportation": {
+    "name": "Transportation",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Transportation"
+  },
+  "Grand seed pod": {
+    "name": "Grand seed pod",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Grand_seed_pod"
+  },
+  "Lever (King Black Dragon Lair)": {
+    "name": "Lever (King Black Dragon Lair)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(King_Black_Dragon_Lair)"
+  },
+  "Balloon transport system/Grand Tree": {
+    "name": "Balloon transport system/Grand Tree",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system/Grand_Tree"
+  },
+  "User:Tethys/Portaltrolling": {
+    "name": "User:Tethys/Portaltrolling",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/User:Tethys/Portaltrolling"
+  },
+  "Lovakengj Minecart Network": {
+    "name": "Lovakengj Minecart Network",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lovakengj_Minecart_Network"
+  },
+  "Balloon transport system/Castle Wars": {
+    "name": "Balloon transport system/Castle Wars",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system/Castle_Wars"
+  },
+  "Lever (Lava Maze Dungeon)": {
+    "name": "Lever (Lava Maze Dungeon)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(Lava_Maze_Dungeon)"
+  },
+  "Quetzal Transport System": {
+    "name": "Quetzal Transport System",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quetzal_Transport_System"
+  },
+  "Statue (Ates)": {
+    "name": "Statue (Ates)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Statue_(Ates)"
+  },
+  "Mycelium Transportation System": {
+    "name": "Mycelium Transportation System",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mycelium_Transportation_System"
+  },
+  "Shilo Village cart system": {
+    "name": "Shilo Village cart system",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shilo_Village_cart_system"
+  },
+  "Balloon transport system": {
+    "name": "Balloon transport system",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system"
+  },
+  "Lady of the Waves": {
+    "name": "Lady of the Waves",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lady_of_the_Waves"
+  },
+  "Magic tablet": {
+    "name": "Magic tablet",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Magic_tablet"
+  },
+  "Mogrim": {
+    "name": "Mogrim",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mogrim"
+  },
+  "Swamp Boaty": {
+    "name": "Swamp Boaty",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Swamp_Boaty"
+  },
+  "Teleportation": {
+    "name": "Teleportation",
+    "type": "TRANSPORTATION",
+    "transport_type": "TELEPORT",
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Teleportation"
+  },
+  "Gnome glider": {
+    "name": "Gnome glider",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_glider"
+  },
+  "Balloon transport system/Crafting Guild": {
+    "name": "Balloon transport system/Crafting Guild",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system/Crafting_Guild"
+  },
+  "Closest.../Free-to-play": {
+    "name": "Closest.../Free-to-play",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Closest.../Free-to-play"
+  },
+  "Free-to-play transportation": {
+    "name": "Free-to-play transportation",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Free-to-play_transportation"
+  },
+  "Goblin village sphere": {
+    "name": "Goblin village sphere",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Goblin_village_sphere"
+  },
+  "Lever (Deserted Keep)": {
+    "name": "Lever (Deserted Keep)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(Deserted_Keep)"
+  },
+  "Dorgesh-kaan sphere": {
+    "name": "Dorgesh-kaan sphere",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dorgesh-kaan_sphere"
+  },
+  "Balloon transport system/Taverley": {
+    "name": "Balloon transport system/Taverley",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system/Taverley"
+  },
+  "Whirlpool (Baxtorian Falls)": {
+    "name": "Whirlpool (Baxtorian Falls)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Whirlpool_(Baxtorian_Falls)"
+  },
+  "Balloon transport system/Varrock": {
+    "name": "Balloon transport system/Varrock",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Balloon_transport_system/Varrock"
+  },
+  "Charter ship": {
+    "name": "Charter ship",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Charter_ship"
+  },
+  "Cutscene": {
+    "name": "Cutscene",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cutscene"
+  },
+  "Lever (Ardougne)": {
+    "name": "Lever (Ardougne)",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lever_(Ardougne)"
+  },
+  "Drakan's medallion": {
+    "name": "Drakan's medallion",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Drakan's_medallion"
+  },
+  "Spirit Tree (Farming)": {
+    "name": "Spirit Tree (Farming)",
+    "type": "TRANSPORTATION",
+    "transport_type": "SPIRIT_TREE",
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Spirit_Tree_(Farming)"
+  },
+  "Keldagrim minecart system": {
+    "name": "Keldagrim minecart system",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Keldagrim_minecart_system"
+  },
+  "Spirit tree": {
+    "name": "Spirit tree",
+    "type": "TRANSPORTATION",
+    "transport_type": "SPIRIT_TREE",
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Spirit_tree"
+  },
+  "Dwarven Boatman": {
+    "name": "Dwarven Boatman",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dwarven_Boatman"
+  },
+  "Ogre boat": {
+    "name": "Ogre boat",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ogre_boat"
+  },
+  "Magic carpet": {
+    "name": "Magic carpet",
+    "type": "TRANSPORTATION",
+    "transport_type": null,
+    "destinations": [],
+    "requirements": {},
+    "wiki_url": "https://oldschool.runescape.wiki/w/Magic_carpet"
+  }
+}

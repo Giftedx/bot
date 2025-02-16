@@ -1,74 +1,90 @@
-<<<<<<< HEAD
-# Ignore all cloned reference repositories
-reference_repos/
+# Single ignore everything rule
+*
 
-# Ignore common Git files
-.git/
-.gitignore
+# Only these specific files
+!/src/main.py
+!/src/core/config.py
+!/src/core/app/bot.py
+!/src/plex/bot.py
+!/src/plex/bot_commands.py
+!/src/bot/plex_selfbot.py
+!/src/cogs/media_commands.py
+!/src/cogs/osrs_commands.py
 
-# Ignore Python cache files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
+# Cursor specific
+.cursor/
+.cursor-retrieval/
+**/workspaceStorage/
+**/anysphere.cursor-retrieval/
+**/embeddable_files.txt
+**/*.cursor-*
 
-# Ignore virtual environment directories
-venv/
-env/
-.env/
-.venv/
+# First ignore absolutely everything
+*
 
-# Ignore IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
-.DS_Store
+# Then only allow specific core files
+!src/main.py
+!src/plex/bot.py
+!src/plex/bot_commands.py
+!src/core/app/bot.py
+!src/core/config.py
+!src/bot/plex_selfbot.py
+!src/cogs/media_commands.py
+!src/cogs/osrs_commands.py
 
-# Ignore log files
-*.log
-clone_repos.log
+# Ignore everything else in these directories
+src/**/__pycache__/
+src/**/*.pyc
+src/**/*.pyo
+src/**/*.pyd
+src/**/*.log
+src/**/*.db
+src/**/*.sqlite*
+src/**/*.rdb
+src/**/.*
+src/**/logs/
+src/**/data/
+src/**/cache/
+src/**/temp/
+src/**/tmp/
+src/**/build/
+src/**/dist/
+src/**/*.egg-info/
 
-# Ignore any data or cache directories
-data/
-cache/
-.cache/
+# Ignore all config files except the main ones
+**/*.json
+**/*.yaml
+**/*.yml
+**/*.ini
+**/*.cfg
+**/*.conf
+!src/core/config.py
 
-# Ignore any build or dist directories
-build/
-dist/
-*.egg-info/
+# Ignore all documentation
+**/*.md
+**/*.rst
+**/*.txt
 
-# Ignore any large data files
-*.csv
-*.json
-*.db
-*.sqlite
-*.sqlite3
+# Ignore all test files
+**/test_*.py
+**/tests/
+**/*_test.py
 
-# Ignore documentation
-docs/
-*.md
-*.rst
-*.txt
+# Ignore all temp and cache files
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.so
+**/*.dll
+**/*.dylib
 
-# Ignore test directories
-tests/
-test/
-testing/
-
-# Ignore backup files
-*~
-*.bak
-*.backup
-*.old
-
-# Ignore any temporary files
-*.tmp
-*.temp
-.*.swp 
-=======
-# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
->>>>>>> aab8a2a4200e6501bf0cfd06f7a7723d0e0b265a
+# Ignore workspace storage
+**/AppData/
+**/Roaming/
+**/Cursor/
+**/User/
+**/workspaceStorage/
+**/.workspace/

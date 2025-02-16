@@ -1,451 +1,282 @@
-"""OSRS world system implementation."""
+"""World manager for handling OSRS map data and locations."""
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Tuple
-import logging
+import json
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from pathlib import Path
 
-from ..models import User
-from .map.WorldMap import WorldPoint, WorldArea, Location, MapRegion
-from ..database.models import (
-    Database,
-    TransportLocation,
-    TeleportLocation,
-    SpecialLocation
-)
-from .map.map_utils import (
-    calculate_distance,
-    get_wilderness_level,
-    is_in_multi_combat
-)
-
-
-logger = logging.getLogger('WorldManager')
-
+from .movement import Position
 
 @dataclass
-class World:
-    """Represents an OSRS world."""
+class Location:
+    """Represents a named location in the game world."""
+    name: str
+    position: Position
+    region_id: int
+    is_members: bool = False
+    requirements: Dict[str, int] = None  # Skill requirements to access
+    
+@dataclass
+class Region:
+    """Represents a region in the game world."""
     id: int
     name: str
-    description: str
-    type: str  # regular, pvp, skill, minigame
-    region: str  # us, uk, de, au
-    members_only: bool = False
-    pvp: bool = False
-    skill_total: int = 0
-    players: Set[int] = field(default_factory=set)  # Set of player IDs
-    max_players: int = 2000
-
-
+    is_members: bool
+    positions: List[Position]  # Boundary positions
+    collision_map: List[List[bool]]  # True = blocked
+    
 class WorldManager:
-    """Manages the game world and its regions."""
+    """Manages OSRS world data and locations."""
     
-    def __init__(self, database: Database):
-        """Initialize world manager."""
-        self.db = database
-        self.worlds: Dict[int, World] = self._initialize_worlds()
-        self.regions: Dict[MapRegion, Set[WorldArea]] = {
-            region: set() for region in MapRegion
-        }
+    def __init__(self, data_path: str):
+        """Initialize the world manager.
+        
+        Args:
+            data_path: Path to world data files
+        """
+        self.data_path = Path(data_path)
+        self.regions: Dict[int, Region] = {}
         self.locations: Dict[str, Location] = {}
-        self.transport_locations: List[TransportLocation] = []
-        self.teleport_locations: List[TeleportLocation] = []
-        self.special_locations: List[SpecialLocation] = []
-        self.multi_combat_areas: Set[WorldArea] = set()
-        self.members_areas: Set[WorldArea] = set()
-        self.load_world_data()
-    
-    def _initialize_worlds(self) -> Dict[int, World]:
-        """Initialize default worlds."""
-        worlds = {}
+        self.collision_maps: Dict[int, List[List[bool]]] = {}
         
-        # Free-to-play worlds
-        worlds[301] = World(
-            id=301,
-            name="301",
-            description="Free-to-play world",
-            type="regular",
-            region="us"
-        )
+        # Load world data
+        self._load_regions()
+        self._load_locations()
+        self._load_collision_maps()
         
-        worlds[308] = World(
-            id=308,
-            name="308",
-            description="Free-to-play PvP world",
-            type="pvp",
-            region="us",
-            pvp=True
-        )
-        
-        # Members worlds
-        worlds[302] = World(
-            id=302,
-            name="302",
-            description="Members world",
-            type="regular",
-            region="us",
-            members_only=True
-        )
-        
-        worlds[325] = World(
-            id=325,
-            name="325",
-            description="High Risk PvP world",
-            type="pvp",
-            region="uk",
-            members_only=True,
-            pvp=True
-        )
-        
-        worlds[349] = World(
-            id=349,
-            name="349",
-            description="Skill Total (1500)",
-            type="skill",
-            region="uk",
-            members_only=True,
-            skill_total=1500
-        )
-        
-        worlds[361] = World(
-            id=361,
-            name="361",
-            description="High Risk PvP world",
-            type="pvp",
-            region="au",
-            members_only=True,
-            pvp=True
-        )
-        
-        return worlds
-    
-    def get_world(self, world_id: int) -> Optional[World]:
-        """Get a world by its ID."""
-        return self.worlds.get(world_id)
-    
-    def get_player_world(self, player: User) -> Optional[World]:
-        """Get the world a player is in."""
-        return self.worlds.get(player.current_world)
-    
-    def join_world(self, player: User, world_id: int) -> bool:
-        """
-        Move a player to a different world.
-        Returns True if successful.
-        """
-        # Check if world exists
-        world = self.worlds.get(world_id)
-        if not world:
-            return False
-        
-        # Check world requirements
-        if world.members_only and not self._is_member(player):
-            return False
-        
-        if world.skill_total > 0 and not self._meets_skill_total(player, world.skill_total):
-            return False
-        
-        # Remove from current world
-        current_world = self.worlds.get(player.current_world)
-        if current_world:
-            current_world.players.discard(player.id)
-        
-        # Check world capacity
-        if len(world.players) >= world.max_players:
-            return False
-        
-        # Add to new world
-        world.players.add(player.id)
-        player.current_world = world_id
-        
-        return True
-    
-    def leave_world(self, player: User) -> None:
-        """Remove a player from their current world."""
-        world = self.worlds.get(player.current_world)
-        if world:
-            world.players.discard(player.id)
-    
-    def are_players_in_same_world(self, player1: User, player2: User) -> bool:
-        """Check if two players are in the same world."""
-        return player1.current_world == player2.current_world
-    
-    def is_pvp_enabled(self, player: User) -> bool:
-        """Check if a player is in a PvP world."""
-        world = self.worlds.get(player.current_world)
-        return world is not None and world.pvp
-    
-    def get_world_players(self, world_id: int) -> Set[int]:
-        """Get all players in a world."""
-        world = self.worlds.get(world_id)
-        return world.players if world else set()
-    
-    def get_available_worlds(self, player: User) -> List[World]:
-        """Get all worlds available to a player."""
-        is_member = self._is_member(player)
-        total_level = self._get_total_level(player)
-        
-        return [
-            world for world in self.worlds.values()
-            if (not world.members_only or is_member)
-            and (world.skill_total == 0 or total_level >= world.skill_total)
-        ]
-    
-    def _is_member(self, player: User) -> bool:
-        """Check if a player is a member."""
-        # TODO: Implement membership check
-        return True
-    
-    def _meets_skill_total(self, player: User, required_total: int) -> bool:
-        """Check if a player meets the total level requirement."""
-        return self._get_total_level(player) >= required_total
-    
-    def _get_total_level(self, player: User) -> int:
-        """Calculate a player's total level."""
-        return sum(skill.level for skill in player.skills.values())
-    
-    def load_world_data(self) -> None:
-        """Load world data from database."""
-        with self.db.conn:
-            cursor = self.db.conn.cursor()
+    def _load_regions(self):
+        """Load region data from JSON."""
+        region_file = self.data_path / "regions.json"
+        if not region_file.exists():
+            return
             
-            # Load transport locations
-            cursor.execute("SELECT * FROM transport_locations")
-            for row in cursor.fetchall():
-                location = TransportLocation(**row)
-                self.transport_locations.append(location)
-                if location.members_only:
-                    self.members_areas.add(
-                        WorldArea(
-                            location.x - 32,
-                            location.y - 32,
-                            64, 64
-                        )
-                    )
-                    
-            # Load teleport locations
-            cursor.execute("SELECT * FROM teleport_locations")
-            for row in cursor.fetchall():
-                location = TeleportLocation(**row)
-                self.teleport_locations.append(location)
-                if location.members_only:
-                    self.members_areas.add(
-                        WorldArea(
-                            location.x - 32,
-                            location.y - 32,
-                            64, 64
-                        )
-                    )
-                    
-            # Load special locations
-            cursor.execute("SELECT * FROM special_locations")
-            for row in cursor.fetchall():
-                location = SpecialLocation(**row)
-                self.special_locations.append(location)
-                if location.members_only:
-                    self.members_areas.add(
-                        WorldArea(
-                            location.x - 32,
-                            location.y - 32,
-                            64, 64
-                        )
-                    )
-                    
-    def add_location(self, location: Location) -> None:
-        """Add a location to the world."""
-        self.locations[location.name] = location
-        self.regions[location.region].add(location.area)
-        
-        if location.members_only:
-            self.members_areas.add(location.area)
-            
-    def get_location(self, name: str) -> Optional[Location]:
-        """Get a location by name."""
-        return self.locations.get(name)
-        
-    def get_locations_in_region(self, region: MapRegion) -> List[Location]:
-        """Get all locations in a region."""
-        return [
-            loc for loc in self.locations.values()
-            if loc.region == region
-        ]
-        
-    def get_locations_in_area(self, area: WorldArea) -> List[Location]:
-        """Get all locations within an area."""
-        return [
-            loc for loc in self.locations.values()
-            if loc.area.overlaps(area)
-        ]
-        
-    def get_nearest_location(
-        self,
-        point: WorldPoint,
-        max_distance: Optional[int] = None
-    ) -> Optional[Location]:
-        """Get the nearest location to a point."""
-        nearest = None
-        min_distance = float('inf')
-        
-        for location in self.locations.values():
-            distance = location.area.distance_to(point)
-            if distance < min_distance and (
-                max_distance is None or
-                distance <= max_distance
-            ):
-                min_distance = distance
-                nearest = location
-                
-        return nearest
-        
-    def is_in_members_area(self, point: WorldPoint) -> bool:
-        """Check if a point is in a members-only area."""
-        return any(
-            area.contains(point)
-            for area in self.members_areas
-        )
-        
-    def is_in_multi_combat(self, point: WorldPoint) -> bool:
-        """Check if a point is in a multi-combat area."""
-        # Check wilderness level first
-        wilderness_level = get_wilderness_level(point.y)
-        if wilderness_level >= 20:
-            return True
-            
-        # Then check defined multi-combat areas
-        return any(
-            area.contains(point)
-            for area in self.multi_combat_areas
-        )
-        
-    def add_multi_combat_area(self, area: WorldArea) -> None:
-        """Add a multi-combat area."""
-        self.multi_combat_areas.add(area)
-        
-    def get_region_at_point(self, point: WorldPoint) -> Optional[MapRegion]:
-        """Get the region at a point."""
-        for region, areas in self.regions.items():
-            if any(area.contains(point) for area in areas):
-                return region
-        return None
-        
-    def get_available_transport(
-        self,
-        point: WorldPoint,
-        max_distance: int = 50
-    ) -> List[TransportLocation]:
-        """Get available transportation methods near a point."""
-        return [
-            transport for transport in self.transport_locations
-            if calculate_distance(
-                point,
-                WorldPoint(transport.x, transport.y, transport.plane)
-            ) <= max_distance
-        ]
-        
-    def get_available_teleports(
-        self,
-        point: WorldPoint,
-        max_distance: int = 50
-    ) -> List[TeleportLocation]:
-        """Get available teleport locations near a point."""
-        return [
-            teleport for teleport in self.teleport_locations
-            if calculate_distance(
-                point,
-                WorldPoint(teleport.x, teleport.y, teleport.plane)
-            ) <= max_distance
-        ]
-        
-    def get_special_locations_in_area(
-        self,
-        area: WorldArea,
-        location_type: Optional[str] = None
-    ) -> List[SpecialLocation]:
-        """Get special locations within an area."""
-        return [
-            loc for loc in self.special_locations
-            if (location_type is None or loc.location_type == location_type)
-            and area.contains(WorldPoint(loc.x, loc.y, loc.plane))
-        ]
-        
-    def get_path_between_points(
-        self,
-        start: WorldPoint,
-        end: WorldPoint,
-        allow_teleports: bool = True,
-        allow_transport: bool = True,
-        max_distance: Optional[int] = None
-    ) -> List[Tuple[str, WorldPoint]]:
-        """Find a path between two points."""
-        path = []
-        current = start
-        
-        # If points are close enough, just walk
-        if max_distance is None or calculate_distance(start, end) <= max_distance:
-            return [("walk", end)]
-            
-        # Try teleports first if allowed
-        if allow_teleports:
-            teleports = [
-                t for t in self.teleport_locations
-                if calculate_distance(
-                    WorldPoint(t.x, t.y, t.plane),
-                    end
-                ) <= (max_distance or 50)
-            ]
-            if teleports:
-                teleport = min(
-                    teleports,
-                    key=lambda t: calculate_distance(
-                        WorldPoint(t.x, t.y, t.plane),
-                        end
-                    )
-                )
-                return [
-                    ("start", start),
-                    (
-                        "teleport",
-                        WorldPoint(teleport.x, teleport.y, teleport.plane)
-                    ),
-                    ("walk", end)
+        with open(region_file) as f:
+            data = json.load(f)
+            for region_data in data:
+                positions = [
+                    Position(pos["x"], pos["y"], pos.get("plane", 0))
+                    for pos in region_data["positions"]
                 ]
                 
-        # Then try transportation if allowed
-        if allow_transport:
-            while calculate_distance(current, end) > (max_distance or 20):
-                transports = self.get_available_transport(current)
-                if not transports:
-                    break
-                    
-                transport = min(
-                    transports,
-                    key=lambda t: calculate_distance(
-                        WorldPoint(
-                            t.destination_x or t.x,
-                            t.destination_y or t.y,
-                            t.destination_plane or t.plane
-                        ),
-                        end
-                    )
+                self.regions[region_data["id"]] = Region(
+                    id=region_data["id"],
+                    name=region_data["name"],
+                    is_members=region_data["is_members"],
+                    positions=positions,
+                    collision_map=[]  # Loaded separately
                 )
                 
-                transport_point = WorldPoint(
-                    transport.x,
-                    transport.y,
-                    transport.plane
+    def _load_locations(self):
+        """Load location data from JSON."""
+        location_file = self.data_path / "locations.json"
+        if not location_file.exists():
+            return
+            
+        with open(location_file) as f:
+            data = json.load(f)
+            for loc_data in data:
+                pos = Position(
+                    loc_data["position"]["x"],
+                    loc_data["position"]["y"],
+                    loc_data["position"].get("plane", 0)
                 )
-                if calculate_distance(current, transport_point) > calculate_distance(current, end):
-                    break
+                
+                self.locations[loc_data["name"]] = Location(
+                    name=loc_data["name"],
+                    position=pos,
+                    region_id=loc_data["region_id"],
+                    is_members=loc_data.get("is_members", False),
+                    requirements=loc_data.get("requirements", {})
+                )
+                
+    def _load_collision_maps(self):
+        """Load collision map data."""
+        collision_dir = self.data_path / "collision"
+        if not collision_dir.exists():
+            return
+            
+        for region_file in collision_dir.glob("*.json"):
+            region_id = int(region_file.stem)
+            with open(region_file) as f:
+                self.collision_maps[region_id] = json.load(f)
+                
+            if region_id in self.regions:
+                self.regions[region_id].collision_map = self.collision_maps[region_id]
+                
+    def get_region(self, region_id: int) -> Optional[Region]:
+        """Get region by ID.
+        
+        Args:
+            region_id: Region identifier
+            
+        Returns:
+            Region data if found, None otherwise
+        """
+        return self.regions.get(region_id)
+        
+    def get_location(self, name: str) -> Optional[Location]:
+        """Get location by name.
+        
+        Args:
+            name: Location name
+            
+        Returns:
+            Location data if found, None otherwise
+        """
+        return self.locations.get(name)
+        
+    def get_nearest_location(self, pos: Position) -> Optional[Tuple[str, float]]:
+        """Find nearest named location to position.
+        
+        Args:
+            pos: Position to search from
+            
+        Returns:
+            Tuple of (location name, distance) if found, None otherwise
+        """
+        if not self.locations:
+            return None
+            
+        nearest = min(
+            self.locations.items(),
+            key=lambda x: pos.real_distance_to(x[1].position)
+        )
+        
+        return (nearest[0], pos.real_distance_to(nearest[1].position))
+        
+    def get_collision_map(self, region_id: int) -> Optional[List[List[bool]]]:
+        """Get collision map for region.
+        
+        Args:
+            region_id: Region identifier
+            
+        Returns:
+            2D collision map if found, None otherwise
+        """
+        return self.collision_maps.get(region_id)
+        
+    def is_walkable(self, pos: Position) -> bool:
+        """Check if position is walkable.
+        
+        Args:
+            pos: Position to check
+            
+        Returns:
+            True if walkable, False otherwise
+        """
+        # Find region containing position
+        region = next(
+            (r for r in self.regions.values() 
+             if any(p.x <= pos.x <= p.x + 64 and p.y <= pos.y <= p.y + 64 
+                   for p in r.positions)),
+            None
+        )
+        
+        if not region or not region.collision_map:
+            return False
+            
+        # Convert to local coordinates
+        local_x = pos.x % 64
+        local_y = pos.y % 64
+        
+        try:
+            return not region.collision_map[local_y][local_x]
+        except IndexError:
+            return False
+            
+    def can_access_location(self, 
+                           location: Location, 
+                           player_skills: Dict[str, int],
+                           is_member: bool = False) -> Tuple[bool, Optional[str]]:
+        """Check if player can access location.
+        
+        Args:
+            location: Location to check
+            player_skills: Dictionary of player skill levels
+            is_member: Whether player is a member
+            
+        Returns:
+            Tuple of (can access, reason if cannot)
+        """
+        if location.is_members and not is_member:
+            return (False, "Members only location")
+            
+        if location.requirements:
+            for skill, level in location.requirements.items():
+                if player_skills.get(skill, 1) < level:
+                    return (False, f"Requires {skill} level {level}")
                     
-                path.append(("walk", transport_point))
-                if transport.destination_x and transport.destination_y:
-                    current = WorldPoint(
-                        transport.destination_x,
-                        transport.destination_y,
-                        transport.destination_plane or 0
-                    )
-                    path.append(("transport", current))
-                else:
-                    break
+        return (True, None)
+        
+    def get_path_between_locations(self,
+                                 start_name: str,
+                                 end_name: str,
+                                 movement_system) -> Optional[List[Position]]:
+        """Find path between named locations.
+        
+        Args:
+            start_name: Starting location name
+            end_name: Destination location name
+            movement_system: MovementSystem instance for pathfinding
+            
+        Returns:
+            List of positions forming path if found, None otherwise
+        """
+        start_loc = self.get_location(start_name)
+        end_loc = self.get_location(end_name)
+        
+        if not start_loc or not end_loc:
+            return None
+            
+        # Get regions path needs to traverse
+        start_region = self.get_region(start_loc.region_id)
+        end_region = self.get_region(end_loc.region_id)
+        
+        if not start_region or not end_region:
+            return None
+            
+        # Combine collision maps of regions
+        combined_map = self._combine_collision_maps([start_region, end_region])
+        
+        # Calculate path
+        return movement_system.calculate_path(
+            start_loc.position,
+            end_loc.position,
+            combined_map
+        )
+        
+    def _combine_collision_maps(self, regions: List[Region]) -> List[List[bool]]:
+        """Combine collision maps from multiple regions.
+        
+        Args:
+            regions: List of regions to combine
+            
+        Returns:
+            Combined collision map
+        """
+        # Find bounds
+        min_x = min(pos.x for r in regions for pos in r.positions)
+        max_x = max(pos.x for r in regions for pos in r.positions)
+        min_y = min(pos.y for r in regions for pos in r.positions)
+        max_y = max(pos.y for r in regions for pos in r.positions)
+        
+        width = max_x - min_x + 1
+        height = max_y - min_y + 1
+        
+        # Initialize combined map
+        combined = [[True] * width for _ in range(height)]
+        
+        # Merge collision data
+        for region in regions:
+            if not region.collision_map:
+                continue
+                
+            for y, row in enumerate(region.collision_map):
+                for x, blocked in enumerate(row):
+                    world_x = region.positions[0].x + x - min_x
+                    world_y = region.positions[0].y + y - min_y
                     
-        path.append(("walk", end))
-        return path
+                    if 0 <= world_x < width and 0 <= world_y < height:
+                        combined[world_y][world_x] = blocked
+                        
+        return combined

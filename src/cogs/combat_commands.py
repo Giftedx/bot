@@ -5,9 +5,11 @@ from typing import Optional, Dict, List, TypedDict
 from enum import Enum
 import random
 import asyncio
-from ..lib.combat.combat_manager import CombatManager
-from ..lib.data.game_data import GameData
-from ..lib.database.db_manager import DatabaseManager
+from ..osrs.core.combat.combat_manager import CombatManager, CombatEntity, CombatState
+from ..osrs.core.data.game_data import GameData
+from ..osrs.database.db_manager import DatabaseManager
+from ..osrs.core.combat.monster_manager import MonsterManager
+from ..osrs.core.combat.combat_calculator import CombatStats, EquipmentBonus
 
 class CombatStyle(str, Enum):
     ACCURATE = "accurate"
@@ -34,6 +36,37 @@ class CombatCommands(commands.Cog):
         self.combat_manager = CombatManager(db, game_data)
         self.game_data = game_data
         self.active_fights = {}
+        self.monster_manager = MonsterManager()
+
+    async def cog_load(self):
+        """Load monster data when cog is loaded."""
+        await self.monster_manager.load_monsters()
+
+    def create_player_entity(self, member: discord.Member) -> CombatEntity:
+        """Create a combat entity from a Discord member."""
+        # TODO: Load actual player stats from database
+        stats = CombatStats(
+            attack=1,
+            strength=1,
+            defence=1,
+            ranged=1,
+            magic=1,
+            prayer=1,
+            hitpoints=10
+        )
+        
+        equipment = EquipmentBonus()  # Default equipment with no bonuses
+        
+        return CombatEntity(
+            id=member.id,
+            name=member.display_name,
+            stats=stats,
+            equipment=equipment,
+            current_hp=10,
+            max_hp=10,
+            combat_level=3,
+            is_player=True
+        )
 
     @app_commands.command(name='combat_stats', description='View your combat stats')
     async def view_combat_stats(self, interaction: discord.Interaction):
@@ -290,48 +323,41 @@ class CombatCommands(commands.Cog):
     @app_commands.command(name="monsters")
     async def monsters_command(self, interaction: discord.Interaction, min_level: Optional[int] = None, max_level: Optional[int] = None):
         """List available monsters to fight"""
-        monsters = self.game_data.get_monsters_by_level_range(min_level, max_level)
+        monsters = self.monster_manager.get_monsters_in_combat_level_range(min_level, max_level)
         
-        # Group monsters by difficulty
-        novice = []
-        intermediate = []
-        advanced = []
-        boss = []
+        if not monsters:
+            await interaction.response.send_message(f"No monsters found between combat levels {min_level} and {max_level}.")
+            return
+            
+        # Create embed
+        embed = discord.Embed(
+            title=f"Monsters (Combat {min_level}-{max_level})",
+            color=discord.Color.blue()
+        )
         
+        # Group monsters by combat level
+        by_level = {}
         for monster in monsters:
-            if monster["combat_level"] < 50:
-                novice.append(monster)
-            elif monster["combat_level"] < 100:
-                intermediate.append(monster)
-            elif monster["combat_level"] < 200:
-                advanced.append(monster)
-            else:
-                boss.append(monster)
-
-        embed = discord.Embed(title="Available Monsters", color=discord.Color.blue())
-        
-        if novice:
-            monster_list = "\n".join([f"• {m['name']} (Level {m['combat_level']})" for m in novice])
-            embed.add_field(name="Novice (1-49)", value=monster_list, inline=False)
+            if monster.combat_level not in by_level:
+                by_level[monster.combat_level] = []
+            by_level[monster.combat_level].append(monster)
             
-        if intermediate:
-            monster_list = "\n".join([f"• {m['name']} (Level {m['combat_level']})" for m in intermediate])
-            embed.add_field(name="Intermediate (50-99)", value=monster_list, inline=False)
+        # Add fields for each combat level
+        for level in sorted(by_level.keys()):
+            level_monsters = by_level[level]
+            names = [m.name for m in level_monsters]
+            embed.add_field(
+                name=f"Level {level}",
+                value="\n".join(names),
+                inline=True
+            )
             
-        if advanced:
-            monster_list = "\n".join([f"• {m['name']} (Level {m['combat_level']})" for m in advanced])
-            embed.add_field(name="Advanced (100-199)", value=monster_list, inline=False)
-            
-        if boss:
-            monster_list = "\n".join([f"• {m['name']} (Level {m['combat_level']})" for m in boss])
-            embed.add_field(name="Boss (200+)", value=monster_list, inline=False)
-
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="fight")
     async def fight_command(self, interaction: discord.Interaction, monster_name: str):
         """Start a fight with a monster"""
-        monster = self.game_data.get_monster_by_name(monster_name)
+        monster = self.monster_manager.get_monster_by_name(monster_name)
         if not monster:
             await interaction.response.send_message(f"Monster '{monster_name}' not found.")
             return
@@ -633,8 +659,8 @@ class CombatCommands(commands.Cog):
 
 async def setup(bot: commands.Bot) -> None:
     """Set up the combat commands cog."""
-    from ..lib.database.db_manager import DatabaseManager
-    from ..lib.data.game_data import GameData
+    from ..osrs.database.db_manager import DatabaseManager
+    from ..osrs.core.data.game_data import GameData
     
     # Initialize dependencies
     db = DatabaseManager()

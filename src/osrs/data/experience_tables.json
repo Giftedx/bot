@@ -1,0 +1,144 @@
+{
+    "level_experience": {
+        "1": 0,
+        "2": 83,
+        "3": 174,
+        "4": 276,
+        "5": 388,
+        "6": 512,
+        "7": 650,
+        "8": 801,
+        "9": 969,
+        "10": 1154,
+        "11": 1358,
+        "12": 1584,
+        "13": 1833,
+        "14": 2107,
+        "15": 2411,
+        "16": 2746,
+        "17": 3115,
+        "18": 3523,
+        "19": 3973,
+        "20": 4470,
+        "30": 13363,
+        "40": 37224,
+        "50": 101333,
+        "60": 273742,
+        "70": 737627,
+        "80": 1986068,
+        "90": 5346332,
+        "99": 13034431
+    },
+    "combat_experience": {
+        "goblin": {
+            "hitpoints": 5,
+            "base_experience": 5,
+            "hitpoint_experience": 1.33
+        },
+        "hill_giant": {
+            "hitpoints": 35,
+            "base_experience": 35,
+            "hitpoint_experience": 1.33
+        },
+        "lesser_demon": {
+            "hitpoints": 79,
+            "base_experience": 79,
+            "hitpoint_experience": 1.33
+        },
+        "blue_dragon": {
+            "hitpoints": 111,
+            "base_experience": 111,
+            "hitpoint_experience": 1.33
+        }
+    },
+    "skilling_experience": {
+        "mining": {
+            "copper_ore": {
+                "level": 1,
+                "experience": 17.5
+            },
+            "tin_ore": {
+                "level": 1,
+                "experience": 17.5
+            },
+            "iron_ore": {
+                "level": 15,
+                "experience": 35
+            },
+            "coal": {
+                "level": 30,
+                "experience": 50
+            },
+            "mithril_ore": {
+                "level": 55,
+                "experience": 80
+            }
+        },
+        "woodcutting": {
+            "normal_tree": {
+                "level": 1,
+                "experience": 25
+            },
+            "oak_tree": {
+                "level": 15,
+                "experience": 37.5
+            },
+            "willow_tree": {
+                "level": 30,
+                "experience": 67.5
+            },
+            "maple_tree": {
+                "level": 45,
+                "experience": 100
+            },
+            "yew_tree": {
+                "level": 60,
+                "experience": 175
+            }
+        },
+        "fishing": {
+            "shrimp": {
+                "level": 1,
+                "experience": 10
+            },
+            "sardine": {
+                "level": 5,
+                "experience": 20
+            },
+            "herring": {
+                "level": 10,
+                "experience": 30
+            },
+            "trout": {
+                "level": 20,
+                "experience": 50
+            },
+            "salmon": {
+                "level": 30,
+                "experience": 70
+            }
+        },
+        "cooking": {
+            "shrimp": {
+                "level": 1,
+                "experience": 30
+            },
+            "sardine": {
+                "level": 1,
+                "experience": 40
+            },
+            "herring": {
+                "level": 5,
+                "experience": 50
+            },
+            "trout": {
+                "level": 15,
+                "experience": 70
+            },
+            "salmon": {
+                "level": 25,
+                "experience": 90
+            }
+        }
+    }
+} 

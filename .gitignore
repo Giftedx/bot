@@ -26,8 +26,9 @@ venv/
 env/
 ENV/
 .venv/
+.python-version
 
-# IDE
+# IDE and Editor Files
 .idea/
 .vscode/
 *.swp
@@ -37,85 +38,122 @@ ENV/
 .settings/
 *.sublime-workspace
 *.sublime-project
+.cursor/
 
-# Logs
-*.log
+# Logs and Debugging
 logs/
+*.log
+discord.log
+fetch_items.log
+debug.log
+error.log
 
-# Environment variables
+# Environment and Configuration
 .env
+.env.local
+.env.*.local
+config.yaml
+config.json
+settings.json
+local_settings.py
 
-# Cache
+# Cache and Temporary Files
 .cache/
 .pytest_cache/
-
-# Coverage
-htmlcov/
+.mypy_cache/
 .coverage
 .coverage.*
 coverage.xml
 *.cover
-
-# Discord bot specific
-config.yaml
-discord.log
-
-# Database
-*.db
-*.sqlite3
-
-# Misc
-.DS_Store
-Thumbs.db
-*.bak
+.hypothesis/
+__snapshots__/
 *.tmp
 *.temp
+.DS_Store
+Thumbs.db
 
-# Media files
-sounds/*.mp3
-sounds/*.wav
-
-# Additional entries
-# MyPy
-.mypy_cache/
-
-# Tox
-.tox/
-
-# Redis
-dump.rdb
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
 *.rdb
+dump.rdb
+
+# Media and Binary Files
+media/
+sounds/
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+*.mp4
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+
+# Bot-specific
+token.txt
+credentials.json
+client_secrets.json
+plex_token.txt
+osrs_credentials.json
 
 # Documentation
 docs/_build/
 docs/api/
+site/
 
-# Node (in case of web components)
+# Node (for web components)
 node_modules/
 package-lock.json
+yarn.lock
+.npm
+.yarn
 
-# Local development
-*.local
-local_settings.py
+# Development Tools
+.tox/
+.nox/
+.pytest_cache/
+.coverage
+htmlcov/
+.hypothesis/
 
-# Backup files
+# Backup Files
 *~
+*.bak
 *.swp
 *.swo
 *.swn
 *.bak
+*.backup
+.save
 
-# System Files
+# OS Generated Files
 .directory
 desktop.ini
+.Trash-*
+.nfs*
+.fuse_hidden*
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Project Specific
+fetch_items.log
+cleanup.ps1
+final_root_cleanup.ps1
+organize_root.ps1
+sort_root.ps1
+cleanup_duplicates.ps1
+reorganize.ps1
 
-# Poetry
-poetry.lock
-
-# Environment directories
-.python-version
-.env.local
-.env.*.local
+# Cursor specific
+.cursor/
+.cursor-retrieval/
+**/workspaceStorage/
+**/anysphere.cursor-retrieval/
+**/embeddable_files.txt
+**/*.cursor-*
+**/AppData/Roaming/Cursor/
+**/.workspace/

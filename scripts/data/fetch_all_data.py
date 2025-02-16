@@ -13,6 +13,9 @@ import sys
 import time
 from typing import Dict, Any, List, Set
 import re
+import os
+from datetime import datetime
+import importlib
 
 # Add parent directory to path for imports
 script_dir = Path(__file__).parent.parent
@@ -24,6 +27,24 @@ from data.fetch_wiki_npcs import WikiNPCFetcher
 from data.fetch_wiki_objects import WikiObjectFetcher
 from data.fetch_wiki_locations import WikiLocationFetcher
 from data.verify_data import DataVerifier
+
+# Import all fetchers
+from .fetch_wiki_items import fetch_wiki_items
+from .fetch_wiki_equipment import fetch_wiki_equipment
+from .fetch_wiki_monsters import fetch_wiki_monsters
+from .fetch_wiki_npcs import fetch_wiki_npcs
+from .fetch_wiki_locations import fetch_wiki_locations
+from .fetch_wiki_objects import fetch_wiki_objects
+from .fetch_wiki_quests import fetch_wiki_quests
+from .fetch_wiki_skills import fetch_wiki_skills
+from .fetch_wiki_minigames import fetch_minigames_data
+from .fetch_wiki_clues import fetch_clue_data
+from .fetch_wiki_diaries import fetch_achievement_diary_data
+from .fetch_wiki_formulas import fetch_formula_data
+from .fetch_wiki_item_stats import fetch_item_stats
+from .fetch_osrs_ge_data import fetch_ge_data
+from .fetch_osrs_worlds import fetch_world_data
+from .fetch_external_services import fetch_external_services_data
 
 # Set up logging
 logging.basicConfig(
@@ -667,4 +688,110 @@ if __name__ == "__main__":
         sys.exit(0)
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
-        sys.exit(1) 
+        sys.exit(1)
+
+def fetch_all_data():
+    """
+    Fetches all game data from various sources and saves it to appropriate directories.
+    Includes:
+    - Wiki data (items, monsters, NPCs, locations, etc.)
+    - OSRS API data (GE prices, world status)
+    - External services data (Twitch, YouTube, etc.)
+    """
+    start_time = time.time()
+    
+    # Create base data directory if it doesn't exist
+    base_dir = Path("src/osrs/data")
+    base_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Dictionary to store all fetched data
+    all_data = {
+        'timestamp': datetime.now().isoformat(),
+        'sources': {}
+    }
+    
+    # List of all fetcher functions and their categories
+    fetchers = [
+        # Wiki data fetchers
+        ('wiki', 'items', fetch_wiki_items),
+        ('wiki', 'equipment', fetch_wiki_equipment),
+        ('wiki', 'monsters', fetch_wiki_monsters),
+        ('wiki', 'npcs', fetch_wiki_npcs),
+        ('wiki', 'locations', fetch_wiki_locations),
+        ('wiki', 'objects', fetch_wiki_objects),
+        ('wiki', 'quests', fetch_wiki_quests),
+        ('wiki', 'skills', fetch_wiki_skills),
+        ('wiki', 'minigames', fetch_minigames_data),
+        ('wiki', 'clues', fetch_clue_data),
+        ('wiki', 'diaries', fetch_achievement_diary_data),
+        ('wiki', 'formulas', fetch_formula_data),
+        ('wiki', 'item_stats', fetch_item_stats),
+        
+        # OSRS API data fetchers
+        ('osrs', 'ge', fetch_ge_data),
+        ('osrs', 'worlds', fetch_world_data),
+        
+        # External services fetcher
+        ('external', 'services', fetch_external_services_data)
+    ]
+    
+    # Fetch data from each source
+    for source, category, fetcher in fetchers:
+        try:
+            print(f"Fetching {source} {category} data...")
+            data = fetcher()
+            
+            # Create category in all_data if it doesn't exist
+            if source not in all_data['sources']:
+                all_data['sources'][source] = {}
+            
+            all_data['sources'][source][category] = {
+                'timestamp': datetime.now().isoformat(),
+                'status': 'success' if data else 'error',
+                'data': data
+            }
+            
+            # Save individual category data
+            category_dir = base_dir / source / category
+            category_dir.mkdir(parents=True, exist_ok=True)
+            
+            with open(category_dir / f"{category}_data.json", 'w') as f:
+                json.dump(data, f, indent=4)
+            
+            print(f"Successfully fetched {source} {category} data")
+        
+        except Exception as e:
+            print(f"Error fetching {source} {category} data: {str(e)}")
+            all_data['sources'][source][category] = {
+                'timestamp': datetime.now().isoformat(),
+                'status': 'error',
+                'error': str(e)
+            }
+    
+    # Save complete data summary
+    with open(base_dir / "all_data_summary.json", 'w') as f:
+        # Remove actual data from summary to keep it small
+        summary_data = {
+            'timestamp': all_data['timestamp'],
+            'sources': {
+                source: {
+                    category: {
+                        k: v for k, v in info.items() if k != 'data'
+                    }
+                    for category, info in categories.items()
+                }
+                for source, categories in all_data['sources'].items()
+            }
+        }
+        json.dump(summary_data, f, indent=4)
+    
+    end_time = time.time()
+    duration = end_time - start_time
+    
+    print(f"\nData fetch completed in {duration:.2f} seconds")
+    print(f"Data saved to {base_dir}")
+    
+    return all_data
+
+if __name__ == "__main__":
+    fetch_all_data() 

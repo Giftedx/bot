@@ -1,0 +1,151 @@
+{
+    "general_store": {
+        "id": "general_store",
+        "name": "General Store",
+        "description": "A shop that sells general goods.",
+        "locations": ["lumbridge", "varrock", "falador"],
+        "stock": {
+            "bronze_axe": {
+                "price": 16,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "hammer": {
+                "price": 1,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "chisel": {
+                "price": 1,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "tinderbox": {
+                "price": 1,
+                "stock": 5,
+                "restock_rate": 100
+            }
+        }
+    },
+    "bobs_axes": {
+        "id": "bobs_axes",
+        "name": "Bob's Brilliant Axes",
+        "description": "A shop specializing in axes and other tools.",
+        "locations": ["lumbridge"],
+        "stock": {
+            "bronze_axe": {
+                "price": 16,
+                "stock": 10,
+                "restock_rate": 100
+            },
+            "iron_axe": {
+                "price": 56,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "steel_axe": {
+                "price": 200,
+                "stock": 3,
+                "restock_rate": 100
+            },
+            "mithril_axe": {
+                "price": 520,
+                "stock": 2,
+                "restock_rate": 50
+            }
+        }
+    },
+    "auburys_rune_shop": {
+        "id": "auburys_rune_shop",
+        "name": "Aubury's Rune Shop",
+        "description": "A shop selling various runes.",
+        "locations": ["varrock"],
+        "stock": {
+            "air_rune": {
+                "price": 4,
+                "stock": 1000,
+                "restock_rate": 100
+            },
+            "mind_rune": {
+                "price": 4,
+                "stock": 1000,
+                "restock_rate": 100
+            },
+            "water_rune": {
+                "price": 4,
+                "stock": 1000,
+                "restock_rate": 100
+            },
+            "earth_rune": {
+                "price": 4,
+                "stock": 1000,
+                "restock_rate": 100
+            },
+            "fire_rune": {
+                "price": 4,
+                "stock": 1000,
+                "restock_rate": 100
+            }
+        }
+    },
+    "warrior_guild_shop": {
+        "id": "warrior_guild_shop",
+        "name": "Warriors' Guild Armoury",
+        "description": "A shop selling various weapons and armor.",
+        "locations": ["burthorpe"],
+        "requirements": {
+            "attack": 65,
+            "strength": 65
+        },
+        "stock": {
+            "rune_defender": {
+                "price": 100000,
+                "stock": 1,
+                "restock_rate": 0
+            },
+            "dragon_defender": {
+                "price": 500000,
+                "stock": 1,
+                "restock_rate": 0
+            },
+            "warrior_guild_token": {
+                "price": 100,
+                "stock": 1000,
+                "restock_rate": 100
+            }
+        }
+    },
+    "fishing_shop": {
+        "id": "fishing_shop",
+        "name": "Fishing Shop",
+        "description": "A shop selling fishing equipment.",
+        "locations": ["port_sarim"],
+        "stock": {
+            "small_fishing_net": {
+                "price": 40,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "fishing_rod": {
+                "price": 5,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "fly_fishing_rod": {
+                "price": 20,
+                "stock": 5,
+                "restock_rate": 100
+            },
+            "fishing_bait": {
+                "price": 3,
+                "stock": 1000,
+                "restock_rate": 100
+            },
+            "feather": {
+                "price": 2,
+                "stock": 1000,
+                "restock_rate": 100
+            }
+        }
+    }
+} 

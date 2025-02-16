@@ -1,0 +1,4269 @@
+{
+  "A Soul's Bane": {
+    "name": "A Soul's Bane",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Soul's_Bane"
+  },
+  "Animal Magnetism": {
+    "name": "Animal Magnetism",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Animal_Magnetism"
+  },
+  "Heroes' Quest": {
+    "name": "Heroes' Quest",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Heroes'_Quest"
+  },
+  "Demon Slayer": {
+    "name": "Demon Slayer",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Demon_Slayer"
+  },
+  "Merlin's Crystal": {
+    "name": "Merlin's Crystal",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 6,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Merlin's_Crystal"
+  },
+  "Tower of Life": {
+    "name": "Tower of Life",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tower_of_Life"
+  },
+  "Eagles' Peak": {
+    "name": "Eagles' Peak",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Eagles'_Peak"
+  },
+  "Great Kourend quest series": {
+    "name": "Great Kourend quest series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Great_Kourend_quest_series"
+  },
+  "Garden of Tranquillity": {
+    "name": "Garden of Tranquillity",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Garden_of_Tranquillity"
+  },
+  "Murder Mystery": {
+    "name": "Murder Mystery",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Murder_Mystery"
+  },
+  "Quests/Free-to-play": {
+    "name": "Quests/Free-to-play",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Free-to-play"
+  },
+  "Legends' Quest": {
+    "name": "Legends' Quest",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Legends'_Quest"
+  },
+  "Royal Trouble": {
+    "name": "Royal Trouble",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Royal_Trouble"
+  },
+  "Monk's Friend": {
+    "name": "Monk's Friend",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Monk's_Friend"
+  },
+  "Ernest the Chicken": {
+    "name": "Ernest the Chicken",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ernest_the_Chicken"
+  },
+  "Daddy's Home/Quick guide": {
+    "name": "Daddy's Home/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Daddy's_Home/Quick_guide"
+  },
+  "Song of the Elves": {
+    "name": "Song of the Elves",
+    "type": "QUEST",
+    "difficulty": "Grandmaster",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Song_of_the_Elves"
+  },
+  "The Queen of Thieves": {
+    "name": "The Queen of Thieves",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Queen_of_Thieves"
+  },
+  "Recipe for Disaster/Defeating the Culinaromancer": {
+    "name": "Recipe for Disaster/Defeating the Culinaromancer",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Defeating_the_Culinaromancer"
+  },
+  "Fremennik series": {
+    "name": "Fremennik series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fremennik_series"
+  },
+  "Into the Tombs": {
+    "name": "Into the Tombs",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Into_the_Tombs"
+  },
+  "Prince Ali Rescue": {
+    "name": "Prince Ali Rescue",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Prince_Ali_Rescue"
+  },
+  "A Tail of Two Cats": {
+    "name": "A Tail of Two Cats",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Tail_of_Two_Cats"
+  },
+  "Hopespear's Will": {
+    "name": "Hopespear's Will",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hopespear's_Will"
+  },
+  "Rune Mysteries": {
+    "name": "Rune Mysteries",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rune_Mysteries"
+  },
+  "Doric's Quest": {
+    "name": "Doric's Quest",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Doric's_Quest"
+  },
+  "Grim Tales": {
+    "name": "Grim Tales",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Grim_Tales"
+  },
+  "Recipe for Disaster/Freeing Pirate Pete": {
+    "name": "Recipe for Disaster/Freeing Pirate Pete",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_Pirate_Pete"
+  },
+  "A Taste of Hope": {
+    "name": "A Taste of Hope",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Taste_of_Hope"
+  },
+  "X Marks the Spot": {
+    "name": "X Marks the Spot",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/X_Marks_the_Spot"
+  },
+  "Elemental Workshop quest series": {
+    "name": "Elemental Workshop quest series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Elemental_Workshop_quest_series"
+  },
+  "Fight Arena": {
+    "name": "Fight Arena",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fight_Arena"
+  },
+  "Pirate's Treasure": {
+    "name": "Pirate's Treasure",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Pirate's_Treasure"
+  },
+  "Knight Waves": {
+    "name": "Knight Waves",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Knight_Waves"
+  },
+  "Sheep Herder": {
+    "name": "Sheep Herder",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sheep_Herder"
+  },
+  "Sleeping Giants": {
+    "name": "Sleeping Giants",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sleeping_Giants"
+  },
+  "Tai Bwo Wannai Trio": {
+    "name": "Tai Bwo Wannai Trio",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tai_Bwo_Wannai_Trio"
+  },
+  "Death to the Dorgeshuun": {
+    "name": "Death to the Dorgeshuun",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Death_to_the_Dorgeshuun"
+  },
+  "Rise of the Red Axe": {
+    "name": "Rise of the Red Axe",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rise_of_the_Red_Axe"
+  },
+  "Optimal quest guide": {
+    "name": "Optimal quest guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Optimal_quest_guide"
+  },
+  "Quests/Special": {
+    "name": "Quests/Special",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Special"
+  },
+  "Sheep Shearer": {
+    "name": "Sheep Shearer",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sheep_Shearer"
+  },
+  "The Grand Tree": {
+    "name": "The Grand Tree",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Grand_Tree"
+  },
+  "Below Ice Mountain": {
+    "name": "Below Ice Mountain",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Below_Ice_Mountain"
+  },
+  "Gertrude's Cat": {
+    "name": "Gertrude's Cat",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gertrude's_Cat"
+  },
+  "A Night at the Theatre": {
+    "name": "A Night at the Theatre",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Night_at_the_Theatre"
+  },
+  "Tree Gnome Village": {
+    "name": "Tree Gnome Village",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tree_Gnome_Village"
+  },
+  "Contact!": {
+    "name": "Contact!",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Contact!"
+  },
+  "Quests": {
+    "name": "Quests",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests"
+  },
+  "Scorpion Catcher": {
+    "name": "Scorpion Catcher",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Scorpion_Catcher"
+  },
+  "The Golem": {
+    "name": "The Golem",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Golem"
+  },
+  "Sacred Bone Burner": {
+    "name": "Sacred Bone Burner",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sacred_Bone_Burner"
+  },
+  "Rag and Bone Man II": {
+    "name": "Rag and Bone Man II",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rag_and_Bone_Man_II"
+  },
+  "Mourning's End Part II": {
+    "name": "Mourning's End Part II",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mourning's_End_Part_II"
+  },
+  "Twisted Tales": {
+    "name": "Twisted Tales",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Twisted_Tales"
+  },
+  "Recipe for Disaster/Freeing Evil Dave": {
+    "name": "Recipe for Disaster/Freeing Evil Dave",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_Evil_Dave"
+  },
+  "Quest items/Achievement Diary": {
+    "name": "Quest items/Achievement Diary",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_items/Achievement_Diary"
+  },
+  "Alfred Grimhand's Barcrawl": {
+    "name": "Alfred Grimhand's Barcrawl",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Alfred_Grimhand's_Barcrawl"
+  },
+  "Jungle Potion": {
+    "name": "Jungle Potion",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Jungle_Potion"
+  },
+  "Family Crest": {
+    "name": "Family Crest",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Family_Crest"
+  },
+  "Quest experience rewards (F2P)": {
+    "name": "Quest experience rewards (F2P)",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_experience_rewards_(F2P)"
+  },
+  "Wanted!": {
+    "name": "Wanted!",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Wanted!"
+  },
+  "Natural history quiz": {
+    "name": "Natural history quiz",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Natural_history_quiz"
+  },
+  "Quests/Intermediate": {
+    "name": "Quests/Intermediate",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Intermediate"
+  },
+  "The Enchanted Key": {
+    "name": "The Enchanted Key",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Enchanted_Key"
+  },
+  "Eadgar's Ruse": {
+    "name": "Eadgar's Ruse",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Eadgar's_Ruse"
+  },
+  "Enter the Abyss/Quick guide": {
+    "name": "Enter the Abyss/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Enter_the_Abyss/Quick_guide"
+  },
+  "The Fremennik Isles": {
+    "name": "The Fremennik Isles",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Fremennik_Isles"
+  },
+  "Recipe for Disaster": {
+    "name": "Recipe for Disaster",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 10,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster"
+  },
+  "Ghosts Ahoy": {
+    "name": "Ghosts Ahoy",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ghosts_Ahoy"
+  },
+  "One Small Favour": {
+    "name": "One Small Favour",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/One_Small_Favour"
+  },
+  "A Kingdom Divided": {
+    "name": "A Kingdom Divided",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Kingdom_Divided"
+  },
+  "Skippy and the Mogres": {
+    "name": "Skippy and the Mogres",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Skippy_and_the_Mogres"
+  },
+  "Quests/Novice": {
+    "name": "Quests/Novice",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Novice"
+  },
+  "Temple of Ikov": {
+    "name": "Temple of Ikov",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Temple_of_Ikov"
+  },
+  "Lunar Diplomacy": {
+    "name": "Lunar Diplomacy",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lunar_Diplomacy"
+  },
+  "Recipe for Disaster/Full guide": {
+    "name": "Recipe for Disaster/Full guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Full_guide"
+  },
+  "While Guthix Sleeps": {
+    "name": "While Guthix Sleeps",
+    "type": "QUEST",
+    "difficulty": "Grandmaster",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/While_Guthix_Sleeps"
+  },
+  "In Search of Knowledge/Quick guide": {
+    "name": "In Search of Knowledge/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/In_Search_of_Knowledge/Quick_guide"
+  },
+  "The Frozen Door/Quick guide": {
+    "name": "The Frozen Door/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Frozen_Door/Quick_guide"
+  },
+  "Dwarf Cannon": {
+    "name": "Dwarf Cannon",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dwarf_Cannon"
+  },
+  "Desert Treasure II - The Fallen Empire": {
+    "name": "Desert Treasure II - The Fallen Empire",
+    "type": "QUEST",
+    "difficulty": "Grandmaster",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Desert_Treasure_II_-_The_Fallen_Empire"
+  },
+  "Vampyre Slayer": {
+    "name": "Vampyre Slayer",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Vampyre_Slayer"
+  },
+  "Mountain Daughter": {
+    "name": "Mountain Daughter",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mountain_Daughter"
+  },
+  "Quest Difficulties": {
+    "name": "Quest Difficulties",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_Difficulties"
+  },
+  "The Restless Ghost": {
+    "name": "The Restless Ghost",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Restless_Ghost"
+  },
+  "Quest point hood": {
+    "name": "Quest point hood",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_point_hood"
+  },
+  "Observatory Quest": {
+    "name": "Observatory Quest",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Observatory_Quest"
+  },
+  "Witch's Potion": {
+    "name": "Witch's Potion",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Witch's_Potion"
+  },
+  "Cold War": {
+    "name": "Cold War",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cold_War"
+  },
+  "The Depths of Despair": {
+    "name": "The Depths of Despair",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Depths_of_Despair"
+  },
+  "Holy Grail": {
+    "name": "Holy Grail",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Holy_Grail"
+  },
+  "A Porcine of Interest": {
+    "name": "A Porcine of Interest",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/A_Porcine_of_Interest"
+  },
+  "The General's Shadow/Quick guide": {
+    "name": "The General's Shadow/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_General's_Shadow/Quick_guide"
+  },
+  "Biohazard": {
+    "name": "Biohazard",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Biohazard"
+  },
+  "What Lies Below": {
+    "name": "What Lies Below",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/What_Lies_Below"
+  },
+  "Between a Rock...": {
+    "name": "Between a Rock...",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Between_a_Rock..."
+  },
+  "Architectural Alliance": {
+    "name": "Architectural Alliance",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Architectural_Alliance"
+  },
+  "King's Ransom": {
+    "name": "King's Ransom",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/King's_Ransom"
+  },
+  "Quests/Skill requirements": {
+    "name": "Quests/Skill requirements",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Skill_requirements"
+  },
+  "Olaf's Quest": {
+    "name": "Olaf's Quest",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Olaf's_Quest"
+  },
+  "My Arm's Big Adventure": {
+    "name": "My Arm's Big Adventure",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/My_Arm's_Big_Adventure"
+  },
+  "Quests/Series": {
+    "name": "Quests/Series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Series"
+  },
+  "Imp Catcher": {
+    "name": "Imp Catcher",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Imp_Catcher"
+  },
+  "Plague City": {
+    "name": "Plague City",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Plague_City"
+  },
+  "Mourning's End Part I": {
+    "name": "Mourning's End Part I",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mourning's_End_Part_I"
+  },
+  "Recipe for Disaster/Freeing King Awowogei": {
+    "name": "Recipe for Disaster/Freeing King Awowogei",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_King_Awowogei"
+  },
+  "Dream Mentor": {
+    "name": "Dream Mentor",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dream_Mentor"
+  },
+  "Creature of Fenkenstrain": {
+    "name": "Creature of Fenkenstrain",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Creature_of_Fenkenstrain"
+  },
+  "Cook's Assistant": {
+    "name": "Cook's Assistant",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cook's_Assistant"
+  },
+  "Horror from the Deep": {
+    "name": "Horror from the Deep",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Horror_from_the_Deep"
+  },
+  "The Curse of Arrav": {
+    "name": "The Curse of Arrav",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Curse_of_Arrav"
+  },
+  "Fairytale I - Growing Pains": {
+    "name": "Fairytale I - Growing Pains",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fairytale_I_-_Growing_Pains"
+  },
+  "Death Plateau": {
+    "name": "Death Plateau",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Death_Plateau"
+  },
+  "Shield of Arrav": {
+    "name": "Shield of Arrav",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shield_of_Arrav"
+  },
+  "The Fremennik Exiles": {
+    "name": "The Fremennik Exiles",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Fremennik_Exiles"
+  },
+  "Bear Your Soul/Quick guide": {
+    "name": "Bear Your Soul/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bear_Your_Soul/Quick_guide"
+  },
+  "The Forsaken Tower": {
+    "name": "The Forsaken Tower",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Forsaken_Tower"
+  },
+  "Getting Ahead": {
+    "name": "Getting Ahead",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Getting_Ahead"
+  },
+  "Zogre Flesh Eaters": {
+    "name": "Zogre Flesh Eaters",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Zogre_Flesh_Eaters"
+  },
+  "Barbarian Training": {
+    "name": "Barbarian Training",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Barbarian_Training"
+  },
+  "The Giant Dwarf": {
+    "name": "The Giant Dwarf",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Giant_Dwarf"
+  },
+  "Making Friends with My Arm": {
+    "name": "Making Friends with My Arm",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Making_Friends_with_My_Arm"
+  },
+  "Fairy Tale quest series": {
+    "name": "Fairy Tale quest series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fairy_Tale_quest_series"
+  },
+  "Another Slice of H.A.M.": {
+    "name": "Another Slice of H.A.M.",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Another_Slice_of_H.A.M."
+  },
+  "The General's Shadow": {
+    "name": "The General's Shadow",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_General's_Shadow"
+  },
+  "The Feud": {
+    "name": "The Feud",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Feud"
+  },
+  "Spirits of the Elid": {
+    "name": "Spirits of the Elid",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Spirits_of_the_Elid"
+  },
+  "Elemental Workshop I": {
+    "name": "Elemental Workshop I",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Elemental_Workshop_I"
+  },
+  "The Dig Site": {
+    "name": "The Dig Site",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Dig_Site"
+  },
+  "Quests/Release dates": {
+    "name": "Quests/Release dates",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Release_dates"
+  },
+  "Perilous Moons": {
+    "name": "Perilous Moons",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Perilous_Moons"
+  },
+  "Recipe for Disaster/Freeing the Mountain Dwarf": {
+    "name": "Recipe for Disaster/Freeing the Mountain Dwarf",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_the_Mountain_Dwarf"
+  },
+  "Tale of the Righteous": {
+    "name": "Tale of the Righteous",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tale_of_the_Righteous"
+  },
+  "Quests/Members": {
+    "name": "Quests/Members",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Members"
+  },
+  "Throne of Miscellania": {
+    "name": "Throne of Miscellania",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Throne_of_Miscellania"
+  },
+  "Twilight's Promise": {
+    "name": "Twilight's Promise",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Twilight's_Promise"
+  },
+  "Witch's House": {
+    "name": "Witch's House",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Witch's_House"
+  },
+  "The Ascent of Arceuus": {
+    "name": "The Ascent of Arceuus",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Ascent_of_Arceuus"
+  },
+  "Recipe for Disaster/Freeing the Lumbridge Guide": {
+    "name": "Recipe for Disaster/Freeing the Lumbridge Guide",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_the_Lumbridge_Guide"
+  },
+  "Romeo & Juliet": {
+    "name": "Romeo & Juliet",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Romeo_&_Juliet"
+  },
+  "Icthlarin's Little Helper": {
+    "name": "Icthlarin's Little Helper",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Icthlarin's_Little_Helper"
+  },
+  "The Garden of Death": {
+    "name": "The Garden of Death",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Garden_of_Death"
+  },
+  "Dragon Slayer II": {
+    "name": "Dragon Slayer II",
+    "type": "QUEST",
+    "difficulty": "Grandmaster",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dragon_Slayer_II"
+  },
+  "Recipe for Disaster/Freeing Skrach Uglogwee": {
+    "name": "Recipe for Disaster/Freeing Skrach Uglogwee",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_Skrach_Uglogwee"
+  },
+  "Family Pest/Quick guide": {
+    "name": "Family Pest/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Family_Pest/Quick_guide"
+  },
+  "In Search of the Myreque": {
+    "name": "In Search of the Myreque",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/In_Search_of_the_Myreque"
+  },
+  "The Lost Tribe": {
+    "name": "The Lost Tribe",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Lost_Tribe"
+  },
+  "Goblin Diplomacy": {
+    "name": "Goblin Diplomacy",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Goblin_Diplomacy"
+  },
+  "The Slug Menace": {
+    "name": "The Slug Menace",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Slug_Menace"
+  },
+  "Temple of the Eye": {
+    "name": "Temple of the Eye",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Temple_of_the_Eye"
+  },
+  "At First Light": {
+    "name": "At First Light",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/At_First_Light"
+  },
+  "Monkey Madness I": {
+    "name": "Monkey Madness I",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Monkey_Madness_I"
+  },
+  "Desert Treasure I": {
+    "name": "Desert Treasure I",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Desert_Treasure_I"
+  },
+  "Dragon Slayer I": {
+    "name": "Dragon Slayer I",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Dragon_Slayer_I"
+  },
+  "Enlightened Journey": {
+    "name": "Enlightened Journey",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Enlightened_Journey"
+  },
+  "Bone Voyage": {
+    "name": "Bone Voyage",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bone_Voyage"
+  },
+  "Misthalin Mystery": {
+    "name": "Misthalin Mystery",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Misthalin_Mystery"
+  },
+  "Recipe for Disaster/Freeing the Goblin generals": {
+    "name": "Recipe for Disaster/Freeing the Goblin generals",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_the_Goblin_generals"
+  },
+  "Sea Slug": {
+    "name": "Sea Slug",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sea_Slug"
+  },
+  "Swan Song": {
+    "name": "Swan Song",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Swan_Song"
+  },
+  "Troll Romance": {
+    "name": "Troll Romance",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Troll_Romance"
+  },
+  "Watchtower": {
+    "name": "Watchtower",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Watchtower"
+  },
+  "Hazeel Cult": {
+    "name": "Hazeel Cult",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hazeel_Cult"
+  },
+  "Nature Spirit": {
+    "name": "Nature Spirit",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Nature_Spirit"
+  },
+  "User:Jayden/Sandbox": {
+    "name": "User:Jayden/Sandbox",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/User:Jayden/Sandbox"
+  },
+  "Curse of the Empty Lord": {
+    "name": "Curse of the Empty Lord",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Curse_of_the_Empty_Lord"
+  },
+  "Ethically Acquired Antiquities": {
+    "name": "Ethically Acquired Antiquities",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ethically_Acquired_Antiquities"
+  },
+  "Shades of Mort'ton": {
+    "name": "Shades of Mort'ton",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shades_of_Mort'ton"
+  },
+  "Sins of the Father": {
+    "name": "Sins of the Father",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sins_of_the_Father"
+  },
+  "Quests/Master": {
+    "name": "Quests/Master",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Master"
+  },
+  "Quests/Experienced": {
+    "name": "Quests/Experienced",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Experienced"
+  },
+  "Waterfall Quest": {
+    "name": "Waterfall Quest",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Waterfall_Quest"
+  },
+  "The Fremennik Trials": {
+    "name": "The Fremennik Trials",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Fremennik_Trials"
+  },
+  "Alfred Grimhand's Barcrawl/Quick guide": {
+    "name": "Alfred Grimhand's Barcrawl/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Alfred_Grimhand's_Barcrawl/Quick_guide"
+  },
+  "Ancient key (Tombs of Amascut)": {
+    "name": "Ancient key (Tombs of Amascut)",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ancient_key_(Tombs_of_Amascut)"
+  },
+  "Bear Your Soul": {
+    "name": "Bear Your Soul",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Bear_Your_Soul"
+  },
+  "Enakhra's Lament": {
+    "name": "Enakhra's Lament",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Enakhra's_Lament"
+  },
+  "Recipe for Disaster/Another Cook's Quest": {
+    "name": "Recipe for Disaster/Another Cook's Quest",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Another_Cook's_Quest"
+  },
+  "Druidic Ritual": {
+    "name": "Druidic Ritual",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Druidic_Ritual"
+  },
+  "Quest items/Need for quest": {
+    "name": "Quest items/Need for quest",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_items/Need_for_quest"
+  },
+  "In Aid of the Myreque": {
+    "name": "In Aid of the Myreque",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/In_Aid_of_the_Myreque"
+  },
+  "Tribal Totem": {
+    "name": "Tribal Totem",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tribal_Totem"
+  },
+  "Daddy's Home": {
+    "name": "Daddy's Home",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Daddy's_Home"
+  },
+  "Quests/Grandmaster": {
+    "name": "Quests/Grandmaster",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Grandmaster"
+  },
+  "Beneath Cursed Sands": {
+    "name": "Beneath Cursed Sands",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Beneath_Cursed_Sands"
+  },
+  "Defender of Varrock": {
+    "name": "Defender of Varrock",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Defender_of_Varrock"
+  },
+  "Priest in Peril": {
+    "name": "Priest in Peril",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Priest_in_Peril"
+  },
+  "The Tourist Trap": {
+    "name": "The Tourist Trap",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Tourist_Trap"
+  },
+  "Cabin Fever": {
+    "name": "Cabin Fever",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cabin_Fever"
+  },
+  "Lost City": {
+    "name": "Lost City",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lost_City"
+  },
+  "Troll Stronghold": {
+    "name": "Troll Stronghold",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Troll_Stronghold"
+  },
+  "Rum Deal": {
+    "name": "Rum Deal",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rum_Deal"
+  },
+  "Quests/List": {
+    "name": "Quests/List",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/List"
+  },
+  "The Great Brain Robbery": {
+    "name": "The Great Brain Robbery",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Great_Brain_Robbery"
+  },
+  "Ratcatchers": {
+    "name": "Ratcatchers",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ratcatchers"
+  },
+  "Regicide": {
+    "name": "Regicide",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Regicide"
+  },
+  "In Search of Knowledge": {
+    "name": "In Search of Knowledge",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/In_Search_of_Knowledge"
+  },
+  "The Eyes of Glouphrie": {
+    "name": "The Eyes of Glouphrie",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Eyes_of_Glouphrie"
+  },
+  "His Faithful Servants": {
+    "name": "His Faithful Servants",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/His_Faithful_Servants"
+  },
+  "Architectural Alliance/Quick guide": {
+    "name": "Architectural Alliance/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Architectural_Alliance/Quick_guide"
+  },
+  "The Hand in the Sand": {
+    "name": "The Hand in the Sand",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Hand_in_the_Sand"
+  },
+  "Gnome quest series": {
+    "name": "Gnome quest series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Gnome_quest_series"
+  },
+  "Darkness of Hallowvale": {
+    "name": "Darkness of Hallowvale",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Darkness_of_Hallowvale"
+  },
+  "Fairytale II - Cure a Queen": {
+    "name": "Fairytale II - Cure a Queen",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fairytale_II_-_Cure_a_Queen"
+  },
+  "Quest items/Originating quest": {
+    "name": "Quest items/Originating quest",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_items/Originating_quest"
+  },
+  "Black Knights' Fortress": {
+    "name": "Black Knights' Fortress",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Black_Knights'_Fortress"
+  },
+  "The Corsair Curse": {
+    "name": "The Corsair Curse",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Corsair_Curse"
+  },
+  "Recruitment Drive": {
+    "name": "Recruitment Drive",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recruitment_Drive"
+  },
+  "Shilo Village": {
+    "name": "Shilo Village",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shilo_Village"
+  },
+  "Quest experience rewards": {
+    "name": "Quest experience rewards",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_experience_rewards"
+  },
+  "Skippy and the Mogres/Quick guide": {
+    "name": "Skippy and the Mogres/Quick guide",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Skippy_and_the_Mogres/Quick_guide"
+  },
+  "Family Pest": {
+    "name": "Family Pest",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Family_Pest"
+  },
+  "Elemental Workshop II": {
+    "name": "Elemental Workshop II",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Elemental_Workshop_II"
+  },
+  "Fishing Contest": {
+    "name": "Fishing Contest",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fishing_Contest"
+  },
+  "The Heart of Darkness": {
+    "name": "The Heart of Darkness",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Heart_of_Darkness"
+  },
+  "Tears of Guthix": {
+    "name": "Tears of Guthix",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tears_of_Guthix"
+  },
+  "Quest item rewards": {
+    "name": "Quest item rewards",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_item_rewards"
+  },
+  "Secrets of the North": {
+    "name": "Secrets of the North",
+    "type": "QUEST",
+    "difficulty": "Master",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Secrets_of_the_North"
+  },
+  "Recipe for Disaster/Freeing Sir Amik Varze": {
+    "name": "Recipe for Disaster/Freeing Sir Amik Varze",
+    "type": "QUEST",
+    "difficulty": "Special",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_Sir_Amik_Varze"
+  },
+  "Mage Arena I": {
+    "name": "Mage Arena I",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Arena_I"
+  },
+  "Tutorial Island": {
+    "name": "Tutorial Island",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Tutorial_Island"
+  },
+  "The Frozen Door": {
+    "name": "The Frozen Door",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Frozen_Door"
+  },
+  "Camelot quest series": {
+    "name": "Camelot quest series",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Camelot_quest_series"
+  },
+  "Devious Minds": {
+    "name": "Devious Minds",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Devious_Minds"
+  },
+  "The Knight's Sword": {
+    "name": "The Knight's Sword",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Knight's_Sword"
+  },
+  "Lair of Tarn Razorlor": {
+    "name": "Lair of Tarn Razorlor",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Lair_of_Tarn_Razorlor"
+  },
+  "Meat and Greet": {
+    "name": "Meat and Greet",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Meat_and_Greet"
+  },
+  "Haunted Mine": {
+    "name": "Haunted Mine",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Haunted_Mine"
+  },
+  "Quests/Requirements": {
+    "name": "Quests/Requirements",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quests/Requirements"
+  },
+  "Big Chompy Bird Hunting": {
+    "name": "Big Chompy Bird Hunting",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Big_Chompy_Bird_Hunting"
+  },
+  "The Path of Glouphrie": {
+    "name": "The Path of Glouphrie",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Path_of_Glouphrie"
+  },
+  "Monkey Madness II": {
+    "name": "Monkey Madness II",
+    "type": "QUEST",
+    "difficulty": "Grandmaster",
+    "length": "Very Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 4,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Monkey_Madness_II"
+  },
+  "Quest points": {
+    "name": "Quest points",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Quest_points"
+  },
+  "Shadow of the Storm": {
+    "name": "Shadow of the Storm",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shadow_of_the_Storm"
+  },
+  "Death on the Isle": {
+    "name": "Death on the Isle",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Death_on_the_Isle"
+  },
+  "Forgettable Tale...": {
+    "name": "Forgettable Tale...",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Forgettable_Tale..."
+  },
+  "Cutscene": {
+    "name": "Cutscene",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cutscene"
+  },
+  "Underground Pass": {
+    "name": "Underground Pass",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Long",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 5,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Underground_Pass"
+  },
+  "Miniquests": {
+    "name": "Miniquests",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Miniquests"
+  },
+  "Rag and Bone Man I": {
+    "name": "Rag and Bone Man I",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rag_and_Bone_Man_I"
+  },
+  "Land of the Goblins": {
+    "name": "Land of the Goblins",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Medium",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 2,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Land_of_the_Goblins"
+  },
+  "Enter the Abyss": {
+    "name": "Enter the Abyss",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Enter_the_Abyss"
+  },
+  "Children of the Sun": {
+    "name": "Children of the Sun",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Children_of_the_Sun"
+  },
+  "Clock Tower": {
+    "name": "Clock Tower",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Clock_Tower"
+  },
+  "Client of Kourend": {
+    "name": "Client of Kourend",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Client_of_Kourend"
+  },
+  "The Ribbiting Tale of a Lily Pad Labour Dispute": {
+    "name": "The Ribbiting Tale of a Lily Pad Labour Dispute",
+    "type": "QUEST",
+    "difficulty": "Novice",
+    "length": "Very Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/The_Ribbiting_Tale_of_a_Lily_Pad_Labour_Dispute"
+  },
+  "Mage Arena II": {
+    "name": "Mage Arena II",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mage_Arena_II"
+  },
+  "Making History": {
+    "name": "Making History",
+    "type": "QUEST",
+    "difficulty": "Intermediate",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 3,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Making_History"
+  },
+  "Roving Elves": {
+    "name": "Roving Elves",
+    "type": "QUEST",
+    "difficulty": "Experienced",
+    "length": "Short",
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 1,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Roving_Elves"
+  },
+  "Rogue Trader": {
+    "name": "Rogue Trader",
+    "type": "QUEST",
+    "difficulty": null,
+    "length": null,
+    "requirements": {
+      "skills": {},
+      "quests": [],
+      "items": []
+    },
+    "rewards": {
+      "quest_points": 0,
+      "experience": {},
+      "items": []
+    },
+    "wiki_url": "https://oldschool.runescape.wiki/w/Rogue_Trader"
+  }
+}

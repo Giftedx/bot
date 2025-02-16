@@ -54,6 +54,10 @@ import tmdbsimple as tmdb
 from tvdb_v4_official import TVDB
 import imdb
 import fanart
+import os
+from datetime import datetime
+import tautulli
+from tautulli import RawAPI
 
 # Set up logging
 logging.basicConfig(
@@ -1121,6 +1125,195 @@ class PlexDataFetcher:
         with open(output_dir / "summary.json", "w", encoding="utf-8") as f:
             json.dump(summary_data, f, indent=2, ensure_ascii=False)
         logger.info("Saved summary data")
+
+def fetch_plex_data():
+    """
+    Fetches Plex data including:
+    - Library contents
+    - Watch history
+    - User stats
+    - Server info
+    - Tautulli stats
+    """
+    plex_data = {
+        'timestamp': datetime.now().isoformat(),
+        'libraries': {},
+        'users': {},
+        'server_info': {},
+        'watch_history': {},
+        'tautulli_stats': {}
+    }
+    
+    # Connect to Plex
+    try:
+        baseurl = os.getenv('PLEX_SERVER_URL')
+        token = os.getenv('PLEX_TOKEN')
+        plex = PlexServer(baseurl, token)
+        
+        # Get server info
+        plex_data['server_info'] = {
+            'version': plex.version,
+            'platform': plex.platform,
+            'machine_identifier': plex.machineIdentifier,
+            'friendly_name': plex.friendlyName
+        }
+        
+        # Get library data
+        for library in plex.library.sections():
+            plex_data['libraries'][library.title] = {
+                'type': library.type,
+                'language': library.language,
+                'agent': library.agent,
+                'scanner': library.scanner,
+                'items': []
+            }
+            
+            # Get items in library
+            for item in library.all():
+                item_data = {
+                    'title': item.title,
+                    'year': item.year,
+                    'rating': item.rating,
+                    'summary': item.summary,
+                    'duration': item.duration if hasattr(item, 'duration') else None,
+                    'media_type': item.type
+                }
+                
+                # Add specific data based on media type
+                if item.type == 'movie':
+                    item_data.update({
+                        'studio': item.studio,
+                        'content_rating': item.contentRating,
+                        'directors': [d.tag for d in item.directors],
+                        'genres': [g.tag for g in item.genres]
+                    })
+                elif item.type == 'show':
+                    item_data.update({
+                        'episode_count': item.leafCount,
+                        'season_count': len(item.seasons()),
+                        'network': item.network,
+                        'originally_available': str(item.originallyAvailable) if item.originallyAvailable else None
+                    })
+                
+                plex_data['libraries'][library.title]['items'].append(item_data)
+        
+        # Get user data
+        account = MyPlexAccount(token=token)
+        for user in account.users():
+            plex_data['users'][user.title] = {
+                'id': user.id,
+                'email': user.email,
+                'thumb': user.thumb,
+                'home': user.home,
+                'restricted': user.restricted
+            }
+        
+        # Get Tautulli stats if available
+        try:
+            tautulli_url = os.getenv('TAUTULLI_URL')
+            tautulli_api_key = os.getenv('TAUTULLI_API_KEY')
+            
+            if tautulli_url and tautulli_api_key:
+                api = RawAPI(tautulli_url, tautulli_api_key)
+                
+                # Get watch statistics
+                stats = api.get_libraries()
+                plex_data['tautulli_stats']['libraries'] = stats
+                
+                # Get user statistics
+                user_stats = api.get_users_table()
+                plex_data['tautulli_stats']['users'] = user_stats
+                
+                # Get recently added
+                recent = api.get_recently_added()
+                plex_data['tautulli_stats']['recently_added'] = recent
+                
+                # Get home stats
+                home_stats = api.get_home_stats()
+                plex_data['tautulli_stats']['home_stats'] = home_stats
+        
+        except Exception as e:
+            print(f"Error fetching Tautulli stats: {str(e)}")
+    
+    except Exception as e:
+        print(f"Error connecting to Plex: {str(e)}")
+    
+    # Save the data
+    output_dir = Path("src/data/plex")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_dir / "plex_data.json", 'w') as f:
+        json.dump(plex_data, f, indent=4)
+    
+    return plex_data
+
+def fetch_watch_together_data():
+    """Fetch data specific to Watch Together feature"""
+    return {
+        'supported_types': ['movie', 'episode'],
+        'max_participants': 25,
+        'features': {
+            'chat': True,
+            'voice': True,
+            'emotes': True,
+            'reactions': True,
+            'voting': True
+        },
+        'controls': {
+            'play': True,
+            'pause': True,
+            'seek': True,
+            'skip': True
+        },
+        'sync_settings': {
+            'buffer_threshold': 5000,  # ms
+            'sync_interval': 1000,     # ms
+            'max_desync': 2000         # ms
+        },
+        'quality_options': {
+            'auto': {'enabled': True, 'default': True},
+            '4k': {'enabled': True, 'bitrate': 25000},
+            '1080p': {'enabled': True, 'bitrate': 8000},
+            '720p': {'enabled': True, 'bitrate': 4000},
+            '480p': {'enabled': True, 'bitrate': 2000}
+        }
+    }
+
+def fetch_integration_settings():
+    """Fetch integration settings for Plex"""
+    return {
+        'discord_rich_presence': {
+            'enabled': True,
+            'show_title': True,
+            'show_progress': True,
+            'show_artwork': True,
+            'privacy': {
+                'hide_adult_content': True,
+                'hide_personal_data': True
+            }
+        },
+        'notifications': {
+            'recently_added': True,
+            'server_status': True,
+            'watch_together_invites': True,
+            'playback_issues': True
+        },
+        'auto_features': {
+            'auto_next_episode': True,
+            'skip_intros': True,
+            'resume_playback': True
+        },
+        'cross_integration': {
+            'pokemon': {
+                'watch_rewards': True,
+                'special_events': True
+            },
+            'osrs': {
+                'watch_xp': True,
+                'special_drops': True
+            }
+        }
+    }
 
 async def main():
     """Main function to fetch all Plex data."""

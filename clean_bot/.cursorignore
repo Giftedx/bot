@@ -1,0 +1,8 @@
+# Only allow these specific files
+*
+!/src/main.py
+!/src/bot.py
+!/src/core/config.py
+!/src/core/app/bot.py
+!/src/plex/bot.py
+!/src/bot/plex_selfbot.py

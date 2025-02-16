@@ -1,335 +1,259 @@
-"""Resource management for OSRS."""
-from typing import Dict, List, Optional, Set
+"""Resource manager for handling gathering resources and respawn timers."""
+
+import time
+from typing import Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass
-from datetime import datetime, timedelta
-import random
+from enum import Enum
+
+from .game_tick import GameTick, TickPriority
+from .movement import Position
+
+class ResourceType(Enum):
+    """Types of gatherable resources."""
+    TREE = "tree"
+    ROCK = "rock"
+    FISHING_SPOT = "fishing_spot"
+    FARMING_PATCH = "farming_patch"
+    HUNTER_SPOT = "hunter_spot"
 
 @dataclass
 class Resource:
-    """Represents a game resource."""
-    id: int
-    type: str
+    """Represents a gatherable resource."""
+    type: ResourceType
+    id: str
+    position: Position
     level_required: int
-    xp_granted: float
+    respawn_ticks: int
     depletion_chance: float
-    respawn_time: timedelta
+    tool_required: Optional[str] = None
+    
+@dataclass
+class ResourceState:
+    """Current state of a resource."""
+    resource: Resource
     depleted: bool = False
-    last_depleted: Optional[datetime] = None
+    depleted_at: int = 0  # Tick when depleted
+    players_gathering: Set[int] = None  # Set of player IDs
     
-    @property
-    def is_available(self) -> bool:
-        """Check if resource is available."""
-        if not self.depleted:
-            return True
-        if not self.last_depleted:
-            return True
-        return datetime.now() >= self.last_depleted + self.respawn_time
-
-class ResourceNode:
-    """Represents a resource gathering node."""
-    
-    def __init__(
-        self,
-        node_id: int,
-        location: str,
-        resource_type: str,
-        max_resources: int = 1
-    ):
-        self.node_id = node_id
-        self.location = location
-        self.resource_type = resource_type
-        self.max_resources = max_resources
-        self.current_resources = max_resources
-        self.last_depleted: Optional[datetime] = None
-        self.being_used_by: Set[int] = set()
+    def __post_init__(self):
+        """Initialize mutable defaults."""
+        if self.players_gathering is None:
+            self.players_gathering = set()
 
 class ResourceManager:
-    """Manages game resources and their states."""
+    """Manages resource gathering and respawning."""
     
-    def __init__(self):
-        self.resources: Dict[int, Resource] = {}
-        self.nodes: Dict[int, ResourceNode] = {}
-        self.resource_definitions: Dict[str, Dict] = {
-            'trees': {
-                'normal': {
-                    'level': 1,
-                    'xp': 25.0,
-                    'depletion': 0.5,
-                    'respawn': timedelta(seconds=30)
-                },
-                'oak': {
-                    'level': 15,
-                    'xp': 37.5,
-                    'depletion': 0.4,
-                    'respawn': timedelta(seconds=45)
-                },
-                'willow': {
-                    'level': 30,
-                    'xp': 67.5,
-                    'depletion': 0.3,
-                    'respawn': timedelta(seconds=60)
-                },
-                'maple': {
-                    'level': 45,
-                    'xp': 100.0,
-                    'depletion': 0.25,
-                    'respawn': timedelta(seconds=90)
-                },
-                'yew': {
-                    'level': 60,
-                    'xp': 175.0,
-                    'depletion': 0.15,
-                    'respawn': timedelta(minutes=2)
-                },
-                'magic': {
-                    'level': 75,
-                    'xp': 250.0,
-                    'depletion': 0.1,
-                    'respawn': timedelta(minutes=3)
-                }
-            },
-            'rocks': {
-                'copper': {
-                    'level': 1,
-                    'xp': 17.5,
-                    'depletion': 0.5,
-                    'respawn': timedelta(seconds=30)
-                },
-                'tin': {
-                    'level': 1,
-                    'xp': 17.5,
-                    'depletion': 0.5,
-                    'respawn': timedelta(seconds=30)
-                },
-                'iron': {
-                    'level': 15,
-                    'xp': 35.0,
-                    'depletion': 0.4,
-                    'respawn': timedelta(seconds=45)
-                },
-                'coal': {
-                    'level': 30,
-                    'xp': 50.0,
-                    'depletion': 0.3,
-                    'respawn': timedelta(seconds=60)
-                },
-                'gold': {
-                    'level': 40,
-                    'xp': 65.0,
-                    'depletion': 0.25,
-                    'respawn': timedelta(seconds=90)
-                },
-                'mithril': {
-                    'level': 55,
-                    'xp': 80.0,
-                    'depletion': 0.2,
-                    'respawn': timedelta(minutes=2)
-                },
-                'adamantite': {
-                    'level': 70,
-                    'xp': 95.0,
-                    'depletion': 0.15,
-                    'respawn': timedelta(minutes=3)
-                },
-                'runite': {
-                    'level': 85,
-                    'xp': 125.0,
-                    'depletion': 0.1,
-                    'respawn': timedelta(minutes=5)
-                }
-            },
-            'fishing_spots': {
-                'shrimp': {
-                    'level': 1,
-                    'xp': 10.0,
-                    'depletion': 0.2,
-                    'respawn': timedelta(seconds=15)
-                },
-                'trout': {
-                    'level': 20,
-                    'xp': 50.0,
-                    'depletion': 0.15,
-                    'respawn': timedelta(seconds=20)
-                },
-                'salmon': {
-                    'level': 30,
-                    'xp': 70.0,
-                    'depletion': 0.15,
-                    'respawn': timedelta(seconds=20)
-                },
-                'lobster': {
-                    'level': 40,
-                    'xp': 90.0,
-                    'depletion': 0.1,
-                    'respawn': timedelta(seconds=30)
-                },
-                'swordfish': {
-                    'level': 50,
-                    'xp': 100.0,
-                    'depletion': 0.1,
-                    'respawn': timedelta(seconds=30)
-                },
-                'shark': {
-                    'level': 76,
-                    'xp': 110.0,
-                    'depletion': 0.05,
-                    'respawn': timedelta(seconds=45)
-                }
-            }
-        }
+    def __init__(self, game_tick: GameTick):
+        """Initialize resource manager.
         
-    def add_resource(
-        self,
-        resource_id: int,
-        resource_type: str,
-        subtype: str
-    ) -> None:
-        """Add a new resource to the manager."""
-        if resource_type not in self.resource_definitions:
-            raise ValueError(f"Unknown resource type: {resource_type}")
-            
-        if subtype not in self.resource_definitions[resource_type]:
-            raise ValueError(f"Unknown {resource_type} subtype: {subtype}")
-            
-        definition = self.resource_definitions[resource_type][subtype]
+        Args:
+            game_tick: GameTick system instance
+        """
+        self.game_tick = game_tick
+        self.resources: Dict[str, Resource] = {}
+        self.resource_states: Dict[str, ResourceState] = {}
         
-        self.resources[resource_id] = Resource(
-            id=resource_id,
-            type=f"{resource_type}_{subtype}",
-            level_required=definition['level'],
-            xp_granted=definition['xp'],
-            depletion_chance=definition['depletion'],
-            respawn_time=definition['respawn']
+        # Register resource tick task
+        self.game_tick.register_task(
+            "resource_update",
+            self._resource_tick,
+            TickPriority.WORLD
         )
         
-    def add_node(
-        self,
-        node_id: int,
-        location: str,
-        resource_type: str,
-        max_resources: int = 1
-    ) -> None:
-        """Add a new resource node."""
-        self.nodes[node_id] = ResourceNode(
-            node_id=node_id,
-            location=location,
-            resource_type=resource_type,
-            max_resources=max_resources
-        )
+    def add_resource(self, resource: Resource):
+        """Add a resource to the world.
         
-    def get_resource(self, resource_id: int) -> Optional[Resource]:
-        """Get a resource by ID."""
+        Args:
+            resource: Resource to add
+        """
+        self.resources[resource.id] = resource
+        self.resource_states[resource.id] = ResourceState(resource)
+        
+    def remove_resource(self, resource_id: str):
+        """Remove a resource from the world.
+        
+        Args:
+            resource_id: ID of resource to remove
+        """
+        self.resources.pop(resource_id, None)
+        self.resource_states.pop(resource_id, None)
+        
+    async def _resource_tick(self):
+        """Process resource updates for current game tick."""
+        current_tick = self.game_tick.get_tick_count()
+        
+        # Check for respawns
+        for state in self.resource_states.values():
+            if state.depleted:
+                if current_tick - state.depleted_at >= state.resource.respawn_ticks:
+                    state.depleted = False
+                    state.depleted_at = 0
+                    
+    def start_gathering(self, 
+                       player_id: int,
+                       resource_id: str) -> Tuple[bool, Optional[str]]:
+        """Start gathering a resource.
+        
+        Args:
+            player_id: Player's ID
+            resource_id: Resource to gather
+            
+        Returns:
+            Tuple of (success, error message if failed)
+        """
+        if resource_id not in self.resource_states:
+            return (False, "Resource not found")
+            
+        state = self.resource_states[resource_id]
+        
+        if state.depleted:
+            return (False, "Resource is depleted")
+            
+        state.players_gathering.add(player_id)
+        return (True, None)
+        
+    def stop_gathering(self,
+                      player_id: int,
+                      resource_id: str):
+        """Stop gathering a resource.
+        
+        Args:
+            player_id: Player's ID
+            resource_id: Resource being gathered
+        """
+        if resource_id in self.resource_states:
+            self.resource_states[resource_id].players_gathering.discard(player_id)
+            
+    def attempt_gather(self,
+                      player_id: int,
+                      resource_id: str) -> Tuple[bool, Optional[str]]:
+        """Attempt to gather from a resource.
+        
+        Args:
+            player_id: Player's ID
+            resource_id: Resource to gather from
+            
+        Returns:
+            Tuple of (success, error message if failed)
+        """
+        if resource_id not in self.resource_states:
+            return (False, "Resource not found")
+            
+        state = self.resource_states[resource_id]
+        
+        if state.depleted:
+            return (False, "Resource is depleted")
+            
+        if player_id not in state.players_gathering:
+            return (False, "Not gathering this resource")
+            
+        # Check for depletion
+        if state.resource.depletion_chance > 0:
+            import random
+            if random.random() < state.resource.depletion_chance:
+                state.depleted = True
+                state.depleted_at = self.game_tick.get_tick_count()
+                state.players_gathering.clear()
+                return (True, "Resource depleted")
+                
+        return (True, None)
+        
+    def get_resource(self, resource_id: str) -> Optional[Resource]:
+        """Get resource by ID.
+        
+        Args:
+            resource_id: Resource identifier
+            
+        Returns:
+            Resource if found, None otherwise
+        """
         return self.resources.get(resource_id)
         
-    def get_node(self, node_id: int) -> Optional[ResourceNode]:
-        """Get a node by ID."""
-        return self.nodes.get(node_id)
+    def get_resources_in_range(self,
+                             position: Position,
+                             max_distance: float) -> List[Resource]:
+        """Get resources within range of a position.
         
-    def attempt_resource_gather(
-        self,
-        resource_id: int,
-        player_id: int,
-        skill_level: int,
-        tool_bonus: float = 0
-    ) -> bool:
-        """Attempt to gather from a resource."""
-        resource = self.get_resource(resource_id)
-        if not resource:
-            return False
+        Args:
+            position: Center position
+            max_distance: Maximum distance to search
             
-        if not resource.is_available:
-            return False
-            
-        if skill_level < resource.level_required:
-            return False
-            
-        # Calculate depletion chance
-        base_chance = resource.depletion_chance
-        level_bonus = skill_level * 0.01
-        final_chance = base_chance * (1 - level_bonus - tool_bonus)
-        
-        # Check for depletion
-        if random.random() < final_chance:
-            resource.depleted = True
-            resource.last_depleted = datetime.now()
-            return False
-            
-        return True
-        
-    def start_gathering(
-        self,
-        node_id: int,
-        player_id: int
-    ) -> bool:
-        """Start gathering at a node."""
-        node = self.get_node(node_id)
-        if not node:
-            return False
-            
-        if node.current_resources <= 0:
-            return False
-            
-        node.being_used_by.add(player_id)
-        return True
-        
-    def stop_gathering(
-        self,
-        node_id: int,
-        player_id: int
-    ) -> None:
-        """Stop gathering at a node."""
-        node = self.get_node(node_id)
-        if node:
-            node.being_used_by.discard(player_id)
-            
-    def deplete_node(self, node_id: int) -> None:
-        """Deplete a resource node."""
-        node = self.get_node(node_id)
-        if node:
-            node.current_resources = max(0, node.current_resources - 1)
-            if node.current_resources == 0:
-                node.last_depleted = datetime.now()
-                node.being_used_by.clear()
-                
-    def respawn_nodes(self) -> None:
-        """Check and respawn depleted nodes."""
-        current_time = datetime.now()
-        
-        for node in self.nodes.values():
-            if node.current_resources < node.max_resources:
-                if node.last_depleted:
-                    resource = next(
-                        (r for r in self.resources.values() if r.type == node.resource_type),
-                        None
-                    )
-                    if resource and current_time >= node.last_depleted + resource.respawn_time:
-                        node.current_resources = node.max_resources
-                        node.last_depleted = None
-                        
-    def get_available_nodes(
-        self,
-        location: str,
-        resource_type: Optional[str] = None
-    ) -> List[ResourceNode]:
-        """Get available nodes in a location."""
-        nodes = [
-            node for node in self.nodes.values()
-            if node.location == location and node.current_resources > 0
+        Returns:
+            List of resources within range
+        """
+        return [
+            resource for resource in self.resources.values()
+            if resource.position.real_distance_to(position) <= max_distance
         ]
         
-        if resource_type:
-            nodes = [
-                node for node in nodes
-                if node.resource_type == resource_type
-            ]
-            
-        return nodes
+    def get_nearest_resource(self,
+                           position: Position,
+                           resource_type: Optional[ResourceType] = None) -> Optional[Resource]:
+        """Find nearest resource to a position.
         
-    def get_nearest_node(
-        self,
-        location: str,
-        resource_type: str
-    ) -> Optional[ResourceNode]:
-        """Get nearest available node of a type."""
-        available = self.get_available_nodes(location, resource_type)
-        return available[0] if available else None 
+        Args:
+            position: Position to search from
+            resource_type: Optional type filter
+            
+        Returns:
+            Nearest matching resource if found
+        """
+        resources = self.resources.values()
+        if resource_type:
+            resources = [r for r in resources if r.type == resource_type]
+            
+        if not resources:
+            return None
+            
+        return min(
+            resources,
+            key=lambda r: r.position.real_distance_to(position)
+        )
+        
+    def is_resource_available(self, resource_id: str) -> bool:
+        """Check if a resource is available for gathering.
+        
+        Args:
+            resource_id: Resource to check
+            
+        Returns:
+            True if resource is available
+        """
+        if resource_id not in self.resource_states:
+            return False
+            
+        return not self.resource_states[resource_id].depleted
+        
+    def get_respawn_time(self, resource_id: str) -> Optional[int]:
+        """Get ticks until resource respawns.
+        
+        Args:
+            resource_id: Resource to check
+            
+        Returns:
+            Ticks until respawn if depleted, None if not depleted
+        """
+        if resource_id not in self.resource_states:
+            return None
+            
+        state = self.resource_states[resource_id]
+        if not state.depleted:
+            return None
+            
+        current_tick = self.game_tick.get_tick_count()
+        ticks_depleted = current_tick - state.depleted_at
+        return max(0, state.resource.respawn_ticks - ticks_depleted)
+        
+    def get_players_gathering(self, resource_id: str) -> Set[int]:
+        """Get players currently gathering from a resource.
+        
+        Args:
+            resource_id: Resource to check
+            
+        Returns:
+            Set of player IDs
+        """
+        if resource_id not in self.resource_states:
+            return set()
+            
+        return self.resource_states[resource_id].players_gathering.copy() 

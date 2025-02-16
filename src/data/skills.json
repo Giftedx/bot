@@ -1,0 +1,1388 @@
+{
+  "Calculator:Fishing": {
+    "name": "Calculator:Fishing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fishing"
+  },
+  "Herblore": {
+    "name": "Herblore",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Herblore"
+  },
+  "Smithing": {
+    "name": "Smithing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Smithing"
+  },
+  "Calculator:Mining/Clue geodes": {
+    "name": "Calculator:Mining/Clue geodes",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Mining/Clue_geodes"
+  },
+  "Calculator:Wintertodt Reward Cart": {
+    "name": "Calculator:Wintertodt Reward Cart",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Wintertodt_Reward_Cart"
+  },
+  "Calculator:Woodcutting": {
+    "name": "Calculator:Woodcutting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Woodcutting"
+  },
+  "Calculator:Firemaking": {
+    "name": "Calculator:Firemaking",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Firemaking"
+  },
+  "Calculator:ZMI": {
+    "name": "Calculator:ZMI",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:ZMI"
+  },
+  "Calculator:Firemaking/Logs": {
+    "name": "Calculator:Firemaking/Logs",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Firemaking/Logs"
+  },
+  "Calculator:Crafting/Tanned hides": {
+    "name": "Calculator:Crafting/Tanned hides",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Tanned_hides"
+  },
+  "Calculator:Efficiency method comparison": {
+    "name": "Calculator:Efficiency method comparison",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Efficiency_method_comparison"
+  },
+  "Prayer": {
+    "name": "Prayer",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Prayer"
+  },
+  "Calculator:Dry calc": {
+    "name": "Calculator:Dry calc",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Dry_calc"
+  },
+  "Defence": {
+    "name": "Defence",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Defence"
+  },
+  "Calculator:Crafting/Glass": {
+    "name": "Calculator:Crafting/Glass",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Glass"
+  },
+  "Calculator:Magic/Magic Dart": {
+    "name": "Calculator:Magic/Magic Dart",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic/Magic_Dart"
+  },
+  "Calculator:Mining": {
+    "name": "Calculator:Mining",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Mining"
+  },
+  "Calculator:Smithing/Smelting": {
+    "name": "Calculator:Smithing/Smelting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing/Smelting"
+  },
+  "Calculator:Moonlight potion": {
+    "name": "Calculator:Moonlight potion",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Moonlight_potion"
+  },
+  "Fishing": {
+    "name": "Fishing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fishing"
+  },
+  "Calculator:Tempoross reward pool": {
+    "name": "Calculator:Tempoross reward pool",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Tempoross_reward_pool"
+  },
+  "Calculator:Crafting/Untanned hides": {
+    "name": "Calculator:Crafting/Untanned hides",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Untanned_hides"
+  },
+  "Calculator:Fletching": {
+    "name": "Calculator:Fletching",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fletching"
+  },
+  "Calculator:Smithing & High Alchemy Calculator": {
+    "name": "Calculator:Smithing & High Alchemy Calculator",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing_&_High_Alchemy_Calculator"
+  },
+  "Calculator:Tombs of Amascut loot": {
+    "name": "Calculator:Tombs of Amascut loot",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Tombs_of_Amascut_loot"
+  },
+  "Calculator:Magic/Making tablets": {
+    "name": "Calculator:Magic/Making tablets",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic/Making_tablets"
+  },
+  "Summoning": {
+    "name": "Summoning",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Summoning"
+  },
+  "Artisan": {
+    "name": "Artisan",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Artisan"
+  },
+  "Calculator:Firemaking/Wintertodt": {
+    "name": "Calculator:Firemaking/Wintertodt",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Firemaking/Wintertodt"
+  },
+  "Mining": {
+    "name": "Mining",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Mining"
+  },
+  "Efficiency": {
+    "name": "Efficiency",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Efficiency"
+  },
+  "Calculator:Flipping": {
+    "name": "Calculator:Flipping",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Flipping"
+  },
+  "Calculator:Crafting/Battlestaves": {
+    "name": "Calculator:Crafting/Battlestaves",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Battlestaves"
+  },
+  "Calculator:Prayer/Prayer point cost": {
+    "name": "Calculator:Prayer/Prayer point cost",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Prayer/Prayer_point_cost"
+  },
+  "Calculator:Cooking/Pizza": {
+    "name": "Calculator:Cooking/Pizza",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Pizza"
+  },
+  "Calculator:Cooking/Potatoes": {
+    "name": "Calculator:Cooking/Potatoes",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Potatoes"
+  },
+  "Calculator:Fishing/Clue bottles": {
+    "name": "Calculator:Fishing/Clue bottles",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fishing/Clue_bottles"
+  },
+  "Calculator:Cooking": {
+    "name": "Calculator:Cooking",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking"
+  },
+  "Construction": {
+    "name": "Construction",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Construction"
+  },
+  "Calculator:Fishing/Molch pearls": {
+    "name": "Calculator:Fishing/Molch pearls",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fishing/Molch_pearls"
+  },
+  "Skills": {
+    "name": "Skills",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Skills"
+  },
+  "Calculator:Farming/Trees": {
+    "name": "Calculator:Farming/Trees",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Farming/Trees"
+  },
+  "Strength": {
+    "name": "Strength",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Strength"
+  },
+  "Calculator:Crafting/Tanning hides": {
+    "name": "Calculator:Crafting/Tanning hides",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Tanning_hides"
+  },
+  "Moonlight potion": {
+    "name": "Moonlight potion",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Moonlight_potion"
+  },
+  "Calculator:Crafting/Magic armour": {
+    "name": "Calculator:Crafting/Magic armour",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Magic_armour"
+  },
+  "Calculator:Fletching/Ammo": {
+    "name": "Calculator:Fletching/Ammo",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fletching/Ammo"
+  },
+  "Calculator:Shop calculator": {
+    "name": "Calculator:Shop calculator",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Shop_calculator"
+  },
+  "Calculator:Hunter/Herbiboar": {
+    "name": "Calculator:Hunter/Herbiboar",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Hunter/Herbiboar"
+  },
+  "Calculator:Hunter": {
+    "name": "Calculator:Hunter",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Hunter"
+  },
+  "Calculator:Cooking/Brewing": {
+    "name": "Calculator:Cooking/Brewing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Brewing"
+  },
+  "Calculator:Smithing/Giants' Foundry": {
+    "name": "Calculator:Smithing/Giants' Foundry",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing/Giants'_Foundry"
+  },
+  "Calculator:Herblore cost": {
+    "name": "Calculator:Herblore cost",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Herblore_cost"
+  },
+  "Calculators": {
+    "name": "Calculators",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculators"
+  },
+  "Skilling equipment": {
+    "name": "Skilling equipment",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Skilling_equipment"
+  },
+  "Sailing": {
+    "name": "Sailing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sailing"
+  },
+  "Calculator:Thieving/Dungeon door success": {
+    "name": "Calculator:Thieving/Dungeon door success",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Thieving/Dungeon_door_success"
+  },
+  "Calculator:Cooking/Pies": {
+    "name": "Calculator:Cooking/Pies",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Pies"
+  },
+  "User:Maximonstr/underwatercalc": {
+    "name": "User:Maximonstr/underwatercalc",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/User:Maximonstr/underwatercalc"
+  },
+  "Calculator:Prayer/Prayer drain": {
+    "name": "Calculator:Prayer/Prayer drain",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Prayer/Prayer_drain"
+  },
+  "Calculator:Herblore/Decanting": {
+    "name": "Calculator:Herblore/Decanting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Herblore/Decanting"
+  },
+  "Calculator:Farming/Saplings": {
+    "name": "Calculator:Farming/Saplings",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Farming/Saplings"
+  },
+  "Calculator:Slayer/Slayer task weight": {
+    "name": "Calculator:Slayer/Slayer task weight",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Slayer/Slayer_task_weight"
+  },
+  "Calculator:Smithing/Bars": {
+    "name": "Calculator:Smithing/Bars",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing/Bars"
+  },
+  "Calculator:Agility/Agility arena tickets": {
+    "name": "Calculator:Agility/Agility arena tickets",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Agility/Agility_arena_tickets"
+  },
+  "Slayer": {
+    "name": "Slayer",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Slayer"
+  },
+  "Calculator:Farming": {
+    "name": "Calculator:Farming",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Farming"
+  },
+  "Calculator:Crafting/Jewellery": {
+    "name": "Calculator:Crafting/Jewellery",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Jewellery"
+  },
+  "Calculator:Farming/Supercompost profit": {
+    "name": "Calculator:Farming/Supercompost profit",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Farming/Supercompost_profit"
+  },
+  "Powered staff": {
+    "name": "Powered staff",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Powered_staff"
+  },
+  "Calculator:Magic": {
+    "name": "Calculator:Magic",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic"
+  },
+  "Golden God/Calculators": {
+    "name": "Golden God/Calculators",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Golden_God/Calculators"
+  },
+  "200 million experience": {
+    "name": "200 million experience",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/200_million_experience"
+  },
+  "Skill mastery": {
+    "name": "Skill mastery",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Skill_mastery"
+  },
+  "Calculator:Herblore/Herbs": {
+    "name": "Calculator:Herblore/Herbs",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Herblore/Herbs"
+  },
+  "Calculator:Skill pet chance": {
+    "name": "Calculator:Skill pet chance",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Skill_pet_chance"
+  },
+  "Calculator:Training manuals": {
+    "name": "Calculator:Training manuals",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Training_manuals"
+  },
+  "Calculator:Ammo cost efficiency": {
+    "name": "Calculator:Ammo cost efficiency",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Ammo_cost_efficiency"
+  },
+  "Hitpoints": {
+    "name": "Hitpoints",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hitpoints"
+  },
+  "Chest (Tombs of Amascut)": {
+    "name": "Chest (Tombs of Amascut)",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Chest_(Tombs_of_Amascut)"
+  },
+  "Calculator:Construction/Flatpacks": {
+    "name": "Calculator:Construction/Flatpacks",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Construction/Flatpacks"
+  },
+  "Calculator:Giants Foundry experience calculator": {
+    "name": "Calculator:Giants Foundry experience calculator",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Giants_Foundry_experience_calculator"
+  },
+  "Taming": {
+    "name": "Taming",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Taming"
+  },
+  "Runecraft": {
+    "name": "Runecraft",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Runecraft"
+  },
+  "Calculator:Smithing/Blast Furnace/Gold": {
+    "name": "Calculator:Smithing/Blast Furnace/Gold",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing/Blast_Furnace/Gold"
+  },
+  "Calculator:Underwater Thieving": {
+    "name": "Calculator:Underwater Thieving",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Underwater_Thieving"
+  },
+  "Herblore training": {
+    "name": "Herblore training",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Herblore_training"
+  },
+  "Calculator:Prayer/Ensouled heads": {
+    "name": "Calculator:Prayer/Ensouled heads",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Prayer/Ensouled_heads"
+  },
+  "Calculator:Construction/Materials": {
+    "name": "Calculator:Construction/Materials",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Construction/Materials"
+  },
+  "Calculator:Thieving": {
+    "name": "Calculator:Thieving",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Thieving"
+  },
+  "Calculator:Fletching/Weapons": {
+    "name": "Calculator:Fletching/Weapons",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fletching/Weapons"
+  },
+  "Calculator:Efficiency ratio": {
+    "name": "Calculator:Efficiency ratio",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Efficiency_ratio"
+  },
+  "Cooking": {
+    "name": "Cooking",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Cooking"
+  },
+  "Calculator:Agility": {
+    "name": "Calculator:Agility",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Agility"
+  },
+  "Farming": {
+    "name": "Farming",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Farming"
+  },
+  "Calculator:Magic/Enchant jewellery": {
+    "name": "Calculator:Magic/Enchant jewellery",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic/Enchant_jewellery"
+  },
+  "Calculator:Bank standing money makers": {
+    "name": "Calculator:Bank standing money makers",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Bank_standing_money_makers"
+  },
+  "Calculator:Slayer/Imbued heart": {
+    "name": "Calculator:Slayer/Imbued heart",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Slayer/Imbued_heart"
+  },
+  "Shamanism": {
+    "name": "Shamanism",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Shamanism"
+  },
+  "Calculator:Blackjack stun": {
+    "name": "Calculator:Blackjack stun",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Blackjack_stun"
+  },
+  "Calculator:Magic/Enchant bolts": {
+    "name": "Calculator:Magic/Enchant bolts",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic/Enchant_bolts"
+  },
+  "Ancient chest": {
+    "name": "Ancient chest",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ancient_chest"
+  },
+  "Calculator:Theatre of Blood loot": {
+    "name": "Calculator:Theatre of Blood loot",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Theatre_of_Blood_loot"
+  },
+  "Calculator:Crafting/Gem cutting": {
+    "name": "Calculator:Crafting/Gem cutting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Gem_cutting"
+  },
+  "Thieving": {
+    "name": "Thieving",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Thieving"
+  },
+  "Calculator:Enchantment": {
+    "name": "Calculator:Enchantment",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Enchantment"
+  },
+  "Calculator:Genie lamps and Books of knowledge": {
+    "name": "Calculator:Genie lamps and Books of knowledge",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Genie_lamps_and_Books_of_knowledge"
+  },
+  "Calculator:Smithing": {
+    "name": "Calculator:Smithing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing"
+  },
+  "Calculator:Abyssal pearls": {
+    "name": "Calculator:Abyssal pearls",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Abyssal_pearls"
+  },
+  "Agility": {
+    "name": "Agility",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Agility"
+  },
+  "Calculator:Shot put": {
+    "name": "Calculator:Shot put",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Shot_put"
+  },
+  "Calculator:Crafting": {
+    "name": "Calculator:Crafting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting"
+  },
+  "Calculator:Crafting/Crushed gems": {
+    "name": "Calculator:Crafting/Crushed gems",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Crafting/Crushed_gems"
+  },
+  "Monumental chest": {
+    "name": "Monumental chest",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Monumental_chest"
+  },
+  "Calculator:Woodcutting/Clue nests": {
+    "name": "Calculator:Woodcutting/Clue nests",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Woodcutting/Clue_nests"
+  },
+  "Calculator:Magic/Powered staves": {
+    "name": "Calculator:Magic/Powered staves",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Magic/Powered_staves"
+  },
+  "Calculator:Wilderness agility loot": {
+    "name": "Calculator:Wilderness agility loot",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Wilderness_agility_loot"
+  },
+  "Calculator:Prayer/Bones": {
+    "name": "Calculator:Prayer/Bones",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Prayer/Bones"
+  },
+  "Calculator:Fishing/Aerial fishing": {
+    "name": "Calculator:Fishing/Aerial fishing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fishing/Aerial_fishing"
+  },
+  "Calculator:Plank making": {
+    "name": "Calculator:Plank making",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Plank_making"
+  },
+  "Calculator:Others/Experience items": {
+    "name": "Calculator:Others/Experience items",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Others/Experience_items"
+  },
+  "Calculator:Runecraft": {
+    "name": "Calculator:Runecraft",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Runecraft"
+  },
+  "Calculator:Barrows item repair": {
+    "name": "Calculator:Barrows item repair",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Barrows_item_repair"
+  },
+  "Hunter": {
+    "name": "Hunter",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Hunter"
+  },
+  "Calculator:Combat level": {
+    "name": "Calculator:Combat level",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Combat_level"
+  },
+  "Calculator:Cooking/Hunter meats": {
+    "name": "Calculator:Cooking/Hunter meats",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Hunter_meats"
+  },
+  "Calculator:Fishing/Barbarian fishing": {
+    "name": "Calculator:Fishing/Barbarian fishing",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Fishing/Barbarian_fishing"
+  },
+  "Ranged": {
+    "name": "Ranged",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Ranged"
+  },
+  "Calculator:Twisted bow": {
+    "name": "Calculator:Twisted bow",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Twisted_bow"
+  },
+  "Warding": {
+    "name": "Warding",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Warding"
+  },
+  "Calculator:Barrows": {
+    "name": "Calculator:Barrows",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Barrows"
+  },
+  "Calculator:Teleportation jewellery": {
+    "name": "Calculator:Teleportation jewellery",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Teleportation_jewellery"
+  },
+  "Woodcutting": {
+    "name": "Woodcutting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Woodcutting"
+  },
+  "Calculator:Miscellania loot": {
+    "name": "Calculator:Miscellania loot",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Miscellania_loot"
+  },
+  "Calculator:Slayer/Master comparison": {
+    "name": "Calculator:Slayer/Master comparison",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Slayer/Master_comparison"
+  },
+  "Firemaking": {
+    "name": "Firemaking",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Firemaking"
+  },
+  "Calculator:Smithing/BarrowsRepair": {
+    "name": "Calculator:Smithing/BarrowsRepair",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Smithing/BarrowsRepair"
+  },
+  "Calculator:Thieving/Master farmer success": {
+    "name": "Calculator:Thieving/Master farmer success",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Thieving/Master_farmer_success"
+  },
+  "Crafting": {
+    "name": "Crafting",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Crafting"
+  },
+  "Calculator:Phoenix necklace": {
+    "name": "Calculator:Phoenix necklace",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Phoenix_necklace"
+  },
+  "Phoenix necklace": {
+    "name": "Phoenix necklace",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Phoenix_necklace"
+  },
+  "Calculator:Prayer": {
+    "name": "Calculator:Prayer",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Prayer"
+  },
+  "Calculator:Cooking/Fish": {
+    "name": "Calculator:Cooking/Fish",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Cooking/Fish"
+  },
+  "Calculator:Soul Wars rewards": {
+    "name": "Calculator:Soul Wars rewards",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Soul_Wars_rewards"
+  },
+  "Calculator:Tempoross experience calculator": {
+    "name": "Calculator:Tempoross experience calculator",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Tempoross_experience_calculator"
+  },
+  "Calculator:Construction": {
+    "name": "Calculator:Construction",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Construction"
+  },
+  "Calculator:Herblore": {
+    "name": "Calculator:Herblore",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Herblore"
+  },
+  "Sailing (2015 proposed skill)": {
+    "name": "Sailing (2015 proposed skill)",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Sailing_(2015_proposed_skill)"
+  },
+  "Armour stand": {
+    "name": "Armour stand",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Armour_stand"
+  },
+  "Magic": {
+    "name": "Magic",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Magic"
+  },
+  "Calculator:Chambers of Xeric loot": {
+    "name": "Calculator:Chambers of Xeric loot",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Chambers_of_Xeric_loot"
+  },
+  "Attack": {
+    "name": "Attack",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Attack"
+  },
+  "Fletching": {
+    "name": "Fletching",
+    "type": "SKILL",
+    "members": true,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Fletching"
+  },
+  "Calculator:Arceuus library book": {
+    "name": "Calculator:Arceuus library book",
+    "type": "SKILL",
+    "members": false,
+    "max_level": 99,
+    "experience_table": {},
+    "training_methods": [],
+    "wiki_url": "https://oldschool.runescape.wiki/w/Calculator:Arceuus_library_book"
+  }
+}

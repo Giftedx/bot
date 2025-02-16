@@ -1,0 +1,74 @@
+<<<<<<< HEAD
+# Ignore all cloned reference repositories
+reference_repos/
+
+# Ignore common Git files
+.git/
+.gitignore
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Ignore virtual environment directories
+venv/
+env/
+.env/
+.venv/
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Ignore log files
+*.log
+clone_repos.log
+
+# Ignore any data or cache directories
+data/
+cache/
+.cache/
+
+# Ignore any build or dist directories
+build/
+dist/
+*.egg-info/
+
+# Ignore any large data files
+*.csv
+*.json
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore documentation
+docs/
+*.md
+*.rst
+*.txt
+
+# Ignore test directories
+tests/
+test/
+testing/
+
+# Ignore backup files
+*~
+*.bak
+*.backup
+*.old
+
+# Ignore any temporary files
+*.tmp
+*.temp
+.*.swp 
+=======
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+>>>>>>> aab8a2a4200e6501bf0cfd06f7a7723d0e0b265a

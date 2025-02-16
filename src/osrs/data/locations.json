@@ -1,0 +1,176 @@
+{
+    "lumbridge": {
+        "id": "lumbridge",
+        "name": "Lumbridge",
+        "type": "city",
+        "description": "The starting point for new adventurers.",
+        "connections": {
+            "lumbridge_swamp": {
+                "type": "walk",
+                "requirements": null
+            },
+            "al_kharid": {
+                "type": "gate",
+                "requirements": {
+                    "quest": "prince_ali_rescue",
+                    "coins": 10
+                }
+            },
+            "draynor_village": {
+                "type": "walk",
+                "requirements": null
+            }
+        },
+        "features": {
+            "bank": true,
+            "general_store": true,
+            "combat_trainer": true
+        },
+        "monsters": ["goblin", "giant_rat", "cow"],
+        "npcs": ["hans", "duke_horacio", "combat_instructor"],
+        "resources": {
+            "trees": ["normal_tree", "oak_tree"],
+            "fishing_spots": ["small_net", "bait"]
+        }
+    },
+    "varrock": {
+        "id": "varrock",
+        "name": "Varrock",
+        "type": "city",
+        "description": "The largest city in Misthalin.",
+        "connections": {
+            "grand_exchange": {
+                "type": "walk",
+                "requirements": null
+            },
+            "barbarian_village": {
+                "type": "walk",
+                "requirements": null
+            },
+            "lumbridge": {
+                "type": "walk",
+                "requirements": null
+            },
+            "wilderness": {
+                "type": "gate",
+                "requirements": {
+                    "warning": true
+                }
+            }
+        },
+        "features": {
+            "bank": true,
+            "grand_exchange": true,
+            "general_store": true,
+            "rune_shop": true
+        },
+        "monsters": ["guard", "dark_wizard", "giant_rat"],
+        "npcs": ["aubury", "romeo", "reldo"],
+        "resources": {
+            "trees": ["normal_tree", "oak_tree"],
+            "mining": ["clay", "tin", "iron"]
+        }
+    },
+    "falador": {
+        "id": "falador",
+        "name": "Falador",
+        "type": "city",
+        "description": "The white city of Asgarnia.",
+        "connections": {
+            "port_sarim": {
+                "type": "walk",
+                "requirements": null
+            },
+            "barbarian_village": {
+                "type": "walk",
+                "requirements": null
+            },
+            "taverley": {
+                "type": "gate",
+                "requirements": {
+                    "members": true
+                }
+            }
+        },
+        "features": {
+            "bank": true,
+            "general_store": true,
+            "shield_shop": true,
+            "mining_guild": {
+                "requirements": {
+                    "mining": 60
+                }
+            }
+        },
+        "monsters": ["guard", "black_knight", "giant_rat"],
+        "npcs": ["sir_vyvin", "sir_amik_varze", "squire"],
+        "resources": {
+            "trees": ["normal_tree", "oak_tree"],
+            "mining": ["coal", "mithril"]
+        }
+    },
+    "wilderness": {
+        "id": "wilderness",
+        "name": "Wilderness",
+        "type": "dangerous",
+        "description": "A dangerous PvP area with valuable resources.",
+        "connections": {
+            "edgeville": {
+                "type": "walk",
+                "requirements": null
+            },
+            "varrock": {
+                "type": "walk",
+                "requirements": null
+            }
+        },
+        "features": {
+            "pvp": true,
+            "high_risk": true,
+            "multi_combat": true
+        },
+        "monsters": [
+            "green_dragon",
+            "chaos_elemental",
+            "king_black_dragon",
+            "revenant"
+        ],
+        "resources": {
+            "mining": ["runite", "adamantite"],
+            "fishing": ["dark_crab"],
+            "wilderness_bosses": true
+        },
+        "level_ranges": {
+            "1-20": "low_wilderness",
+            "21-40": "mid_wilderness",
+            "41-56": "high_wilderness"
+        }
+    },
+    "grand_exchange": {
+        "id": "grand_exchange",
+        "name": "Grand Exchange",
+        "type": "trading",
+        "description": "Central trading hub of RuneScape.",
+        "connections": {
+            "varrock": {
+                "type": "walk",
+                "requirements": null
+            },
+            "edgeville": {
+                "type": "walk",
+                "requirements": null
+            }
+        },
+        "features": {
+            "bank": true,
+            "trading_post": true,
+            "spirit_tree": {
+                "requirements": {
+                    "quest": "tree_gnome_village"
+                }
+            }
+        },
+        "npcs": ["grand_exchange_clerk", "banker"],
+        "resources": null
+    }
+} 

@@ -1,0 +1,177 @@
+{
+    "goblin": {
+        "always": [
+            {
+                "item": "bones",
+                "quantity": 1
+            }
+        ],
+        "common": [
+            {
+                "item": "bronze_spear",
+                "quantity": 1,
+                "chance": 0.2
+            },
+            {
+                "item": "bronze_sq_shield",
+                "quantity": 1,
+                "chance": 0.2
+            }
+        ],
+        "uncommon": [
+            {
+                "item": "hammer",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "goblin_mail",
+                "quantity": 1,
+                "chance": 0.1
+            }
+        ],
+        "rare": [
+            {
+                "item": "champion_scroll",
+                "quantity": 1,
+                "chance": 0.001
+            }
+        ]
+    },
+    "hill_giant": {
+        "always": [
+            {
+                "item": "big_bones",
+                "quantity": 1
+            }
+        ],
+        "common": [
+            {
+                "item": "iron_arrow",
+                "quantity": [5, 15],
+                "chance": 0.3
+            },
+            {
+                "item": "steel_arrow",
+                "quantity": [5, 10],
+                "chance": 0.2
+            }
+        ],
+        "uncommon": [
+            {
+                "item": "iron_full_helm",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "iron_kiteshield",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "steel_med_helm",
+                "quantity": 1,
+                "chance": 0.1
+            }
+        ],
+        "rare": [
+            {
+                "item": "giant_key",
+                "quantity": 1,
+                "chance": 0.01
+            },
+            {
+                "item": "champion_scroll",
+                "quantity": 1,
+                "chance": 0.001
+            }
+        ]
+    },
+    "lesser_demon": {
+        "always": [
+            {
+                "item": "ashes",
+                "quantity": 1
+            }
+        ],
+        "common": [
+            {
+                "item": "fire_rune",
+                "quantity": [30, 60],
+                "chance": 0.4
+            },
+            {
+                "item": "steel_axe",
+                "quantity": 1,
+                "chance": 0.2
+            }
+        ],
+        "uncommon": [
+            {
+                "item": "black_full_helm",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "black_kiteshield",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "adamant_med_helm",
+                "quantity": 1,
+                "chance": 0.1
+            }
+        ],
+        "rare": [
+            {
+                "item": "rune_med_helm",
+                "quantity": 1,
+                "chance": 0.01
+            }
+        ]
+    },
+    "blue_dragon": {
+        "always": [
+            {
+                "item": "dragon_bones",
+                "quantity": 1
+            },
+            {
+                "item": "blue_dragonhide",
+                "quantity": 1
+            }
+        ],
+        "common": [
+            {
+                "item": "water_rune",
+                "quantity": [50, 100],
+                "chance": 0.4
+            },
+            {
+                "item": "mithril_bolts",
+                "quantity": [10, 20],
+                "chance": 0.3
+            }
+        ],
+        "uncommon": [
+            {
+                "item": "adamant_full_helm",
+                "quantity": 1,
+                "chance": 0.1
+            },
+            {
+                "item": "adamant_kiteshield",
+                "quantity": 1,
+                "chance": 0.1
+            }
+        ],
+        "rare": [
+            {
+                "item": "dragon_med_helm",
+                "quantity": 1,
+                "chance": 0.001
+            }
+        ]
+    }
+} 
