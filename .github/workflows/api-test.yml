@@ -126,7 +126,7 @@ jobs:
           } > api-test-report.md
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-test-results
           path: |
