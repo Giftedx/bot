@@ -1,185 +1,184 @@
-# Discord Application with OSRS, Pokemon, and Plex Integration
+# OSRS Discord Activity Server
 
-A modern Discord application that integrates OSRS (Old School RuneScape) data, Pokemon features, and Plex media playback using Discord's latest application features.
+A server-side implementation of Old School RuneScape that runs entirely on the backend and displays through Discord's activity feature. All game logic, calculations, and state management happen server-side, with Discord serving purely as the display and input interface.
 
-## Major Changes
-- Migrated from bot model to Discord application model
-- Implemented slash commands and modern interactions
-- Added proper component handling
-- Improved documentation and structure
+## Architecture Overview
 
-## Documentation
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Development Guide](docs/DEVELOPMENT.md)
-- [API Documentation](docs/API.md)
-- [Deployment Guide](docs/DEPLOYMENT.md)
+- **Server-Side Game Engine**:
+  - Complete OSRS game logic implementation
+  - State management and persistence
+  - Real-time game calculations
+  - Player session handling
+  - Multiplayer coordination
+  
+- **Discord Integration**:
+  - Activity iframe display
+  - Text channel fallback mode
+  - Command handling
+  - Real-time state updates
+  - Voice channel integration
 
-## Requirements
+## Display Methods
 
-- Python 3.12 or higher
-- Redis server (for caching)
-- PostgreSQL (optional, for advanced data storage)
-- FFmpeg (for media features)
+1. **Discord Activity Mode**:
+   - Runs in Discord's built-in activity iframe
+   - Real-time WebSocket updates
+   - Visual game rendering
+   - Integrated with voice channels
 
-## Quick Start
+2. **Text Channel Fallback**:
+   - ASCII-style representation
+   - Command-based interaction
+   - Full feature parity with visual mode
+   - Works in any Discord channel
 
-1. Create Discord Application:
-   - Go to [Discord Developer Portal](https://discord.com/developers/applications)
-   - Create new application
-   - Get credentials (App ID, Public Key, Token)
-   - Enable required intents
+## Server Features
 
-2. Clone and Setup:
+- **Game Logic**:
+  - Exact OSRS formulas and mechanics
+  - Complete combat system
+  - All skills and training methods
+  - Inventory and equipment management
+  - NPC interactions
+  - World map and navigation
+
+- **Multiplayer**:
+  - Synchronized game state
+  - Player interactions
+  - Trading system
+  - Chat functionality
+  - Party system
+
+- **Data Management**:
+  - Persistent player data
+  - State synchronization
+  - Session management
+  - Secure data storage
+
+## Server Setup
+
+1. Clone the repository:
 ```bash
-# Clone repository
-git clone <repository-url>
-cd discord-app
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-.\venv\Scripts\activate   # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your credentials
+git clone https://github.com/yourusername/osrs-discord-server.git
+cd osrs-discord-server
 ```
 
-3. Configure Application:
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure Discord Application:
+   - Create application at https://discord.com/developers/applications
+   - Enable Activity Feature
+   - Configure Activity Settings
+   - Set up OAuth2 credentials
+   - Enable required gateway intents
+
+4. Environment Configuration:
 ```env
-# Discord Application
+# Discord Configuration
 DISCORD_APP_ID=your_app_id
 DISCORD_PUBLIC_KEY=your_public_key
-DISCORD_TOKEN=your_token
+DISCORD_BOT_TOKEN=your_bot_token
 
-# Plex Configuration (Optional)
-PLEX_URL=your_plex_url
-PLEX_TOKEN=your_plex_token
+# Server Configuration
+PORT=8080
+WS_PORT=8081
+NODE_ENV=development
 
-# Database Configuration
+# Database Configuration (if using)
 DATABASE_URL=your_database_url
-
-# Redis Configuration
-REDIS_URL=redis://localhost:6379
 ```
 
-4. Run Application:
+5. Start the server:
 ```bash
-python -m src.app
+npm run dev
 ```
 
-## Features
+## Technical Implementation
 
-### Plex Integration
-- Media playback in Discord
-- Library browsing
-- Search functionality
-- Media controls
-- Quality selection
+### Server Architecture
+- Node.js/TypeScript backend
+- WebSocket server for real-time updates
+- State management system
+- Player session handling
+- Discord API integration
 
-### OSRS Features
-- Data collection and tracking
-- Pet statistics
-- Boss information
-- Skill tracking
-- Price monitoring
+### Game Engine
+- OSRS mechanics implementation
+- Combat calculations
+- Skill systems
+- World management
+- NPC AI
+- Pathfinding
 
-### Pokemon Features
-- ROM data parsing
-- PokeAPI integration
-- Pokemon information
-- Game data collection
+### Discord Integration
+- Activity API implementation
+- Voice channel integration
+- Command handling
+- State synchronization
+- Real-time updates
+
+## Usage in Discord
+
+1. Start an activity in a voice channel:
+   ```
+   /osrs start
+   ```
+
+2. Join the voice channel to access the activity
+
+3. Game commands:
+   ```
+   /move <x> <y>     - Move to location
+   /attack <target>   - Attack NPC/player
+   /skill <action>    - Perform skill action
+   /inventory        - Check inventory
+   /stats           - View stats
+   /help            - Show all commands
+   ```
 
 ## Development
 
-1. Setup Development Environment:
+### Adding New Features
+1. Implement server-side logic
+2. Add state management
+3. Create Discord command handlers
+4. Update display system
+5. Test multiplayer synchronization
+
+### Testing
 ```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
+# Run server tests
+npm test
 
-# Set up pre-commit hooks
-pre-commit install
-```
+# Run integration tests
+npm run test:integration
 
-2. Run Tests:
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-coverage run -m pytest
-coverage report
-```
-
-3. Code Quality:
-```bash
-# Format code
-black .
-
-# Check types
-mypy .
-
-# Lint code
-flake8
+# Test Discord integration
+npm run test:discord
 ```
 
 ## Contributing
 
-1. Create Feature Branch:
-```bash
-git checkout -b feature/your-feature-name
-```
-
-2. Development Workflow:
-- Write tests first
-- Implement feature
-- Update documentation
-- Run quality checks
-- Submit pull request
-
-3. Documentation:
-- Update relevant .md files
-- Add API documentation
-- Update architecture docs if needed
-- Add migration notes if applicable
-
-## Deployment
-
-See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions on:
-- Setting up production environment
-- Configuring Discord application
-- Setting up databases
-- Monitoring and logging
-- Backup procedures
-
-## Troubleshooting
-
-Common issues and solutions:
-1. Command Registration:
-   - Verify slash commands are registered
-   - Check application permissions
-   - Verify intents are enabled
-
-2. Media Playback:
-   - Check Plex connectivity
-   - Verify media permissions
-   - Check FFmpeg installation
-
-3. Data Collection:
-   - Verify API access
-   - Check rate limits
-   - Verify database connectivity
+1. Fork the repository
+2. Create feature branch
+3. Implement server-side changes
+4. Test thoroughly
+5. Submit pull request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-- Discord.py developers
-- Plex API contributors
-- OSRS Wiki team
-- PokeAPI team 
+- OSRS Wiki for game mechanics data
+- Discord for Activity API
+- RuneLite for inspiration
+- OSRS community for testing
+
+## Support
+
+For server issues or feature requests, please create an issue in the repository. 

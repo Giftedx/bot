@@ -6,7 +6,7 @@ import os
 import logging
 import asyncio
 import aiohttp
-from typing import Optional
+from typing import Optional, Mapping, List
 import datetime
 from dotenv import load_dotenv
 
@@ -19,6 +19,78 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger('bot')
+
+class CustomHelpCommand(commands.HelpCommand):
+    """Custom help command implementation."""
+    
+    async def send_bot_help(self, mapping: Mapping[Optional[commands.Cog], List[commands.Command]]):
+        """Send the bot help page."""
+        embed = discord.Embed(
+            title="Bot Commands",
+            description="Here are all available commands organized by category.\nUse `!help <category>` for more details.",
+            color=discord.Color.blue()
+        )
+        
+        # Sort cogs by name
+        sorted_mapping = sorted(mapping.items(), key=lambda x: x[0].qualified_name if x[0] else "No Category")
+        
+        for cog, commands_list in sorted_mapping:
+            if not commands_list:
+                continue
+                
+            name = cog.qualified_name if cog else "No Category"
+            # Filter out hidden commands
+            visible_commands = [cmd for cmd in commands_list if not cmd.hidden]
+            if visible_commands:
+                value = ", ".join(f"`{cmd.name}`" for cmd in visible_commands)
+                embed.add_field(name=name, value=value, inline=False)
+        
+        await self.get_destination().send(embed=embed)
+    
+    async def send_cog_help(self, cog: commands.Cog):
+        """Send help for a specific category."""
+        embed = discord.Embed(
+            title=f"{cog.qualified_name} Commands",
+            description=cog.description or "No description available.",
+            color=discord.Color.blue()
+        )
+        
+        # Add command list
+        for command in cog.get_commands():
+            if not command.hidden:
+                embed.add_field(
+                    name=f"{command.name} {command.signature}",
+                    value=command.help or "No description available.",
+                    inline=False
+                )
+        
+        await self.get_destination().send(embed=embed)
+    
+    async def send_command_help(self, command: commands.Command):
+        """Send help for a specific command."""
+        embed = discord.Embed(
+            title=f"Command: {command.name}",
+            color=discord.Color.blue()
+        )
+        
+        # Add command details
+        embed.add_field(
+            name="Usage",
+            value=f"`{self.context.prefix}{command.name} {command.signature}`",
+            inline=False
+        )
+        
+        if command.help:
+            embed.add_field(name="Description", value=command.help, inline=False)
+            
+        if command.aliases:
+            embed.add_field(
+                name="Aliases",
+                value=", ".join(f"`{alias}`" for alias in command.aliases),
+                inline=False
+            )
+        
+        await self.get_destination().send(embed=embed)
 
 class Config:
     """Bot configuration."""
@@ -39,11 +111,12 @@ class Bot(commands.Bot):
         intents.message_content = True
         intents.members = True
         
-        # Initialize the bot
+        # Initialize the bot with custom help command
         super().__init__(
             command_prefix=Config.COMMAND_PREFIX,
             intents=intents,
-            case_insensitive=True
+            case_insensitive=True,
+            help_command=CustomHelpCommand()
         )
         
         # Store configuration
@@ -71,7 +144,9 @@ class Bot(commands.Bot):
             'discord_bot.cogs.music_commands',
             'discord_bot.cogs.moderation_commands',
             'discord_bot.cogs.custom_commands',
-            'discord_bot.cogs.media_commands'
+            'discord_bot.cogs.media_commands',
+            'discord_bot.cogs.osrs_commands',
+            'discord_bot.cogs.fun_commands'
         ]
         
         for cog in cogs:

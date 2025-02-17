@@ -1,15 +1,28 @@
 """Media commands for Plex integration."""
 
-import discord
 from discord.ext import commands
+import discord
 from plexapi.server import PlexServer
 from plexapi.exceptions import NotFound, Unauthorized
 import asyncio
 from typing import Optional, List
 import datetime
 
-class MediaCommands(commands.Cog):
-    """Commands for interacting with Plex media server."""
+class MediaCommands(commands.Cog, name="Media"):
+    """Media server integration and playback commands.
+    
+    This category includes commands for:
+    - Searching Plex media library
+    - Playing media on Plex clients
+    - Viewing media information
+    - Managing playlists
+    - Viewing recently added content
+    
+    Requires:
+    - Configured Plex server
+    - Valid Plex authentication token
+    - At least one Plex client
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -29,12 +42,55 @@ class MediaCommands(commands.Cog):
     
     @commands.group(name="plex", invoke_without_command=True)
     async def plex_group(self, ctx):
-        """Plex media commands. Use subcommands search/play/info."""
+        """Plex media commands. Use subcommands search/play/info.
+        
+        This is a command group for Plex media server integration.
+        Use one of the subcommands to interact with your Plex server.
+        
+        Subcommands:
+        ------------
+        search - Search for media
+        play - Play media on a Plex client
+        info - Get detailed media information
+        recent - Show recently added media
+        
+        Examples:
+        ---------
+        !plex search Avengers
+        !plex play "The Matrix"
+        !plex info "Star Wars"
+        !plex recent
+        
+        Notes:
+        ------
+        - Requires configured Plex server
+        - Some commands require active Plex client
+        """
         await ctx.send_help(ctx.command)
     
     @plex_group.command(name="search")
     async def search_media(self, ctx, *, query: str):
-        """Search for media on the Plex server."""
+        """Search for media on the Plex server.
+        
+        Searches across all libraries (movies, TV shows, music)
+        and returns the top 5 matches.
+        
+        Parameters:
+        -----------
+        query: The search term(s)
+        
+        Examples:
+        ---------
+        !plex search Avengers
+        !plex search "Breaking Bad"
+        !plex search "The Office"
+        
+        Notes:
+        ------
+        - Searches all media types
+        - Shows up to 5 results
+        - Includes basic media info
+        """
         if not self.plex:
             await ctx.send("Plex integration is not configured!")
             return
@@ -80,7 +136,27 @@ class MediaCommands(commands.Cog):
     
     @plex_group.command(name="play")
     async def play_media(self, ctx, *, title: str):
-        """Start playing media on the Plex server."""
+        """Start playing media on the Plex server.
+        
+        Searches for and plays the specified media on the first
+        available Plex client.
+        
+        Parameters:
+        -----------
+        title: The title of the media to play
+        
+        Examples:
+        ---------
+        !plex play "The Matrix"
+        !plex play "Friends S01E01"
+        !plex play "Inception"
+        
+        Notes:
+        ------
+        - Requires active Plex client
+        - Plays first search result
+        - Can play movies or TV episodes
+        """
         if not self.plex:
             await ctx.send("Plex integration is not configured!")
             return
@@ -130,7 +206,27 @@ class MediaCommands(commands.Cog):
     
     @plex_group.command(name="info")
     async def media_info(self, ctx, *, title: str):
-        """Get detailed information about media."""
+        """Get detailed information about media.
+        
+        Shows comprehensive information about the specified media,
+        including metadata, ratings, and availability.
+        
+        Parameters:
+        -----------
+        title: The title to get information about
+        
+        Examples:
+        ---------
+        !plex info "The Dark Knight"
+        !plex info "Stranger Things"
+        !plex info "The Office S03E01"
+        
+        Notes:
+        ------
+        - Shows detailed metadata
+        - Includes artwork if available
+        - Works with movies and TV shows
+        """
         if not self.plex:
             await ctx.send("Plex integration is not configured!")
             return
@@ -192,7 +288,25 @@ class MediaCommands(commands.Cog):
     
     @plex_group.command(name="recent")
     async def recent_media(self, ctx, limit: int = 5):
-        """Show recently added media."""
+        """Show recently added media.
+        
+        Displays the most recently added content to your Plex server.
+        
+        Parameters:
+        -----------
+        limit: Number of items to show (default: 5, max: 10)
+        
+        Examples:
+        ---------
+        !plex recent
+        !plex recent 10
+        
+        Notes:
+        ------
+        - Shows newest items first
+        - Includes all media types
+        - Shows add date
+        """
         if not self.plex:
             await ctx.send("Plex integration is not configured!")
             return

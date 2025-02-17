@@ -42,9 +42,8 @@ from typing import Dict, Any, List, Set, Optional
 import re
 from bs4 import BeautifulSoup
 import mwparserfromhell
-import pokepy
-import ptcgio
-from pokemon_tcg_sdk.api import PokemonTcgAPI
+import pokebase as pb  # Using pokebase instead of pokepy
+import pokemontcgsdk  # Updated import for Pokemon TCG SDK
 from github import Github
 from plexapi.server import PlexServer
 import spotipy
@@ -56,6 +55,9 @@ import discord
 from discord.ext import commands
 import vdf  # For parsing Vencord plugin data
 import os
+
+# Constants
+USER_AGENT = "PokemonDataFetcher/1.0 (Python/3.8; +https://github.com/yourusername/pokemon-data-fetcher)"
 
 # Set up logging
 logging.basicConfig(
@@ -469,8 +471,7 @@ class PokemonDataFetcher:
         self.data: Dict[str, Dict[str, Any]] = {}
         
         # Initialize API clients
-        self.pokepy_client = pokepy.V2Client()
-        self.tcg_api = PokemonTcgAPI()
+        self.tcg_api = pokemontcgsdk  # Updated TCG API initialization
         self.rom_data = PokemonROMData()
         self.discord_data = DiscordActivityData()
         self.integration_data = IntegrationData()
@@ -639,81 +640,87 @@ class PokemonDataFetcher:
         
     def parse_pokemon_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Parse Pokemon data into structured format."""
+        # Use pokebase to get Pokemon data
+        pokemon = pb.pokemon(data["name"])
         return {
-            "id": data["id"],
-            "name": data["name"],
-            "types": [t["type"]["name"] for t in data["types"]],
+            "id": pokemon.id,
+            "name": pokemon.name,
+            "types": [t.type.name for t in pokemon.types],
             "stats": {
-                s["stat"]["name"]: s["base_stat"] 
-                for s in data["stats"]
+                s.stat.name: s.base_stat 
+                for s in pokemon.stats
             },
             "abilities": [
                 {
-                    "name": a["ability"]["name"],
-                    "is_hidden": a["is_hidden"]
+                    "name": a.ability.name,
+                    "is_hidden": a.is_hidden
                 }
-                for a in data["abilities"]
+                for a in pokemon.abilities
             ],
-            "height": data["height"],
-            "weight": data["weight"],
+            "height": pokemon.height,
+            "weight": pokemon.weight,
             "sprites": {
-                "front_default": data["sprites"]["front_default"],
-                "back_default": data["sprites"]["back_default"],
-                "front_shiny": data["sprites"]["front_shiny"],
-                "back_shiny": data["sprites"]["back_shiny"]
+                "front_default": pokemon.sprites.front_default,
+                "back_default": pokemon.sprites.back_default,
+                "front_shiny": pokemon.sprites.front_shiny,
+                "back_shiny": pokemon.sprites.back_shiny
             },
             "moves": [
                 {
-                    "name": m["move"]["name"],
-                    "learn_method": m["version_group_details"][0]["move_learn_method"]["name"],
-                    "level": m["version_group_details"][0]["level_learned_at"]
+                    "name": m.move.name,
+                    "learn_method": m.version_group_details[0].move_learn_method.name,
+                    "level": m.version_group_details[0].level_learned_at
                 }
-                for m in data["moves"]
+                for m in pokemon.moves
             ]
         }
         
     def parse_move_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Parse move data into structured format."""
+        # Use pokebase to get move data
+        move = pb.move(data["name"])
         return {
-            "id": data["id"],
-            "name": data["name"],
-            "type": data["type"]["name"],
-            "power": data["power"],
-            "pp": data["pp"],
-            "accuracy": data["accuracy"],
-            "priority": data["priority"],
-            "damage_class": data["damage_class"]["name"],
-            "effect": data["effect_entries"][0]["effect"] if data["effect_entries"] else None,
-            "effect_chance": data["effect_chance"],
-            "target": data["target"]["name"],
+            "id": move.id,
+            "name": move.name,
+            "type": move.type.name,
+            "power": move.power,
+            "pp": move.pp,
+            "accuracy": move.accuracy,
+            "priority": move.priority,
+            "damage_class": move.damage_class.name,
+            "effect": move.effect_entries[0].effect if move.effect_entries else None,
+            "effect_chance": move.effect_chance,
+            "target": move.target.name,
             "meta": {
-                "category": data["meta"]["category"]["name"] if "meta" in data else None,
-                "min_hits": data["meta"]["min_hits"] if "meta" in data else None,
-                "max_hits": data["meta"]["max_hits"] if "meta" in data else None,
-                "min_turns": data["meta"]["min_turns"] if "meta" in data else None,
-                "max_turns": data["meta"]["max_turns"] if "meta" in data else None,
-                "drain": data["meta"]["drain"] if "meta" in data else None,
-                "healing": data["meta"]["healing"] if "meta" in data else None,
-                "crit_rate": data["meta"]["crit_rate"] if "meta" in data else None,
-                "ailment_chance": data["meta"]["ailment_chance"] if "meta" in data else None,
-                "flinch_chance": data["meta"]["flinch_chance"] if "meta" in data else None,
-                "stat_chance": data["meta"]["stat_chance"] if "meta" in data else None
+                "category": move.meta.category.name if hasattr(move, 'meta') else None,
+                "min_hits": move.meta.min_hits if hasattr(move, 'meta') else None,
+                "max_hits": move.meta.max_hits if hasattr(move, 'meta') else None,
+                "min_turns": move.meta.min_turns if hasattr(move, 'meta') else None,
+                "max_turns": move.meta.max_turns if hasattr(move, 'meta') else None,
+                "drain": move.meta.drain if hasattr(move, 'meta') else None,
+                "healing": move.meta.healing if hasattr(move, 'meta') else None,
+                "crit_rate": move.meta.crit_rate if hasattr(move, 'meta') else None,
+                "ailment_chance": move.meta.ailment_chance if hasattr(move, 'meta') else None,
+                "flinch_chance": move.meta.flinch_chance if hasattr(move, 'meta') else None,
+                "stat_chance": move.meta.stat_chance if hasattr(move, 'meta') else None
             }
         }
         
     def parse_ability_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Parse ability data into structured format."""
+        # Use pokebase to get ability data
+        ability = pb.ability(data["name"])
         return {
-            "id": data["id"],
-            "name": data["name"],
-            "effect": data["effect_entries"][0]["effect"] if data["effect_entries"] else None,
-            "short_effect": data["effect_entries"][0]["short_effect"] if data["effect_entries"] else None,
+            "id": ability.id,
+            "name": ability.name,
+            "effect": ability.effect_entries[0].effect if ability.effect_entries else None,
+            "short_effect": ability.effect_entries[0].short_effect if ability.effect_entries else None,
             "pokemon": [
                 {
-                    "name": p["pokemon"]["name"],
-                    "is_hidden": p["is_hidden"]
+                    "name": p.pokemon.name,
+                    "is_hidden": p.is_hidden
                 }
-                for p in data["pokemon"]
+                for p in ability.pokemon
             ]
         }
         

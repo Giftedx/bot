@@ -6,8 +6,18 @@ import asyncio
 from typing import Optional, Union
 import datetime
 
-class AdminCommands(commands.Cog):
-    """Administrative commands for server management."""
+class AdminCommands(commands.Cog, name="Admin"):
+    """Administrative commands for server management.
+    
+    This category includes commands for:
+    - Server management
+    - Bot configuration
+    - Permission management
+    - System monitoring
+    - Extension management
+    
+    Most commands require administrator permissions.
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -16,163 +26,223 @@ class AdminCommands(commands.Cog):
         """Check if user has admin permissions."""
         return ctx.author.guild_permissions.administrator
     
-    @commands.command(name="kick")
-    @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason: str = None):
-        """Kick a member from the server."""
-        try:
-            await member.kick(reason=reason)
-            embed = discord.Embed(
-                title="Member Kicked",
-                description=f"{member.mention} has been kicked.",
-                color=discord.Color.red()
-            )
-            if reason:
-                embed.add_field(name="Reason", value=reason)
-            await ctx.send(embed=embed)
-        except discord.Forbidden:
-            await ctx.send("I don't have permission to kick that member.")
-    
-    @commands.command(name="ban")
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason: str = None):
-        """Ban a member from the server."""
-        try:
-            await member.ban(reason=reason)
-            embed = discord.Embed(
-                title="Member Banned",
-                description=f"{member.mention} has been banned.",
-                color=discord.Color.red()
-            )
-            if reason:
-                embed.add_field(name="Reason", value=reason)
-            await ctx.send(embed=embed)
-        except discord.Forbidden:
-            await ctx.send("I don't have permission to ban that member.")
-    
-    @commands.command(name="unban")
-    @commands.has_permissions(ban_members=True)
-    async def unban(self, ctx, *, member):
-        """Unban a member from the server."""
-        banned_users = [entry async for entry in ctx.guild.bans()]
-        member_name, member_discriminator = member.split('#')
+    @commands.command(name="reload")
+    @commands.is_owner()
+    async def reload_extension(self, ctx, extension: str):
+        """Reload a bot extension/cog.
         
-        for ban_entry in banned_users:
-            user = ban_entry.user
-            if (user.name, user.discriminator) == (member_name, member_discriminator):
-                await ctx.guild.unban(user)
-                embed = discord.Embed(
-                    title="Member Unbanned",
-                    description=f"{user.mention} has been unbanned.",
-                    color=discord.Color.green()
-                )
-                await ctx.send(embed=embed)
-                return
+        Reloads the specified extension without restarting the bot.
+        Only the bot owner can use this command.
         
-        await ctx.send(f"Could not find banned user {member}")
+        Parameters:
+        -----------
+        extension: The name of the extension to reload
+        
+        Examples:
+        ---------
+        !reload music_commands
+        !reload moderation_commands
+        
+        Notes:
+        ------
+        - Owner only command
+        - Use for updating code changes
+        - Extension must be loaded first
+        """
+        try:
+            await self.bot.reload_extension(f"discord_bot.cogs.{extension}")
+            await ctx.send(f"✅ Reloaded extension: {extension}")
+        except Exception as e:
+            await ctx.send(f"❌ Error reloading {extension}: {str(e)}")
     
-    @commands.command(name="clear")
-    @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount: int = 5):
-        """Clear a specified number of messages."""
-        if amount < 1:
-            await ctx.send("Please specify a positive number of messages to delete.")
+    @commands.command(name="load")
+    @commands.is_owner()
+    async def load_extension(self, ctx, extension: str):
+        """Load a bot extension/cog.
+        
+        Loads a new extension that isn't currently loaded.
+        Only the bot owner can use this command.
+        
+        Parameters:
+        -----------
+        extension: The name of the extension to load
+        
+        Examples:
+        ---------
+        !load new_commands
+        !load custom_features
+        
+        Notes:
+        ------
+        - Owner only command
+        - Extension must exist in cogs directory
+        - Cannot load already loaded extensions
+        """
+        try:
+            await self.bot.load_extension(f"discord_bot.cogs.{extension}")
+            await ctx.send(f"✅ Loaded extension: {extension}")
+        except Exception as e:
+            await ctx.send(f"❌ Error loading {extension}: {str(e)}")
+    
+    @commands.command(name="unload")
+    @commands.is_owner()
+    async def unload_extension(self, ctx, extension: str):
+        """Unload a bot extension/cog.
+        
+        Unloads an active extension from the bot.
+        Only the bot owner can use this command.
+        
+        Parameters:
+        -----------
+        extension: The name of the extension to unload
+        
+        Examples:
+        ---------
+        !unload music_commands
+        !unload unused_feature
+        
+        Notes:
+        ------
+        - Owner only command
+        - Cannot unload essential extensions
+        - Commands from unloaded extensions won't work
+        """
+        try:
+            await self.bot.unload_extension(f"discord_bot.cogs.{extension}")
+            await ctx.send(f"✅ Unloaded extension: {extension}")
+        except Exception as e:
+            await ctx.send(f"❌ Error unloading {extension}: {str(e)}")
+    
+    @commands.command(name="sync")
+    @commands.is_owner()
+    async def sync_commands(self, ctx):
+        """Sync slash commands with Discord.
+        
+        Synchronizes all slash commands with Discord's servers.
+        Only the bot owner can use this command.
+        
+        Examples:
+        ---------
+        !sync
+        
+        Notes:
+        ------
+        - Owner only command
+        - May take a few minutes
+        - Required after adding new slash commands
+        """
+        try:
+            await self.bot.tree.sync()
+            await ctx.send("✅ Successfully synced slash commands!")
+        except Exception as e:
+            await ctx.send(f"❌ Error syncing commands: {str(e)}")
+    
+    @commands.command(name="status")
+    @commands.is_owner()
+    async def set_status(self, ctx, status_type: str, *, status: str):
+        """Set the bot's status/presence.
+        
+        Changes the bot's status message and activity type.
+        Only the bot owner can use this command.
+        
+        Parameters:
+        -----------
+        status_type: Type of status (playing, watching, listening, streaming)
+        status: The status message to display
+        
+        Examples:
+        ---------
+        !status playing with commands
+        !status watching over servers
+        !status listening to music
+        
+        Notes:
+        ------
+        - Owner only command
+        - Changes are immediate
+        - Status persists until changed
+        """
+        activity_types = {
+            'playing': discord.ActivityType.playing,
+            'watching': discord.ActivityType.watching,
+            'listening': discord.ActivityType.listening,
+            'streaming': discord.ActivityType.streaming
+        }
+        
+        if status_type.lower() not in activity_types:
+            await ctx.send("Invalid status type! Use: playing, watching, listening, or streaming")
             return
             
-        deleted = await ctx.channel.purge(limit=amount + 1)  # +1 to include command message
-        msg = await ctx.send(f"Deleted {len(deleted)-1} messages.")
-        await asyncio.sleep(3)
-        await msg.delete()
-    
-    @commands.command(name="mute")
-    @commands.has_permissions(manage_roles=True)
-    async def mute(self, ctx, member: discord.Member, duration: Optional[str] = None, *, reason: str = None):
-        """Mute a member in the server."""
-        # Check for or create muted role
-        muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
-        if not muted_role:
-            try:
-                muted_role = await ctx.guild.create_role(
-                    name="Muted",
-                    reason="Created for muting members"
-                )
-                
-                # Set permissions for the muted role
-                for channel in ctx.guild.channels:
-                    await channel.set_permissions(muted_role, speak=False, send_messages=False)
-            except discord.Forbidden:
-                await ctx.send("I don't have permission to create roles.")
-                return
+        activity = discord.Activity(
+            type=activity_types[status_type.lower()],
+            name=status
+        )
         
-        if muted_role in member.roles:
-            await ctx.send(f"{member.mention} is already muted.")
-            return
-            
-        # Parse duration if provided
-        duration_seconds = 0
-        if duration:
-            try:
-                unit = duration[-1].lower()
-                value = int(duration[:-1])
-                if unit == 's':
-                    duration_seconds = value
-                elif unit == 'm':
-                    duration_seconds = value * 60
-                elif unit == 'h':
-                    duration_seconds = value * 3600
-                elif unit == 'd':
-                    duration_seconds = value * 86400
-                else:
-                    await ctx.send("Invalid duration format. Use s/m/h/d (e.g., 30s, 5m, 1h, 1d)")
-                    return
-            except ValueError:
-                await ctx.send("Invalid duration format. Use s/m/h/d (e.g., 30s, 5m, 1h, 1d)")
-                return
-        
-        try:
-            await member.add_roles(muted_role, reason=reason)
-            embed = discord.Embed(
-                title="Member Muted",
-                description=f"{member.mention} has been muted.",
-                color=discord.Color.orange()
-            )
-            if reason:
-                embed.add_field(name="Reason", value=reason)
-            if duration:
-                embed.add_field(name="Duration", value=duration)
-            await ctx.send(embed=embed)
-            
-            if duration_seconds > 0:
-                await asyncio.sleep(duration_seconds)
-                if muted_role in member.roles:
-                    await member.remove_roles(muted_role)
-                    await ctx.send(f"{member.mention} has been unmuted.")
-        except discord.Forbidden:
-            await ctx.send("I don't have permission to mute that member.")
+        await self.bot.change_presence(activity=activity)
+        await ctx.send(f"✅ Status updated to: {status_type} {status}")
     
-    @commands.command(name="unmute")
-    @commands.has_permissions(manage_roles=True)
-    async def unmute(self, ctx, member: discord.Member):
-        """Unmute a muted member."""
-        muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
-        if not muted_role:
-            await ctx.send("No muted role found.")
-            return
+    @commands.command(name="shutdown")
+    @commands.is_owner()
+    async def shutdown(self, ctx):
+        """Safely shut down the bot.
+        
+        Performs a clean shutdown of the bot.
+        Only the bot owner can use this command.
+        
+        Examples:
+        ---------
+        !shutdown
+        
+        Notes:
+        ------
+        - Owner only command
+        - Closes all connections
+        - Saves any pending data
+        """
+        await ctx.send("Shutting down... 👋")
+        await self.bot.close()
+    
+    @commands.command(name="maintenance")
+    @commands.is_owner()
+    async def maintenance_mode(self, ctx, enabled: bool = None):
+        """Toggle maintenance mode.
+        
+        Enables or disables maintenance mode for the bot.
+        Only the bot owner can use this command.
+        
+        Parameters:
+        -----------
+        enabled: True to enable, False to disable (optional)
+        
+        Examples:
+        ---------
+        !maintenance on
+        !maintenance off
+        !maintenance - Toggle current state
+        
+        Notes:
+        ------
+        - Owner only command
+        - Disables most commands when active
+        - Shows maintenance message to users
+        """
+        if enabled is None:
+            enabled = not getattr(self.bot, "maintenance_mode", False)
             
-        if muted_role not in member.roles:
-            await ctx.send(f"{member.mention} is not muted.")
-            return
-            
-        try:
-            await member.remove_roles(muted_role)
-            embed = discord.Embed(
-                title="Member Unmuted",
-                description=f"{member.mention} has been unmuted.",
-                color=discord.Color.green()
+        self.bot.maintenance_mode = enabled
+        
+        if enabled:
+            await self.bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.playing,
+                    name="🔧 Maintenance Mode"
+                ),
+                status=discord.Status.dnd
             )
-            await ctx.send(embed=embed)
-        except discord.Forbidden:
-            await ctx.send("I don't have permission to unmute that member.")
+            await ctx.send("🔧 Maintenance mode enabled")
+        else:
+            await self.bot.change_presence(status=discord.Status.online)
+            await ctx.send("✅ Maintenance mode disabled")
 
 async def setup(bot):
     """Add the cog to the bot."""

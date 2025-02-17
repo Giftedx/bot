@@ -1,18 +1,31 @@
-"""Base cog class that all other cogs will inherit from."""
+"""Base cog containing core bot functionality."""
 
 from discord.ext import commands
 import discord
 import logging
 from typing import Optional, Any
 from discord_bot.config import Config
+import asyncio
+import datetime
 
-class BaseCog(commands.Cog):
-    """Base cog class with common functionality."""
+class BaseCog(commands.Cog, name="Core"):
+    """Core bot functionality and essential commands.
+    
+    This category includes commands for:
+    - Bot information
+    - Ping and latency
+    - Bot statistics
+    - System status
+    - Basic utility functions
+    
+    These commands are always available and don't require special permissions.
+    """
     
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.config = Config()
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.start_time = datetime.datetime.utcnow()
         
     async def cog_command_error(self, ctx: commands.Context, error: Exception) -> None:
         """Handle errors that occur in this cog's commands."""
@@ -102,4 +115,188 @@ class BaseCog(commands.Cog):
         if seconds > 0 or not parts:
             parts.append(f"{seconds}s")
             
-        return " ".join(parts) 
+        return " ".join(parts)
+
+    @commands.command(name="ping")
+    async def ping(self, ctx):
+        """Check the bot's latency.
+        
+        Shows the bot's current WebSocket latency.
+        
+        Examples:
+        ---------
+        !ping
+        
+        Notes:
+        ------
+        - Shows latency in milliseconds
+        - Updates in real-time
+        - Useful for checking bot responsiveness
+        """
+        latency = round(self.bot.latency * 1000)
+        await ctx.send(f"🏓 Pong! Latency: {latency}ms")
+    
+    @commands.command(name="uptime")
+    async def uptime(self, ctx):
+        """Check how long the bot has been running.
+        
+        Shows the time since the bot was last started.
+        
+        Examples:
+        ---------
+        !uptime
+        
+        Notes:
+        ------
+        - Shows days, hours, minutes, seconds
+        - Updates in real-time
+        - Resets when bot restarts
+        """
+        current_time = datetime.datetime.utcnow()
+        delta = current_time - self.start_time
+        
+        days = delta.days
+        hours, remainder = divmod(delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        uptime_str = f"{days}d {hours}h {minutes}m {seconds}s"
+        await ctx.send(f"⏱️ Uptime: {uptime_str}")
+    
+    @commands.command(name="about")
+    async def about(self, ctx):
+        """Display information about the bot.
+        
+        Shows detailed information about the bot's features and statistics.
+        
+        Examples:
+        ---------
+        !about
+        
+        Notes:
+        ------
+        - Shows version info
+        - Lists key features
+        - Displays bot statistics
+        - Shows support information
+        """
+        embed = discord.Embed(
+            title="About Bot",
+            description="A versatile Discord bot with moderation, music, games, and more!",
+            color=discord.Color.blue()
+        )
+        
+        # Bot statistics
+        total_members = sum(guild.member_count for guild in self.bot.guilds)
+        total_channels = sum(len(guild.channels) for guild in self.bot.guilds)
+        
+        embed.add_field(name="Servers", value=str(len(self.bot.guilds)), inline=True)
+        embed.add_field(name="Members", value=str(total_members), inline=True)
+        embed.add_field(name="Channels", value=str(total_channels), inline=True)
+        
+        # Feature list
+        features = [
+            "✨ Powerful moderation tools",
+            "🎵 High-quality music playback",
+            "🎮 Fun games and activities",
+            "🎬 Media integration with Plex",
+            "⚙️ Custom commands system"
+        ]
+        embed.add_field(name="Features", value="\n".join(features), inline=False)
+        
+        # System info
+        embed.add_field(name="Version", value="1.0.0", inline=True)
+        embed.add_field(name="Python", value=discord.__version__, inline=True)
+        embed.add_field(name="Support", value="[GitHub](https://github.com/yourusername/bot)", inline=True)
+        
+        await ctx.send(embed=embed)
+    
+    @commands.command(name="invite")
+    async def invite(self, ctx):
+        """Get the bot's invite link.
+        
+        Generates an invite link to add the bot to other servers.
+        
+        Examples:
+        ---------
+        !invite
+        
+        Notes:
+        ------
+        - Requires proper permissions
+        - Shows required bot permissions
+        - Includes support server link
+        """
+        permissions = discord.Permissions(
+            send_messages=True,
+            embed_links=True,
+            attach_files=True,
+            read_messages=True,
+            manage_messages=True,
+            connect=True,
+            speak=True,
+            use_voice_activation=True,
+            add_reactions=True
+        )
+        
+        invite_url = discord.utils.oauth_url(
+            self.bot.user.id,
+            permissions=permissions
+        )
+        
+        embed = discord.Embed(
+            title="Invite Bot",
+            description="Add me to your server!",
+            color=discord.Color.blue()
+        )
+        embed.add_field(name="Bot Invite", value=f"[Click Here]({invite_url})", inline=True)
+        embed.add_field(name="Support Server", value="[Join Here](https://discord.gg/support)", inline=True)
+        
+        await ctx.send(embed=embed)
+    
+    @commands.command(name="stats")
+    async def stats(self, ctx):
+        """View bot statistics.
+        
+        Shows detailed statistics about the bot's usage and performance.
+        
+        Examples:
+        ---------
+        !stats
+        
+        Notes:
+        ------
+        - Shows server count
+        - Displays member reach
+        - Lists command usage
+        - Shows system performance
+        """
+        embed = discord.Embed(
+            title="Bot Statistics",
+            color=discord.Color.blue()
+        )
+        
+        # Server stats
+        total_members = sum(guild.member_count for guild in self.bot.guilds)
+        total_channels = sum(len(guild.channels) for guild in self.bot.guilds)
+        total_voice = sum(len(guild.voice_channels) for guild in self.bot.guilds)
+        total_text = sum(len(guild.text_channels) for guild in self.bot.guilds)
+        
+        embed.add_field(name="Servers", value=str(len(self.bot.guilds)), inline=True)
+        embed.add_field(name="Members", value=str(total_members), inline=True)
+        embed.add_field(name="Channels", value=f"📝 {total_text} | 🔊 {total_voice}", inline=True)
+        
+        # Performance stats
+        latency = round(self.bot.latency * 1000)
+        current_time = datetime.datetime.utcnow()
+        delta = current_time - self.start_time
+        uptime = f"{delta.days}d {delta.seconds//3600}h {(delta.seconds//60)%60}m"
+        
+        embed.add_field(name="Latency", value=f"{latency}ms", inline=True)
+        embed.add_field(name="Uptime", value=uptime, inline=True)
+        embed.add_field(name="Commands", value=str(len(self.bot.commands)), inline=True)
+        
+        await ctx.send(embed=embed)
+
+async def setup(bot):
+    """Add the cog to the bot."""
+    await bot.add_cog(BaseCog(bot)) 

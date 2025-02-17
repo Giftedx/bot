@@ -16,7 +16,20 @@ URL_REGEX = re.compile(
 )
 
 class MusicCommands(commands.Cog, name="Music"):
-    """Music playback commands using Wavelink."""
+    """Music playback and management commands.
+    
+    This category includes commands for:
+    - Playing music from various sources (YouTube, Spotify, etc.)
+    - Queue management
+    - Playback control (pause, resume, skip)
+    - Volume control
+    - Now playing information
+    
+    Requires:
+    - Bot must be in a voice channel
+    - Lavalink server must be running
+    - User must be in a voice channel
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -76,7 +89,21 @@ class MusicCommands(commands.Cog, name="Music"):
 
     @commands.command(name='join')
     async def join(self, ctx):
-        """Join the user's voice channel."""
+        """Join your voice channel.
+        
+        Bot will join the voice channel you are currently in.
+        You must be in a voice channel to use this command.
+        
+        Examples:
+        ---------
+        !join
+        
+        Notes:
+        ------
+        - Bot will automatically join when using play command
+        - Bot will not join if you're not in a voice channel
+        - Bot will move to your channel if already in another
+        """
         if not ctx.author.voice:
             await ctx.send("You must be in a voice channel for me to join.")
             return
@@ -97,7 +124,30 @@ class MusicCommands(commands.Cog, name="Music"):
 
     @commands.command(name='play')
     async def play(self, ctx, *, query: str):
-        """Play a song from YouTube or a supported platform."""
+        """Play a song or add it to the queue.
+        
+        Supports various sources:
+        - YouTube URLs (videos, playlists)
+        - Spotify URLs (tracks, playlists, albums)
+        - SoundCloud URLs
+        - Direct search queries (searches YouTube)
+        
+        Parameters:
+        -----------
+        query: The song to play (URL or search terms)
+        
+        Examples:
+        ---------
+        !play https://youtube.com/watch?v=...
+        !play Despacito
+        !play playlist:https://youtube.com/playlist?list=...
+        
+        Notes:
+        ------
+        - Bot will join your voice channel if not already in one
+        - Songs are added to queue if something is already playing
+        - Playlists are automatically processed and added to queue
+        """
         player = await self.get_player(ctx)
         if not player:
             return
@@ -177,7 +227,23 @@ class MusicCommands(commands.Cog, name="Music"):
 
     @commands.command(name='queue')
     async def queue(self, ctx):
-        """Show the current queue."""
+        """Show the current music queue.
+        
+        Displays:
+        - Currently playing song
+        - Next 10 songs in queue
+        - Total number of songs in queue
+        - Total queue duration
+        
+        Examples:
+        ---------
+        !queue
+        
+        Notes:
+        ------
+        - Use !queue page <number> to view different pages
+        - Queue is server-specific
+        """
         player = await self.get_player(ctx)
         if not player:
             return

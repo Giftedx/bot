@@ -8,8 +8,17 @@ from typing import Optional
 import random
 import asyncio
 
-class PokemonCommands(commands.Cog):
-    """Pokemon-related commands."""
+class PokemonCommands(commands.Cog, name="Pokemon"):
+    """Pokemon-related commands and games.
+    
+    This category includes commands for:
+    - Looking up Pokemon information
+    - Checking Pokemon types
+    - Playing Pokemon-related games
+    - Getting random Pokemon
+    
+    All data is fetched from the official PokeAPI.
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -33,7 +42,27 @@ class PokemonCommands(commands.Cog):
     
     @commands.command(name="pokemon")
     async def pokemon_info(self, ctx, pokemon: str):
-        """Get information about a Pokemon."""
+        """Get detailed information about a Pokemon.
+        
+        Fetches and displays comprehensive information about the specified Pokemon,
+        including its stats, types, abilities, and sprite.
+        
+        Parameters:
+        -----------
+        pokemon: The name or Pokedex number of the Pokemon
+        
+        Examples:
+        ---------
+        !pokemon pikachu
+        !pokemon 25
+        !pokemon charizard
+        
+        Notes:
+        ------
+        - Pokemon names are case-insensitive
+        - Can use either Pokemon name or Pokedex number
+        - Shows base stats and abilities
+        """
         async with ctx.typing():
             data = await self.get_pokemon_data(pokemon)
             
@@ -69,7 +98,20 @@ class PokemonCommands(commands.Cog):
     
     @commands.command(name="random_pokemon")
     async def random_pokemon(self, ctx):
-        """Get information about a random Pokemon."""
+        """Get information about a random Pokemon.
+        
+        Randomly selects a Pokemon from all generations (up to Gen 8)
+        and displays its information.
+        
+        Examples:
+        ---------
+        !random_pokemon
+        
+        Notes:
+        ------
+        - Includes Pokemon from all generations up to Gen 8
+        - Shows same detailed information as !pokemon command
+        """
         pokemon_id = random.randint(1, 898)  # Up to Gen 8
         async with ctx.typing():
             data = await self.get_pokemon_data(str(pokemon_id))
@@ -82,7 +124,21 @@ class PokemonCommands(commands.Cog):
     
     @commands.command(name="guess_pokemon")
     async def guess_pokemon(self, ctx):
-        """Start a Pokemon guessing game."""
+        """Start a Pokemon guessing game.
+        
+        Shows a Pokemon's sprite and gives players 30 seconds to guess
+        which Pokemon it is. First person to guess correctly wins!
+        
+        Examples:
+        ---------
+        !guess_pokemon
+        
+        Notes:
+        ------
+        - 30 second time limit
+        - Names must be exact (case-insensitive)
+        - Anyone in the channel can guess
+        """
         # Get random Pokemon
         pokemon_id = random.randint(1, 898)
         data = await self.get_pokemon_data(str(pokemon_id))
@@ -115,7 +171,30 @@ class PokemonCommands(commands.Cog):
     
     @commands.command(name="type")
     async def type_info(self, ctx, type_name: str):
-        """Get information about a Pokemon type."""
+        """Get information about a Pokemon type.
+        
+        Displays detailed type effectiveness information, including:
+        - Super effective against
+        - Not very effective against
+        - No effect against
+        - Weaknesses and resistances
+        
+        Parameters:
+        -----------
+        type_name: The Pokemon type to look up
+        
+        Examples:
+        ---------
+        !type fire
+        !type water
+        !type dragon
+        
+        Notes:
+        ------
+        - Type names are case-insensitive
+        - Shows all damage relations
+        - Useful for battle strategy
+        """
         async with ctx.typing():
             try:
                 async with self.session.get(f"{self.base_url}/type/{type_name.lower()}") as resp:

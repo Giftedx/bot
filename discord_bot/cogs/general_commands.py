@@ -1,3 +1,5 @@
+"""General utility commands for the bot."""
+
 from discord.ext import commands
 import discord
 import logging
@@ -11,7 +13,11 @@ import asyncio
 logger = logging.getLogger(__name__)
 
 class GeneralCommands(commands.Cog, name="General"):
-    """General utility commands."""
+    """General utility commands for server management and information.
+    
+    This category includes commands for basic server information, user information,
+    utility functions like polls and reminders, and other general-purpose tools.
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -25,9 +31,11 @@ class GeneralCommands(commands.Cog, name="General"):
         -----------
         dice: The dice to roll in NdN format (e.g., 2d6 for two six-sided dice)
         
-        Example:
-        --------
-        !roll 2d20
+        Examples:
+        ---------
+        !roll 2d20 - Roll two 20-sided dice
+        !roll 4d6 - Roll four 6-sided dice
+        !roll - Roll one 6-sided die (default)
         """
         try:
             rolls, limit = map(int, dice.split('d'))
@@ -70,7 +78,18 @@ class GeneralCommands(commands.Cog, name="General"):
 
     @commands.command(name='serverinfo')
     async def server_info(self, ctx):
-        """Get information about the current server."""
+        """Get detailed information about the current server.
+        
+        This command shows:
+        - Server name and ID
+        - Creation date
+        - Owner
+        - Member count and status
+        - Channel counts
+        - Role count
+        - Server features
+        - Boost status
+        """
         guild = ctx.guild
         embed = discord.Embed(
             title=f"ℹ️ {guild.name} Server Information",

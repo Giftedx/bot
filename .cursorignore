@@ -1,90 +1,34 @@
-# Single ignore everything rule
+# Ignore everything first
 *
 
-# Only these specific files
-!/src/main.py
-!/src/core/config.py
-!/src/core/app/bot.py
-!/src/plex/bot.py
-!/src/plex/bot_commands.py
-!/src/bot/plex_selfbot.py
-!/src/cogs/media_commands.py
-!/src/cogs/osrs_commands.py
-
-# Cursor specific
-.cursor/
-.cursor-retrieval/
-**/workspaceStorage/
-**/anysphere.cursor-retrieval/
-**/embeddable_files.txt
-**/*.cursor-*
-
-# First ignore absolutely everything
-*
-
-# Then only allow specific core files
+# Only allow these specific core files
 !src/main.py
+!src/bot.py
+!src/application.py
+
+# Core bot functionality
+!src/core/config.py
+!src/core/bot.py
+!src/core/app/bot.py
+
+# Plex integration
 !src/plex/bot.py
 !src/plex/bot_commands.py
-!src/core/app/bot.py
-!src/core/config.py
-!src/bot/plex_selfbot.py
+!src/plex/config.py
+
+# Essential cogs
 !src/cogs/media_commands.py
+!src/cogs/plex_commands.py
 !src/cogs/osrs_commands.py
 
-# Ignore everything else in these directories
-src/**/__pycache__/
-src/**/*.pyc
-src/**/*.pyo
-src/**/*.pyd
-src/**/*.log
-src/**/*.db
-src/**/*.sqlite*
-src/**/*.rdb
-src/**/.*
-src/**/logs/
-src/**/data/
-src/**/cache/
-src/**/temp/
-src/**/tmp/
-src/**/build/
-src/**/dist/
-src/**/*.egg-info/
-
-# Ignore all config files except the main ones
-**/*.json
-**/*.yaml
-**/*.yml
-**/*.ini
-**/*.cfg
-**/*.conf
-!src/core/config.py
-
-# Ignore all documentation
-**/*.md
-**/*.rst
-**/*.txt
-
-# Ignore all test files
-**/test_*.py
-**/tests/
-**/*_test.py
-
-# Ignore all temp and cache files
+# Ignore everything else explicitly
+**/*
+**/.*
 **/__pycache__/
-**/.pytest_cache/
-**/.mypy_cache/
-**/*.pyc
-**/*.pyo
-**/*.pyd
-**/*.so
-**/*.dll
-**/*.dylib
-
-# Ignore workspace storage
-**/AppData/
-**/Roaming/
-**/Cursor/
-**/User/
-**/workspaceStorage/
-**/.workspace/
+**/node_modules/
+**/venv/
+repos/
+task-manager/
+data/
+dist/
+logs/

@@ -8,7 +8,17 @@ from typing import Optional, Union
 logger = logging.getLogger(__name__)
 
 class ModerationCommands(commands.Cog, name="Moderation"):
-    """Server moderation and management commands."""
+    """Server moderation and management commands.
+    
+    This category includes commands for:
+    - User moderation (kick, ban, mute, warn)
+    - Message management (purge, cleanup)
+    - Channel management (lock, slowmode)
+    - Role management
+    - Warning system
+    
+    Most commands require appropriate moderator permissions.
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -19,14 +29,22 @@ class ModerationCommands(commands.Cog, name="Moderation"):
     async def kick(self, ctx, member: discord.Member, *, reason=None):
         """Kick a member from the server.
         
+        This command will kick the specified member and log the action.
+        The kicked member can rejoin with a new invite.
+        
         Parameters:
         -----------
         member: The member to kick (mention or ID)
-        reason: The reason for the kick
+        reason: The reason for the kick (optional)
         
-        Example:
-        --------
+        Examples:
+        ---------
         !kick @username Spamming in chat
+        !kick @username
+        
+        Required Permissions:
+        -------------------
+        - Kick Members
         """
         if member.top_role >= ctx.author.top_role:
             await ctx.send("You can't kick someone with a higher or equal role!")
@@ -49,14 +67,22 @@ class ModerationCommands(commands.Cog, name="Moderation"):
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         """Ban a member from the server.
         
+        This command will permanently ban the specified member until unbanned.
+        Banned members cannot rejoin even with new invites.
+        
         Parameters:
         -----------
         member: The member to ban (mention or ID)
-        reason: The reason for the ban
+        reason: The reason for the ban (optional)
         
-        Example:
-        --------
+        Examples:
+        ---------
         !ban @username Repeated rule violations
+        !ban @username
+        
+        Required Permissions:
+        -------------------
+        - Ban Members
         """
         if member.top_role >= ctx.author.top_role:
             await ctx.send("You can't ban someone with a higher or equal role!")
@@ -448,7 +474,30 @@ class ModerationCommands(commands.Cog, name="Moderation"):
     @commands.command(name="cleanup")
     @commands.has_permissions(manage_messages=True)
     async def cleanup(self, ctx, *, args: str = ""):
-        """Clean up messages based on criteria."""
+        """Clean up messages based on various criteria.
+        
+        This command provides advanced message cleanup functionality with multiple filters.
+        
+        Parameters:
+        -----------
+        args: Cleanup arguments (space-separated)
+            - number: Amount of messages to delete (default: 100)
+            - bots: Only delete bot messages
+            - user:ID: Only delete messages from specific user
+            - contains:text: Only delete messages containing text
+        
+        Examples:
+        ---------
+        !cleanup 50 - Delete last 50 messages
+        !cleanup bots - Delete bot messages
+        !cleanup user:123456789 - Delete user's messages
+        !cleanup contains:hello - Delete messages containing 'hello'
+        !cleanup 20 bots contains:prefix - Combined filters
+        
+        Required Permissions:
+        -------------------
+        - Manage Messages
+        """
         # Parse arguments
         args = args.lower().split()
         amount = 100  # Default amount
@@ -499,14 +548,14 @@ class ModerationCommands(commands.Cog, name="Moderation"):
             if contains:
                 embed.add_field(name="Content Filter", value=contains, inline=True)
                 
-            msg = await ctx.send(embed=embed)
+            summary = await ctx.send(embed=embed)
             await asyncio.sleep(5)
-            await msg.delete()
+            await summary.delete()
             
         except discord.Forbidden:
-            await ctx.send("I don't have permission to delete messages.")
-        except discord.HTTPException:
-            await ctx.send("Failed to delete messages. They might be too old (>14 days).")
+            await ctx.send("I don't have permission to delete messages!")
+        except discord.HTTPException as e:
+            await ctx.send(f"Error deleting messages: {str(e)}")
 
 async def setup(bot):
     """Add the cog to the bot."""

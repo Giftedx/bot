@@ -1,3 +1,5 @@
+"""Game and entertainment commands."""
+
 from discord.ext import commands
 import discord
 import logging
@@ -9,7 +11,17 @@ import json
 logger = logging.getLogger(__name__)
 
 class GameCommands(commands.Cog, name="Games"):
-    """Fun game commands for the bot."""
+    """Fun game commands and entertainment features.
+    
+    This category includes commands for:
+    - Classic games (Hangman, Tic Tac Toe)
+    - Trivia games with multiple categories
+    - Dice rolling and random number generation
+    - Magic 8-ball and fortune telling
+    - Rock, Paper, Scissors
+    
+    Most games can be played solo or with other members.
+    """
     
     def __init__(self, bot):
         self.bot = bot
@@ -32,7 +44,22 @@ class GameCommands(commands.Cog, name="Games"):
 
     @commands.command(name='hangman')
     async def hangman(self, ctx):
-        """Start a game of hangman."""
+        """Start a game of hangman.
+        
+        Classic hangman game where players guess letters to uncover a word.
+        Game ends when the word is guessed or after 6 wrong guesses.
+        
+        Examples:
+        ---------
+        !hangman
+        
+        Notes:
+        ------
+        - One game per channel
+        - 6 wrong guesses allowed
+        - 30 second timeout between guesses
+        - Anyone in the channel can guess
+        """
         if ctx.channel.id in self.hangman_games:
             await ctx.send("A game is already in progress in this channel!")
             return
@@ -89,13 +116,24 @@ class GameCommands(commands.Cog, name="Games"):
     async def tictactoe(self, ctx, opponent: discord.Member = None):
         """Start a game of Tic Tac Toe with another player.
         
+        Classic Tic Tac Toe game played with reactions.
+        First player uses X, second player uses O.
+        
         Parameters:
         -----------
         opponent: The member to play against
         
-        Example:
-        --------
+        Examples:
+        ---------
         !tictactoe @username
+        !ttt @username
+        
+        Notes:
+        ------
+        - One game per channel
+        - 30 second turn timer
+        - Cannot play against bots
+        - Cannot play against yourself
         """
         if opponent is None:
             await ctx.send("Please mention someone to play against!")
@@ -179,13 +217,25 @@ class GameCommands(commands.Cog, name="Games"):
     async def trivia(self, ctx, category: str = None):
         """Start a trivia game.
         
+        Multi-category trivia game with scoring system.
+        Questions have multiple choice answers selected with reactions.
+        
         Parameters:
         -----------
         category: Optional category (general, books, film, music, games, science, computers, sports, geography, history, animals)
         
-        Example:
-        --------
+        Examples:
+        ---------
+        !trivia
+        !trivia science
         !trivia computers
+        
+        Notes:
+        ------
+        - 30 second answer timer
+        - Keeps track of scores
+        - Random category if none specified
+        - Questions from Open Trivia Database
         """
         if category and category.lower() not in self.trivia_categories:
             categories = ", ".join(self.trivia_categories.keys())
@@ -232,7 +282,8 @@ class GameCommands(commands.Cog, name="Games"):
                 user_answer = answers[int(msg.content) - 1]
                 
                 if user_answer == correct_answer:
-                    await ctx.send(f"🎉 Correct, {msg.author.mention}!")
+                    self.trivia_scores[msg.author.id] = self.trivia_scores.get(msg.author.id, 0) + 1
+                    await ctx.send(f"🎉 Correct, {msg.author.mention}! Your score is now {self.trivia_scores[msg.author.id]}")
                 else:
                     await ctx.send(f"❌ Wrong! The correct answer was: {correct_answer}")
                     
@@ -241,7 +292,25 @@ class GameCommands(commands.Cog, name="Games"):
 
     @commands.command(name="8ball")
     async def eight_ball(self, ctx, *, question: str):
-        """Ask the magic 8-ball a question."""
+        """Ask the magic 8-ball a question.
+        
+        Get a mystical answer to any yes/no question.
+        
+        Parameters:
+        -----------
+        question: The question to ask
+        
+        Examples:
+        ---------
+        !8ball Will I win the lottery?
+        !8ball Should I go out today?
+        
+        Notes:
+        ------
+        - Questions should be yes/no format
+        - Responses are randomly selected
+        - For entertainment purposes only!
+        """
         responses = [
             "It is certain.", "It is decidedly so.", "Without a doubt.",
             "Yes - definitely.", "You may rely on it.", "As I see it, yes.",
@@ -261,10 +330,30 @@ class GameCommands(commands.Cog, name="Games"):
         embed.add_field(name="Answer", value=response, inline=False)
         
         await ctx.send(embed=embed)
-    
+
     @commands.command(name="roll")
     async def roll_dice(self, ctx, dice: str = "1d6"):
-        """Roll dice in NdN format."""
+        """Roll dice in NdN format.
+        
+        Roll any number and type of dice using DnD notation.
+        
+        Parameters:
+        -----------
+        dice: Dice notation (e.g., 2d6 for two six-sided dice)
+        
+        Examples:
+        ---------
+        !roll - Roll one six-sided die
+        !roll 2d20 - Roll two twenty-sided dice
+        !roll 4d6 - Roll four six-sided dice
+        
+        Notes:
+        ------
+        - Default is 1d6
+        - Maximum 100 dice
+        - Maximum 100 sides per die
+        - Shows individual rolls and total
+        """
         try:
             number, sides = map(int, dice.split('d'))
             if number <= 0 or sides <= 0:
@@ -287,10 +376,23 @@ class GameCommands(commands.Cog, name="Games"):
             await ctx.send(embed=embed)
         except ValueError:
             await ctx.send("Format must be in NdN! (e.g., 1d6, 2d20)")
-    
+
     @commands.command(name="rps")
     async def rock_paper_scissors(self, ctx):
-        """Play Rock, Paper, Scissors."""
+        """Play Rock, Paper, Scissors against the bot.
+        
+        Classic Rock, Paper, Scissors game using reactions.
+        
+        Examples:
+        ---------
+        !rps
+        
+        Notes:
+        ------
+        - Use reactions to make your choice
+        - 30 second time limit
+        - Shows win/loss record
+        """
         choices = ["🪨", "📄", "✂️"]
         
         embed = discord.Embed(
@@ -337,83 +439,6 @@ class GameCommands(commands.Cog, name="Games"):
             
         except asyncio.TimeoutError:
             await ctx.send("Game cancelled - you didn't react in time!")
-    
-    @commands.command(name="trivia")
-    async def trivia(self, ctx):
-        """Start a trivia game."""
-        # Sample trivia questions (in practice, you'd want a larger database)
-        questions = [
-            {
-                "question": "What is the capital of France?",
-                "answer": "Paris",
-                "options": ["London", "Berlin", "Paris", "Madrid"]
-            },
-            {
-                "question": "Which planet is known as the Red Planet?",
-                "answer": "Mars",
-                "options": ["Venus", "Mars", "Jupiter", "Saturn"]
-            },
-            {
-                "question": "What is the largest mammal in the world?",
-                "answer": "Blue Whale",
-                "options": ["African Elephant", "Blue Whale", "Giraffe", "Hippopotamus"]
-            }
-        ]
-        
-        question_data = random.choice(questions)
-        options = question_data["options"]
-        correct_answer = question_data["answer"]
-        
-        # Create embed
-        embed = discord.Embed(
-            title="Trivia Time!",
-            description=question_data["question"],
-            color=discord.Color.blue()
-        )
-        
-        for i, option in enumerate(options, 1):
-            embed.add_field(name=f"Option {i}", value=option, inline=True)
-            
-        message = await ctx.send(embed=embed)
-        
-        # Add reaction options
-        reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
-        for reaction in reactions:
-            await message.add_reaction(reaction)
-            
-        def check(reaction, user):
-            return user == ctx.author and str(reaction.emoji) in reactions
-            
-        try:
-            reaction, _ = await self.bot.wait_for('reaction_add', timeout=30.0, check=check)
-            
-            # Get user's answer
-            selected_index = reactions.index(str(reaction.emoji))
-            selected_answer = options[selected_index]
-            
-            # Update score
-            if selected_answer == correct_answer:
-                self.trivia_scores[ctx.author.id] = self.trivia_scores.get(ctx.author.id, 0) + 1
-                result = "Correct! 🎉"
-            else:
-                result = f"Wrong! The correct answer was {correct_answer}"
-                
-            # Show result
-            embed = discord.Embed(
-                title="Trivia Result",
-                description=result,
-                color=discord.Color.green() if selected_answer == correct_answer else discord.Color.red()
-            )
-            embed.add_field(
-                name="Your Score",
-                value=self.trivia_scores.get(ctx.author.id, 0),
-                inline=False
-            )
-            
-            await message.edit(embed=embed)
-            
-        except asyncio.TimeoutError:
-            await ctx.send("Time's up! Game cancelled.")
 
 async def setup(bot):
     """Add the cog to the bot."""
