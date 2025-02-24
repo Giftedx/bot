@@ -59,7 +59,7 @@ jobs:
             --output pr_analysis.json
 
       - name: Select reviewers
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const analysis = require('./pr_analysis.json');
@@ -85,7 +85,7 @@ jobs:
             });
 
       - name: Add review checklist
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const checklistBody = `
@@ -222,7 +222,7 @@ jobs:
 
       - name: Create review summary
         if: github.event_name == 'schedule'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');

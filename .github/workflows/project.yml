@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Organize project cards
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const columns = {
@@ -233,7 +233,7 @@ jobs:
 
       - name: Create project summary
         if: github.event_name == 'schedule'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');

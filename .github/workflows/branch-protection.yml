@@ -167,7 +167,7 @@ jobs:
 
     steps:
       - name: Update branch protection
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             await github.rest.repos.updateBranchProtection({
@@ -234,7 +234,7 @@ jobs:
 
       - name: Create protection issue
         if: contains(needs.*.result, 'failure')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
