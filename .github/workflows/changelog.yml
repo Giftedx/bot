@@ -156,7 +156,7 @@ jobs:
             --output update_results.json
 
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs: update changelog"
