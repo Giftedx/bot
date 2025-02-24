@@ -248,7 +248,7 @@ jobs:
 
       - name: Create optimization PR
         if: github.event_name == 'schedule'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "perf: implement suggested optimizations"
