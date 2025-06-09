@@ -1,24 +1,27 @@
 """Plex client for handling Plex server connections and media playback."""
 
-import os
 from typing import Dict, List, Optional
 from plexapi.server import PlexServer
 from plexapi.video import Movie, Episode
 from plexapi.audio import Track
-from dotenv import load_dotenv
+# from dotenv import load_dotenv # Removed dotenv
+# import os # os import removed as getenv is no longer used directly here
 
-load_dotenv()
+from src.core.config import ConfigManager # Added ConfigManager import
+
+# load_dotenv() # Removed load_dotenv call
 
 class PlexClient:
     """Client for interacting with Plex Media Server."""
     
     def __init__(self):
-        """Initialize the Plex client using environment variables."""
-        self.base_url = os.getenv('PLEX_URL')
-        self.token = os.getenv('PLEX_TOKEN')
+        """Initialize the Plex client using ConfigManager."""
+        config_manager = ConfigManager(config_dir="config")
+        self.base_url = config_manager.get('plex.url')
+        self.token = config_manager.get('plex.token')
         
         if not self.base_url or not self.token:
-            raise ValueError("PLEX_URL and PLEX_TOKEN must be set in environment variables")
+            raise ValueError("PLEX_URL and PLEX_TOKEN must be configured via ConfigManager.")
             
         self.server = PlexServer(self.base_url, self.token)
         

@@ -3,7 +3,8 @@ import logging
 import sys
 from pathlib import Path
 
-from src.bot.core.bot import run_bot
+# from src.bot.core.bot import run_bot # Removed old import
+from src.core.bot import PersonalBot # Added PersonalBot import
 
 
 def setup_logging() -> None:
@@ -33,7 +34,9 @@ def main() -> None:
         logger.info("Starting bot...")
         
         # Run the bot
-        run_bot()
+        # run_bot() # Old way to run bot
+        bot = PersonalBot()
+        bot.run() # PersonalBot.run no longer takes a token argument
     except KeyboardInterrupt:
         logger.info("Shutting down...")
     except Exception as e:

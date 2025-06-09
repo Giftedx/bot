@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
-import json
+import yaml # Changed from json to yaml
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
@@ -12,73 +12,8 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-@dataclass
-class PlexConfig:
-    """Plex configuration settings."""
-    url: str = os.getenv('PLEX_URL', '')
-    token: str = os.getenv('PLEX_TOKEN', '')
-    client_id: str = os.getenv('PLEX_CLIENT_ID', 'discord-plex-player')
-    device_name: str = os.getenv('PLEX_DEVICE_NAME', 'Discord Player')
-    
-    def validate(self) -> None:
-        """Validate Plex configuration."""
-        if not self.url:
-            raise ValueError("PLEX_URL is required")
-        if not self.token:
-            raise ValueError("PLEX_TOKEN is required")
-
-@dataclass
-class DiscordConfig:
-    """Discord configuration settings."""
-    token: str = os.getenv('DISCORD_TOKEN', '')
-    client_id: str = os.getenv('DISCORD_CLIENT_ID', '')
-    client_secret: str = os.getenv('DISCORD_CLIENT_SECRET', '')
-    redirect_uri: str = os.getenv('DISCORD_REDIRECT_URI', 'http://localhost:5000/auth/callback')
-    
-    def validate(self) -> None:
-        """Validate Discord configuration."""
-        if not self.token:
-            raise ValueError("DISCORD_TOKEN is required")
-        if not self.client_id:
-            raise ValueError("DISCORD_CLIENT_ID is required")
-        if not self.client_secret:
-            raise ValueError("DISCORD_CLIENT_SECRET is required")
-
-@dataclass
-class RedisConfig:
-    """Redis configuration settings."""
-    host: str = os.getenv('REDIS_HOST', 'localhost')
-    port: int = int(os.getenv('REDIS_PORT', '6379'))
-    db: int = int(os.getenv('REDIS_DB', '0'))
-    password: Optional[str] = os.getenv('REDIS_PASSWORD')
-
-@dataclass
-class WebConfig:
-    """Web server configuration settings."""
-    host: str = os.getenv('WEB_HOST', 'localhost')
-    port: int = int(os.getenv('WEB_PORT', '5000'))
-    debug: bool = os.getenv('WEB_DEBUG', 'false').lower() == 'true'
-    secret_key: str = os.getenv('WEB_SECRET_KEY', 'your-secret-key')
-    cors_origins: list = os.getenv('CORS_ORIGINS', '*').split(',')
-
-@dataclass
-class Config:
-    """Application configuration."""
-    plex: PlexConfig = PlexConfig()
-    discord: DiscordConfig = DiscordConfig()
-    redis: RedisConfig = RedisConfig()
-    web: WebConfig = WebConfig()
-    
-    def validate(self) -> None:
-        """Validate all configuration settings."""
-        self.plex.validate()
-        self.discord.validate()
-
-def load_config() -> Config:
-    """Load and validate configuration."""
-    config = Config()
-    config.validate()
-    return config
+# Removed PlexConfig, DiscordConfig, RedisConfig, WebConfig, and Config dataclasses
+# Removed top-level load_config() function
 
 class ConfigManager:
     """Manages configuration settings and secrets"""
@@ -87,8 +22,8 @@ class ConfigManager:
         self.config_dir = Path(config_dir)
         self.config_dir.mkdir(parents=True, exist_ok=True)
         
-        self.config_path = self.config_dir / "config.json"
-        self.secrets_path = self.config_dir / "secrets.json"
+        self.config_path = self.config_dir / "config.yaml" # Changed file extension
+        self.secrets_path = self.config_dir / "secrets.yaml" # Changed file extension
         
         # Default configuration
         self.default_config = {
@@ -165,7 +100,7 @@ class ConfigManager:
         try:
             if self.config_path.exists():
                 with open(self.config_path) as f:
-                    loaded_config = json.load(f)
+                    loaded_config = yaml.safe_load(f) # Changed from json.load to yaml.safe_load
                 # Merge with defaults to ensure all keys exist
                 return self.merge_configs(self.default_config, loaded_config)
             else:
@@ -194,7 +129,7 @@ class ConfigManager:
             try:
                 if self.secrets_path.exists():
                     with open(self.secrets_path) as f:
-                        file_secrets = json.load(f)
+                        file_secrets = yaml.safe_load(f) # Changed from json.load to yaml.safe_load
                     secrets = self.merge_configs(secrets, file_secrets)
             except Exception as e:
                 logger.error(f"Error loading secrets: {e}")
@@ -205,7 +140,7 @@ class ConfigManager:
         """Save configuration to file"""
         try:
             with open(self.config_path, 'w') as f:
-                json.dump(config, f, indent=4)
+                yaml.dump(config, f, indent=4) # Changed from json.dump to yaml.dump
         except Exception as e:
             logger.error(f"Error saving config: {e}")
     
@@ -213,7 +148,7 @@ class ConfigManager:
         """Save secrets to file"""
         try:
             with open(self.secrets_path, 'w') as f:
-                json.dump(secrets, f, indent=4)
+                yaml.dump(secrets, f, indent=4) # Changed from json.dump to yaml.dump
         except Exception as e:
             logger.error(f"Error saving secrets: {e}")
     
@@ -234,6 +169,24 @@ class ConfigManager:
     def get_secret(self, key: str, default: Any = None) -> Any:
         """Get secret value by key path"""
         return self.get_nested_value(self.secrets, key.split('.'), default)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get configuration value by key path, checking secrets first."""
+        # Try to get from secrets
+        # Assuming that if get_secret returns its own default, the key wasn't found.
+        # A more robust way might involve a unique sentinel default value for get_secret
+        # if None is a valid secret value that needs to be distinguished from "not found".
+        secret_value = self.get_secret(key, default=_SENTINEL) # Use a unique sentinel
+        if secret_value is not _SENTINEL:
+            return secret_value
+
+        # If not in secrets, try to get from config
+        config_value = self.get_config(key, default=_SENTINEL) # Use a unique sentinel
+        if config_value is not _SENTINEL:
+            return config_value
+
+        # If not in config either, return the provided default
+        return default
     
     @staticmethod
     def merge_configs(base: Dict[str, Any], update: Dict[str, Any]) -> Dict[str, Any]:
@@ -348,24 +301,24 @@ class ConfigManager:
             
             # Backup config
             if self.config_path.exists():
-                backup_path = backup_dir / f"config_{timestamp}.json"
+                backup_path = backup_dir / f"config_{timestamp}.yaml" # Changed file extension
                 with open(self.config_path) as f:
-                    config_data = json.load(f)
+                    config_data = yaml.safe_load(f) # Changed from json.load to yaml.safe_load
                 with open(backup_path, 'w') as f:
-                    json.dump(config_data, f, indent=4)
+                    yaml.dump(config_data, f, indent=4) # Changed from json.dump to yaml.dump
             
             # Backup secrets
             if self.secrets_path.exists():
-                backup_path = backup_dir / f"secrets_{timestamp}.json"
+                backup_path = backup_dir / f"secrets_{timestamp}.yaml" # Changed file extension
                 with open(self.secrets_path) as f:
-                    secrets_data = json.load(f)
+                    secrets_data = yaml.safe_load(f) # Changed from json.load to yaml.safe_load
                 with open(backup_path, 'w') as f:
-                    json.dump(secrets_data, f, indent=4)
+                    yaml.dump(secrets_data, f, indent=4) # Changed from json.dump to yaml.dump
             
             # Clean up old backups
             max_backups = self.get_config('database.max_backups', 7)
-            config_backups = sorted(backup_dir.glob('config_*.json'))
-            secrets_backups = sorted(backup_dir.glob('secrets_*.json'))
+            config_backups = sorted(backup_dir.glob('config_*.yaml')) # Changed glob pattern
+            secrets_backups = sorted(backup_dir.glob('secrets_*.yaml')) # Changed glob pattern
             
             while len(config_backups) > max_backups:
                 config_backups[0].unlink()
@@ -386,8 +339,8 @@ class ConfigManager:
                 return {'config': [], 'secrets': []}
             
             return {
-                'config': sorted(str(p) for p in backup_dir.glob('config_*.json')),
-                'secrets': sorted(str(p) for p in backup_dir.glob('secrets_*.json'))
+                'config': sorted(str(p) for p in backup_dir.glob('config_*.yaml')), # Changed glob pattern
+                'secrets': sorted(str(p) for p in backup_dir.glob('secrets_*.yaml')) # Changed glob pattern
             }
         except Exception as e:
             logger.error(f"Error listing backups: {e}")

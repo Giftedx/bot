@@ -11,7 +11,8 @@ from src.core.mechanics import (
     PrayerMultipliers, ExperienceTable, DropRates,
     CombatStyle, AttackType, AgilityCourse, AGILITY_COURSES
 )
-from src.core.config import Config
+# from src.core.config import Config # Removed Config import
+from src.core.config import ConfigManager # Added ConfigManager import
 from src.core.interfaces import GameDisplay
 from src.core.database import DatabaseManager
 
@@ -253,9 +254,10 @@ class PlayerState:
 class GameClient:
     """Main game client that coordinates all OSRS systems"""
     
-    def __init__(self, config: Config):
-        self.config = config
-        self.db = DatabaseManager()
+    # def __init__(self, config: Config): # Old __init__
+    def __init__(self, config_manager: ConfigManager): # New __init__
+        self.config_manager = config_manager # Storing ConfigManager instance
+        self.db = DatabaseManager() # Assuming DatabaseManager handles its own config or is refactored separately
         self.players: Dict[str, PlayerState] = {}
         self.display_mode = "text"
         self.displays: Dict[str, GameDisplay] = {}

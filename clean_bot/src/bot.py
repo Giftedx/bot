@@ -14,13 +14,14 @@ from prometheus_client import Counter, Histogram, Gauge
 
 # from src.utils.error_handler import ErrorHandler
 from src.utils.error_handler import ErrorHandler
-from src.core.config import Settings  # Import Settings
+# from src.core.config import Settings  # Removed Settings import
+from src.core.config import ConfigManager  # Added ConfigManager import
 from dependency_injector.wiring import inject, Provide
 from src.utils.performance import measure_latency
 import discord
 import redis
 
-from core.config import load_config
+# from core.config import load_config # Removed load_config import
 from services.plex.client import PlexClient
 from core.exceptions import PlexConnectionError, MediaNotFoundError
 
@@ -36,30 +37,32 @@ class PlexBot(commands.Bot):
     
     def __init__(self):
         """Initialize the bot."""
-        config = load_config()
+        # config = load_config() # Old config loading removed
+        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
+
         intents = discord.Intents.default()
         intents.message_content = True
         intents.voice_states = True
         
         super().__init__(
-            command_prefix='!',
-            description='Discord Plex Player',
+            command_prefix=self.config_manager.get('bot.command_prefix', '!'), # Get command_prefix
+            description=self.config_manager.get('bot.description', 'Discord Plex Player'), # Get description
             intents=intents
         )
         
         # Initialize components
-        self.config = config
+        # self.config = config # Old config storage removed
         self.redis = redis.Redis(
-            host=config.redis.host,
-            port=config.redis.port,
-            db=config.redis.db,
-            password=config.redis.password
+            host=self.config_manager.get('redis.host', 'localhost'), # Get redis host
+            port=self.config_manager.get('redis.port', 6379), # Get redis port
+            db=self.config_manager.get('redis.db', 0), # Get redis db
+            password=self.config_manager.get('redis.password') # Get redis password
         )
         
         try:
             self.plex = PlexClient(
-                config.plex.url,
-                config.plex.token,
+                self.config_manager.get('plex.url'), # Get plex url
+                self.config_manager.get('plex.token'), # Get plex token
                 self.redis
             )
         except PlexConnectionError as e:
@@ -111,7 +114,11 @@ class PlexBot(commands.Bot):
             
     def run(self):
         """Run the bot."""
-        super().run(self.config.discord.token)
+        discord_token = self.config_manager.get('discord.token')
+        if not discord_token:
+            logger.error("Discord token not found in configuration. Bot cannot start.")
+            return
+        super().run(discord_token)
 
 if __name__ == '__main__':
     bot = PlexBot()

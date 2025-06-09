@@ -2,6 +2,7 @@ from typing import Optional
 from discord.ext import commands
 from discord import FFmpegPCMAudio, VoiceClient
 from src.core.plex_manager import PlexManager
+from src.core.exceptions import MediaNotFoundError, PlexConnectionError, PlexAPIError, StreamingError # Updated import path
 from src.core.virtual_display import VirtualDisplayManager  # type: ignore
 
 
@@ -10,34 +11,53 @@ class PlexCommands(commands.Cog):
 
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-        self.plex_manager = PlexManager(  # type: ignore
-            "http://localhost:32400",
-            "YOUR_PLEX_TOKEN"
-        )
+        self.plex_manager = PlexManager() # Changed instantiation
         self.display_manager = VirtualDisplayManager()
         self.voice_client: Optional[VoiceClient] = None
 
     @commands.command(name='play')
     async def play(self, ctx: commands.Context, media_name: str) -> None:
         """Play media from Plex library"""
-        media_url = await self.plex_manager.fetch_media_url(  # type: ignore
-            media_name
-        )
-        if not media_url:
-            await ctx.send("Media not found in Plex library")
-            return
-
-        if not ctx.author.voice or not hasattr(ctx.author.voice, 'channel'):
-            await ctx.send("Join a voice channel first!")
-            return
-
         try:
-            voice_channel = ctx.author.voice.channel  # type: ignore
-            self.voice_client = await voice_channel.connect(reconnect=True)
+            # Assuming fetch_media_url is an async method in PlexManager
+            # that internally handles search and getting stream URL.
+            media_url = await self.plex_manager.fetch_media_url(media_name) # type: ignore
+            if not media_url: # Should ideally be covered by MediaNotFoundError if search fails
+                await ctx.send("Media not found in Plex library.")
+                return
+
+            if not ctx.author.voice or not ctx.author.voice.channel:
+                await ctx.send("You need to be in a voice channel to play media!")
+                return
+
+            voice_channel = ctx.author.voice.channel # type: ignore
+            if self.voice_client and self.voice_client.is_connected():
+                await self.voice_client.move_to(voice_channel)
+            else:
+                self.voice_client = await voice_channel.connect(reconnect=True)
+
+            # Ensure previous playback is stopped if any
+            if self.voice_client.is_playing() or self.voice_client.is_paused():
+                self.voice_client.stop()
+
             self.voice_client.play(FFmpegPCMAudio(media_url))
             await ctx.send(f"Now playing: {media_name}")
+
+        except MediaNotFoundError:
+            await ctx.send(f"Sorry, I couldn't find '{media_name}' in the Plex library.")
+        except PlexConnectionError:
+            await ctx.send("There was a problem connecting to Plex. Please ensure it's running and configured correctly.")
+        except PlexAPIError:
+            await ctx.send("An API error occurred while communicating with Plex. Please try again later.")
+        except StreamingError:
+            await ctx.send("A streaming error occurred with Plex. Unable to play media.")
+        except commands.errors.MissingRequiredArgument as e: # discord.py specific error
+            await ctx.send(f"Oops! You forgot something. Command usage: `!play <media_name>` (Error: {e.param.name} is missing).")
         except Exception as e:
-            await ctx.send(f"Error: {str(e)}")
+            # Log the full error for debugging
+            # logger.error(f"Unexpected error in play command: {e}", exc_info=True) # Assuming logger is set up
+            print(f"Unexpected error in play command: {e}") # Placeholder for logging
+            await ctx.send(f"An unexpected error occurred: {str(e)}")
 
     @commands.command(name='queue')
     async def queue_media(self, ctx: commands.Context, media_name: str) -> None:
