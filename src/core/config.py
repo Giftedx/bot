@@ -176,13 +176,13 @@ class ConfigManager:
         # Assuming that if get_secret returns its own default, the key wasn't found.
         # A more robust way might involve a unique sentinel default value for get_secret
         # if None is a valid secret value that needs to be distinguished from "not found".
-        secret_value = self.get_secret(key, default=object()) # Use a unique sentinel
-        if secret_value is not object():
+        secret_value = self.get_secret(key, default=_SENTINEL) # Use a unique sentinel
+        if secret_value is not _SENTINEL:
             return secret_value
 
         # If not in secrets, try to get from config
-        config_value = self.get_config(key, default=object()) # Use a unique sentinel
-        if config_value is not object():
+        config_value = self.get_config(key, default=_SENTINEL) # Use a unique sentinel
+        if config_value is not _SENTINEL:
             return config_value
 
         # If not in config either, return the provided default
