@@ -9,7 +9,8 @@ from pathlib import Path
 from src.plex.bot import PlexBot
 from src.core.app.bot import OSRSBot
 from src.bot.plex_selfbot import PlexSelfBot
-from src.core.config import Settings
+# from src.core.config import Settings # Removed Settings import
+from src.core.config import ConfigManager # Added ConfigManager import
 
 def setup_logging() -> None:
     """Set up logging configuration."""
@@ -38,19 +39,28 @@ def main() -> None:
     try:
         if args.type == 'plex':
             # Standard Plex bot with basic media commands
-            bot = PlexBot()
+            bot = PlexBot() # PlexBot now handles its own config
             logger.info("Starting Plex bot...")
-            bot.run(Settings.DISCORD_TOKEN)
+            bot.run() # PlexBot's run method no longer takes a token
         elif args.type == 'plex-selfbot':
             # Advanced Plex bot with streaming capabilities
-            bot = PlexSelfBot(Settings.PLEX_URL, Settings.PLEX_TOKEN)
+            # Assuming PlexSelfBot will be refactored similarly to PlexBot
+            # to use ConfigManager internally.
+            bot = PlexSelfBot() # PlexSelfBot would init its own ConfigManager
             logger.info("Starting Plex selfbot...")
-            bot.run(Settings.DISCORD_TOKEN)
+            bot.run() # PlexSelfBot's run would also fetch its own token
         elif args.type == 'osrs':
             # OSRS game bot
+            # This part will likely break as Settings is removed and OSRSBot is not updated in this subtask.
+            # For now, we'll fetch the token directly for it, though OSRSBot itself would need refactoring.
+            config_manager = ConfigManager(config_dir="config")
+            osrs_token = config_manager.get('discord.token')
+            if not osrs_token:
+                logger.error("Discord token for OSRSBot not found in configuration.")
+                sys.exit(1)
             bot = OSRSBot()
             logger.info("Starting OSRS bot...")
-            bot.run(Settings.DISCORD_TOKEN)
+            bot.run(osrs_token) # Still passing token until OSRSBot is refactored
     except Exception as e:
         logger.error(f"Error running bot: {e}")
         sys.exit(1)

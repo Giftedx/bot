@@ -13,7 +13,8 @@ from plexapi.media import Media
 from plexapi.exceptions import NotFound, Unauthorized, BadRequest
 
 from .models import MediaInfo, StreamInfo
-from ...core.config import Config
+# from ...core.config import Config # Removed old Config import
+from src.core.config import ConfigManager # Added ConfigManager import
 from ...core.exceptions import PlexConnectionError, MediaNotFoundError
 
 logger = logging.getLogger(__name__)
@@ -56,15 +57,25 @@ class PlexCache:
 class PlexClient:
     """Client for interacting with Plex Media Server."""
     
-    def __init__(self, url: str, token: str, redis_client: redis.Redis):
+    # def __init__(self, url: str, token: str, redis_client: redis.Redis): # Old __init__
+    def __init__(self, config_manager: ConfigManager, redis_client: redis.Redis): # New __init__
         """Initialize Plex client."""
-        self.url = url
-        self.token = token
+        self.url = config_manager.get('plex.url')
+        self.token = config_manager.get('plex.token')
+
+        if not self.url or not self.token:
+            logger.error("Plex URL or Token not found in configuration. PlexClient cannot initialize.")
+            raise PlexConnectionError("Plex URL and/or Token is not configured for PlexClient.")
+
         self.cache = PlexCache(redis_client)
         self._connect()
         
     def _connect(self) -> None:
         """Establish connection to Plex server."""
+        if not self.url or not self.token: # Should be caught by __init__, but defensive check
+            msg = "Plex URL or Token is not configured properly for connection."
+            logger.error(msg)
+            raise PlexConnectionError(msg)
         try:
             self.server = PlexServer(self.url, self.token)
             logger.info("Successfully connected to Plex server")

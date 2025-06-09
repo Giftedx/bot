@@ -13,7 +13,12 @@ from discord.ext import commands
 from plexapi.server import PlexServer
 from plexapi.video import Video
 from plexapi.audio import Track
+from plexapi.exceptions import NotFound, Unauthorized, BadRequest, PlexApiException
+from requests.exceptions import ConnectionError as RequestsConnectionError, Timeout as RequestsTimeout, RequestException
 from discord_sdk import DiscordSDK, MediaSession
+
+from src.core.config import ConfigManager
+from src.core.exceptions import PlexConnectionError, PlexAPIError, MediaNotFoundError, StreamingError # Updated import path
 import av
 import websockets
 
@@ -31,12 +36,57 @@ class MediaState:
     thumbnail_url: str
     session_id: str
 
+def _format_ms_to_time(ms: int) -> str:
+    """Formats milliseconds to HH:MM:SS or MM:SS string."""
+    seconds = ms // 1000
+    minutes = seconds // 60
+    hours = minutes // 60
+
+    if hours > 0:
+        return f"{hours:02d}:{minutes % 60:02d}:{seconds % 60:02d}"
+    else:
+        return f"{minutes:02d}:{seconds % 60:02d}"
+
 class PlexDiscordPlayer:
     """Handles Plex media playback through Discord's embedded player."""
     
-    def __init__(self, bot: commands.Bot, plex_url: str, plex_token: str):
+    # def __init__(self, bot: commands.Bot, plex_url: str, plex_token: str): # Old __init__
+    def __init__(self, bot: commands.Bot): # New __init__
         self.bot = bot
-        self.plex = PlexServer(plex_url, plex_token)
+
+        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
+        plex_url = self.config_manager.get('plex.url')
+        plex_token = self.config_manager.get('plex.token')
+
+        if not plex_url or not plex_token:
+            logger.error("Plex URL or Token not found in configuration. PlexDiscordPlayer cannot initialize.")
+            # This will likely cause PlexServer to fail or misbehave.
+            # Consider raising an error or specific handling if PlexServer cannot init with None.
+            # For now, PlexServer will raise its own errors if URL/token are invalid/None.
+            raise ValueError("Plex URL and/or Token is not configured. PlexDiscordPlayer cannot operate.") # This remains a config guard
+
+        try:
+            self.plex = PlexServer(plex_url, plex_token, timeout=10) # Added timeout
+            logger.info(f"Successfully connected to Plex server for PlexDiscordPlayer: {plex_url}")
+        except Unauthorized:
+            logger.error(f"Plex authentication failed for PlexDiscordPlayer: Invalid token or credentials for {plex_url}.")
+            raise PlexConnectionError(f"Invalid Plex credentials for {plex_url}.")
+        except RequestsConnectionError as e:
+            logger.error(f"Plex connection failed for PlexDiscordPlayer: Could not connect to server at {plex_url}. Error: {e}")
+            raise PlexConnectionError(f"Could not connect to Plex server at {plex_url}.")
+        except RequestsTimeout as e:
+            logger.error(f"Plex connection timed out for PlexDiscordPlayer while trying to reach {plex_url}. Error: {e}")
+            raise PlexConnectionError(f"Connection to Plex server {plex_url} timed out.")
+        except PlexApiException as e:
+            logger.error(f"Plex API error during PlexDiscordPlayer connection to {plex_url}: {e}")
+            raise PlexAPIError(f"Plex API error during connection to {plex_url}: {e}")
+        except RequestException as e:
+            logger.error(f"Network error during PlexDiscordPlayer connection to {plex_url}: {e}")
+            raise PlexConnectionError(f"Network error connecting to Plex at {plex_url}: {e}")
+        except Exception as e:
+            logger.error(f"Unexpected error connecting to Plex for PlexDiscordPlayer ({plex_url}): {e}", exc_info=True)
+            raise StreamingError(f"An unexpected error occurred while connecting to Plex ({plex_url}): {e}")
+
         self.sdk = DiscordSDK()
         self.media_sessions: Dict[str, MediaSession] = {}
         self.current_states: Dict[str, MediaState] = {}
@@ -56,9 +106,22 @@ class PlexDiscordPlayer:
         """Create an embedded player for Plex media."""
         try:
             # Get media from Plex
-            media = self.plex.fetchItem(media_id)
-            if not media:
-                raise ValueError(f"Media not found: {media_id}")
+            try:
+                media = self.plex.fetchItem(media_id) # media_id should be int for fetchItem usually
+                if not media: # Should be caught by NotFound, but defensive
+                    raise MediaNotFoundError(f"Media item {media_id} resulted in None.")
+            except NotFound:
+                logger.warning(f"Plex media not found for ID: {media_id}")
+                raise MediaNotFoundError(f"Media with ID {media_id} not found on Plex.")
+            except Unauthorized as e:
+                logger.error(f"Plex unauthorized while fetching media ID {media_id}: {e}")
+                raise PlexConnectionError(f"Plex authorization failed while fetching media: {e}")
+            except PlexApiException as e:
+                logger.error(f"Plex API error fetching media ID {media_id}: {e}")
+                raise PlexAPIError(f"Plex API error fetching media {media_id}: {e}")
+            except RequestException as e: # Covers ConnectionError, Timeout, etc.
+                logger.error(f"Network error fetching Plex media ID {media_id}: {e}")
+                raise PlexConnectionError(f"Network error fetching media {media_id} from Plex: {e}")
                 
             # Create media session
             session = await self.sdk.create_media_session(
@@ -121,38 +184,68 @@ class PlexDiscordPlayer:
             # Start progress tracking
             asyncio.create_task(self._track_progress(ctx))
             
-        except Exception as e:
-            logger.error(f"Error starting playback: {e}")
+        except MediaNotFoundError: # Re-raise if already specific
+            raise
+        except PlexConnectionError: # Re-raise
+            raise
+        except PlexAPIError: # Re-raise
+            raise
+        except Exception as e: # General errors for SDK or other issues
+            logger.error(f"Error starting playback for media {state.media_id if state else 'unknown'}: {e}", exc_info=True)
+            # Potentially raise a more generic StreamingError here if needed by calling code
             
     async def _track_progress(self, ctx: commands.Context):
         """Track media playback progress."""
         guild_id = str(ctx.guild.id)
+
+        # Initial state check
+        if guild_id not in self.media_sessions or guild_id not in self.current_states:
+            logger.warning(f"Progress tracking for guild {guild_id} aborted: session or state not found.")
+            return
+
         session = self.media_sessions[guild_id]
         state = self.current_states[guild_id]
         
+        logger.info(f"Starting progress tracking for '{state.title}' in guild {guild_id}.")
+
         while state.is_playing:
+            # Loop validity check
+            if guild_id not in self.media_sessions or not self.current_states.get(guild_id, {}).get('is_playing'):
+                logger.info(f"Progress tracking loop for guild {guild_id} terminating: session ended or playback stopped.")
+                break
+
             try:
-                position = await session.get_position()
-                state.position = position
+                position_ms = await session.get_position() # Assuming this returns ms
+                state.position = position_ms
+
+                # Calculate remaining time and end timestamp
+                # Ensure duration and position are in the same units (milliseconds)
+                duration_ms = state.duration
+                remaining_ms = max(0, duration_ms - position_ms)
                 
+                current_time_sec = datetime.now().timestamp()
+                end_timestamp_sec = int(current_time_sec + (remaining_ms / 1000))
+
                 # Update Discord presence
                 activity = discord.Activity(
                     type=discord.ActivityType.watching,
                     name=state.title,
-                    details=f"Watching {state.title}",
-                    state=f"{position}/{state.duration}",
+                    # details field removed as it's redundant with name
+                    state=f"{_format_ms_to_time(position_ms)} / {_format_ms_to_time(duration_ms)}",
                     timestamps={
-                        "start": int(state.started_at.timestamp()),
-                        "end": int(state.started_at.timestamp() + state.duration)
+                        "start": int(state.started_at.timestamp()), # Keeps original start time
+                        "end": end_timestamp_sec
                     }
                 )
                 await self.bot.change_presence(activity=activity)
                 
-                await asyncio.sleep(1)
+                await asyncio.sleep(15) # Changed update frequency
                 
             except Exception as e:
-                logger.error(f"Error tracking progress: {e}")
+                logger.error(f"Error tracking progress for '{state.title}' in guild {guild_id}: {e}", exc_info=True)
                 break
+
+        logger.info(f"Progress tracking for '{state.title}' in guild {guild_id} finished.")
                 
     async def pause_playback(self, ctx: commands.Context):
         """Pause media playback."""

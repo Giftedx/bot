@@ -5,7 +5,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from ..core.exceptions import MediaNotFoundError, PlexConnectionError
+from ..core.exceptions import MediaNotFoundError, PlexConnectionError, PlexAPIError, StreamingError # This path should still be correct
 from ..services.plex.models import MediaInfo, PlaybackState
 
 logger = logging.getLogger(__name__)
@@ -25,6 +25,8 @@ class PlexCommands(commands.Cog):
         
         try:
             results = await self.bot.plex.search_media(query)
+            # The `if not results:` check might be redundant if search_media raises MediaNotFoundError for empty results.
+            # However, keeping it provides a fallback if the method returns an empty list instead of raising.
             if not results:
                 await interaction.followup.send("No media found matching your search.")
                 return
@@ -43,9 +45,17 @@ class PlexCommands(commands.Cog):
                 )
                 
             await interaction.followup.send(embed=embed)
+        except MediaNotFoundError:
+            await interaction.followup.send(f"No media found matching your search for '{query}'.")
+        except PlexConnectionError:
+            await interaction.followup.send("Could not connect to Plex. Please check the bot's configuration and ensure Plex is running.")
+        except PlexAPIError:
+            await interaction.followup.send("An error occurred while communicating with Plex. Please try again later.")
+        except StreamingError:
+            await interaction.followup.send("A streaming-related error occurred with Plex.")
         except Exception as e:
-            logger.error(f"Error searching media: {e}")
-            await interaction.followup.send(f"An error occurred: {str(e)}")
+            logger.error(f"Error searching Plex media for '{query}': {e}", exc_info=True)
+            await interaction.followup.send(f"An unexpected error occurred while searching. Please try again later.")
             
     @app_commands.command(name="play")
     @app_commands.describe(query="The media to play")
@@ -62,10 +72,17 @@ class PlexCommands(commands.Cog):
         
         try:
             # Search for media
-            results = await self.bot.plex.search_media(query)
-            if not results:
-                await interaction.followup.send("No media found matching your search.")
+            try:
+                results = await self.bot.plex.search_media(query)
+                if not results: # Fallback if search_media doesn't raise MediaNotFoundError for empty
+                    await interaction.followup.send(f"No media found matching your search for '{query}'.")
+                    return
+            except MediaNotFoundError: # Explicit catch from search_media
+                await interaction.followup.send(f"No media found matching your search for '{query}'.")
                 return
+            # Other Plex errors from search_media will be caught by the outer try-except
+
+            media_to_play = results[0] # Assuming we play the first result
                 
             # Get voice client
             voice_client = await self.bot.get_voice_client(interaction.user.voice.channel)
@@ -74,8 +91,15 @@ class PlexCommands(commands.Cog):
                 return
                 
             # Get stream URL
-            media = results[0]
-            stream = await self.bot.plex.get_stream_url(media.id)
+            try:
+                stream = await self.bot.plex.get_stream_url(media_to_play.id)
+                if not stream or not stream.url: # stream might be an object with a url attribute
+                    await interaction.followup.send(f"Could not get a playable stream for '{media_to_play.title}'.")
+                    return
+            except MediaNotFoundError: # If get_stream_url can't find by ID (e.g., stale search result)
+                await interaction.followup.send(f"Could not find details to stream '{media_to_play.title}'. The item might have been removed.")
+                return
+            # Other Plex errors from get_stream_url will be caught by the outer try-except
             
             # Start playback
             if voice_client.is_playing():
@@ -116,11 +140,19 @@ class PlexCommands(commands.Cog):
             # Emit WebSocket event
             self.bot.redis.publish(
                 'playback_state',
-                state.dict()
+                state.dict() # Ensure state.dict() is appropriate for publishing
             )
+        except MediaNotFoundError: # This would typically be from the search part if not handled prior
+            await interaction.followup.send(f"Could not find media matching '{query}' to play.")
+        except PlexConnectionError:
+            await interaction.followup.send("Could not connect to Plex to play media. Please check configuration and Plex status.")
+        except PlexAPIError:
+            await interaction.followup.send("An API error occurred with Plex while trying to play media. Please try again.")
+        except StreamingError:
+            await interaction.followup.send("A streaming error occurred with Plex. Unable to play media.")
         except Exception as e:
-            logger.error(f"Error playing media: {e}")
-            await interaction.followup.send(f"An error occurred: {str(e)}")
+            logger.error(f"Error playing media '{query}': {e}", exc_info=True)
+            await interaction.followup.send(f"An unexpected error occurred while trying to play media.")
             
     @app_commands.command(name="pause")
     async def pause(self, interaction: discord.Interaction):

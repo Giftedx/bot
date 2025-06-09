@@ -4,23 +4,29 @@ import asyncio
 from typing import Optional
 
 from src.core.game_client import GameClient
-from src.core.config import Config
+# from src.core.config import Config # Removed Config import
+from src.core.config import ConfigManager # Added ConfigManager import
 
 class OSRSBot(commands.Bot):
     """Discord bot for OSRS game integration"""
     
-    def __init__(self, config: Config):
+    # def __init__(self, config: Config): # Old __init__
+    def __init__(self): # New __init__
+        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
+
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
         
         super().__init__(
-            command_prefix="!",
+            command_prefix=self.config_manager.get('osrs_bot.command_prefix', '!'), # Example, adjust key if needed
             intents=intents,
-            description="OSRS Discord Game"
+            description=self.config_manager.get('osrs_bot.description', "OSRS Discord Game") # Example
         )
         
-        self.game_client = GameClient(config)
+        # Assuming GameClient will be refactored to accept ConfigManager
+        # or specific values fetched from it.
+        self.game_client = GameClient(self.config_manager) # Passing ConfigManager to GameClient
         self.display_channels = {}
         
     async def setup_hook(self):
@@ -133,4 +139,20 @@ class OSRSBot(commands.Bot):
         while True:
             for user_id in self.display_channels:
                 await self._update_display(int(user_id))
-            await asyncio.sleep(1)  # Update every second 
+            await asyncio.sleep(1)  # Update every second
+
+    async def start(self, *args, **kwargs): # New start method
+        """Start the bot, fetching the token from ConfigManager."""
+        discord_token = self.config_manager.get('discord.token')
+        if not discord_token:
+            # Consider logging an error or raising an exception
+            print("Error: Discord token not found in configuration for OSRSBot.")
+            return
+
+        # Re-add the token to kwargs if it was there, or add it if it wasn't
+        # The base class start method expects the token as the first argument.
+        # args = (discord_token,) + args # This might be problematic if token is also in kwargs
+
+        # Check if 'token' is already a kwarg. If so, this is complex.
+        # The simplest is to assume super().start() takes token as first arg, and others as kwargs.
+        await super().start(discord_token, *args, **kwargs)

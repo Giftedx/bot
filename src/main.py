@@ -4,7 +4,8 @@ import logging
 import sys
 from pathlib import Path
 
-from src.core.config import Config
+# from src.core.config import Config # Removed Config import
+from src.core.config import ConfigManager # Added ConfigManager import
 from src.bot.osrs_bot import OSRSBot
 
 def setup_logging() -> None:
@@ -32,17 +33,18 @@ async def main() -> None:
         logger = logging.getLogger(__name__)
         logger.info("Starting OSRS Discord Game...")
         
-        # Load config
-        config = Config()
+        # ConfigManager is now instantiated within OSRSBot directly
+        # # Load config
+        # config = Config() # Old config loading removed
         
         # Initialize bot
-        bot = OSRSBot(config)
+        bot = OSRSBot() # OSRSBot now instantiates its own ConfigManager
         
         # Start display update task
         asyncio.create_task(bot.start_display_updates())
         
         # Run the bot
-        await bot.start(config.discord_token)
+        await bot.start() # OSRSBot's start method now fetches its own token
         
     except KeyboardInterrupt:
         logger.info("Shutting down...")

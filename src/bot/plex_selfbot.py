@@ -11,6 +11,8 @@ from plexapi.video import Video
 from plexapi.media import Media
 from plexapi.exceptions import NotFound, Unauthorized
 
+from src.core.config import ConfigManager # Added ConfigManager import
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,7 +39,18 @@ class PlaybackState:
     volume: int = 100
 
 class PlexSelfBot(commands.Bot):
-    def __init__(self, plex_url: str, plex_token: str) -> None:
+    # def __init__(self, plex_url: str, plex_token: str) -> None: # Old __init__
+    def __init__(self) -> None: # New __init__
+        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
+
+        plex_url = self.config_manager.get('plex.url')
+        plex_token = self.config_manager.get('plex.token')
+
+        if not plex_url or not plex_token:
+            logger.error("Plex URL or Token not found in configuration. PlexSelfBot cannot start.")
+            # Or handle this more gracefully, maybe prevent bot from fully starting
+            raise ValueError("Plex URL or Token not found in configuration for PlexSelfBot")
+
         # Set up intents
         intents = discord.Intents.default()
         intents.members = True
@@ -286,12 +299,31 @@ class PlexSelfBot(commands.Bot):
         """Called when the bot is ready."""
         logger.info(f"Logged in as {self.user}")
 
+    def run(self) -> None: # Added run method consistent with PlexBot
+        """Run the bot."""
+        discord_token = self.config_manager.get('discord.token')
+        if not discord_token:
+            logger.error("Discord token not found in configuration. PlexSelfBot cannot start.")
+            return
+        super().run(discord_token, bot=False) # self_bot=True is handled in __init__
 
-def run_selfbot(token: str, plex_url: str, plex_token: str) -> None:
-    """Run the Plex selfbot."""
+
+# def run_selfbot(token: str, plex_url: str, plex_token: str) -> None: # Old run_selfbot
+#     """Run the Plex selfbot."""
+#     try:
+#         bot = PlexSelfBot(plex_url, plex_token) # Old instantiation
+#         bot.run(token) # Old run call
+#     except Exception as e:
+#         logger.error(f"Failed to start bot: {e}")
+#         raise
+
+# Example main execution (if this file is run directly)
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     try:
-        bot = PlexSelfBot(plex_url, plex_token)
-        bot.run(token)
+        bot = PlexSelfBot()
+        bot.run()
+    except ValueError as e: # Catch specific error from __init__
+        logger.error(f"Configuration error: {e}")
     except Exception as e:
-        logger.error(f"Failed to start bot: {e}")
-        raise
+        logger.error(f"Failed to start PlexSelfBot: {e}")

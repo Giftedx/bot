@@ -9,6 +9,7 @@ import json
 
 from .database import DatabaseManager
 from .personal_system import PersonalSystem
+from .config import ConfigManager # Added ConfigManager import
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,8 @@ class PersonalBot(commands.Bot):
     """Discord bot for personal content and cross-game features"""
     
     def __init__(self):
+        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
+
         intents = discord.Intents.default()
         intents.message_content = True
         intents.members = True
@@ -303,8 +306,13 @@ class PersonalBot(commands.Bot):
             
             for event in events:
                 # Find appropriate channel
-                channel = self.get_channel(self.config['event_channel_id'])
+                event_channel_id = self.config_manager.get('channels.event_channel_id')
+                if not event_channel_id:
+                    logger.warning("Event channel ID not configured, skipping event announcement.")
+                    continue
+                channel = self.get_channel(event_channel_id)
                 if not channel:
+                    logger.warning(f"Event channel ID {event_channel_id} not found.")
                     continue
                 
                 # Announce event
@@ -322,12 +330,21 @@ class PersonalBot(commands.Bot):
         """Process roasts periodically"""
         try:
             # Get channels where roasts are enabled
-            roast_channels = [
-                self.get_channel(channel_id)
-                for channel_id in self.config['roast_channel_ids']
-            ]
+            roast_channel_ids = self.config_manager.get('channels.roast_channel_ids', [])
+            if not roast_channel_ids: # If empty list or None from config
+                logger.info("No roast channels configured, skipping roast processing.")
+                return
+
+            roast_channels = []
+            for channel_id in roast_channel_ids:
+                channel = self.get_channel(channel_id)
+                if channel:
+                    roast_channels.append(channel)
+                else:
+                    logger.warning(f"Roast channel ID {channel_id} not found.")
             
-            if not roast_channels:
+            if not roast_channels: # If configured IDs were not found
+                logger.info("No valid roast channels found after checking configured IDs.")
                 return
             
             # Check for roastable messages
@@ -356,10 +373,16 @@ class PersonalBot(commands.Bot):
         except Exception as e:
             logger.error(f"Error processing roasts: {e}")
     
-    def run(self, token: str, **kwargs):
+    # def run(self, token: str, **kwargs): # Old run method
+    def run(self, **kwargs): # New run method
         """Run the bot"""
+        discord_token = self.config_manager.get('discord.token')
+        if not discord_token:
+            logger.error("Discord token not found in configuration. Bot cannot start.")
+            return
+
         try:
-            super().run(token, **kwargs)
+            super().run(discord_token, **kwargs)
         except Exception as e:
             logger.error(f"Bot runtime error: {e}")
         finally:
