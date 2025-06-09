@@ -1,125 +1,112 @@
 # Documentation Index
 
-## Quick Links
-- [🚀 Quickstart Guide](quickstart.md)
-- [📖 Development Guide](guides/development/README.md)
-- [🔧 Installation Guide](guides/installation/README.md)
-- [🚢 Deployment Guide](guides/deployment/README.md)
-- [🤝 Contributing Guide](CONTRIBUTING.md)
-- [🔒 Security Guide](SECURITY.md)
+This index lists all documents found in the `docs/` and `notes/` directories. Each document's status will be updated as the audit and restructuring progresses.
 
-## Documentation Structure
+## Documents in /docs
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - To Be Audited
+- [guides/documentation/README.md](./guides/documentation/README.md) - To Be Audited
+- [guides/documentation/standards.md](./guides/documentation/standards.md) - To Be Audited
+- [guides/README.md](./guides/README.md) - To Be Audited
+- [index.html](./index.html) - To Be Audited
+- [commands/README.md](./commands/README.md) - To Be Audited
+- [commands/command-reference.md](./commands/command-reference.md) - To Be Audited
+- [troubleshooting/websocket-issues.md](./troubleshooting/websocket-issues.md) - To Be Audited
+- [troubleshooting/common-issues.md](./troubleshooting/common-issues.md) - To Be Audited
+- [troubleshooting/README.md](./troubleshooting/README.md) - To Be Audited
+- [components/architecture-1_README.md](./architecture/components/architecture-1_README.md) - Migrated from ./architecture-1/README.md, To Be Audited
+- [development-1/README.md](./development-1/README.md) - To Be Audited
+- [INSTALL.md](./INSTALL.md) - To Be Audited
+- [DEPLOYMENT.md](./DEPLOYMENT.md) - Audited - Appears Current (aligns with ARCHITECTURE.md)
+- [SECURITY.md](./SECURITY.md) - Audited - Highly Outdated (refers to 'OSRS Discord Bot', likely from a different project/version)
+- [deployment/deployment-guide.md](./deployment/deployment-guide.md) - To Be Audited
+- [deployment/setup.md](./deployment/setup.md) - To Be Audited
+- [systems/pokemon/commands.md](./systems/pokemon/commands.md) - To Be Audited
+- [systems/pokemon/trading-system.md](./systems/pokemon/trading-system.md) - To Be Audited
+- [systems/pokemon/battle-system.md](./systems/pokemon/battle-system.md) - To Be Audited
+- [systems/pokemon/evolution-system.md](./systems/pokemon/evolution-system.md) - To Be Audited
+- [systems/pokemon/api.md](./systems/pokemon/api.md) - To Be Audited
+- [systems/pokemon/README.md](./systems/pokemon/README.md) - To Be Audited
+- [systems/osrs/commands.md](./systems/osrs/commands.md) - To Be Audited
+- [systems/osrs/api.md](./systems/osrs/api.md) - To Be Audited
+- [systems/osrs/README.md](./systems/osrs/README.md) - To Be Audited
+- [systems/economy/README.md](./systems/economy/README.md) - To Be Audited
+- [systems/plex/README.md](./systems/plex/README.md) - Audited - Largely Current, aligns with src/app/commands/plex.py and app model. Describes intended functionality.
+- [systems/README.md](./systems/README.md) - To Be Audited
+- [README-plex.md](./README-plex.md) - Audited - Outdated (describes selfbot, not current application).
+- [templates/DOCUMENTATION_TEMPLATE.md](./templates/DOCUMENTATION_TEMPLATE.md) - To Be Audited
+- [templates/api-template.md](./templates/api-template.md) - To Be Audited
+- [templates/README-template.md](./templates/README-template.md) - To Be Audited
+- [templates/README.md](./templates/README.md) - To Be Audited
+- [templates/configuration-guide-template.md](./templates/configuration-guide-template.md) - To Be Audited
+- [overview.md](./architecture/overview.md) - Migrated from ./ARCHITECTURE.md, Appears Current (describes modern multi-integration Discord app)
+- [configuration/configuration-guide.md](./configuration/configuration-guide.md) - To Be Audited
+- [configuration/README.md](./configuration/README.md) - To Be Audited
+- [CHANGELOG.md](./CHANGELOG.md) - To Be Audited
+- [architecture/overview.md](./architecture/overview.md) - To Be Audited
+- [system_overview_Feb2024.md](./architecture/system_overview_Feb2024.md) - New file (preserved from existing docs/architecture/overview.md), To Be Audited
+- [quickstart.md](./quickstart.md) - To Be Audited
+- [project/ANALYSIS.md](./project/ANALYSIS.md) - To Be Audited
+- [project/COMMAND_MIGRATION.md](./project/COMMAND_MIGRATION.md) - Audited - Appears to be the active tracking document for command migration. Plex section is In Progress.
+- [project/SLASH_MIGRATION.md](./project/SLASH_MIGRATION.md) - Audited - Active tracking for slash command migration. Plex section is In Progress.
+- [project/DOCUMENTATION_AUDIT.md](./project/DOCUMENTATION_AUDIT.md) - To Be Audited
+- [project/README.md](./project/README.md) - To Be Audited
+- [DEVELOPMENT.md](./DEVELOPMENT.md) - Audited - Appears Current (aligns with ARCHITECTURE.md)
+- [docs.md](./docs.md) - To Be Audited
+- [deployment-1/README.md](./deployment-1/README.md) - To Be Audited
+- [installation/installation.md](./installation/installation.md) - To Be Audited
+- [installation/README.md](./installation/README.md) - To Be Audited
+- [DOCUMENTATION_STRUCTURE.md](./DOCUMENTATION_STRUCTURE.md) - To Be Audited
+- [development/setup.md](./development/setup.md) - To Be Audited
+- [development/development-guide.md](./development/development-guide.md) - To Be Audited
+- [README.md](./README.md) - Audited - Partially Outdated (describes older Plex bot model, see ARCHITECTURE.md for newer app model)
+- [external-repos.md](./external-repos.md) - To Be Audited
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Audited - Potentially Outdated (refers to 'Discord Plex Player', may need update for broader app scope)
+- [LICENSE](./LICENSE) - To Be Audited
 
-### 📐 Architecture
-- [System Overview](architecture/overview.md)
-- [Core Components](architecture/components.md)
-- [Data Layer](architecture/data-layer.md)
-- [Integration Points](architecture/integration.md)
-- [Error Handling](architecture/error-handling.md)
-- [Performance](architecture/performance.md)
+## Documents in /notes
+- [../notes/technical-implementation.py](../notes/technical-implementation.py) - To Be Audited
+- [../notes/implementation_plan.md](../notes/implementation_plan.md) - To Be Audited
+- [diagrams/system-architecture(1).mermaid](./architecture/diagrams/system-architecture(1).mermaid) - Migrated from ../notes/system-architecture(1).mermaid, To Be Audited
+- [../notes/documentation_improvements.md](../notes/documentation_improvements.md) - To Be Audited
+- [../notes/implementation_timeline.md](../notes/implementation_timeline.md) - To Be Audited
+- [../notes/backpressure_system.md](../notes/backpressure_system.md) - To Be Audited
+- [../notes/error_handling_issues.md](../notes/error_handling_issues.md) - To Be Audited
+- [../notes/testing_overview.md](../notes/testing_overview.md) - To Be Audited
+- [../notes/integration_plan.md](../notes/integration_plan.md) - To Be Audited
+- [../notes/automation_system.md](../notes/automation_system.md) - To Be Audited
+- [../notes/detailed-plan.txt](../notes/detailed-plan.txt) - To Be Audited
+- [../notes/repo-list.md](../notes/repo-list.md) - To Be Audited
+- [components/notes_overview.md](./architecture/components/notes_overview.md) - Migrated from ../notes/overview.md, To Be Audited
+- [diagrams/detailed-architecture(1).mermaid](./architecture/diagrams/detailed-architecture(1).mermaid) - Migrated from ../notes/detailed-architecture(1).mermaid, To Be Audited
+- [../notes/task_manager_investigation.md](../notes/task_manager_investigation.md) - To Be Audited
+- [../notes/special_systems.md](../notes/special_systems.md) - To Be Audited
+- [diagrams/system-overview.mermaid](./architecture/diagrams/system-overview.mermaid) - Migrated from ../notes/system-overview.mermaid, To Be Audited
+- [../notes/package_configuration.md](../notes/package_configuration.md) - To Be Audited
+- [diagrams/system-architecture.mermaid](./architecture/diagrams/system-architecture.mermaid) - Migrated from ../notes/system-architecture.mermaid, To Be Audited
+- [../notes/game_systems_integration_todo.md](../notes/game_systems_integration_todo.md) - To Be Audited
+- [../notes/adaptive_quality_test_plan.md](../notes/adaptive_quality_test_plan.md) - To Be Audited
+- [diagrams/optimal-stack.mermaid](./architecture/diagrams/optimal-stack.mermaid) - Migrated from ../notes/optimal-stack.mermaid, To Be Audited
+- [../notes/security_concerns.md](../notes/security_concerns.md) - To Be Audited
+- [diagrams/implementation-roadmap.mermaid](./architecture/diagrams/implementation-roadmap.mermaid) - Migrated from ../notes/implementation-roadmap.mermaid, To Be Audited
+- [../notes/refactoring_progress.md](../notes/refactoring_progress.md) - To Be Audited
+- [../notes/implementation_progress_2024_02.md](../notes/implementation_progress_2024_02.md) - To Be Audited
+- [../notes/project_analysis.md](../notes/project_analysis.md) - To Be Audited
+- [../notes/optimized_implementation.md](../notes/optimized_implementation.md) - To Be Audited
+- [../notes/Project Directory Structure.md](../notes/Project Directory Structure.md) - To Be Audited
+- [../notes/critical-addendum.md](../notes/critical-addendum.md) - To Be Audited
+- [../notes/synergy_systems.md](../notes/synergy_systems.md) - To Be Audited
+- [../notes/project-structure.txt](../notes/project-structure.txt) - To Be Audited
+- [diagrams/detailed-architecture.mermaid](./architecture/diagrams/detailed-architecture.mermaid) - Migrated from ../notes/detailed-architecture.mermaid, To Be Audited
+- [../notes/pokemon_metadata_todo.md](../notes/pokemon_metadata_todo.md) - To Be Audited
+- [../notes/wiki_metadata_todo.md](../notes/wiki_metadata_todo.md) - To Be Audited
+- [../notes/ui-mockup(1).tsx](../notes/ui-mockup(1).tsx) - To Be Audited
+- [../notes/implementation_analysis_2024_02.md](../notes/implementation_analysis_2024_02.md) - To Be Audited
+- [../notes/README.md](../notes/README.md) - To Be Audited
+- [components/error_handling_architecture.md](./architecture/components/error_handling_architecture.md) - Migrated from ../notes/error_handling_architecture.md, To Be Audited
+- [../notes/environment_variables.md](../notes/environment_variables.md) - To Be Audited
+- [diagrams/complete-system-architecture.mermaid](./architecture/diagrams/complete-system-architecture.mermaid) - Migrated from ../notes/complete-system-architecture.mermaid, To Be Audited
+- [../notes/missing_components.md](../notes/missing_components.md) - To Be Audited
+- [../notes/ui-mockup.tsx](../notes/ui-mockup.tsx) - To Be Audited
+- [../notes/type_hint_issues.md](../notes/type_hint_issues.md) - To Be Audited
+- [../notes/recommended_additions.md](../notes/recommended_additions.md) - To Be Audited
 
-### 🛠️ Implementation
-- [Development Setup](guides/development/setup.md)
-- [Coding Standards](guides/development/standards.md)
-- [Testing Guide](guides/development/testing.md)
-- [Debugging Guide](guides/development/debugging.md)
-- [Performance Tuning](guides/development/performance.md)
-
-### 🎮 Game Systems
-- [OSRS Integration](systems/osrs/README.md)
-- [Pokemon Integration](systems/pokemon/README.md)
-- [Pet System](systems/pets/README.md)
-- [Battle System](systems/battle/README.md)
-- [Economy System](systems/economy/README.md)
-
-### 🎥 Media Integration
-- [Plex Overview](systems/plex/README.md)
-- [Media Commands](systems/plex/commands.md)
-- [Streaming Setup](systems/plex/streaming.md)
-- [Quality Management](systems/plex/quality.md)
-
-### 🤖 Bot Features
-- [Command Reference](features/commands/README.md)
-- [Event Handling](features/events/README.md)
-- [Permissions](features/permissions/README.md)
-- [Rate Limiting](features/rate-limiting/README.md)
-
-### 🔌 API Documentation
-- [REST API](api/rest/README.md)
-- [WebSocket API](api/websocket/README.md)
-- [Discord API](api/discord/README.md)
-- [Plex API](api/plex/README.md)
-
-### ⚙️ Configuration
-- [Environment Variables](configuration/environment.md)
-- [Bot Configuration](configuration/bot.md)
-- [Database Setup](configuration/database.md)
-- [Cache Configuration](configuration/cache.md)
-
-### 📊 Monitoring
-- [Metrics](monitoring/metrics.md)
-- [Logging](monitoring/logging.md)
-- [Alerting](monitoring/alerting.md)
-- [Health Checks](monitoring/health.md)
-
-### 🔍 Troubleshooting
-- [Common Issues](troubleshooting/common-issues.md)
-- [Debug Guide](troubleshooting/debugging.md)
-- [Error Reference](troubleshooting/errors.md)
-- [FAQ](troubleshooting/faq.md)
-
-## Status and Updates
-
-### Current Status
-- Documentation Reorganization: 🟡 In Progress
-- API Documentation: 🟡 In Progress
-- Implementation Guides: 🟡 In Progress
-- System Integration Docs: 🟡 In Progress
-
-### Recent Updates
-1. Reorganized documentation structure
-2. Added comprehensive index
-3. Updated architecture documentation
-4. Added system integration guides
-
-### Upcoming Updates
-1. Complete API documentation
-2. Expand troubleshooting guides
-3. Add performance tuning guides
-4. Update deployment procedures
-
-## For Contributors
-
-### Getting Started
-1. Read the [Contributing Guide](CONTRIBUTING.md)
-2. Setup your [Development Environment](guides/development/setup.md)
-3. Review the [Architecture Overview](architecture/overview.md)
-4. Check the [Implementation Status](project/status.md)
-
-### Documentation Guidelines
-- Follow the [Documentation Standards](guides/documentation/standards.md)
-- Use provided [Templates](templates/README.md)
-- Update the [Changelog](CHANGELOG.md)
-- Maintain cross-references
-
-## Maintenance Schedule
-
-### Daily
-- Update implementation progress
-- Document new features
-- Track API changes
-- Update status reports
-
-### Weekly
-- Review documentation accuracy
-- Update architecture diagrams
-- Validate all links
-- Update indexes
-
-### Monthly
-- Full documentation audit
-- Update all diagrams
-- Review all READMEs
-- Version documentation
-
-_Last Updated: February 2024_ 
