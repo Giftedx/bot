@@ -1,171 +1,131 @@
-# System Architecture Overview
+# Discord Application Architecture
 
-## Introduction
+## Overview
 
-This document provides a comprehensive overview of the system architecture for our Discord bot that integrates OSRS, Pokemon, and Plex features. The architecture is designed to be modular, scalable, and maintainable while supporting cross-system interactions.
-
-## High-Level Architecture
-
-```mermaid
-graph TB
-    subgraph Discord["Discord Layer"]
-        DC[Discord Client]
-        DH[Event Handlers]
-        CM[Command Manager]
-    end
-
-    subgraph Core["Core Systems"]
-        UDL[Universal Data Layer]
-        ES[Event System]
-        CS[Cache System]
-        PS[Profile System]
-    end
-
-    subgraph GameSystems["Game Systems"]
-        OSRS[OSRS Integration]
-        PKM[Pokemon Integration]
-        PET[Pet System]
-        BTL[Battle System]
-        ECO[Economy System]
-    end
-
-    subgraph Media["Media Systems"]
-        PX[Plex Integration]
-        MS[Media Streaming]
-        QC[Quality Control]
-    end
-
-    subgraph Data["Data Layer"]
-        DB[(Database)]
-        RC[(Redis Cache)]
-        MQ[Message Queue]
-    end
-
-    Discord --> Core
-    Core --> GameSystems
-    Core --> Media
-    GameSystems --> Data
-    Media --> Data
-    Core --> Data
-```
+The application has been migrated from a bot-based model to a full Discord application model, utilizing modern Discord features and best practices.
 
 ## Core Components
 
-### 1. Discord Layer
-- **Discord Client**: Handles Discord API interactions
-- **Event Handlers**: Processes Discord events
-- **Command Manager**: Manages command registration and execution
+### 1. Application Client (`src/app/client.py`)
+- Modern Discord application client
+- Handles interactions and command routing
+- Manages application lifecycle
+- Implements proper error handling
 
-### 2. Core Systems
-- **Universal Data Layer**: Provides unified data access
-- **Event System**: Manages cross-system event propagation
-- **Cache System**: Handles caching and performance optimization
-- **Profile System**: Manages user profiles and progression
+### 2. Command Handlers (`src/app/commands/`)
+- Modular command implementation
+- Uses slash commands exclusively
+- Proper interaction response handling
+- Command groups by feature
 
-### 3. Game Systems
-- **OSRS Integration**: Old School RuneScape features
-- **Pokemon Integration**: Pokemon game features
-- **Pet System**: Virtual pet management
-- **Battle System**: Cross-game battle mechanics
-- **Economy System**: Unified virtual economy
+### 3. Interaction Components (`src/app/interactions/`)
+- Reusable UI components
+- Button handlers
+- Select menus
+- Modal forms
 
-### 4. Media Systems
-- **Plex Integration**: Media server integration
-- **Media Streaming**: Handles media playback
-- **Quality Control**: Manages streaming quality
+### 4. Integrations (`src/integrations/`)
+- External service integrations
+- Plex media integration
+- OSRS data integration
+- Pokemon data integration
 
-### 5. Data Layer
-- **Database**: Persistent storage (PostgreSQL)
-- **Redis Cache**: In-memory caching
-- **Message Queue**: Async task processing
+## Application Structure
 
-## Cross-System Integration
+```
+src/
+├── app/                    # Core application code
+│   ├── __init__.py        # Application entry point
+│   ├── client.py          # Discord app client
+│   ├── commands/          # Command handlers
+│   │   ├── __init__.py
+│   │   ├── plex.py       # Plex media commands
+│   │   ├── pokemon.py    # Pokemon commands
+│   │   └── osrs.py       # OSRS commands
+│   ├── interactions/      # Interaction handlers
+│   │   ├── __init__.py
+│   │   ├── components.py # UI components
+│   │   └── modals.py    # Form modals
+│   └── state.py          # Application state
+├── integrations/          # External integrations
+├── data/                  # Data management
+└── utils/                # Utilities
+```
 
-The architecture supports cross-system interactions through:
-1. Universal Data Layer for consistent data access
-2. Event System for cross-system communication
-3. Shared Economy for unified virtual currency
-4. Achievement System spanning all features
+## Migration Notes
 
-## Security Considerations
+### Discord Application Changes
+1. Moved from bot model to application model
+2. Implemented slash commands
+3. Added proper interaction handling
+4. Updated permission system
+5. Improved error handling
 
-1. **Authentication**
-   - Discord OAuth2 integration
-   - Role-based access control
-   - Session management
+### Plex Integration Changes
+1. Updated for interaction model
+2. Added media controls
+3. Improved player UI
+4. Better state management
 
-2. **Data Protection**
-   - Encrypted storage
-   - Secure communication
-   - Rate limiting
+## Configuration
 
-3. **API Security**
-   - Input validation
-   - Request signing
-   - Token management
+Required environment variables:
+```env
+# Discord Application
+DISCORD_APP_ID=your_app_id
+DISCORD_PUBLIC_KEY=your_public_key
+DISCORD_TOKEN=your_token
 
-## Performance Optimization
-
-1. **Caching Strategy**
-   - Redis for hot data
-   - Local memory caching
-   - Cache invalidation
-
-2. **Load Management**
-   - Request throttling
-   - Queue-based processing
-   - Resource pooling
-
-## Monitoring and Maintenance
-
-1. **Health Checks**
-   - Service status monitoring
-   - Performance metrics
-   - Error tracking
-
-2. **Logging**
-   - Structured logging
-   - Error reporting
-   - Audit trails
+# Plex Configuration
+PLEX_URL=your_plex_url
+PLEX_TOKEN=your_plex_token
+```
 
 ## Development Guidelines
 
-1. **Code Organization**
-   - Modular architecture
-   - Clear separation of concerns
-   - Consistent coding standards
+1. Command Implementation
+   - Use slash commands exclusively
+   - Implement proper permission checks
+   - Handle all interaction responses
+   - Add command documentation
 
-2. **Testing Strategy**
-   - Unit testing
-   - Integration testing
-   - End-to-end testing
+2. Component Development
+   - Create reusable components
+   - Implement proper timeout handling
+   - Add accessibility features
+   - Document component usage
 
-3. **Documentation**
-   - Code documentation
-   - API documentation
-   - System documentation
+3. Integration Development
+   - Implement proper cleanup
+   - Handle rate limits
+   - Add error recovery
+   - Document configuration
 
-## Future Considerations
+## Testing
 
-1. **Scalability**
-   - Horizontal scaling
-   - Service isolation
-   - Load balancing
+1. Command Testing
+   - Test all command paths
+   - Verify permission handling
+   - Check interaction responses
+   - Validate error handling
 
-2. **New Features**
-   - Additional game integrations
-   - Enhanced media features
-   - Extended social features
+2. Component Testing
+   - Test component lifecycle
+   - Verify interaction handling
+   - Check timeout behavior
+   - Validate state management
 
-3. **Technical Debt**
-   - Regular refactoring
-   - Dependency updates
-   - Performance optimization
+## Deployment
 
-## Related Documentation
-- [Development Guide](../guides/development/README.md)
-- [API Documentation](../api/README.md)
-- [Deployment Guide](../guides/deployment/README.md)
-- [Security Guide](../SECURITY.md)
+1. Discord Setup
+   - Register application
+   - Configure permissions
+   - Set up slash commands
+   - Verify intents
 
-_Last Updated: February 2024_ 
+2. Environment Setup
+   - Configure variables
+   - Set up logging
+   - Configure monitoring
+   - Set up backups
+```
