@@ -20,10 +20,10 @@ class UserUtilities(commands.Cog):
         self._deleted_messages = {}
         self.cooldowns: Dict[str, Dict[int, float]] = defaultdict(dict)
         self.cooldown_times = {
-            'tag': 3,
-            'bookmark': 3,
-            'suggest': 30,
-            'poll': 30,
+            "tag": 3,
+            "bookmark": 3,
+            "suggest": 30,
+            "poll": 30,
         }
 
     async def cog_check(self, ctx: commands.Context) -> bool:
@@ -33,21 +33,18 @@ class UserUtilities(commands.Cog):
             last_use = self.cooldowns[ctx.command.name].get(ctx.author.id, 0)
             if time.time() - last_use < cooldown:
                 remaining = int(cooldown - (time.time() - last_use))
-                raise commands.CommandOnCooldown(
-                    commands.BucketType.user,
-                    remaining
-                )
+                raise commands.CommandOnCooldown(commands.BucketType.user, remaining)
             self.cooldowns[ctx.command.name][ctx.author.id] = time.time()
         return True
 
-    @commands.group(name='cc')
+    @commands.group(name="cc")
     @commands.has_permissions(manage_messages=True)
     async def custom_command(self, ctx: commands.Context):
         """Manage custom commands"""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @custom_command.command(name='add')
+    @custom_command.command(name="add")
     async def add_custom_command(self, ctx: commands.Context, name: str, *, response: str):
         """Add a custom command"""
         if name in [c.name for c in ctx.bot.commands]:
@@ -59,7 +56,7 @@ class UserUtilities(commands.Cog):
         self.custom_commands[ctx.guild.id][name] = response
         await ctx.send(f"Added custom command: !{name}")
 
-    @custom_command.command(name='edit')
+    @custom_command.command(name="edit")
     async def edit_custom_command(self, ctx: commands.Context, name: str, *, response: str):
         """Edit a custom command"""
         if name not in self.custom_commands[ctx.guild.id]:
@@ -68,7 +65,7 @@ class UserUtilities(commands.Cog):
         self.custom_commands[ctx.guild.id][name] = response
         await ctx.send(f"Updated custom command: !{name}")
 
-    @custom_command.command(name='remove')
+    @custom_command.command(name="remove")
     async def remove_custom_command(self, ctx: commands.Context, name: str):
         """Remove a custom command"""
         if name not in self.custom_commands[ctx.guild.id]:
@@ -77,7 +74,7 @@ class UserUtilities(commands.Cog):
         del self.custom_commands[ctx.guild.id][name]
         await ctx.send(f"Removed custom command: !{name}")
 
-    @custom_command.command(name='list')
+    @custom_command.command(name="list")
     async def list_custom_commands(self, ctx: commands.Context):
         """List all custom commands"""
         commands = self.custom_commands[ctx.guild.id]
@@ -86,21 +83,17 @@ class UserUtilities(commands.Cog):
 
         embed = discord.Embed(title="Custom Commands", color=discord.Color.blue())
         for name, response in commands.items():
-            embed.add_field(
-                name=f"!{name}",
-                value=f"Response: {response[:100]}...",
-                inline=False
-            )
+            embed.add_field(name=f"!{name}", value=f"Response: {response[:100]}...", inline=False)
         await ctx.send(embed=embed)
 
-    @commands.group(name='alias')
+    @commands.group(name="alias")
     @commands.has_permissions(manage_guild=True)
     async def alias(self, ctx: commands.Context):
         """Manage custom command aliases"""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @alias.command(name='add')
+    @alias.command(name="add")
     @commands.has_permissions(manage_guild=True)
     async def add_alias(self, ctx: commands.Context, alias: str, *, command: str):
         """Add a custom alias for a command"""
@@ -113,7 +106,7 @@ class UserUtilities(commands.Cog):
         self.custom_aliases[ctx.guild.id][alias] = command
         await ctx.send(f"Added alias '{alias}' for command '{command}'")
 
-    @alias.command(name='remove')
+    @alias.command(name="remove")
     @commands.has_permissions(manage_guild=True)
     async def remove_alias(self, ctx: commands.Context, alias: str):
         """Remove a custom alias"""
@@ -123,7 +116,7 @@ class UserUtilities(commands.Cog):
         else:
             await ctx.send("Alias not found!")
 
-    @alias.command(name='list')
+    @alias.command(name="list")
     async def list_aliases(self, ctx: commands.Context):
         """List all custom aliases"""
         aliases = self.custom_aliases[ctx.guild.id]
@@ -132,79 +125,64 @@ class UserUtilities(commands.Cog):
 
         embed = discord.Embed(title="Custom Command Aliases", color=discord.Color.blue())
         for alias, command in aliases.items():
-            embed.add_field(
-                name=f"!{alias}",
-                value=f"→ !{command}",
-                inline=False
-            )
+            embed.add_field(name=f"!{alias}", value=f"→ !{command}", inline=False)
         await ctx.send(embed=embed)
 
-    @commands.command(name='afk')
+    @commands.command(name="afk")
     async def afk(self, ctx: commands.Context, *, reason: str = "AFK"):
         """Set your AFK status"""
         self.afk_users[ctx.author.id] = reason
         await ctx.send(f"I set your AFK: {reason}")
 
-    @commands.command(name='snipe')
+    @commands.command(name="snipe")
     async def snipe(self, ctx: commands.Context):
         """Show the last deleted message in the channel"""
         deleted = self._deleted_messages.get(ctx.channel.id)
-        
+
         if not deleted:
             await ctx.send("No recently deleted messages!")
             return
-            
+
         author, content, deleted_at = deleted
-        
-        embed = discord.Embed(
-            description=content,
-            color=discord.Color.red(),
-            timestamp=deleted_at
-        )
+
+        embed = discord.Embed(description=content, color=discord.Color.red(), timestamp=deleted_at)
         embed.set_author(
             name=f"{author.name}#{author.discriminator}",
-            icon_url=author.avatar.url if author.avatar else None
+            icon_url=author.avatar.url if author.avatar else None,
         )
         embed.set_footer(text="Deleted at")
-        
+
         await ctx.send(embed=embed)
 
-    @commands.command(name='userinfo')
-    async def userinfo(
-        self,
-        ctx: commands.Context,
-        target: Optional[discord.Member] = None
-    ):
+    @commands.command(name="userinfo")
+    async def userinfo(self, ctx: commands.Context, target: Optional[discord.Member] = None):
         """Get information about a user"""
         user = target or ctx.author
-        embed = discord.Embed(
-            title=f"User Info - {user.name}",
-            color=discord.Color.blue()
-        )
-        
+        embed = discord.Embed(title=f"User Info - {user.name}", color=discord.Color.blue())
+
         # Handle both Member and User objects
         if isinstance(user, discord.Member):
             roles = [role.mention for role in user.roles[1:]]
             embed.add_field(name="Nickname", value=user.nick or "None")
             embed.add_field(
                 name="Joined Server",
-                value=user.joined_at.strftime("%Y-%m-%d") if user.joined_at else "Unknown"
+                value=user.joined_at.strftime("%Y-%m-%d") if user.joined_at else "Unknown",
             )
             if roles:
                 embed.add_field(
                     name=f"Roles [{len(roles)}]",
                     value=" ".join(roles[:5]) + ("..." if len(roles) > 5 else ""),
-                    inline=False
+                    inline=False,
                 )
-        
+
         avatar_url = user.avatar.url if user.avatar else user.default_avatar.url
         embed.set_thumbnail(url=avatar_url)
         embed.add_field(name="ID", value=user.id)
         embed.add_field(name="Account Created", value=user.created_at.strftime("%Y-%m-%d"))
-        
+
         await ctx.send(embed=embed)
 
-    @commands.group(name='tag', invoke_without_command=True)
+    @commands.group(name="tag", invoke_without_command=True)
     async def tag(self, ctx: commands.Context, *, name: str = None):
         """Tag system to store and recall text snippets"""
         if name is None:
@@ -216,7 +194,7 @@ class UserUtilities(commands.Cog):
         else:
             await ctx.send(f"Tag '{name}' not found!")
 
-    @tag.command(name='create')
+    @tag.command(name="create")
     async def tag_create(self, ctx: commands.Context, name: str, *, content: str):
         """Create a new tag"""
         if ctx.guild.id not in self.tags:
@@ -229,7 +207,7 @@ class UserUtilities(commands.Cog):
         self.tags[ctx.guild.id][name] = content
         await ctx.send(f"Created tag '{name}'")
 
-    @tag.command(name='delete')
+    @tag.command(name="delete")
     async def tag_delete(self, ctx: commands.Context, name: str):
         """Delete a tag"""
         if name in self.tags.get(ctx.guild.id, {}):
@@ -238,7 +216,7 @@ class UserUtilities(commands.Cog):
         else:
             await ctx.send("Tag not found!")
 
-    @tag.command(name='list')
+    @tag.command(name="list")
     async def tag_list(self, ctx: commands.Context):
         """List all tags in the server"""
         guild_tags = self.tags.get(ctx.guild.id, {})
@@ -250,7 +228,7 @@ class UserUtilities(commands.Cog):
             embed.add_field(
                 name=name,
                 value=f"{content[:100]}..." if len(content) > 100 else content,
-                inline=False
+                inline=False,
             )
         await ctx.send(embed=embed)
 
@@ -264,8 +242,7 @@ class UserUtilities(commands.Cog):
         if message.author.id in self.afk_users:
             del self.afk_users[message.author.id]
             await message.channel.send(
-                f"Welcome back {message.author.mention}! "
-                "AFK status removed."
+                f"Welcome back {message.author.mention}! " "AFK status removed."
             )
 
         for mention in message.mentions:
@@ -287,9 +264,7 @@ class UserUtilities(commands.Cog):
 
         if cmd in self.custom_aliases[message.guild.id]:
             new_content = message.content.replace(
-                cmd,
-                self.custom_aliases[message.guild.id][cmd],
-                1
+                cmd, self.custom_aliases[message.guild.id][cmd], 1
             )
             new_message = discord.Message._copy(message)
             new_message._update({"content": new_content})
@@ -302,7 +277,7 @@ class UserUtilities(commands.Cog):
             self._deleted_messages[message.channel.id] = (
                 message.author,
                 message.content,
-                message.created_at
+                message.created_at,
             )
 
 

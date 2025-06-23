@@ -17,14 +17,13 @@ import discord
 
 logger = logging.getLogger(__name__)
 
+
 class MediaStreamingBot(commands.Bot):
     """Custom Discord bot for media streaming."""
+
     @inject
     def __init__(
-        self,
-        *args: Any,
-        settings: Settings = Provide[Container.config],
-        **kwargs: Any
+        self, *args: Any, settings: Settings = Provide[Container.config], **kwargs: Any
     ) -> None:
         intents = discord.Intents.all()
         intents.message_content = True
@@ -32,21 +31,14 @@ class MediaStreamingBot(commands.Bot):
             command_prefix=settings.get("COMMAND_PREFIX", "!"),
             intents=intents,
             heartbeat_timeout=60.0,
-            activity=discord.Activity(
-                type=discord.ActivityType.watching, name="media streams"
-            )
+            activity=discord.Activity(type=discord.ActivityType.watching, name="media streams"),
         )
         self.settings = settings
         self._shutdown_event = asyncio.Event()
 
         self._command_contexts: Dict[str, Any] = {}
-        self._error_handler = ErrorHandler(
-            max_retries=3,
-            backoff_factor=1.5
-        )
-        self._command_queue: asyncio.Queue[
-            Tuple[str, commands.Context]
-        ] = asyncio.Queue()
+        self._error_handler = ErrorHandler(max_retries=3, backoff_factor=1.5)
+        self._command_queue: asyncio.Queue[Tuple[str, commands.Context]] = asyncio.Queue()
         self._command_workers: List[asyncio.Task] = []
         self._max_concurrent_commands = 5
         self._command_semaphore = asyncio.Semaphore(10)
@@ -61,9 +53,7 @@ class MediaStreamingBot(commands.Bot):
             self._shutdown_event.set()
             cleanup_timeout = float(self.settings.get("GRACEFUL_SHUTDOWN_TIMEOUT", 30.0))
             try:
-                await asyncio.wait_for(
-                    self._cleanup(), timeout=cleanup_timeout
-                )
+                await asyncio.wait_for(self._cleanup(), timeout=cleanup_timeout)
             except asyncio.TimeoutError:
                 logger.error(f"Cleanup timed out after {cleanup_timeout}s")
 
@@ -81,9 +71,7 @@ class MediaStreamingBot(commands.Bot):
         for task in self._cleanup_tasks:
             task.cancel()
         if self._cleanup_tasks:
-            await asyncio.gather(
-                *self._cleanup_tasks, return_exceptions=True
-            )
+            await asyncio.gather(*self._cleanup_tasks, return_exceptions=True)
 
     async def setup_hook(self) -> None:
         """Set up the bot."""
@@ -96,7 +84,7 @@ class MediaStreamingBot(commands.Bot):
             logger.info("Bot setup complete.")
 
             # Handle signals differently on Windows vs Unix
-            if sys.platform != 'win32':
+            if sys.platform != "win32":
                 # Register signal handlers only on Unix systems
                 for sig in (signal.SIGTERM, signal.SIGINT):
                     self.loop.add_signal_handler(sig, self._handle_signal)
@@ -173,11 +161,11 @@ class MediaStreamingBot(commands.Bot):
     async def on_message(self, message: discord.Message) -> None:
         await self.process_commands(message)
 
-    async def on_command_error(
-        self, ctx: commands.Context, error: commands.CommandError
-    ) -> None:
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         error_type = type(error).__name__
-        METRICS['command_errors'].labels(command=ctx.command.name if ctx.command else 'unknown').inc()
+        METRICS["command_errors"].labels(
+            command=ctx.command.name if ctx.command else "unknown"
+        ).inc()
         logger.error(f"Command error: {error}", exc_info=True)
         if isinstance(error, commands.CommandInvokeError):
             await super().on_command_error(ctx, error.original)
@@ -187,7 +175,7 @@ class MediaStreamingBot(commands.Bot):
     async def on_command(self, ctx: commands.Context) -> None:
         if ctx.command is not None:
             logger.info(f"Command invoked: {ctx.command.name}")
-            METRICS['command_latency'].labels(command_name=ctx.command.name).observe(
+            METRICS["command_latency"].labels(command_name=ctx.command.name).observe(
                 (time.monotonic() - ctx.message.created_at.timestamp())
             )
 
@@ -199,14 +187,12 @@ class MediaStreamingBot(commands.Bot):
             cmd_key = f"{message.author.id}:{message.content}"
 
             if self._command_timeouts.get(cmd_key, 0) > time.time():
-                await message.channel.send(
-                    "Please wait before using this command again."
-                )
+                await message.channel.send("Please wait before using this command again.")
                 return
 
             try:
-                self._command_timeouts[cmd_key] = (
-                    time.time() + float(self.settings.get("COMMAND_COOLDOWN", 3.0))
+                self._command_timeouts[cmd_key] = time.time() + float(
+                    self.settings.get("COMMAND_COOLDOWN", 3.0)
                 )
                 ctx = await self.get_context(message)
                 if ctx.command is not None:
@@ -214,9 +200,7 @@ class MediaStreamingBot(commands.Bot):
             except Exception as e:
                 logger.error(f"Command processing error: {e}", exc_info=True)
                 self._errors.labels(type=type(e).__name__).inc()
-                await message.channel.send(
-                    "An error occurred processing your command."
-                )
+                await message.channel.send("An error occurred processing your command.")
 
     async def _execute_command(self, cmd: str, ctx: commands.Context) -> None:
         """Executes a command, handling rate limits/command-specific logic."""
@@ -230,12 +214,11 @@ class MediaStreamingBot(commands.Bot):
         except commands.BadArgument:
             await ctx.send("Invalid arguments provided.")
         except commands.CommandOnCooldown as e:
-            await ctx.send(
-                f"Command on cooldown, try again in {e.retry_after:.2f}."
-            )
+            await ctx.send(f"Command on cooldown, try again in {e.retry_after:.2f}.")
         except Exception as e:
             logger.error(f"Command execution failed: {e}", exc_info=True)
             await ctx.send("Error occurred while executing the command.")
+
 
 # Initialize dependency container and wire it
 container = Container()

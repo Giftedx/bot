@@ -7,10 +7,10 @@ from .loader import OSRSDataLoader
 from .models import OSRSPet, OSRSPetSource, OSRSPetRarity, OSRSSkill
 
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
 
 async def test_data_fetching():
     """Test fetching data from OSRS Wiki"""
@@ -48,11 +48,12 @@ async def test_data_fetching():
         else:
             logger.error("Failed to fetch all pets")
 
+
 def test_data_loading():
     """Test loading data from JSON files"""
     logger.info("\nTesting data loading...")
     loader = OSRSDataLoader()
-    
+
     # Test loading all pets
     pets = loader.load_pets(force_reload=True)
     if pets:
@@ -104,17 +105,19 @@ def test_data_loading():
     else:
         logger.error("Failed to load pets from JSON")
 
+
 async def main():
     """Run all tests"""
     logger.info("Starting OSRS data integration tests...")
-    
+
     # Test data fetching
     await test_data_fetching()
-    
+
     # Test data loading
     test_data_loading()
-    
+
     logger.info("Completed OSRS data integration tests")
 
+
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())

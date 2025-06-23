@@ -1,59 +1,53 @@
-# Use multi-stage build for smaller final image
-FROM python:3.14-rc-alpine3.20 as builder
+# Use multi-stage build for a smaller, more secure final image
 
-# Set working directory
+# 1. Builder Stage: Build dependencies
+FROM python:3.11-slim as builder
+
 WORKDIR /app
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+# Copy project definition
+COPY pyproject.toml README.md LICENSE ./
 
-# Final stage
-FROM python:3.14-rc-alpine3.20
+# Build wheel files for all production dependencies
+RUN pip wheel --no-cache-dir --wheel-dir /app/wheels .
 
-# Create non-root user
-RUN useradd -m -u 1000 botuser
+# 2. Final Stage: Production image
+FROM python:3.11-slim
+
+# Create a non-root user for security
+RUN useradd --create-home --shell /bin/bash botuser
 
 # Set working directory
 WORKDIR /app
 
-# Install runtime dependencies
+# Install runtime system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
-    opus-tools \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy wheels from builder
+# Copy pre-built wheels from the builder stage
 COPY --from=builder /app/wheels /wheels
-RUN pip install --no-cache /wheels/*
 
-# Copy application code
-COPY . .
+# Install the wheels
+RUN pip install --no-cache-dir /wheels/*
 
-# Set ownership to non-root user
+# Copy the application source code
+COPY ./src ./src
+
+# Change ownership to the non-root user
 RUN chown -R botuser:botuser /app
 
-# Switch to non-root user
+# Switch to the non-root user
 USER botuser
 
-# Create necessary directories
-RUN mkdir -p /app/logs /app/data
-
 # Set environment variables
-ENV PYTHONPATH=/app
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV DISCORD_TOKEN=""
-ENV REDIS_URL="redis://redis:6379/0"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8080/health')"
-
-# Command to run the application
+# Default command to run the application
 CMD ["python", "-m", "src.main"]

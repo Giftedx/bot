@@ -157,3 +157,4 @@ reorganize.ps1
 **/*.cursor-*
 **/AppData/Roaming/Cursor/
 **/.workspace/
+.venv

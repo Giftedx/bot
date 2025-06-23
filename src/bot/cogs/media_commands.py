@@ -2,10 +2,7 @@
 from typing import Optional, List, Dict, Any, cast
 import logging
 from discord.ext import commands
-from discord import (
-    VoiceChannel, VoiceClient, Member,
-    Embed, Color, Guild, VoiceState
-)
+from discord import VoiceChannel, VoiceClient, Member, Embed, Color, Guild, VoiceState
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +28,7 @@ class MediaCommands(commands.Cog):
     @commands.command(name="join")
     @commands.guild_only()
     async def join_voice(
-        self,
-        ctx: commands.Context,
-        channel: Optional[VoiceChannel] = None
+        self, ctx: commands.Context, channel: Optional[VoiceChannel] = None
     ) -> None:
         """Join a voice channel."""
         if not is_guild_context(ctx):
@@ -43,7 +38,7 @@ class MediaCommands(commands.Cog):
         guild = cast(Guild, ctx.guild)
         member = cast(Member, ctx.author)
         voice_state = cast(Optional[VoiceState], member.voice)
-        
+
         # Get voice channel
         if not channel and voice_state and voice_state.channel:
             if isinstance(voice_state.channel, VoiceChannel):
@@ -83,12 +78,7 @@ class MediaCommands(commands.Cog):
 
     @commands.command(name="play")
     @commands.guild_only()
-    async def play_media(
-        self,
-        ctx: commands.Context,
-        *,
-        query: str
-    ) -> None:
+    async def play_media(self, ctx: commands.Context, *, query: str) -> None:
         """Play media from a URL or search query."""
         if not is_guild_context(ctx):
             return
@@ -103,10 +93,7 @@ class MediaCommands(commands.Cog):
             if guild.id not in self.queues:
                 self.queues[guild.id] = []
 
-            self.queues[guild.id].append({
-                "query": query,
-                "requester": ctx.author.id
-            })
+            self.queues[guild.id].append({"query": query, "requester": ctx.author.id})
 
             await ctx.send(f"Added to queue: {query}")
         except Exception as e:
@@ -150,22 +137,14 @@ class MediaCommands(commands.Cog):
             await ctx.send("Queue is empty!")
             return
 
-        embed = Embed(
-            title="Media Queue",
-            color=Color.blue()
-        )
+        embed = Embed(title="Media Queue", color=Color.blue())
 
         for i, item in enumerate(queue, 1):
             requester = guild.get_member(item["requester"])
-            requester_name = (
-                requester.display_name if requester 
-                else "Unknown"
-            )
-                
+            requester_name = requester.display_name if requester else "Unknown"
+
             embed.add_field(
-                name=f"{i}. {item['query']}",
-                value=f"Requested by: {requester_name}",
-                inline=False
+                name=f"{i}. {item['query']}", value=f"Requested by: {requester_name}", inline=False
             )
 
         await ctx.send(embed=embed)

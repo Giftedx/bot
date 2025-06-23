@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 from datetime import datetime, timedelta
 
+
 class GameCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -16,10 +17,17 @@ class GameCommands(commands.Cog):
             return
 
         WORDS = [
-            "DISCORD", "PYTHON", "GAMING", "HANGMAN", "WIZARD", 
-            "PROGRAMMING", "JAVASCRIPT", "DEVELOPER", "COMPUTER"
+            "DISCORD",
+            "PYTHON",
+            "GAMING",
+            "HANGMAN",
+            "WIZARD",
+            "PROGRAMMING",
+            "JAVASCRIPT",
+            "DEVELOPER",
+            "COMPUTER",
         ]
-        
+
         word = random.choice(WORDS)
         guessed = set()
         tries_left = 6
@@ -30,7 +38,7 @@ class GameCommands(commands.Cog):
             "```\n   +---+\n   O   |\n  /|   |\n       |\n      ===```",
             "```\n   +---+\n   O   |\n  /|\\  |\n       |\n      ===```",
             "```\n   +---+\n   O   |\n  /|\\  |\n  /    |\n      ===```",
-            "```\n   +---+\n   O   |\n  /|\\  |\n  / \\  |\n      ===```"
+            "```\n   +---+\n   O   |\n  /|\\  |\n  / \\  |\n      ===```",
         ]
 
         def get_display_word():
@@ -39,25 +47,23 @@ class GameCommands(commands.Cog):
         embed = discord.Embed(
             title="🎯 Hangman Game",
             description=f"{HANGMAN_STAGES[6-tries_left]}\nWord: `{get_display_word()}`\nGuessed: {', '.join(sorted(guessed)) if guessed else 'None'}",
-            color=discord.Color.blue()
+            color=discord.Color.blue(),
         )
-        
+
         game_message = await ctx.send(embed=embed)
         self.active_games[ctx.channel.id] = {
             "word": word,
             "message": game_message,
             "guessed": guessed,
-            "tries": tries_left
+            "tries": tries_left,
         }
 
         def check(m):
-            return (m.channel == ctx.channel and 
-                   len(m.content) == 1 and 
-                   m.content.isalpha())
+            return m.channel == ctx.channel and len(m.content) == 1 and m.content.isalpha()
 
         while tries_left > 0 and "_" in get_display_word():
             try:
-                guess = await self.bot.wait_for('message', timeout=30.0, check=check)
+                guess = await self.bot.wait_for("message", timeout=30.0, check=check)
                 letter = guess.content.upper()
 
                 if letter in guessed:
@@ -84,6 +90,7 @@ class GameCommands(commands.Cog):
                 break
 
         del self.active_games[ctx.channel.id]
+
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(GameCommands(bot))

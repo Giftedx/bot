@@ -69,9 +69,7 @@ def validate_stats(stats: Dict[str, Any], required_fields: List[str]) -> None:
 
         value = stats[field]
         if not isinstance(value, (int, float)) or value < 0:
-            raise ValidationError(
-                f"Invalid value for {field}: must be a non-negative number"
-            )
+            raise ValidationError(f"Invalid value for {field}: must be a non-negative number")
 
 
 def validate_player_turn(battle_state: BattleState, player_id: int) -> None:
@@ -125,9 +123,7 @@ def validate_resource_cost(
 
         current = stats.get(f"current_{resource}", 0)
         if current < cost:
-            raise ValidationError(
-                f"Insufficient {resource}: need {cost}, have {current}"
-            )
+            raise ValidationError(f"Insufficient {resource}: need {cost}, have {current}")
 
 
 def validate_status_effects(

@@ -1,46 +1,12 @@
 """Core battle management system."""
 
 import random
-from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-
-class BattleType(Enum):
-    """Types of battles available."""
-
-    OSRS = "osrs"
-    POKEMON = "pokemon"
-    PET = "pet"
+from src.core.models import BattleReward, BattleState, BattleType
 
 
-@dataclass
-class BattleState:
-    """Current state of an active battle."""
-
-    battle_id: str
-    battle_type: BattleType
-    challenger_id: int
-    opponent_id: int
-    current_turn: int
-    is_finished: bool = False
-    winner_id: Optional[int] = None
-    battle_data: Dict[str, Any] = field(default_factory=dict)
-    turn_history: List[Dict[str, Any]] = field(default_factory=list)
-    round_number: int = 1
-
-
-@dataclass
-class BattleReward:
-    """Rewards from battle completion."""
-
-    xp: int
-    coins: int
-    items: Optional[Dict[str, int]] = None
-    special_rewards: Optional[Dict[str, Any]] = None
-
-
-class GenericBattleStateManager:
+class BattleManager:
     """Manages all battle types and interactions."""
 
     def __init__(self) -> None:
@@ -117,9 +83,7 @@ class GenericBattleStateManager:
 
             # Determine loser
             loser_id = (
-                battle.opponent_id
-                if winner_id == battle.challenger_id
-                else battle.challenger_id
+                battle.opponent_id if winner_id == battle.challenger_id else battle.challenger_id
             )
 
             loser_reward = BattleReward(

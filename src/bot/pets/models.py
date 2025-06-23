@@ -6,8 +6,9 @@ from typing import List, Optional
 
 class PetType(Enum):
     """Pet element types."""
+
     FIRE = "🔥"
-    WATER = "💧" 
+    WATER = "💧"
     EARTH = "🌍"
     AIR = "💨"
     LIGHT = "✨"
@@ -16,8 +17,9 @@ class PetType(Enum):
 
 class StatusEffect(Enum):
     """Battle status effects."""
+
     BURN = "🔥"
-    POISON = "🤢" 
+    POISON = "🤢"
     PARALYZE = "⚡"
     SLEEP = "💤"
     NONE = ""
@@ -26,6 +28,7 @@ class StatusEffect(Enum):
 @dataclass
 class PetMove:
     """Represents a battle move/ability."""
+
     name: str
     damage: int
     element: PetType
@@ -40,6 +43,7 @@ class PetMove:
 @dataclass
 class Pet:
     """Base pet class."""
+
     id: int
     name: str
     owner_id: int
@@ -54,6 +58,7 @@ class Pet:
 @dataclass
 class BattlePet:
     """Pet state during battle."""
+
     pet: Pet
     moves: List[PetMove]
     current_hp: int
@@ -66,6 +71,7 @@ class BattlePet:
 @dataclass
 class Battle:
     """Represents an active battle between pets."""
+
     id: int
     pet1: BattlePet
     pet2: BattlePet

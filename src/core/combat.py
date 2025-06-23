@@ -62,9 +62,7 @@ class CombatSystem:
             },
         }
 
-    def start_combat(
-        self, attacker: Player, defender: Player, style: CombatStyle
-    ) -> CombatState:
+    def start_combat(self, attacker: Player, defender: Player, style: CombatStyle) -> CombatState:
         """Initialize a combat session"""
         state = CombatState(attacker, defender, style)
         self.active_battles[attacker.id] = state
@@ -118,14 +116,10 @@ class CombatSystem:
         damage = random.randint(0, max_hit)
         return True, damage
 
-    def process_combat_tick(
-        self, state: CombatState
-    ) -> tuple[bool, int, Optional[str]]:
+    def process_combat_tick(self, state: CombatState) -> tuple[bool, int, Optional[str]]:
         """Process one combat tick, return (hit_success, damage, xp_type)"""
         # Calculate hit
-        hit_lands, damage = self.calculate_attack(
-            state.attacker, state.defender, state.style
-        )
+        hit_lands, damage = self.calculate_attack(state.attacker, state.defender, state.style)
 
         if hit_lands:
             state.hits.append(damage)
@@ -135,9 +129,7 @@ class CombatSystem:
 
         return False, 0, None
 
-    def award_combat_xp(
-        self, player: Player, damage: int, xp_type: str
-    ) -> Dict[SkillType, int]:
+    def award_combat_xp(self, player: Player, damage: int, xp_type: str) -> Dict[SkillType, int]:
         """Award combat XP based on damage dealt"""
         xp_gained = {}
         base_xp = damage * 4  # 4 XP per damage point

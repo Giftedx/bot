@@ -62,16 +62,12 @@ class EconomyCommands(commands.Cog):
         self.economy = EconomySystem(bot)
 
     @commands.command(name="coins")
-    async def coins(
-        self, ctx: commands.Context, user: Optional[discord.Member] = None
-    ) -> None:
+    async def coins(self, ctx: commands.Context, user: Optional[discord.Member] = None) -> None:
         """Check your coin balance"""
         await self.economy.show_balance(ctx, user)
 
     @commands.command(name="transfer")
-    async def transfer(
-        self, ctx: commands.Context, amount: int, recipient: discord.Member
-    ) -> None:
+    async def transfer(self, ctx: commands.Context, amount: int, recipient: discord.Member) -> None:
         """Transfer coins to another user"""
         success = await self.economy.transfer_coins(ctx.author.id, recipient.id, amount)
 

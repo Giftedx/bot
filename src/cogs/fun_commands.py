@@ -243,9 +243,7 @@ class FunCommands(commands.Cog):
                 return
 
         question = random.choice(available_questions)
-        await ctx.send(
-            f"**{question['category'].title()} Trivia**\n{question['question']}"
-        )
+        await ctx.send(f"**{question['category'].title()} Trivia**\n{question['question']}")
 
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
@@ -415,9 +413,7 @@ class FunCommands(commands.Cog):
                 description=f"And the winner is...\n\n**{random.choice(choices)}**!",
                 color=discord.Color.gold(),
             )
-            embed.add_field(
-                name="Options were", value="\n".join(f"• {opt}" for opt in choices)
-            )
+            embed.add_field(name="Options were", value="\n".join(f"• {opt}" for opt in choices))
             embed.set_footer(text="Choose wisely!")
             await ctx.send(embed=embed)
         except Exception as e:
@@ -518,9 +514,7 @@ class FunCommands(commands.Cog):
             await ctx.send("Give me something to mock! Usage: !mock <text>")
             return
 
-        mocked_text = "".join(
-            c.upper() if i % 2 else c.lower() for i, c in enumerate(text)
-        )
+        mocked_text = "".join(c.upper() if i % 2 else c.lower() for i, c in enumerate(text))
         embed = discord.Embed(
             title="mOcKiNg SpOnGeBoB",
             description=f"{mocked_text}",
@@ -645,20 +639,14 @@ class FunCommands(commands.Cog):
         await msg.add_reaction(emoji)
 
     @commands.command(name="ship")
-    async def ship(
-        self, ctx, member1: discord.Member = None, member2: discord.Member = None
-    ):
+    async def ship(self, ctx, member1: discord.Member = None, member2: discord.Member = None):
         """Check the love compatibility between two people"""
         if not member1 or not member2:
-            await ctx.send(
-                "❤️ I need two people to ship! Usage: !ship @person1 @person2"
-            )
+            await ctx.send("❤️ I need two people to ship! Usage: !ship @person1 @person2")
             return
 
         if member1 == member2:
-            await ctx.send(
-                "😅 Self-love is important, but try shipping two different people!"
-            )
+            await ctx.send("😅 Self-love is important, but try shipping two different people!")
             return
 
         # Generate consistent ship percentage based on members' IDs
@@ -668,9 +656,7 @@ class FunCommands(commands.Cog):
 
         # Find appropriate comment based on percentage
         comment = next(
-            comment
-            for ranges, comment in self.SHIP_COMMENTS.items()
-            if percentage in ranges
+            comment for ranges, comment in self.SHIP_COMMENTS.items() if percentage in ranges
         )
 
         ship_name = f"{member1.name[:len(member1.name)//2]}{member2.name[len(member2.name)//2:]}"
@@ -683,9 +669,7 @@ class FunCommands(commands.Cog):
         )
         embed.add_field(name="Ship Name", value=f"**{ship_name}**", inline=False)
         progress = "█" * (percentage // 10) + "░" * ((100 - percentage) // 10)
-        embed.add_field(
-            name="Love Meter", value=f"`{progress}` {percentage}%", inline=False
-        )
+        embed.add_field(name="Love Meter", value=f"`{progress}` {percentage}%", inline=False)
 
         msg = await ctx.send(embed=embed)
         hearts = ["💝", "💖", "💗", "💓", "💘"]

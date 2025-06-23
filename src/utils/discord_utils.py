@@ -7,12 +7,13 @@ from typing import Union, Optional
 
 logger = logging.getLogger(__name__)
 
+
 async def update_status(
     ctx_or_interaction: Union[commands.Context, discord.Interaction],
     message: str,
     ephemeral: bool = False,
     embed: Optional[discord.Embed] = None,
-    view: Optional[discord.ui.View] = None
+    view: Optional[discord.ui.View] = None,
 ) -> Optional[Union[discord.Message, discord.WebhookMessage]]:
     """
     Sends or responds to a command/interaction with a message.
@@ -47,13 +48,17 @@ async def update_status(
                 # A common pattern for initial response is to send, then use followup to edit or get the message.
                 # For now, if it's an initial response, we won't fetch the message object directly from send_message.
                 # We will try to get it via original_response() if possible, or use followup for explicit message return.
-                if ephemeral: # Cannot get original response for ephemeral messages easily
+                if ephemeral:  # Cannot get original response for ephemeral messages easily
                     sent_message = None
                 else:
                     try:
                         sent_message = await ctx_or_interaction.original_response()
-                    except discord.errors.NotFound: # If response was already sent via followup or other means
-                        logger.debug(f"Could not fetch original_response for interaction {ctx_or_interaction.id}, using followup.")
+                    except (
+                        discord.errors.NotFound
+                    ):  # If response was already sent via followup or other means
+                        logger.debug(
+                            f"Could not fetch original_response for interaction {ctx_or_interaction.id}, using followup."
+                        )
                         sent_message = await ctx_or_interaction.followup.send(
                             content=message, embed=embed, view=view, ephemeral=ephemeral
                         )
@@ -74,7 +79,9 @@ async def update_status(
         return sent_message
 
     except discord.errors.HTTPException as e:
-        logger.error(f"Discord HTTP error sending status update: {e.status} - {e.text}", exc_info=True)
+        logger.error(
+            f"Discord HTTP error sending status update: {e.status} - {e.text}", exc_info=True
+        )
         return None
     except Exception as e:
         logger.error(f"Unexpected error sending status update: {e}", exc_info=True)

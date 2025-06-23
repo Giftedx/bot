@@ -6,8 +6,7 @@ from dotenv import load_dotenv
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 class SettingsManager:
@@ -38,26 +37,24 @@ class SettingsManager:
 
     def _create_arg_parser(self) -> argparse.ArgumentParser:
         """Creates and configures the command-line argument parser."""
-        parser = argparse.ArgumentParser(
-            description="Media Server Configuration")
+        parser = argparse.ArgumentParser(description="Media Server Configuration")
         # MUST support those keys referenced within previous configuration and
         # context... starting with "redis":
-        parser.add_argument("--REDIS_HOST", type=str,
-                            help="Redis hostname")
+        parser.add_argument("--REDIS_HOST", type=str, help="Redis hostname")
         parser.add_argument("--REDIS_PORT", type=int, help="Redis port")
         parser.add_argument("--REDIS_DB", type=int, help="Redis DB number")
         parser.add_argument("--PLEX_URL", type=str, help="Plex URL")
         parser.add_argument("--PLEX_TOKEN", type=str, help="Plex token")
-        parser.add_argument("--DISCORD_TOKEN", type=str,
-                            help="Discord token")
+        parser.add_argument("--DISCORD_TOKEN", type=str, help="Discord token")
         parser.add_argument("--TAUTULLI_URL", type=str, help="Tautulli URL")
-        parser.add_argument("--TAUTULLI_API_KEY", type=str,
-                            help="Tautulli key")
+        parser.add_argument("--TAUTULLI_API_KEY", type=str, help="Tautulli key")
         parser.add_argument("--FFMPEG_PATH", type=str, help="FFmpeg path")
-        parser.add_argument("--BOT_TYPE", type=str, default="regular",
-                            help="Bot type (regular or selfbot)")
-        parser.add_argument("--COMMAND_PREFIX", type=str, default="!",
-                            help="Bot type (regular or selfbot)")
+        parser.add_argument(
+            "--BOT_TYPE", type=str, default="regular", help="Bot type (regular or selfbot)"
+        )
+        parser.add_argument(
+            "--COMMAND_PREFIX", type=str, default="!", help="Bot type (regular or selfbot)"
+        )
         return parser
 
     def load_settings(self) -> None:
@@ -104,11 +101,11 @@ class SettingsManager:
 
     def get_setting_int(self, key: str, default: Optional[int] = None) -> Optional[int]:
         val = self.get_setting(key)
-        if val is None: return default
+        if val is None:
+            return default
 
         try:
-            return int(
-                str(val))  # explicit cast to str to ensure type safety
+            return int(str(val))  # explicit cast to str to ensure type safety
         except ValueError:
             logging.warning(f"Setting '{key}' has invalid int, using default")
             return default
@@ -120,9 +117,9 @@ class SettingsManager:
                 return default
             return None
         val_str = str(val).lower()
-        if val_str in ('true', '1', 't', 'y', 'yes'):
+        if val_str in ("true", "1", "t", "y", "yes"):
             return True
-        if val_str in ('false', '0', 'f', 'n', 'no'):
+        if val_str in ("false", "0", "f", "n", "no"):
             return False
         else:
             logging.warning(f"'{key}' has invalid boolean value")

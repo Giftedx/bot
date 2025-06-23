@@ -2,11 +2,7 @@
 from typing import Generator
 import pytest
 from unittest.mock import AsyncMock, MagicMock
-from discord import (
-    VoiceChannel, VoiceClient, Member,
-    Guild, VoiceState, Embed,
-    ClientException
-)
+from discord import VoiceChannel, VoiceClient, Member, Guild, VoiceState, Embed, ClientException
 
 from src.bot.cogs.media_commands import MediaCommands
 
@@ -81,25 +77,22 @@ def cleanup() -> Generator[None, None, None]:
 
 @pytest.mark.asyncio
 async def test_join_voice(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_channel: MagicMock,
-    voice_client: MagicMock
+    cog: MediaCommands, ctx: MagicMock, voice_channel: MagicMock, voice_client: MagicMock
 ) -> None:
     """Test joining a voice channel."""
     voice_channel.connect.return_value = voice_client
-    
+
     # Test joining specific channel
     await cog.join_voice(ctx, voice_channel)
     voice_channel.connect.assert_called_once()
     assert ctx.guild.id in cog.voice_clients
     ctx.send.assert_called_with(f"Joined {voice_channel.name}!")
-    
+
     # Reset mocks
     ctx.send.reset_mock()
     voice_channel.connect.reset_mock()
     cog.voice_clients.clear()
-    
+
     # Test joining author's channel
     await cog.join_voice(ctx)
     voice_channel.connect.assert_called_once()
@@ -109,16 +102,14 @@ async def test_join_voice(
 
 @pytest.mark.asyncio
 async def test_join_voice_errors(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_channel: MagicMock
+    cog: MediaCommands, ctx: MagicMock, voice_channel: MagicMock
 ) -> None:
     """Test error cases when joining voice."""
     # Test when user not in voice
     ctx.author.voice = None
     await cog.join_voice(ctx)
     ctx.send.assert_called_with("You need to be in a voice channel!")
-    
+
     # Test connection failure
     ctx.author.voice = voice_channel
     voice_channel.connect.side_effect = ClientException("Connection failed")
@@ -127,17 +118,13 @@ async def test_join_voice_errors(
 
 
 @pytest.mark.asyncio
-async def test_leave_voice(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_client: MagicMock
-) -> None:
+async def test_leave_voice(cog: MediaCommands, ctx: MagicMock, voice_client: MagicMock) -> None:
     """Test leaving a voice channel."""
     # Test leaving when not in a channel
     await cog.leave_voice(ctx)
     ctx.send.assert_called_with("Not in a voice channel!")
     voice_client.disconnect.assert_not_called()
-    
+
     # Test leaving when in a channel
     cog.voice_clients[ctx.guild.id] = voice_client
     await cog.leave_voice(ctx)
@@ -148,9 +135,7 @@ async def test_leave_voice(
 
 @pytest.mark.asyncio
 async def test_leave_voice_errors(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_client: MagicMock
+    cog: MediaCommands, ctx: MagicMock, voice_client: MagicMock
 ) -> None:
     """Test error cases when leaving voice."""
     # Test disconnect failure
@@ -161,16 +146,12 @@ async def test_leave_voice_errors(
 
 
 @pytest.mark.asyncio
-async def test_play_media(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_client: MagicMock
-) -> None:
+async def test_play_media(cog: MediaCommands, ctx: MagicMock, voice_client: MagicMock) -> None:
     """Test playing media."""
     # Test playing when not in a channel
     await cog.play_media(ctx, query="test song")
     ctx.send.assert_called_with("Not in a voice channel!")
-    
+
     # Test playing when in a channel
     cog.voice_clients[ctx.guild.id] = voice_client
     await cog.play_media(ctx, query="test song")
@@ -180,17 +161,13 @@ async def test_play_media(
 
 
 @pytest.mark.asyncio
-async def test_stop_playback(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_client: MagicMock
-) -> None:
+async def test_stop_playback(cog: MediaCommands, ctx: MagicMock, voice_client: MagicMock) -> None:
     """Test stopping playback."""
     # Test stopping when not playing
     await cog.stop_playback(ctx)
     ctx.send.assert_called_with("Not playing anything!")
     voice_client.stop.assert_not_called()
-    
+
     # Test stopping when playing
     cog.voice_clients[ctx.guild.id] = voice_client
     await cog.stop_playback(ctx)
@@ -200,9 +177,7 @@ async def test_stop_playback(
 
 @pytest.mark.asyncio
 async def test_stop_playback_errors(
-    cog: MediaCommands,
-    ctx: MagicMock,
-    voice_client: MagicMock
+    cog: MediaCommands, ctx: MagicMock, voice_client: MagicMock
 ) -> None:
     """Test error cases when stopping playback."""
     # Test stop failure
@@ -213,21 +188,18 @@ async def test_stop_playback_errors(
 
 
 @pytest.mark.asyncio
-async def test_show_queue(
-    cog: MediaCommands,
-    ctx: MagicMock
-) -> None:
+async def test_show_queue(cog: MediaCommands, ctx: MagicMock) -> None:
     """Test showing the queue."""
     # Test showing empty queue
     await cog.show_queue(ctx)
     ctx.send.assert_called_with("Queue is empty!")
-    
+
     # Test showing queue with items
     cog.queues[ctx.guild.id] = [
         {"query": "song 1", "requester": ctx.author.id},
-        {"query": "song 2", "requester": ctx.author.id}
+        {"query": "song 2", "requester": ctx.author.id},
     ]
-    
+
     await cog.show_queue(ctx)
     ctx.send.assert_called_once()
     call_args = ctx.send.call_args
@@ -241,17 +213,12 @@ async def test_show_queue(
 
 
 @pytest.mark.asyncio
-async def test_show_queue_errors(
-    cog: MediaCommands,
-    ctx: MagicMock
-) -> None:
+async def test_show_queue_errors(cog: MediaCommands, ctx: MagicMock) -> None:
     """Test error cases when showing queue."""
     # Test with invalid requester
-    cog.queues[ctx.guild.id] = [
-        {"query": "song 1", "requester": 999999}  # Invalid user ID
-    ]
+    cog.queues[ctx.guild.id] = [{"query": "song 1", "requester": 999999}]  # Invalid user ID
     ctx.guild.get_member.return_value = None
-    
+
     await cog.show_queue(ctx)
     embed = ctx.send.call_args.args[0]
     assert "Unknown" in embed.fields[0].value
@@ -267,30 +234,27 @@ async def test_cog_load(bot: MagicMock) -> None:
 
 
 @pytest.mark.asyncio
-async def test_dm_commands(
-    cog: MediaCommands,
-    ctx: MagicMock
-) -> None:
+async def test_dm_commands(cog: MediaCommands, ctx: MagicMock) -> None:
     """Test commands in DM context."""
     # Simulate DM context
     ctx.guild = None
-    
+
     # Test each command
     await cog.join_voice(ctx)
     ctx.send.assert_called_with("This command can only be used in a server!")
-    
+
     ctx.send.reset_mock()
     await cog.leave_voice(ctx)
     assert not ctx.send.called  # Should return silently
-    
+
     ctx.send.reset_mock()
     await cog.play_media(ctx, query="test")
     assert not ctx.send.called  # Should return silently
-    
+
     ctx.send.reset_mock()
     await cog.stop_playback(ctx)
     assert not ctx.send.called  # Should return silently
-    
+
     ctx.send.reset_mock()
     await cog.show_queue(ctx)
     assert not ctx.send.called  # Should return silently

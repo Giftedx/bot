@@ -110,9 +110,7 @@ class GameCommands(commands.Cog):
         """
         embed.add_field(name="🎲 Quick Games", value=quick_desc, inline=False)
 
-        embed.set_footer(
-            text="Type !help <game> for detailed instructions on any game!"
-        )
+        embed.set_footer(text="Type !help <game> for detailed instructions on any game!")
         await ctx.send(embed=embed)
 
     # Word Games
@@ -263,9 +261,7 @@ class GameCommands(commands.Cog):
         )
         msg = await ctx.send(embed=embed)
         await asyncio.sleep(1)
-        embed.description = (
-            f"Result: **{result}**! {'⚪' if result == 'Heads' else '⚫'}"
-        )
+        embed.description = f"Result: **{result}**! {'⚪' if result == 'Heads' else '⚫'}"
         await msg.edit(embed=embed)
 
 

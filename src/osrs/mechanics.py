@@ -35,10 +35,10 @@ class CombatStats:
         """
         Calculate combat level using the actual OSRS formula
         """
-        base = 0.25 * (defence + hitpoints + math.floor(prayer/2))
-        melee = 0.325 * (attack + strength)
-        range_level = 0.325 * (math.floor(ranged/2) + ranged)
-        mage_level = 0.325 * (math.floor(magic/2) + magic)
+        base = 0.25 * (self.defence + self.hitpoints + math.floor(self.prayer/2))
+        melee = 0.325 * (self.attack + self.strength)
+        range_level = 0.325 * (math.floor(self.ranged/2) + self.ranged)
+        mage_level = 0.325 * (math.floor(self.magic/2) + self.magic)
         
         return math.floor(base + max(melee, range_level, mage_level))
 

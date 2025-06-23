@@ -90,9 +90,11 @@ class TaskManager:
                 task.tick()
 
                 # Check if task should complete
-                if (task.status == TaskStatus.RUNNING and
-                    task.end_time and
-                    datetime.now() >= task.end_time):
+                if (
+                    task.status == TaskStatus.RUNNING
+                    and task.end_time
+                    and datetime.now() >= task.end_time
+                ):
                     if task.complete():
                         completed_tasks.append(task_type)
                         self._task_history.append(task)
@@ -113,4 +115,4 @@ class TaskManager:
         """String representation of task manager state."""
         active = len(self._active_tasks)
         history = len(self._task_history)
-        return f"TaskManager(active={active}, completed={history})" 
+        return f"TaskManager(active={active}, completed={history})"

@@ -1,6 +1,7 @@
 from typing import NoReturn
 import pytest
 
+
 def test_exception_handling() -> None:
     """Test various exception handling scenarios."""
     with pytest.raises(ValueError):
@@ -12,6 +13,6 @@ def test_exception_handling() -> None:
 
     with pytest.raises(KeyError):
         my_dict: dict[str, int] = {}
-        my_dict['non_existent_key']  # This will raise a KeyError
+        my_dict["non_existent_key"]  # This will raise a KeyError
 
     assert True  # Ensure the test runs to completion without unhandled exceptions

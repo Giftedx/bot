@@ -12,15 +12,16 @@ import os
 
 logger = logging.getLogger(__name__)
 
+
 class OSRSDataManager:
     def __init__(self, cache_dir: str = "data/cache/osrs"):
         self.cache_dir = cache_dir
         self.api_base_url = "https://services.runescape.com/m=itemdb_oldschool/api"
-        self.wiki_site = mwclient.Site('oldschool.runescape.wiki', path='/')
+        self.wiki_site = mwclient.Site("oldschool.runescape.wiki", path="/")
         self.cache: Dict[str, Any] = {}
         self.cache_duration = timedelta(hours=24)
         self.last_update: Dict[str, datetime] = {}
-        
+
         # Ensure cache directory exists
         os.makedirs(cache_dir, exist_ok=True)
 
@@ -40,8 +41,9 @@ class OSRSDataManager:
             async with aiofiles.open(f"{self.cache_dir}/pets.json", "r") as f:
                 self.cache["pets"] = json.loads(await f.read())
             async with aiofiles.open(f"{self.cache_dir}/last_update.json", "r") as f:
-                self.last_update = {k: datetime.fromisoformat(v) 
-                                  for k, v in json.loads(await f.read()).items()}
+                self.last_update = {
+                    k: datetime.fromisoformat(v) for k, v in json.loads(await f.read()).items()
+                }
         except FileNotFoundError:
             logger.info("No cache found, will create new cache")
             self.cache = {}
@@ -56,24 +58,22 @@ class OSRSDataManager:
         async with aiofiles.open(f"{self.cache_dir}/pets.json", "w") as f:
             await f.write(json.dumps(self.cache.get("pets", {}), indent=2))
         async with aiofiles.open(f"{self.cache_dir}/last_update.json", "w") as f:
-            await f.write(json.dumps({k: v.isoformat() 
-                                    for k, v in self.last_update.items()}, indent=2))
+            await f.write(
+                json.dumps({k: v.isoformat() for k, v in self.last_update.items()}, indent=2)
+            )
 
     def needs_update(self) -> bool:
         """Check if data needs to be updated"""
         if not self.last_update:
             return True
         now = datetime.utcnow()
-        return any(now - update_time > self.cache_duration 
-                  for update_time in self.last_update.values())
+        return any(
+            now - update_time > self.cache_duration for update_time in self.last_update.values()
+        )
 
     async def update_all_data(self):
         """Update all OSRS data"""
-        tasks = [
-            self.update_items(),
-            self.update_monsters(),
-            self.update_pets()
-        ]
+        tasks = [self.update_items(), self.update_monsters(), self.update_pets()]
         await asyncio.gather(*tasks)
         await self.save_cache()
 
@@ -100,22 +100,22 @@ class OSRSDataManager:
     def parse_wiki_content(self, content: str) -> Dict[str, Any]:
         """Parse Wiki page content into structured data"""
         data = {}
-        
+
         # Extract infobox data
-        infobox_match = re.search(r'\{\{Infobox(.+?)\}\}', content, re.DOTALL)
+        infobox_match = re.search(r"\{\{Infobox(.+?)\}\}", content, re.DOTALL)
         if infobox_match:
             infobox = infobox_match.group(1)
-            for line in infobox.split('\n'):
-                if '=' in line:
-                    key, value = line.split('=', 1)
+            for line in infobox.split("\n"):
+                if "=" in line:
+                    key, value = line.split("=", 1)
                     data[key.strip()] = value.strip()
 
         # Extract other relevant sections
-        sections = re.split(r'==(.+?)==', content)
+        sections = re.split(r"==(.+?)==", content)
         for i in range(1, len(sections), 2):
-            if i+1 < len(sections):
+            if i + 1 < len(sections):
                 section_name = sections[i].strip()
-                section_content = sections[i+1].strip()
+                section_content = sections[i + 1].strip()
                 data[section_name] = section_content
 
         return data
@@ -124,7 +124,7 @@ class OSRSDataManager:
         """Update item database"""
         logger.info("Updating OSRS items...")
         items_data = await self.fetch_api_data("catalogue/items.json")
-        
+
         # Enhance with Wiki data
         for item_id, item in items_data.items():
             wiki_data = await self.fetch_wiki_data(f"Item:{item['name']}")
@@ -137,9 +137,9 @@ class OSRSDataManager:
         """Update monster database"""
         logger.info("Updating OSRS monsters...")
         monsters_data = {}
-        
+
         # Get list of monsters from Wiki
-        category = self.wiki_site.categories['Monsters']
+        category = self.wiki_site.categories["Monsters"]
         for page in category:
             monster_data = await self.fetch_wiki_data(page.name)
             if monster_data:
@@ -152,9 +152,9 @@ class OSRSDataManager:
         """Update pet database"""
         logger.info("Updating OSRS pets...")
         pets_data = {}
-        
+
         # Get list of pets from Wiki
-        category = self.wiki_site.categories['Pets']
+        category = self.wiki_site.categories["Pets"]
         for page in category:
             pet_data = await self.fetch_wiki_data(page.name)
             if pet_data:
@@ -176,49 +176,49 @@ class OSRSDataManager:
                 "hitpoints": 0,
                 "ranged": 0,
                 "magic": 0,
-                "prayer": 0
+                "prayer": 0,
             },
             "abilities": [],
             "drop_rate": None,
             "requirements": {},
-            "obtainable_from": []
+            "obtainable_from": [],
         }
 
         try:
             page = self.wiki_site.pages[pet_name]
             content = page.text()
-            
+
             # Extract stats
-            stats_match = re.search(r'\{\{Combat stats(.+?)\}\}', content, re.DOTALL)
+            stats_match = re.search(r"\{\{Combat stats(.+?)\}\}", content, re.DOTALL)
             if stats_match:
                 stats_text = stats_match.group(1)
                 for stat in pet_data["stats"]:
-                    stat_match = re.search(rf'\|{stat}\s*=\s*(\d+)', stats_text)
+                    stat_match = re.search(rf"\|{stat}\s*=\s*(\d+)", stats_text)
                     if stat_match:
                         pet_data["stats"][stat] = int(stat_match.group(1))
 
             # Extract drop rate
-            drop_rate_match = re.search(r'drop rate.*?(\d+)/(\d+)', content, re.IGNORECASE)
+            drop_rate_match = re.search(r"drop rate.*?(\d+)/(\d+)", content, re.IGNORECASE)
             if drop_rate_match:
                 numerator = int(drop_rate_match.group(1))
                 denominator = int(drop_rate_match.group(2))
                 pet_data["drop_rate"] = numerator / denominator
 
             # Extract requirements
-            level_reqs = re.findall(r'(\d+) ([A-Za-z]+) required', content)
+            level_reqs = re.findall(r"(\d+) ([A-Za-z]+) required", content)
             for level, skill in level_reqs:
                 pet_data["requirements"][skill.lower()] = int(level)
 
             # Extract sources
-            sources_section = re.search(r'==\s*Sources\s*==(.+?)==', content, re.DOTALL)
+            sources_section = re.search(r"==\s*Sources\s*==(.+?)==", content, re.DOTALL)
             if sources_section:
-                sources = re.findall(r'\*\s*(.+?)(?:\n|$)', sources_section.group(1))
+                sources = re.findall(r"\*\s*(.+?)(?:\n|$)", sources_section.group(1))
                 pet_data["obtainable_from"] = [source.strip() for source in sources]
 
             # Add special abilities
-            abilities_section = re.search(r'==\s*Abilities\s*==(.+?)==', content, re.DOTALL)
+            abilities_section = re.search(r"==\s*Abilities\s*==(.+?)==", content, re.DOTALL)
             if abilities_section:
-                abilities = re.findall(r'\*\s*(.+?)(?:\n|$)', abilities_section.group(1))
+                abilities = re.findall(r"\*\s*(.+?)(?:\n|$)", abilities_section.group(1))
                 pet_data["abilities"] = [ability.strip() for ability in abilities]
 
         except Exception as e:
@@ -244,8 +244,7 @@ class OSRSDataManager:
         return [
             {"name": name, **data}
             for name, data in self.cache.get("pets", {}).items()
-            if query in name.lower() or
-               any(query in str(value).lower() for value in data.values())
+            if query in name.lower() or any(query in str(value).lower() for value in data.values())
         ]
 
     def get_boss_pets(self) -> List[Dict[str, Any]]:
@@ -253,8 +252,7 @@ class OSRSDataManager:
         return [
             {"name": name, **data}
             for name, data in self.cache.get("pets", {}).items()
-            if any("boss" in source.lower() 
-                  for source in data.get("obtainable_from", []))
+            if any("boss" in source.lower() for source in data.get("obtainable_from", []))
         ]
 
     def get_skilling_pets(self) -> List[Dict[str, Any]]:
@@ -262,9 +260,18 @@ class OSRSDataManager:
         return [
             {"name": name, **data}
             for name, data in self.cache.get("pets", {}).items()
-            if any(skill in data.get("requirements", {})
-                  for skill in ["woodcutting", "fishing", "mining", "farming",
-                              "agility", "thieving", "hunter"])
+            if any(
+                skill in data.get("requirements", {})
+                for skill in [
+                    "woodcutting",
+                    "fishing",
+                    "mining",
+                    "farming",
+                    "agility",
+                    "thieving",
+                    "hunter",
+                ]
+            )
         ]
 
     async def get_current_prices(self, item_ids: List[str]) -> Dict[str, int]:
@@ -286,31 +293,34 @@ class OSRSDataManager:
             "skills": pet_data.get("requirements", {}),
             "items": [],
             "quests": [],
-            "other": []
+            "other": [],
         }
 
         # Get additional requirements from Wiki
         wiki_data = await self.fetch_wiki_data(f"Pet:{pet_name}")
-        
+
         # Extract quest requirements
-        quest_section = re.search(r'==\s*Quest requirements\s*==(.+?)==', 
-                                wiki_data.get("content", ""), re.DOTALL)
+        quest_section = re.search(
+            r"==\s*Quest requirements\s*==(.+?)==", wiki_data.get("content", ""), re.DOTALL
+        )
         if quest_section:
-            quests = re.findall(r'\*\s*(.+?)(?:\n|$)', quest_section.group(1))
+            quests = re.findall(r"\*\s*(.+?)(?:\n|$)", quest_section.group(1))
             requirements["quests"] = [quest.strip() for quest in quests]
 
         # Extract item requirements
-        item_section = re.search(r'==\s*Item requirements\s*==(.+?)==',
-                               wiki_data.get("content", ""), re.DOTALL)
+        item_section = re.search(
+            r"==\s*Item requirements\s*==(.+?)==", wiki_data.get("content", ""), re.DOTALL
+        )
         if item_section:
-            items = re.findall(r'\*\s*(.+?)(?:\n|$)', item_section.group(1))
+            items = re.findall(r"\*\s*(.+?)(?:\n|$)", item_section.group(1))
             requirements["items"] = [item.strip() for item in items]
 
         # Extract other requirements
-        other_section = re.search(r'==\s*Other requirements\s*==(.+?)==',
-                                wiki_data.get("content", ""), re.DOTALL)
+        other_section = re.search(
+            r"==\s*Other requirements\s*==(.+?)==", wiki_data.get("content", ""), re.DOTALL
+        )
         if other_section:
-            others = re.findall(r'\*\s*(.+?)(?:\n|$)', other_section.group(1))
+            others = re.findall(r"\*\s*(.+?)(?:\n|$)", other_section.group(1))
             requirements["other"] = [other.strip() for other in others]
 
-        return requirements 
+        return requirements

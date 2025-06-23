@@ -68,6 +68,7 @@ class BaseSkillTask(Task):
         Returns True if successful.
         """
         import random
+
         return random.random() < self.success_chance
 
     @property
@@ -88,8 +89,5 @@ class BaseSkillTask(Task):
         if hours == 0:
             return 0.0
 
-        total_xp = sum(
-            self.calculate_xp_per_action() 
-            for _ in range(self.actions_completed)
-        )
-        return total_xp / hours 
+        total_xp = sum(self.calculate_xp_per_action() for _ in range(self.actions_completed))
+        return total_xp / hours

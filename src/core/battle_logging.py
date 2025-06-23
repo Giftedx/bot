@@ -39,9 +39,7 @@ class BattleLogger:
         file_formatter = logging.Formatter(
             "%(asctime)s - %(levelname)s - Battle %(battle_id)s: %(message)s"
         )
-        console_formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s - %(message)s"
-        )
+        console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
         fh.setFormatter(file_formatter)
         ch.setFormatter(console_formatter)
@@ -90,9 +88,7 @@ class BattleLogger:
             },
         )
 
-    def log_error(
-        self, battle_id: str, error: Exception, context: Dict[str, Any]
-    ) -> None:
+    def log_error(self, battle_id: str, error: Exception, context: Dict[str, Any]) -> None:
         """Log battle error."""
         self.logger.error(
             f"Battle error: {str(error)}",
@@ -103,9 +99,7 @@ class BattleLogger:
             exc_info=True,
         )
 
-    def log_reward(
-        self, battle_id: str, player_id: int, rewards: Dict[str, Any]
-    ) -> None:
+    def log_reward(self, battle_id: str, player_id: int, rewards: Dict[str, Any]) -> None:
         """Log battle rewards."""
         self.logger.info(
             f"Rewards given to player {player_id}",
@@ -115,9 +109,7 @@ class BattleLogger:
             },
         )
 
-    def log_achievement(
-        self, battle_id: str, player_id: int, achievement: Dict[str, Any]
-    ) -> None:
+    def log_achievement(self, battle_id: str, player_id: int, achievement: Dict[str, Any]) -> None:
         """Log achievement unlock."""
         self.logger.info(
             f"Achievement unlocked: {achievement['name']}",

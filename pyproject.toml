@@ -12,31 +12,115 @@ license = {file = "LICENSE"}
 authors = [
     {name = "Project Contributors"}
 ]
-
 dependencies = [
-    "discord.py>=2.0.0",
+    # Core
+    "aiohttp==3.9.1",
+    "asyncio==3.4.3",
+    "python-dotenv==1.0.0",
+    "pydantic==2.5.2",
+    "PyJWT==2.8.0",
+    "bcrypt==4.1.1",
+    "requests==2.31.0",
+    "aiofiles==23.2.1",
+    "ujson==5.8.0",
+    "python-dateutil==2.8.2",
+    "pytz==2023.3.post1",
+    "humanize>=4.9.0",
+    "colorama>=0.4.6",
+    "websockets>=12.0",
+    "dataclasses>=0.6",
+    "typing-extensions>=4.7.1",
+
+    # Database
+    "SQLAlchemy==2.0.23",
+    "alembic==1.13.0",
+    "psycopg2-binary==2.9.9",
+    "asyncpg==0.29.0",
+    "aiosqlite>=0.19.0",
+
+    # Caching
+    "redis==5.0.1",
+    "aioredis==2.0.1",
+
+    # Discord
+    "discord.py==2.3.2",
+    "discord-py-slash-command==4.2.1",
+
+    # Web Framework
+    "fastapi==0.104.1",
+    "uvicorn==0.24.0",
+    "starlette==0.27.0",
+    "httpx==0.25.2",
+    "Flask>=3.0.1",
+    "Flask-CORS>=4.0.0",
+    "gunicorn>=21.2.0",
+
+    # APIs and Parsing
     "plexapi>=4.0.0",
-    "prometheus-client>=0.9.0",
-    "redis>=4.0.0",
-    "SQLAlchemy>=1.4.0",
-    "aiohttp>=3.8.0",
-    "pytest>=7.0.0",
-    "mypy>=1.0.0",
-    "black>=22.0.0",
-    "flake8>=4.0.0"
+    "mwclient>=0.10.1",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.1.0",
+    "pokebase>=1.3.0",
+    "requests-cache>=0.9.8",
+    "mwparserfromhell>=0.6.6",
+    "pokemontcgsdk>=2.0.0",
+    "PyGithub>=2.1.1",
+    "spotipy>=2.23.0",
+    "google-api-python-client>=2.108.0",
+    "stackapi>=0.3.0",
+    "vdf>=3.4",
+    "wikitextparser>=0.55.1",
+
+    # Media
+    "PyNaCl>=1.4.0",
+    "wavelink>=3.2.0",
+    "yt-dlp>=2023.12.30",
+    "ffmpeg-python>=0.2.0",
+
+    # Security
+    "cryptography==41.0.5",
+    "passlib==1.7.4",
+    "python-jose==3.3.0",
+    "prometheus_client>=0.19.0",
+    "dependency-injector==4.41.0",
 ]
 
-[tool.setuptools]
-packages = ["src"]
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest==7.4.3",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.1.0",
+    "pytest-mock==3.12.0",
+    "coverage>=7.4.1",
+
+    # Linters and Formatters
+    "black==23.11.0",
+    "isort==5.12.0",
+    "mypy==1.7.1",
+    "flake8==6.1.0",
+    "pylint",
+    "bandit",
+    
+    # Pre-commit
+    "pre-commit==3.5.0",
+
+    # Documentation
+    "Sphinx==7.2.6",
+    "sphinx-rtd-theme==1.3.0",
+    "autodoc==0.5.0",
+    
+    # Other Dev Tools
+    "bump2version",
+    "safety",
+    "pip-audit"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = [
     "--verbose",
-    "--cov=src",
-    "--cov-report=term-missing",
-    "--cov-report=html",
     "--asyncio-mode=auto"
 ]
 filterwarnings = [
@@ -140,4 +224,4 @@ pythonPlatform = "All"
 
 executionEnvironments = [
   { root = "src" }
-]
+] 

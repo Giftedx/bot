@@ -137,9 +137,7 @@ class BattleRewardsManager:
             # Add XP and loyalty to pet
             if "active_pet" in updated:
                 updated["active_pet"]["xp"] += rewards.xp
-                updated["active_pet"]["loyalty"] = min(
-                    100, updated["active_pet"]["loyalty"] + 5
-                )
+                updated["active_pet"]["loyalty"] = min(100, updated["active_pet"]["loyalty"] + 5)
             updated["pet_tokens"] += rewards.coins
 
         # Add any items won

@@ -35,12 +35,7 @@ class PetService:
         self._active_pets: Dict[int, int] = {}  # user_id -> active_pet_index
         self._max_pets = 3
 
-    async def create_pet(
-        self,
-        owner_id: int,
-        name: str,
-        element: PetType
-    ) -> Pet:
+    async def create_pet(self, owner_id: int, name: str, element: PetType) -> Pet:
         """Create a new pet for a user.
 
         Args:
@@ -55,19 +50,13 @@ class PetService:
         """
         # Check pet limit
         if len(self._pets.get(owner_id, [])) >= self._max_pets:
-            raise MaxPetsExceededError(
-                f"Cannot have more than {self._max_pets} pets"
-            )
+            raise MaxPetsExceededError(f"Cannot have more than {self._max_pets} pets")
 
         # Generate starter moves based on element
         moves = self._generate_starter_moves(element)
 
         # Create pet
-        pet = Pet(
-            name=name,
-            element=element,
-            moves=moves
-        )
+        pet = Pet(name=name, element=element, moves=moves)
 
         # Add to storage
         if owner_id not in self._pets:
@@ -85,77 +74,59 @@ class PetService:
         moves = []
 
         # Basic attack
-        moves.append(PetMove(
-            name="Tackle",
-            damage=10,
-            element=element,
-            cooldown=0,
-            emoji="💥"
-        ))
+        moves.append(PetMove(name="Tackle", damage=10, element=element, cooldown=0, emoji="💥"))
 
         # Element-specific move
         if element == PetType.FIRE:
-            moves.append(PetMove(
-                name="Ember",
-                damage=15,
-                element=element,
-                cooldown=2,
-                emoji="🔥",
-                status_effect=StatusEffect.BURN,
-                status_chance=20
-            ))
+            moves.append(
+                PetMove(
+                    name="Ember",
+                    damage=15,
+                    element=element,
+                    cooldown=2,
+                    emoji="🔥",
+                    status_effect=StatusEffect.BURN,
+                    status_chance=20,
+                )
+            )
         elif element == PetType.WATER:
-            moves.append(PetMove(
-                name="Water Gun",
-                damage=15,
-                element=element,
-                cooldown=2,
-                emoji="💧"
-            ))
+            moves.append(
+                PetMove(name="Water Gun", damage=15, element=element, cooldown=2, emoji="💧")
+            )
         elif element == PetType.EARTH:
-            moves.append(PetMove(
-                name="Rock Throw",
-                damage=20,
-                element=element,
-                cooldown=3,
-                emoji="🪨"
-            ))
+            moves.append(
+                PetMove(name="Rock Throw", damage=20, element=element, cooldown=3, emoji="🪨")
+            )
         elif element == PetType.AIR:
-            moves.append(PetMove(
-                name="Gust",
-                damage=12,
-                element=element,
-                cooldown=1,
-                emoji="💨"
-            ))
+            moves.append(PetMove(name="Gust", damage=12, element=element, cooldown=1, emoji="💨"))
         elif element == PetType.LIGHT:
-            moves.append(PetMove(
-                name="Flash",
-                damage=15,
-                element=element,
-                cooldown=2,
-                emoji="✨",
-                status_effect=StatusEffect.PARALYZE,
-                status_chance=15
-            ))
+            moves.append(
+                PetMove(
+                    name="Flash",
+                    damage=15,
+                    element=element,
+                    cooldown=2,
+                    emoji="✨",
+                    status_effect=StatusEffect.PARALYZE,
+                    status_chance=15,
+                )
+            )
         elif element == PetType.DARK:
-            moves.append(PetMove(
-                name="Shadow Strike",
-                damage=18,
-                element=element,
-                cooldown=2,
-                emoji="🌑",
-                status_effect=StatusEffect.SLEEP,
-                status_chance=10
-            ))
+            moves.append(
+                PetMove(
+                    name="Shadow Strike",
+                    damage=18,
+                    element=element,
+                    cooldown=2,
+                    emoji="🌑",
+                    status_effect=StatusEffect.SLEEP,
+                    status_chance=10,
+                )
+            )
 
         return moves
 
-    async def get_pet(
-        self,
-        owner_id: int,
-        index: Optional[int] = None
-    ) -> Pet:
+    async def get_pet(self, owner_id: int, index: Optional[int] = None) -> Pet:
         """Get a user's pet by index.
 
         Args:
@@ -180,11 +151,7 @@ class PetService:
         except IndexError:
             raise PetNotFoundError(f"No pet at index {index}")
 
-    async def set_active_pet(
-        self,
-        owner_id: int,
-        index: int
-    ) -> Pet:
+    async def set_active_pet(self, owner_id: int, index: int) -> Pet:
         """Set a user's active pet.
 
         Args:
@@ -207,11 +174,7 @@ class PetService:
             raise PetNotFoundError(f"No pet at index {index}")
 
     async def award_experience(
-        self,
-        owner_id: int,
-        pet_index: Optional[int],
-        amount: int,
-        source: str
+        self, owner_id: int, pet_index: Optional[int], amount: int, source: str
     ) -> Optional[int]:
         """Award experience to a pet.
 
@@ -228,10 +191,7 @@ class PetService:
         """
         pet = await self.get_pet(owner_id, pet_index)
 
-        logger.info(
-            "Awarding %s XP to %s (owner: %s) from %s",
-            amount, pet.name, owner_id, source
-        )
+        logger.info("Awarding %s XP to %s (owner: %s) from %s", amount, pet.name, owner_id, source)
 
         if pet.add_experience(amount):
             logger.info(f"{pet.name} leveled up to {pet.level}!")

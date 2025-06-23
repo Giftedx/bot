@@ -14,10 +14,11 @@ import redis.exceptions
 from src.core.exceptions import RedisConnectionError, RedisOperationError
 
 router = APIRouter()
-prefs_manager = PreferencesManager(os.getenv('REDIS_URL'))
+prefs_manager = PreferencesManager(os.getenv("REDIS_URL"))
 notification_center = NotificationCenter()
 settings_manager = SettingsManager()
 logger = logging.getLogger(__name__)
+
 
 # Example dependency for getting the current user
 async def get_current_user(token: str) -> Optional[str]:  # Replace str with your user model
@@ -27,6 +28,7 @@ async def get_current_user(token: str) -> Optional[str]:  # Replace str with you
     if token == "valid_token":
         return "example_user"  # Replace with your user object
     return None
+
 
 class PreferencesUpdate(BaseModel):
     theme: Optional[str] = None
@@ -41,6 +43,7 @@ class PreferencesUpdate(BaseModel):
             return SecurityValidator.sanitize_html(value)
         return value
 
+
 class MediaControl(BaseModel):
     action: str
     media_id: str
@@ -52,6 +55,7 @@ class MediaControl(BaseModel):
             return SecurityValidator.sanitize_html(value)
         return value
 
+
 class NotificationUpdate(BaseModel):
     thread_id: str
     read: bool
@@ -62,6 +66,7 @@ class NotificationUpdate(BaseModel):
             return SecurityValidator.sanitize_html(value)
         return value
 
+
 class SettingsUpdate(BaseModel):
     category: str
     settings: Dict[str, Any]
@@ -71,6 +76,7 @@ class SettingsUpdate(BaseModel):
         if isinstance(value, str):
             return SecurityValidator.sanitize_html(value)
         return value
+
 
 class SettingsPreset(BaseModel):
     name: str
@@ -84,6 +90,7 @@ class SettingsPreset(BaseModel):
             return SecurityValidator.sanitize_html(value)
         return value
 
+
 class ItemCreate(BaseModel):
     name: str
     description: str
@@ -94,6 +101,7 @@ class ItemCreate(BaseModel):
             return SecurityValidator.sanitize_html(value)
         return value
 
+
 @router.get("/api/preferences")
 async def get_preferences(user_id: str = Depends(get_current_user)):
     if not user_id:
@@ -102,16 +110,20 @@ async def get_preferences(user_id: str = Depends(get_current_user)):
         prefs = await prefs_manager.get_preferences(user_id)
         return prefs
     except redis.exceptions.RedisError as e:
-        logger.error(f"Redis error while getting preferences for user {user_id}: {e}", exc_info=True)
+        logger.error(
+            f"Redis error while getting preferences for user {user_id}: {e}", exc_info=True
+        )
         raise HTTPException(status_code=500, detail="Failed to get preferences due to Redis error")
     except Exception as e:
-        logger.error(f"Unexpected error while getting preferences for user {user_id}: {e}", exc_info=True)
+        logger.error(
+            f"Unexpected error while getting preferences for user {user_id}: {e}", exc_info=True
+        )
         raise HTTPException(status_code=500, detail="Failed to get preferences")
+
 
 @router.post("/api/preferences")
 async def update_preferences(
-    prefs_update: PreferencesUpdate,
-    user_id: str = Depends(get_current_user)
+    prefs_update: PreferencesUpdate, user_id: str = Depends(get_current_user)
 ):
     if not user_id:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -119,11 +131,16 @@ async def update_preferences(
         await prefs_manager.update_preferences(user_id, prefs_update.dict(exclude_unset=True))
         return {"message": "Preferences updated successfully"}
     except redis.exceptions.RedisError as e:
-        logger.error(f"Redis error while updating preferences for user {user_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to update preferences due to Redis error")
+        logger.error(
+            f"Redis error while updating preferences for user {user_id}: {e}", exc_info=True
+        )
+        raise HTTPException(
+            status_code=500, detail="Failed to update preferences due to Redis error"
+        )
     except Exception as e:
         logger.error(f"Failed to update preferences for user {user_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to update preferences")
+
 
 @router.get("/api/themes/{theme_name}")
 async def get_theme(theme_name: str):
@@ -132,10 +149,12 @@ async def get_theme(theme_name: str):
         raise HTTPException(status_code=404, detail="Theme not found")
     return theme
 
+
 @router.post("/api/media/control")
 async def control_media(media_control: MediaControl):
     # Handle media control commands
     return {"status": "success"}
+
 
 @router.websocket("/ws/notifications")
 async def websocket_endpoint(websocket: WebSocket):
@@ -147,17 +166,19 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             # Keep connection alive and handle client messages
             data = await websocket.receive_json()
-            if data.get('type') == 'ack':
-                await notification_center.mark_as_read(data['notification_id'])
+            if data.get("type") == "ack":
+                await notification_center.mark_as_read(data["notification_id"])
     except Exception as e:
         logger.error(f"Notification WebSocket error: {e}")
     finally:
         notification_center.remove_client(websocket)
         await websocket.close()
 
+
 @router.get("/api/settings/{category}")
 async def get_settings(category: str):
     return await settings_manager.get_category(category)
+
 
 @router.post("/api/settings")
 async def update_settings(settings_update: SettingsUpdate):
@@ -173,43 +194,46 @@ async def update_settings(settings_update: SettingsUpdate):
             timestamp=datetime.now(),
             source="settings",
             icon="gear",
-            priority=0
+            priority=0,
         )
     )
 
     return result
 
+
 @router.post("/api/settings/preview")
 async def preview_settings(settings_update: SettingsUpdate):
     return await settings_manager.get_preview(settings_update.settings)
+
 
 @router.post("/api/settings/conflicts")
 async def check_settings_conflicts(settings_update: SettingsUpdate):
     """Check for potential conflicts in settings"""
     return await settings_manager.detect_conflicts(settings_update.settings)
 
+
 @router.post("/api/settings/import")
 async def import_settings(settings_update: SettingsUpdate):
     """Import settings with validation and conflict detection"""
     validation = await settings_manager.validate_settings(settings_update.settings)
-    if not validation['valid']:
-        raise HTTPException(400, validation['errors'])
+    if not validation["valid"]:
+        raise HTTPException(400, validation["errors"])
 
     conflicts = await settings_manager.detect_conflicts(settings_update.settings)
-    return {
-        'conflicts': conflicts,
-        'requires_resolution': bool(conflicts)
-    }
+    return {"conflicts": conflicts, "requires_resolution": bool(conflicts)}
+
 
 @router.get("/api/settings/presets")
 async def get_settings_presets():
     """Get all available setting presets"""
     return await settings_manager.get_presets()
 
+
 @router.post("/api/settings/presets")
 async def create_settings_preset(settings_preset: SettingsPreset):
     """Save a new settings preset"""
     return await settings_manager.save_preset(settings_preset.dict())
+
 
 @router.get("/api/settings/backup")
 async def get_settings_backup():
@@ -218,25 +242,28 @@ async def get_settings_backup():
     return StreamingResponse(
         io.BytesIO(json.dumps(backup).encode()),
         media_type="application/json",
-        headers={"Content-Disposition": "attachment; filename=settings_backup.json"}
+        headers={"Content-Disposition": "attachment; filename=settings_backup.json"},
     )
+
 
 @router.post("/api/settings/restore")
 async def restore_settings(settings_update: SettingsUpdate):
     """Restore settings from backup"""
     return await settings_manager.restore_backup(settings_update.settings)
 
+
 @router.post("/api/settings/validate")
 async def validate_settings(settings_update: SettingsUpdate):
     """Validate settings before applying"""
     validation = await settings_manager.validate_settings(settings_update.settings)
-    if validation['conflicts']:
+    if validation["conflicts"]:
         return {
-            'valid': False,
-            'conflicts': validation['conflicts'],
-            'suggestions': await settings_manager.generate_suggestions(settings_update.settings)
+            "valid": False,
+            "conflicts": validation["conflicts"],
+            "suggestions": await settings_manager.generate_suggestions(settings_update.settings),
         }
-    return {'valid': True}
+    return {"valid": True}
+
 
 @router.post("/api/notifications/thread/{thread_id}")
 async def update_notification_thread(thread_id: str, notification_update: NotificationUpdate):
@@ -247,10 +274,12 @@ async def update_notification_thread(thread_id: str, notification_update: Notifi
         await notification_manager.expand_thread(thread_id)
     return {"status": "success"}
 
+
 @router.get("/api/settings/search")
 async def search_settings(query: str):
     """Search settings with fuzzy matching"""
     return await settings_manager.search_settings(query)
+
 
 @router.post("/api/settings/export")
 async def export_settings(settings_update: SettingsUpdate):
@@ -259,17 +288,23 @@ async def export_settings(settings_update: SettingsUpdate):
     return StreamingResponse(
         io.BytesIO(json.dumps(settings).encode()),
         media_type="application/json",
-        headers={"Content-Disposition": f"attachment; filename=settings_export_{datetime.now():%Y%m%d}.json"}
+        headers={
+            "Content-Disposition": f"attachment; filename=settings_export_{datetime.now():%Y%m%d}.json"
+        },
     )
 
+
 @router.get("/items/{item_id}")
-async def get_item(item_id: int, q: Optional[str] = None, current_user: str = Depends(get_current_user)):
+async def get_item(
+    item_id: int, q: Optional[str] = None, current_user: str = Depends(get_current_user)
+):
     """
     Example route handler.
     """
     if current_user is None:
         raise HTTPException(status_code=401, detail="Not authenticated")
     return {"item_id": item_id, "q": q, "current_user": current_user}
+
 
 @router.post("/items/")
 async def create_item(item_create: ItemCreate, current_user: str = Depends(get_current_user)):

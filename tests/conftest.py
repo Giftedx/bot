@@ -26,6 +26,7 @@ from src.utils.container import Container
 
 # Battle System Fixtures
 
+
 @pytest.fixture
 def battle_config() -> BattleSystemConfig:
     """Fixture for battle system configuration."""
@@ -35,17 +36,13 @@ def battle_config() -> BattleSystemConfig:
 @pytest.fixture
 def basic_move() -> BattleMove:
     """Fixture for basic battle move."""
-    return BattleMove(
-        name="Basic Attack", move_type="normal", base_power=50, accuracy=90
-    )
+    return BattleMove(name="Basic Attack", move_type="normal", base_power=50, accuracy=90)
 
 
 @pytest.fixture
 def perfect_move() -> BattleMove:
     """Fixture for move that always hits."""
-    return BattleMove(
-        name="Perfect Strike", move_type="normal", base_power=40, accuracy=None
-    )
+    return BattleMove(name="Perfect Strike", move_type="normal", base_power=40, accuracy=None)
 
 
 @pytest.fixture
@@ -134,8 +131,10 @@ def test_log_dir(tmp_path: Path) -> Path:
 
 # Utility Functions
 
+
 class EmbedField:
     """Helper class for testing Discord embed fields."""
+
     def __init__(self, name: str, value: str, inline: bool = False):
         self.name = name
         self.value = value
@@ -147,35 +146,28 @@ def assert_embed_matches(
     title: Optional[str] = None,
     description: Optional[str] = None,
     color: Optional[int] = None,
-    fields: Optional[List[EmbedField]] = None
+    fields: Optional[List[EmbedField]] = None,
 ) -> None:
     """Assert that an embed matches the expected values."""
     if title is not None:
-        assert embed.title == title, (
-            f"Title mismatch. Expected '{title}', got '{embed.title}'"
-        )
-        
+        assert embed.title == title, f"Title mismatch. Expected '{title}', got '{embed.title}'"
+
     if description is not None:
         assert embed.description == description, (
-            f"Description mismatch. "
-            f"Expected '{description}', got '{embed.description}'"
+            f"Description mismatch. " f"Expected '{description}', got '{embed.description}'"
         )
-        
+
     if color is not None:
-        assert embed.color == color, (
-            f"Color mismatch. Expected {color}, got {embed.color}"
-        )
-        
+        assert embed.color == color, f"Color mismatch. Expected {color}, got {embed.color}"
+
     if fields is not None:
         assert len(embed.fields) == len(fields), (
-            f"Field count mismatch. "
-            f"Expected {len(fields)}, got {len(embed.fields)}"
+            f"Field count mismatch. " f"Expected {len(fields)}, got {len(embed.fields)}"
         )
-        
+
         for expected, actual in zip(fields, embed.fields):
             assert actual.name == expected.name, (
-                f"Field name mismatch. "
-                f"Expected '{expected.name}', got '{actual.name}'"
+                f"Field name mismatch. " f"Expected '{expected.name}', got '{actual.name}'"
             )
             assert actual.value == expected.value, (
                 f"Field value mismatch for '{expected.name}'. "
@@ -189,6 +181,7 @@ def assert_embed_matches(
 
 # Utility Fixtures
 
+
 @pytest.fixture
 def temp_dir(tmp_path: Path) -> Generator[Path, None, None]:
     """Provide a temporary directory for tests."""
@@ -198,14 +191,11 @@ def temp_dir(tmp_path: Path) -> Generator[Path, None, None]:
 @pytest.fixture
 def config(temp_dir: Path) -> Generator[ConfigManager, None, None]:
     """Provide a test configuration manager."""
-    test_config = ConfigManager(
-        config_file=temp_dir / "config.json",
-        env_file=temp_dir / ".env"
-    )
+    test_config = ConfigManager(config_file=temp_dir / "config.json", env_file=temp_dir / ".env")
     # Override paths for testing
-    test_config.set('REPO_DATA_DIR', temp_dir / "data")
-    test_config.set('CACHE_DIR', temp_dir / "cache")
-    test_config.set('LOG_FILE', temp_dir / "logs/test.log")
+    test_config.set("REPO_DATA_DIR", temp_dir / "data")
+    test_config.set("CACHE_DIR", temp_dir / "cache")
+    test_config.set("LOG_FILE", temp_dir / "logs/test.log")
     yield test_config
 
 
@@ -252,6 +242,7 @@ def container() -> Generator[Container, None, None]:
 @pytest.fixture
 def mock_github_api(monkeypatch):
     """Mock GitHub API responses."""
+
     class MockResponse:
         def __init__(self, data, status_code=200):
             self.data = data

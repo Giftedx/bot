@@ -14,14 +14,15 @@ from ..utils.formatting import format_error
 
 logger = logging.getLogger(__name__)
 
+
 def check_permissions(**perms: bool) -> Callable:
     """Check if the user has required permissions."""
+
     async def predicate(ctx: commands.Context) -> bool:
         ch = ctx.channel
         permissions = ch.permissions_for(ctx.author)
 
-        missing = [perm for perm, value in perms.items()
-                  if getattr(permissions, perm) != value]
+        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
         if not missing:
             return True
@@ -29,6 +30,7 @@ def check_permissions(**perms: bool) -> Callable:
         raise commands.MissingPermissions(missing)
 
     return commands.check(predicate)
+
 
 class BaseCog(commands.Cog):
     """Base cog class with shared functionality."""
@@ -50,7 +52,7 @@ class BaseCog(commands.Cog):
 
     async def cog_command_error(self, ctx: commands.Context, error: Exception) -> None:
         """Handle errors for all commands in this cog."""
-        if hasattr(ctx.command, 'on_error'):
+        if hasattr(ctx.command, "on_error"):
             return
 
         error_type = type(error).__name__
@@ -58,33 +60,29 @@ class BaseCog(commands.Cog):
             error = error.original
 
         error_message = format_error(error)
-        
+
         # Send error message to user
         try:
             embed = discord.Embed(
-                title="Error",
-                description=error_message,
-                color=discord.Color.red()
+                title="Error", description=error_message, color=discord.Color.red()
             )
             await ctx.send(embed=embed)
         except discord.HTTPException:
             await ctx.send(f"An error occurred: {error_message}")
 
         # Log error if it's not a common user error
-        if not isinstance(error, (
-            commands.CommandNotFound,
-            commands.MissingPermissions,
-            commands.CheckFailure,
-            commands.CommandOnCooldown
-        )):
+        if not isinstance(
+            error,
+            (
+                commands.CommandNotFound,
+                commands.MissingPermissions,
+                commands.CheckFailure,
+                commands.CommandOnCooldown,
+            ),
+        ):
             logger.error(f"Command error in {ctx.command}: {error}", exc_info=True)
 
-    def add_cooldown(
-        self,
-        user_id: int,
-        command_name: str,
-        duration: timedelta
-    ) -> None:
+    def add_cooldown(self, user_id: int, command_name: str, duration: timedelta) -> None:
         """Add a cooldown for a user and command."""
         if command_name not in self._cooldowns:
             self._cooldowns[command_name] = {}
@@ -94,7 +92,7 @@ class BaseCog(commands.Cog):
         """Check if a command is on cooldown for a user."""
         if command_name not in self._cooldowns:
             return False
-        
+
         if user_id not in self._cooldowns[command_name]:
             return False
 
@@ -104,11 +102,7 @@ class BaseCog(commands.Cog):
 
         return True
 
-    def get_cooldown_remaining(
-        self,
-        user_id: int,
-        command_name: str
-    ) -> Optional[timedelta]:
+    def get_cooldown_remaining(self, user_id: int, command_name: str) -> Optional[timedelta]:
         """Get remaining cooldown time for a user and command."""
         if not self.is_on_cooldown(user_id, command_name):
             return None
@@ -127,19 +121,14 @@ class BaseCog(commands.Cog):
         items: List[str],
         items_per_page: int = 10,
         color: discord.Color = discord.Color.blue(),
-        timeout: int = 60
+        timeout: int = 60,
     ) -> None:
         """Send a paginated embed message."""
-        pages = [items[i:i + items_per_page] 
-                for i in range(0, len(items), items_per_page)]
+        pages = [items[i : i + items_per_page] for i in range(0, len(items), items_per_page)]
         total_pages = len(pages)
 
         if not pages:
-            embed = discord.Embed(
-                title=title,
-                description="No items to display",
-                color=color
-            )
+            embed = discord.Embed(title=title, description="No items to display", color=color)
             await ctx.send(embed=embed)
             return
 
@@ -163,17 +152,15 @@ class BaseCog(commands.Cog):
 
         def check(reaction: discord.Reaction, user: discord.User) -> bool:
             return (
-                user == ctx.author and
-                str(reaction.emoji) in reactions and
-                reaction.message.id == message.id
+                user == ctx.author
+                and str(reaction.emoji) in reactions
+                and reaction.message.id == message.id
             )
 
         while True:
             try:
                 reaction, user = await self.bot.wait_for(
-                    "reaction_add",
-                    timeout=timeout,
-                    check=check
+                    "reaction_add", timeout=timeout, check=check
                 )
 
                 if str(reaction.emoji) == "⬅️":
@@ -188,37 +175,26 @@ class BaseCog(commands.Cog):
                 await message.clear_reactions()
                 break
 
-    async def confirm_action(
-        self,
-        ctx: commands.Context,
-        prompt: str,
-        timeout: int = 30
-    ) -> bool:
+    async def confirm_action(self, ctx: commands.Context, prompt: str, timeout: int = 30) -> bool:
         """Ask for user confirmation before proceeding."""
         embed = discord.Embed(
-            title="Confirmation",
-            description=prompt,
-            color=discord.Color.yellow()
+            title="Confirmation", description=prompt, color=discord.Color.yellow()
         )
         embed.set_footer(text="React with ✅ to confirm or ❌ to cancel")
-        
+
         message = await ctx.send(embed=embed)
         await message.add_reaction("✅")
         await message.add_reaction("❌")
 
         def check(reaction: discord.Reaction, user: discord.User) -> bool:
             return (
-                user == ctx.author and
-                str(reaction.emoji) in ["✅", "❌"] and
-                reaction.message.id == message.id
+                user == ctx.author
+                and str(reaction.emoji) in ["✅", "❌"]
+                and reaction.message.id == message.id
             )
 
         try:
-            reaction, user = await self.bot.wait_for(
-                "reaction_add",
-                timeout=timeout,
-                check=check
-            )
+            reaction, user = await self.bot.wait_for("reaction_add", timeout=timeout, check=check)
             await message.delete()
             return str(reaction.emoji) == "✅"
         except asyncio.TimeoutError:

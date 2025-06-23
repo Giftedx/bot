@@ -12,6 +12,7 @@ from ..core.constants import BitField, SkillType, SkillLevel
 
 class AttackStyle(Enum):
     """Combat attack styles."""
+
     ACCURATE = "accurate"
     AGGRESSIVE = "aggressive"
     DEFENSIVE = "defensive"
@@ -23,6 +24,7 @@ class AttackStyle(Enum):
 @dataclass
 class User:
     """Represents an OSRS user/player."""
+
     id: str
     username: str
     minion_ironman: bool = False
@@ -49,9 +51,9 @@ class User:
         """Initialize default values and create Bank instances."""
         self._bank = Bank(self.bank)
         self._bank_with_gp = Bank(self.bank)
-        self._bank_with_gp.add('Coins', self.GP)
+        self._bank_with_gp.add("Coins", self.GP)
         self._collection_log = Bank(self.collection_log)
-        
+
         # Initialize gear if not provided
         default_gear = GearSetup()
         self.gear_melee = self.gear_melee or default_gear
@@ -62,13 +64,10 @@ class User:
         self.gear_wildy = self.gear_wildy or default_gear
         self.gear_fashion = self.gear_fashion or default_gear
         self.gear_other = self.gear_other or default_gear
-        
+
         # Initialize skills if empty
         if not self.skills:
-            self.skills = {
-                skill_type: SkillLevel() 
-                for skill_type in SkillType
-            }
+            self.skills = {skill_type: SkillLevel() for skill_type in SkillType}
             # Set Hitpoints to 10
             self.skills[SkillType.HITPOINTS].level = 10
             self.skills[SkillType.HITPOINTS].xp = self._xp_for_level(10)
@@ -92,24 +91,20 @@ class User:
     def gear(self) -> Dict[str, GearSetup]:
         """Get all gear setups."""
         return {
-            'melee': self.gear_melee,
-            'mage': self.gear_mage,
-            'range': self.gear_range,
-            'misc': self.gear_misc,
-            'skilling': self.gear_skilling,
-            'wildy': self.gear_wildy,
-            'fashion': self.gear_fashion,
-            'other': self.gear_other
+            "melee": self.gear_melee,
+            "mage": self.gear_mage,
+            "range": self.gear_range,
+            "misc": self.gear_misc,
+            "skilling": self.gear_skilling,
+            "wildy": self.gear_wildy,
+            "fashion": self.gear_fashion,
+            "other": self.gear_other,
         }
 
     @property
     def gear_bank(self) -> GearBank:
         """Get a GearBank instance for this user."""
-        return GearBank(
-            gear=self.gear,
-            bank=self.bank,
-            skills=self.skills
-        )
+        return GearBank(gear=self.gear, bank=self.bank, skills=self.skills)
 
     @property
     def combat_level(self) -> int:
@@ -139,10 +134,7 @@ class User:
 
     def has_skill_requirements(self, requirements: Dict[SkillType, int]) -> bool:
         """Check if user meets skill requirements."""
-        return all(
-            self.skill_level(skill) >= level
-            for skill, level in requirements.items()
-        )
+        return all(self.skill_level(skill) >= level for skill, level in requirements.items())
 
     @staticmethod
     def _xp_for_level(level: int) -> int:
@@ -156,11 +148,13 @@ class User:
         """Count number of skills at level 99 or higher."""
         return sum(1 for skill in self.skills.values() if skill.level >= 99)
 
-    def has_equipped(self, items: Union[int, str, List[int], List[str]], every: bool = False) -> bool:
+    def has_equipped(
+        self, items: Union[int, str, List[int], List[str]], every: bool = False
+    ) -> bool:
         """Check if user has item(s) equipped in any gear setup."""
         if isinstance(items, (int, str)):
             items = [items]
-        
+
         for gear_setup in self.gear.values():
             equipped = gear_setup.equipped_items()
             if every:
@@ -171,15 +165,17 @@ class User:
                     return True
         return False
 
-    def has_equipped_or_in_bank(self, items: Union[int, str, List[int], List[str]], every: bool = False) -> bool:
+    def has_equipped_or_in_bank(
+        self, items: Union[int, str, List[int], List[str]], every: bool = False
+    ) -> bool:
         """Check if user has item(s) equipped or in bank."""
         if isinstance(items, (int, str)):
             items = [items]
-        
+
         # Check equipped items
         if self.has_equipped(items, every):
             return True
-            
+
         # Check bank
         for item in items:
             if every:
@@ -188,5 +184,5 @@ class User:
             else:
                 if self.bank.has(item):
                     return True
-                    
-        return every 
+
+        return every

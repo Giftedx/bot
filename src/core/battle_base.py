@@ -52,9 +52,7 @@ class BaseBattleSystem(IBattleSystem, ABC):
         defender_stats = self._get_opponent_stats(battle_state)
 
         # Get and validate move
-        available_moves = self.get_available_moves(
-            battle_state, battle_state.current_turn
-        )
+        available_moves = self.get_available_moves(battle_state, battle_state.current_turn)
         move = self._get_move_by_name(move_name, available_moves)
         validate_move(move, available_moves)
 
@@ -129,18 +127,14 @@ class BaseBattleSystem(IBattleSystem, ABC):
             else battle_state.battle_data.get("challenger_stats", {})
         )
 
-    def _get_move_by_name(
-        self, move_name: str, available_moves: List[BattleMove]
-    ) -> BattleMove:
+    def _get_move_by_name(self, move_name: str, available_moves: List[BattleMove]) -> BattleMove:
         """Get move object by name."""
         for move in available_moves:
             if move.name.lower() == move_name.lower():
                 return move
         raise InvalidMoveError(f"Move not found: {move_name}")
 
-    def _apply_resource_costs(
-        self, stats: Dict[str, Any], move: BattleMove
-    ) -> Dict[str, Any]:
+    def _apply_resource_costs(self, stats: Dict[str, Any], move: BattleMove) -> Dict[str, Any]:
         """Apply move resource costs to stats."""
         modified = stats.copy()
 

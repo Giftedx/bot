@@ -47,9 +47,7 @@ class VoiceHandler:
             if not ctx.voice_client.channel:
                 return False
 
-            await ctx.guild.change_voice_state(
-                channel=ctx.voice_client.channel, self_video=enabled
-            )
+            await ctx.guild.change_voice_state(channel=ctx.voice_client.channel, self_video=enabled)
             return True
         except Exception as e:
             logger.error(f"Failed to {'enable' if enabled else 'disable'} video: {e}")

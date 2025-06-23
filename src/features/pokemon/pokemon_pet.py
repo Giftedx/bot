@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from ....shared.base_pet import BasePet
 
+
 class PokemonPet(BasePet):
     def __init__(self, pet_id: str, owner_id: str, name: str, species: str):
         super().__init__(pet_id, owner_id, name)
@@ -15,7 +16,7 @@ class PokemonPet(BasePet):
             "defense": 1,
             "sp_attack": 1,
             "sp_defense": 1,
-            "speed": 1
+            "speed": 1,
         }
 
     def special_ability(self) -> str:
@@ -54,12 +55,12 @@ class PokemonPet(BasePet):
             "moves": self.moves,
             "evolution_stage": self.evolution_stage,
             "can_evolve": self.can_evolve,
-            "stats": self.stats
+            "stats": self.stats,
         }
         return {**base_data, **pokemon_data}
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'PokemonPet':
+    def from_dict(cls, data: Dict[str, Any]) -> "PokemonPet":
         """Create Pokemon pet instance from dictionary data"""
         pet = super().from_dict(cls, data)
         pet.species = data["species"]
@@ -68,4 +69,4 @@ class PokemonPet(BasePet):
         pet.evolution_stage = data["evolution_stage"]
         pet.can_evolve = data["can_evolve"]
         pet.stats = data["stats"]
-        return pet 
+        return pet

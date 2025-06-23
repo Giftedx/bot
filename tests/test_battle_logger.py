@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.core.battle_config import BattleState
+from src.core.models import BattleState, BattleType
 from src.core.battle_logger import BattleLogger
 from src.core.battle_storage import BattleStorage
 from src.core.exceptions import LoggingError
@@ -23,7 +23,7 @@ def test_log_battle_start(battle_logger):
     """Test logging battle start."""
     battle_state = BattleState(
         battle_id="test_battle_1",
-        battle_type="osrs",
+        battle_type=BattleType.OSRS,
         challenger_id=1,
         opponent_id=2,
         current_turn=1,
@@ -45,7 +45,7 @@ def test_log_turn(battle_logger):
     """Test logging battle turn."""
     battle_state = BattleState(
         battle_id="test_battle_1",
-        battle_type="osrs",
+        battle_type=BattleType.OSRS,
         challenger_id=1,
         opponent_id=2,
         current_turn=1,
@@ -70,7 +70,7 @@ def test_log_battle_end(battle_logger):
     """Test logging battle end."""
     battle_state = BattleState(
         battle_id="test_battle_1",
-        battle_type="osrs",
+        battle_type=BattleType.OSRS,
         challenger_id=1,
         opponent_id=2,
         current_turn=1,

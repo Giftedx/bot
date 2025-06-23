@@ -31,29 +31,22 @@ class CommandProcessor:
                 # Rate limit check
                 cmd_key = f"{ctx.author.id}:{ctx.command.name}"
                 if not await self._rate_limiter.acquire(cmd_key):
-                    await ctx.send(
-                        "You're using commands too quickly! Please slow " "down."
-                    )
+                    await ctx.send("You're using commands too quickly! Please slow " "down.")
                     return
 
                 # Execute command
                 await self.bot.invoke(ctx)
 
             except commands.CommandOnCooldown as e:
-                await ctx.send(
-                    f"This command is on cooldown. Try again in {e.retry_after:.1f}s"
-                )
+                await ctx.send(f"This command is on cooldown. Try again in {e.retry_after:.1f}s")
             except commands.MissingPermissions as _:
                 await ctx.send("You don't have permission to use this command!")
             except commands.BotMissingPermissions as e:
                 await ctx.send(
-                    f"I need the following permissions: "
-                    f"{', '.join(e.missing_permissions)}"
+                    f"I need the following permissions: " f"{', '.join(e.missing_permissions)}"
                 )
             except commands.MissingRole as e:
-                await ctx.send(
-                    f"You need the {e.missing_role} role to use this command!"
-                )
+                await ctx.send(f"You need the {e.missing_role} role to use this command!")
             except commands.NoPrivateMessage:
                 await ctx.send("This command can't be used in private messages!")
             except Exception as e:

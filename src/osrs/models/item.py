@@ -8,6 +8,7 @@ from ..core.constants import SkillType
 
 class ItemType(Enum):
     """Item types."""
+
     EQUIPMENT = "equipment"
     CONSUMABLE = "consumable"
     MATERIAL = "material"
@@ -19,6 +20,7 @@ class ItemType(Enum):
 @dataclass
 class ItemRequirements:
     """Item requirements."""
+
     skills: Dict[SkillType, int] = field(default_factory=dict)
     quests: Set[str] = field(default_factory=set)
 
@@ -26,6 +28,7 @@ class ItemRequirements:
 @dataclass
 class Item:
     """Represents an OSRS item."""
+
     id: str
     name: str
     type: ItemType
@@ -41,4 +44,4 @@ class Item:
     buy_limit: Optional[int] = None
     requirements: ItemRequirements = field(default_factory=ItemRequirements)
     examine: str = ""
-    wiki_url: str = "" 
+    wiki_url: str = ""

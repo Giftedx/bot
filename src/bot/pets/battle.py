@@ -2,13 +2,7 @@
 import random
 from typing import Optional, Tuple
 
-from src.bot.pets.models import (
-    Battle,
-    BattlePet,
-    PetMove,
-    StatusEffect,
-    PetType
-)
+from src.bot.pets.models import Battle, BattlePet, PetMove, StatusEffect, PetType
 
 
 class BattleSystem:
@@ -16,47 +10,33 @@ class BattleSystem:
 
     @staticmethod
     def calculate_damage(
-        move: PetMove,
-        attacker: BattlePet,
-        defender: BattlePet
+        move: PetMove, attacker: BattlePet, defender: BattlePet
     ) -> Tuple[int, str]:
         """Calculate damage for a move, considering elements and status."""
         # Base damage calculation
         damage = move.damage + attacker.pet.base_damage
-        
+
         # Element effectiveness multipliers
         multiplier = 1.0
-        
+
         # Check super effective combinations
         super_effective = (
-            (attacker.element == PetType.FIRE and 
-             defender.element == PetType.EARTH) or
-            (attacker.element == PetType.WATER and 
-             defender.element == PetType.FIRE) or
-            (attacker.element == PetType.EARTH and 
-             defender.element == PetType.AIR) or
-            (attacker.element == PetType.AIR and 
-             defender.element == PetType.WATER) or
-            (attacker.element == PetType.LIGHT and 
-             defender.element == PetType.DARK) or
-            (attacker.element == PetType.DARK and 
-             defender.element == PetType.LIGHT)
+            (attacker.element == PetType.FIRE and defender.element == PetType.EARTH)
+            or (attacker.element == PetType.WATER and defender.element == PetType.FIRE)
+            or (attacker.element == PetType.EARTH and defender.element == PetType.AIR)
+            or (attacker.element == PetType.AIR and defender.element == PetType.WATER)
+            or (attacker.element == PetType.LIGHT and defender.element == PetType.DARK)
+            or (attacker.element == PetType.DARK and defender.element == PetType.LIGHT)
         )
-        
+
         # Check not very effective combinations
         not_effective = (
-            (defender.element == PetType.FIRE and 
-             attacker.element == PetType.EARTH) or
-            (defender.element == PetType.WATER and 
-             attacker.element == PetType.FIRE) or
-            (defender.element == PetType.EARTH and 
-             attacker.element == PetType.AIR) or
-            (defender.element == PetType.AIR and 
-             attacker.element == PetType.WATER) or
-            (defender.element == PetType.LIGHT and 
-             attacker.element == PetType.DARK) or
-            (defender.element == PetType.DARK and 
-             attacker.element == PetType.LIGHT)
+            (defender.element == PetType.FIRE and attacker.element == PetType.EARTH)
+            or (defender.element == PetType.WATER and attacker.element == PetType.FIRE)
+            or (defender.element == PetType.EARTH and attacker.element == PetType.AIR)
+            or (defender.element == PetType.AIR and attacker.element == PetType.WATER)
+            or (defender.element == PetType.LIGHT and attacker.element == PetType.DARK)
+            or (defender.element == PetType.DARK and attacker.element == PetType.LIGHT)
         )
 
         if super_effective:
@@ -77,25 +57,18 @@ class BattleSystem:
 
         # Calculate final damage
         final_damage = int(damage * multiplier)
-        
+
         # Check for status effect application
-        if (move.status_effect != StatusEffect.NONE and 
-                random.randint(1, 100) <= move.status_chance):
+        if move.status_effect != StatusEffect.NONE and random.randint(1, 100) <= move.status_chance:
             defender.status = move.status_effect
             defender.status_turns = random.randint(2, 4)
-            message += (
-                f"{defender.pet.name} was afflicted with "
-                f"{move.status_effect.value}!"
-            )
+            message += f"{defender.pet.name} was afflicted with " f"{move.status_effect.value}!"
 
         return final_damage, message
 
     @staticmethod
     def process_turn(
-        battle: Battle,
-        move: PetMove,
-        attacker: BattlePet,
-        defender: BattlePet
+        battle: Battle, move: PetMove, attacker: BattlePet, defender: BattlePet
     ) -> str:
         """Process a single turn of battle."""
         # Check if attacker can move
@@ -112,11 +85,9 @@ class BattleSystem:
             return f"{attacker.pet.name}'s {move.name} missed!"
 
         # Calculate and apply damage
-        damage, effect_message = BattleSystem.calculate_damage(
-            move, attacker, defender
-        )
+        damage, effect_message = BattleSystem.calculate_damage(move, attacker, defender)
         defender.current_hp = max(0, defender.current_hp - damage)
-        
+
         # Build battle message
         message = (
             f"{attacker.pet.name} used {move.name} {move.emoji}\n"
@@ -158,16 +129,6 @@ class BattleSystem:
         return message
 
     @staticmethod
-    def create_battle(
-        pet1: BattlePet,
-        pet2: BattlePet,
-        battle_id: int
-    ) -> Battle:
+    def create_battle(pet1: BattlePet, pet2: BattlePet, battle_id: int) -> Battle:
         """Create a new battle between two pets."""
-        return Battle(
-            id=battle_id,
-            pet1=pet1,
-            pet2=pet2,
-            current_turn=1,
-            is_finished=False
-        )
+        return Battle(id=battle_id, pet1=pet1, pet2=pet2, current_turn=1, is_finished=False)

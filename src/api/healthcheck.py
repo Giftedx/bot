@@ -1,7 +1,8 @@
 import http.client
 import sys
 
-def check_health(host='localhost', port=8080, path='/health'):
+
+def check_health(host="localhost", port=8080, path="/health"):
     try:
         conn = http.client.HTTPConnection(host, port, timeout=10)
         conn.request("GET", path)
@@ -18,5 +19,6 @@ def check_health(host='localhost', port=8080, path='/health'):
     finally:
         conn.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     check_health()

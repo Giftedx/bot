@@ -6,7 +6,7 @@ import discord
 import pytest
 from discord.ext import commands
 
-from cogs.battle_system import BattleCommands
+from src.core.utils.battle_system import BattleCommands
 from src.core.battle_database import BattleDatabase
 from src.core.battle_manager import BattleManager, BattleType
 
@@ -130,9 +130,7 @@ class TestBattleIntegration:
         assert winner_reward.coins > 0
         assert "loyalty_gain" in winner_reward.special_rewards
 
-    @pytest.mark.parametrize(
-        "battle_type", [BattleType.OSRS, BattleType.POKEMON, BattleType.PET]
-    )
+    @pytest.mark.parametrize("battle_type", [BattleType.OSRS, BattleType.POKEMON, BattleType.PET])
     async def test_battle_type_specific_features(self, battle_cog, battle_type):
         """Test features specific to each battle type."""
         ctx = Mock(spec=commands.Context)
@@ -154,9 +152,7 @@ class TestBattleIntegration:
 
         elif battle_type == BattleType.POKEMON:
             # Test type effectiveness
-            effectiveness = battle_system._calculate_effectiveness(
-                "water", ["fire", "ground"]
-            )
+            effectiveness = battle_system._calculate_effectiveness("water", ["fire", "ground"])
             assert effectiveness > 1.0  # Should be super effective
 
         elif battle_type == BattleType.PET:
@@ -167,9 +163,7 @@ class TestBattleIntegration:
                 "moves": {"test": {"power": 40}},
             }
             defender_stats = {"stats": {"defense": 30}}
-            damage, _ = battle_system.calculate_damage(
-                "test", attacker_stats, defender_stats
-            )
+            damage, _ = battle_system.calculate_damage("test", attacker_stats, defender_stats)
             assert damage > 0  # Loyalty should increase damage
 
     async def test_error_handling(self, battle_cog):

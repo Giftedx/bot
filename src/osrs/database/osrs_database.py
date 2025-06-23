@@ -13,7 +13,7 @@ from ..data import (
     get_equipment_data,
     get_monster_data,
     get_achievement_data,
-    get_item_price
+    get_item_price,
 )
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 class OSRSDatabase:
     """PostgreSQL database manager for OSRS data."""
-    
+
     def __init__(self, pool: asyncpg.Pool):
         """Initialize with connection pool."""
         self.pool = pool
@@ -30,7 +30,8 @@ class OSRSDatabase:
         """Initialize database tables."""
         async with self.pool.acquire() as conn:
             # Create tables
-            await conn.execute("""
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_characters (
                     user_id BIGINT PRIMARY KEY,
                     name TEXT NOT NULL,
@@ -45,9 +46,11 @@ class OSRSDatabase:
                     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
                     last_login TIMESTAMP NOT NULL DEFAULT NOW()
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_quest_completions (
                     user_id BIGINT NOT NULL,
                     quest_name TEXT NOT NULL,
@@ -57,9 +60,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_achievement_diary_tasks (
                     user_id BIGINT NOT NULL,
                     diary_name TEXT NOT NULL,
@@ -71,9 +76,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_training_sessions (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -86,9 +93,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_transactions (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -101,9 +110,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_combat_stats (
                     user_id BIGINT NOT NULL,
                     kills INTEGER NOT NULL DEFAULT 0,
@@ -114,9 +125,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_pets (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -131,9 +144,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_pet_achievements (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -145,9 +160,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_cross_system_boosts (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -158,9 +175,11 @@ class OSRSDatabase:
                     FOREIGN KEY (user_id) REFERENCES osrs_characters(user_id)
                         ON DELETE CASCADE
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_minigame_scores (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -172,9 +191,11 @@ class OSRSDatabase:
                         ON DELETE CASCADE,
                     UNIQUE (user_id, minigame)
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_collection_log (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -186,9 +207,11 @@ class OSRSDatabase:
                         ON DELETE CASCADE,
                     UNIQUE (user_id, category, item_id)
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_player_titles (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -199,9 +222,11 @@ class OSRSDatabase:
                         ON DELETE CASCADE,
                     UNIQUE (user_id, title)
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_player_relationships (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -214,9 +239,11 @@ class OSRSDatabase:
                         ON DELETE CASCADE,
                     UNIQUE (user_id, related_user_id, relationship_type)
                 )
-            """)
-            
-            await conn.execute("""
+            """
+            )
+
+            await conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS osrs_player_statistics (
                     id SERIAL PRIMARY KEY,
                     user_id BIGINT NOT NULL,
@@ -227,43 +254,42 @@ class OSRSDatabase:
                         ON DELETE CASCADE,
                     UNIQUE (user_id, statistic_type)
                 )
-            """)
+            """
+            )
 
     async def get_character(self, user_id: int) -> Optional[Dict]:
         """Get a character's data."""
         async with self.pool.acquire() as conn:
             char_data = await conn.fetchrow(
-                "SELECT * FROM osrs_characters WHERE user_id = $1",
-                user_id
+                "SELECT * FROM osrs_characters WHERE user_id = $1", user_id
             )
-            
+
             if not char_data:
                 return None
-                
+
             # Get quest completions
             quests = await conn.fetch(
                 "SELECT quest_name, status, completed_at FROM osrs_quest_completions WHERE user_id = $1",
-                user_id
+                user_id,
             )
-            
+
             # Get achievement diary progress
             achievements = await conn.fetch(
                 """SELECT diary_name, task_name, difficulty, completed, completed_at 
                    FROM osrs_achievement_diary_tasks WHERE user_id = $1""",
-                user_id
+                user_id,
             )
-            
+
             # Get combat stats
             combat_stats = await conn.fetchrow(
-                "SELECT * FROM osrs_combat_stats WHERE user_id = $1",
-                user_id
+                "SELECT * FROM osrs_combat_stats WHERE user_id = $1", user_id
             )
-            
+
             return {
                 **dict(char_data),
-                'quests': [dict(q) for q in quests],
-                'achievements': [dict(a) for a in achievements],
-                'combat_stats': dict(combat_stats) if combat_stats else None
+                "quests": [dict(q) for q in quests],
+                "achievements": [dict(a) for a in achievements],
+                "combat_stats": dict(combat_stats) if combat_stats else None,
             }
 
     async def create_character(self, user_id: int, name: str) -> bool:
@@ -275,39 +301,42 @@ class OSRSDatabase:
                     await conn.execute(
                         """INSERT INTO osrs_characters (user_id, name, stats)
                            VALUES ($1, $2, $3)""",
-                        user_id, name, json.dumps({
-                            'attack': {'level': 1, 'xp': 0},
-                            'strength': {'level': 1, 'xp': 0},
-                            'defence': {'level': 1, 'xp': 0},
-                            'hitpoints': {'level': 10, 'xp': 1154},
-                            'prayer': {'level': 1, 'xp': 0},
-                            'magic': {'level': 1, 'xp': 0},
-                            'ranged': {'level': 1, 'xp': 0},
-                            'mining': {'level': 1, 'xp': 0},
-                            'smithing': {'level': 1, 'xp': 0},
-                            'fishing': {'level': 1, 'xp': 0},
-                            'cooking': {'level': 1, 'xp': 0},
-                            'woodcutting': {'level': 1, 'xp': 0},
-                            'firemaking': {'level': 1, 'xp': 0},
-                            'crafting': {'level': 1, 'xp': 0},
-                            'fletching': {'level': 1, 'xp': 0},
-                            'agility': {'level': 1, 'xp': 0},
-                            'herblore': {'level': 1, 'xp': 0},
-                            'thieving': {'level': 1, 'xp': 0},
-                            'runecraft': {'level': 1, 'xp': 0},
-                            'slayer': {'level': 1, 'xp': 0},
-                            'farming': {'level': 1, 'xp': 0},
-                            'construction': {'level': 1, 'xp': 0},
-                            'hunter': {'level': 1, 'xp': 0}
-                        })
+                        user_id,
+                        name,
+                        json.dumps(
+                            {
+                                "attack": {"level": 1, "xp": 0},
+                                "strength": {"level": 1, "xp": 0},
+                                "defence": {"level": 1, "xp": 0},
+                                "hitpoints": {"level": 10, "xp": 1154},
+                                "prayer": {"level": 1, "xp": 0},
+                                "magic": {"level": 1, "xp": 0},
+                                "ranged": {"level": 1, "xp": 0},
+                                "mining": {"level": 1, "xp": 0},
+                                "smithing": {"level": 1, "xp": 0},
+                                "fishing": {"level": 1, "xp": 0},
+                                "cooking": {"level": 1, "xp": 0},
+                                "woodcutting": {"level": 1, "xp": 0},
+                                "firemaking": {"level": 1, "xp": 0},
+                                "crafting": {"level": 1, "xp": 0},
+                                "fletching": {"level": 1, "xp": 0},
+                                "agility": {"level": 1, "xp": 0},
+                                "herblore": {"level": 1, "xp": 0},
+                                "thieving": {"level": 1, "xp": 0},
+                                "runecraft": {"level": 1, "xp": 0},
+                                "slayer": {"level": 1, "xp": 0},
+                                "farming": {"level": 1, "xp": 0},
+                                "construction": {"level": 1, "xp": 0},
+                                "hunter": {"level": 1, "xp": 0},
+                            }
+                        ),
                     )
-                    
+
                     # Initialize combat stats
                     await conn.execute(
-                        "INSERT INTO osrs_combat_stats (user_id) VALUES ($1)",
-                        user_id
+                        "INSERT INTO osrs_combat_stats (user_id) VALUES ($1)", user_id
                     )
-                    
+
                     return True
         except asyncpg.UniqueViolationError:
             return False
@@ -328,10 +357,10 @@ class OSRSDatabase:
                            last_login = NOW()
                        WHERE user_id = $5""",
                     json.dumps(stats),
-                    sum(s['level'] for s in stats.values()),
-                    sum(s['xp'] for s in stats.values()),
+                    sum(s["level"] for s in stats.values()),
+                    sum(s["xp"] for s in stats.values()),
                     self._calculate_combat_level(stats),
-                    user_id
+                    user_id,
                 )
                 return True
         except Exception as e:
@@ -339,13 +368,13 @@ class OSRSDatabase:
             return False
 
     async def record_training_session(
-        self, 
-        user_id: int, 
-        skill: str, 
+        self,
+        user_id: int,
+        skill: str,
         start_time: datetime,
         start_level: int,
         end_level: int = None,
-        xp_gained: int = None
+        xp_gained: int = None,
     ) -> int:
         """Record a training session."""
         try:
@@ -355,17 +384,19 @@ class OSRSDatabase:
                        (user_id, skill, start_time, start_level, end_level, xp_gained)
                        VALUES ($1, $2, $3, $4, $5, $6)
                        RETURNING id""",
-                    user_id, skill, start_time, start_level, end_level, xp_gained
+                    user_id,
+                    skill,
+                    start_time,
+                    start_level,
+                    end_level,
+                    xp_gained,
                 )
         except Exception as e:
             logger.error(f"Error recording training session: {e}")
             return None
 
     async def complete_training_session(
-        self, 
-        session_id: int,
-        end_level: int,
-        xp_gained: int
+        self, session_id: int, end_level: int, xp_gained: int
     ) -> bool:
         """Complete a training session."""
         try:
@@ -374,7 +405,9 @@ class OSRSDatabase:
                     """UPDATE osrs_training_sessions 
                        SET end_level = $1, xp_gained = $2, end_time = NOW()
                        WHERE id = $3""",
-                    end_level, xp_gained, session_id
+                    end_level,
+                    xp_gained,
+                    session_id,
                 )
                 return True
         except Exception as e:
@@ -382,12 +415,7 @@ class OSRSDatabase:
             return False
 
     async def record_transaction(
-        self,
-        user_id: int,
-        item_id: int,
-        quantity: int,
-        price_per_item: int,
-        transaction_type: str
+        self, user_id: int, item_id: int, quantity: int, price_per_item: int, transaction_type: str
     ) -> int:
         """Record an item transaction."""
         try:
@@ -397,8 +425,12 @@ class OSRSDatabase:
                        (user_id, item_id, quantity, price_per_item, total_price, transaction_type)
                        VALUES ($1, $2, $3, $4, $5, $6)
                        RETURNING id""",
-                    user_id, item_id, quantity, price_per_item, 
-                    quantity * price_per_item, transaction_type
+                    user_id,
+                    item_id,
+                    quantity,
+                    price_per_item,
+                    quantity * price_per_item,
+                    transaction_type,
                 )
         except Exception as e:
             logger.error(f"Error recording transaction: {e}")
@@ -412,7 +444,8 @@ class OSRSDatabase:
                     """UPDATE osrs_characters 
                        SET inventory = $1
                        WHERE user_id = $2""",
-                    json.dumps(inventory), user_id
+                    json.dumps(inventory),
+                    user_id,
                 )
                 return True
         except Exception as e:
@@ -427,7 +460,8 @@ class OSRSDatabase:
                     """UPDATE osrs_characters 
                        SET equipment = $1
                        WHERE user_id = $2""",
-                    json.dumps(equipment), user_id
+                    json.dumps(equipment),
+                    user_id,
                 )
                 return True
         except Exception as e:
@@ -442,7 +476,8 @@ class OSRSDatabase:
                     """UPDATE osrs_characters 
                        SET bank = $1
                        WHERE user_id = $2""",
-                    json.dumps(bank), user_id
+                    json.dumps(bank),
+                    user_id,
                 )
                 return True
         except Exception as e:
@@ -453,16 +488,11 @@ class OSRSDatabase:
         """Get a character's quest progress."""
         async with self.pool.acquire() as conn:
             return await conn.fetch(
-                "SELECT * FROM osrs_quest_completions WHERE user_id = $1",
-                user_id
+                "SELECT * FROM osrs_quest_completions WHERE user_id = $1", user_id
             )
 
     async def update_quest_status(
-        self,
-        user_id: int,
-        quest_name: str,
-        status: str,
-        completed_at: datetime = None
+        self, user_id: int, quest_name: str, status: str, completed_at: datetime = None
     ) -> bool:
         """Update a quest's status."""
         try:
@@ -474,10 +504,13 @@ class OSRSDatabase:
                            VALUES ($1, $2, $3, $4)
                            ON CONFLICT (user_id, quest_name)
                            DO UPDATE SET status = $3, completed_at = $4""",
-                        user_id, quest_name, status, completed_at
+                        user_id,
+                        quest_name,
+                        status,
+                        completed_at,
                     )
-                    
-                    if status == 'completed':
+
+                    if status == "completed":
                         # Update quest points
                         quest_data = get_quest_data(quest_name)
                         if quest_data:
@@ -485,10 +518,10 @@ class OSRSDatabase:
                                 """UPDATE osrs_characters 
                                    SET quest_points = quest_points + $1
                                    WHERE user_id = $2""",
-                                quest_data['rewards']['quest_points'],
-                                user_id
+                                quest_data["rewards"]["quest_points"],
+                                user_id,
                             )
-                    
+
                     return True
         except Exception as e:
             logger.error(f"Error updating quest status: {e}")
@@ -498,16 +531,11 @@ class OSRSDatabase:
         """Get a character's achievement diary progress."""
         async with self.pool.acquire() as conn:
             return await conn.fetch(
-                "SELECT * FROM osrs_achievement_diary_tasks WHERE user_id = $1",
-                user_id
+                "SELECT * FROM osrs_achievement_diary_tasks WHERE user_id = $1", user_id
             )
 
     async def complete_achievement_task(
-        self,
-        user_id: int,
-        diary_name: str,
-        task_name: str,
-        difficulty: str
+        self, user_id: int, diary_name: str, task_name: str, difficulty: str
     ) -> bool:
         """Mark an achievement diary task as completed."""
         try:
@@ -518,7 +546,10 @@ class OSRSDatabase:
                        VALUES ($1, $2, $3, $4, true, NOW())
                        ON CONFLICT (user_id, diary_name, task_name)
                        DO UPDATE SET completed = true, completed_at = NOW()""",
-                    user_id, diary_name, task_name, difficulty
+                    user_id,
+                    diary_name,
+                    task_name,
+                    difficulty,
                 )
                 return True
         except Exception as e:
@@ -534,7 +565,8 @@ class OSRSDatabase:
                        FROM osrs_characters
                        ORDER BY (stats->$1)::int DESC
                        LIMIT $2""",
-                    skill, limit
+                    skill,
+                    limit,
                 )
             else:
                 return await conn.fetch(
@@ -542,7 +574,7 @@ class OSRSDatabase:
                        FROM osrs_characters
                        ORDER BY total_xp DESC
                        LIMIT $1""",
-                    limit
+                    limit,
                 )
 
     async def get_recent_achievements(self, user_id: int, limit: int = 5) -> List[Dict]:
@@ -560,7 +592,8 @@ class OSRSDatabase:
                    WHERE user_id = $1 AND completed_at IS NOT NULL
                    ORDER BY completed_at DESC
                    LIMIT $2""",
-                user_id, limit
+                user_id,
+                limit,
             )
 
     async def get_recent_transactions(self, user_id: int, limit: int = 10) -> List[Dict]:
@@ -572,7 +605,8 @@ class OSRSDatabase:
                    WHERE user_id = $1
                    ORDER BY created_at DESC
                    LIMIT $2""",
-                user_id, limit
+                user_id,
+                limit,
             )
 
     async def record_combat_stats(
@@ -581,7 +615,7 @@ class OSRSDatabase:
         kills: int = 0,
         deaths: int = 0,
         damage_dealt: int = 0,
-        damage_taken: int = 0
+        damage_taken: int = 0,
     ) -> bool:
         """Update combat statistics."""
         try:
@@ -596,7 +630,11 @@ class OSRSDatabase:
                            deaths = osrs_combat_stats.deaths + $3,
                            damage_dealt = osrs_combat_stats.damage_dealt + $4,
                            damage_taken = osrs_combat_stats.damage_taken + $5""",
-                    user_id, kills, deaths, damage_dealt, damage_taken
+                    user_id,
+                    kills,
+                    deaths,
+                    damage_dealt,
+                    damage_taken,
                 )
                 return True
         except Exception as e:
@@ -606,32 +644,22 @@ class OSRSDatabase:
     def _calculate_combat_level(self, stats: Dict) -> int:
         """Calculate combat level from stats."""
         base = 0.25 * (
-            stats['defence']['level'] + 
-            stats['hitpoints']['level'] +
-            stats['prayer']['level'] // 2
+            stats["defence"]["level"] + stats["hitpoints"]["level"] + stats["prayer"]["level"] // 2
         )
-        
-        melee = 0.325 * (
-            stats['attack']['level'] + 
-            stats['strength']['level']
-        )
-        
-        ranged = 0.325 * (
-            (stats['ranged']['level'] * 3) // 2
-        )
-        
-        magic = 0.325 * (
-            (stats['magic']['level'] * 3) // 2
-        )
-        
+
+        melee = 0.325 * (stats["attack"]["level"] + stats["strength"]["level"])
+
+        ranged = 0.325 * ((stats["ranged"]["level"] * 3) // 2)
+
+        magic = 0.325 * ((stats["magic"]["level"] * 3) // 2)
+
         return int(base + max(melee, ranged, magic))
 
     async def get_pet(self, user_id: int, pet_id: int) -> Optional[Dict]:
         """Get a pet by ID."""
         async with self.pool.acquire() as conn:
             return await conn.fetchrow(
-                "SELECT * FROM osrs_pets WHERE user_id = $1 AND id = $2",
-                user_id, pet_id
+                "SELECT * FROM osrs_pets WHERE user_id = $1 AND id = $2", user_id, pet_id
             )
 
     async def create_pet(
@@ -640,7 +668,7 @@ class OSRSDatabase:
         name: str,
         pet_type: str,
         rarity: str = "common",
-        attributes: Dict = None
+        attributes: Dict = None,
     ) -> bool:
         """Create a new pet."""
         try:
@@ -649,8 +677,11 @@ class OSRSDatabase:
                     """INSERT INTO osrs_pets 
                        (user_id, name, pet_type, rarity, attributes)
                        VALUES ($1, $2, $3, $4, $5)""",
-                    user_id, name, pet_type, rarity, 
-                    json.dumps(attributes or {})
+                    user_id,
+                    name,
+                    pet_type,
+                    rarity,
+                    json.dumps(attributes or {}),
                 )
                 return True
         except Exception as e:
@@ -658,11 +689,7 @@ class OSRSDatabase:
             return False
 
     async def update_pet_stats(
-        self,
-        pet_id: int,
-        experience: int = None,
-        level: int = None,
-        happiness: int = None
+        self, pet_id: int, experience: int = None, level: int = None, happiness: int = None
     ) -> bool:
         """Update pet statistics."""
         try:
@@ -678,14 +705,14 @@ class OSRSDatabase:
                 if happiness is not None:
                     updates.append("happiness = $" + str(len(values) + 1))
                     values.append(happiness)
-                
+
                 if updates:
                     values.append(pet_id)
                     await conn.execute(
                         f"""UPDATE osrs_pets 
                            SET {', '.join(updates)}
                            WHERE id = ${len(values)}""",
-                        *values
+                        *values,
                     )
                 return True
         except Exception as e:
@@ -698,7 +725,7 @@ class OSRSDatabase:
         source_type: str,
         target_type: str,
         boost_value: float,
-        expires_at: Optional[datetime] = None
+        expires_at: Optional[datetime] = None,
     ) -> bool:
         """Add a cross-system boost."""
         try:
@@ -707,19 +734,18 @@ class OSRSDatabase:
                     """INSERT INTO osrs_cross_system_boosts
                        (user_id, source_type, target_type, boost_value, expires_at)
                        VALUES ($1, $2, $3, $4, $5)""",
-                    user_id, source_type, target_type, boost_value, expires_at
+                    user_id,
+                    source_type,
+                    target_type,
+                    boost_value,
+                    expires_at,
                 )
                 return True
         except Exception as e:
             logger.error(f"Error adding cross-system boost: {e}")
             return False
 
-    async def update_minigame_score(
-        self,
-        user_id: int,
-        minigame: str,
-        score: int
-    ) -> bool:
+    async def update_minigame_score(self, user_id: int, minigame: str, score: int) -> bool:
         """Update minigame score."""
         try:
             async with self.pool.acquire() as conn:
@@ -740,7 +766,9 @@ class OSRSDatabase:
                            score = $3,
                            high_score = GREATEST($3, osrs_minigame_scores.high_score),
                            last_played = NOW()""",
-                    user_id, minigame, score
+                    user_id,
+                    minigame,
+                    score,
                 )
                 return True
         except Exception as e:
@@ -748,11 +776,7 @@ class OSRSDatabase:
             return False
 
     async def add_collection_log_entry(
-        self,
-        user_id: int,
-        category: str,
-        item_id: str,
-        count: int = 1
+        self, user_id: int, category: str, item_id: str, count: int = 1
     ) -> bool:
         """Add or update collection log entry."""
         try:
@@ -763,19 +787,17 @@ class OSRSDatabase:
                        VALUES ($1, $2, $3, $4)
                        ON CONFLICT (user_id, category, item_id)
                        DO UPDATE SET count = osrs_collection_log.count + $4""",
-                    user_id, category, item_id, count
+                    user_id,
+                    category,
+                    item_id,
+                    count,
                 )
                 return True
         except Exception as e:
             logger.error(f"Error adding collection log entry: {e}")
             return False
 
-    async def update_player_title(
-        self,
-        user_id: int,
-        title: str,
-        active: bool = False
-    ) -> bool:
+    async def update_player_title(self, user_id: int, title: str, active: bool = False) -> bool:
         """Add or update player title."""
         try:
             async with self.pool.acquire() as conn:
@@ -785,16 +807,18 @@ class OSRSDatabase:
                         """UPDATE osrs_player_titles
                            SET active = FALSE
                            WHERE user_id = $1""",
-                        user_id
+                        user_id,
                     )
-                
+
                 await conn.execute(
                     """INSERT INTO osrs_player_titles
                        (user_id, title, active)
                        VALUES ($1, $2, $3)
                        ON CONFLICT (user_id, title)
                        DO UPDATE SET active = $3""",
-                    user_id, title, active
+                    user_id,
+                    title,
+                    active,
                 )
                 return True
         except Exception as e:
@@ -802,10 +826,7 @@ class OSRSDatabase:
             return False
 
     async def add_player_relationship(
-        self,
-        user_id: int,
-        related_user_id: int,
-        relationship_type: str
+        self, user_id: int, related_user_id: int, relationship_type: str
     ) -> bool:
         """Add player relationship."""
         try:
@@ -816,19 +837,16 @@ class OSRSDatabase:
                        VALUES ($1, $2, $3)
                        ON CONFLICT (user_id, related_user_id, relationship_type)
                        DO NOTHING""",
-                    user_id, related_user_id, relationship_type
+                    user_id,
+                    related_user_id,
+                    relationship_type,
                 )
                 return True
         except Exception as e:
             logger.error(f"Error adding player relationship: {e}")
             return False
 
-    async def update_player_statistic(
-        self,
-        user_id: int,
-        statistic_type: str,
-        value: int
-    ) -> bool:
+    async def update_player_statistic(self, user_id: int, statistic_type: str, value: int) -> bool:
         """Update player statistic."""
         try:
             async with self.pool.acquire() as conn:
@@ -840,9 +858,11 @@ class OSRSDatabase:
                        DO UPDATE SET 
                            value = osrs_player_statistics.value + $3,
                            last_updated = NOW()""",
-                    user_id, statistic_type, value
+                    user_id,
+                    statistic_type,
+                    value,
                 )
                 return True
         except Exception as e:
             logger.error(f"Error updating player statistic: {e}")
-            return False 
+            return False

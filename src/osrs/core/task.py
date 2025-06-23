@@ -12,6 +12,7 @@ from ..models.user import User
 
 class TaskStatus(Enum):
     """Task execution status."""
+
     PENDING = auto()
     RUNNING = auto()
     COMPLETED = auto()
@@ -22,6 +23,7 @@ class TaskStatus(Enum):
 @dataclass
 class TaskRequirements:
     """Requirements for starting a task."""
+
     skills: Dict[SkillType, int] = field(default_factory=dict)
     items: Dict[Union[str, int], int] = field(default_factory=dict)
     quests: Set[str] = field(default_factory=set)
@@ -32,6 +34,7 @@ class TaskRequirements:
 @dataclass
 class TaskRewards:
     """Rewards for completing a task."""
+
     xp: Dict[SkillType, int] = field(default_factory=dict)
     items: Dict[Union[str, int], int] = field(default_factory=dict)
     gp: int = 0
@@ -59,8 +62,7 @@ class Task(ABC):
     @property
     def time_remaining(self) -> Optional[timedelta]:
         """Get remaining time if task is running."""
-        if (self.status == TaskStatus.RUNNING and 
-            self.start_time and self.end_time):
+        if self.status == TaskStatus.RUNNING and self.start_time and self.end_time:
             remaining = self.end_time - datetime.now()
             return remaining if remaining.total_seconds() > 0 else timedelta()
         return None
@@ -92,13 +94,14 @@ class Task(ABC):
             return False
 
         # Check quest requirements
-        if not all(quest in self.user.bitfield 
-                  for quest in self.requirements.quests):
+        if not all(quest in self.user.bitfield for quest in self.requirements.quests):
             return False
 
         # Check combat level
-        if (self.requirements.combat_level and 
-            self.user.combat_level < self.requirements.combat_level):
+        if (
+            self.requirements.combat_level
+            and self.user.combat_level < self.requirements.combat_level
+        ):
             return False
 
         # Check GP
@@ -118,7 +121,7 @@ class Task(ABC):
         # Remove required items and GP
         if not self.user.bank.remove_all(self.requirements.items):
             return False
-            
+
         self.user.GP -= self.requirements.gp
 
         self.status = TaskStatus.RUNNING
@@ -186,4 +189,4 @@ class Task(ABC):
         status_str = f"[{self.status.name}]"
         if self.time_remaining:
             status_str += f" {self.time_remaining}"
-        return f"{self.__class__.__name__} {status_str}" 
+        return f"{self.__class__.__name__} {status_str}"

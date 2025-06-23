@@ -8,9 +8,10 @@ from .osrs_pet import OSRSPet
 
 logger = logging.getLogger(__name__)
 
+
 class PetManager:
     """Manages the pet system."""
-    
+
     def __init__(self, bot):
         """Initialize pet manager."""
         self.bot = bot
@@ -24,20 +25,16 @@ class PetManager:
             pets = await conn.fetch("SELECT * FROM osrs_pets")
             for pet_data in pets:
                 try:
-                    if pet_data['pet_type'] == PetType.OSRS.value:
+                    if pet_data["pet_type"] == PetType.OSRS.value:
                         pet = OSRSPet.from_dict(dict(pet_data))
                     else:
                         pet = Pet.from_dict(dict(pet_data))
-                    self.active_pets[pet_data['user_id']] = pet
+                    self.active_pets[pet_data["user_id"]] = pet
                 except Exception as e:
                     logger.error(f"Error loading pet {pet_data['id']}: {e}")
 
     async def create_pet(
-        self,
-        owner_id: int,
-        name: str,
-        pet_type: str,
-        rarity: str = "common"
+        self, owner_id: int, name: str, pet_type: str, rarity: str = "common"
     ) -> Optional[Pet]:
         """Create a new pet."""
         try:
@@ -55,24 +52,17 @@ class PetManager:
                     ) VALUES ($1, $2, $3, $4)
                     RETURNING id
                     """,
-                    owner_id, name, pet_type, rarity
+                    owner_id,
+                    name,
+                    pet_type,
+                    rarity,
                 )
 
                 # Create appropriate pet type
                 if pet_type == PetType.OSRS.value:
-                    pet = OSRSPet(
-                        id=pet_id,
-                        owner_id=owner_id,
-                        name=name,
-                        pet_type=pet_type
-                    )
+                    pet = OSRSPet(id=pet_id, owner_id=owner_id, name=name, pet_type=pet_type)
                 else:
-                    pet = Pet(
-                        id=pet_id,
-                        owner_id=owner_id,
-                        name=name,
-                        pet_type=PetType(pet_type)
-                    )
+                    pet = Pet(id=pet_id, owner_id=owner_id, name=name, pet_type=PetType(pet_type))
 
                 self.active_pets[owner_id] = pet
                 return pet
@@ -85,23 +75,14 @@ class PetManager:
         """Get a player's active pet."""
         return self.active_pets.get(owner_id)
 
-    async def train_pet(
-        self,
-        owner_id: int,
-        activity: str,
-        duration: int
-    ) -> tuple[int, bool]:
+    async def train_pet(self, owner_id: int, activity: str, duration: int) -> tuple[int, bool]:
         """Train a pet and gain experience."""
         pet = self.active_pets.get(owner_id)
         if not pet:
             return (0, False)
 
         # Calculate experience gain
-        base_xp = {
-            "walking": 5,
-            "playing": 10,
-            "training": 15
-        }.get(activity, 5)
+        base_xp = {"walking": 5, "playing": 10, "training": 15}.get(activity, 5)
 
         xp_gained = base_xp * duration
         leveled_up = pet.add_experience(xp_gained)
@@ -122,7 +103,7 @@ class PetManager:
                 pet.stats.experience,
                 pet.stats.level,
                 pet.stats.happiness,
-                pet.id
+                pet.id,
             )
 
         return (xp_gained, leveled_up)
@@ -133,11 +114,7 @@ class PetManager:
         if not pet:
             return 0
 
-        happiness_gain = {
-            "basic": 10,
-            "premium": 25,
-            "special": 50
-        }.get(food_type, 5)
+        happiness_gain = {"basic": 10, "premium": 25, "special": 50}.get(food_type, 5)
 
         gained = pet.heal(happiness_gain)
 
@@ -150,7 +127,7 @@ class PetManager:
                 WHERE id = $2
                 """,
                 pet.stats.happiness,
-                pet.id
+                pet.id,
             )
 
         return gained
@@ -174,14 +151,10 @@ class PetManager:
             "skill_levels": pet.stats.skill_levels,
             "training_points": pet.stats.training_points,
             "status": pet.status.value if pet.status else "none",
-            "attributes": pet.attributes
+            "attributes": pet.attributes,
         }
 
-    async def update_pet_attributes(
-        self,
-        owner_id: int,
-        attributes: Dict
-    ) -> bool:
+    async def update_pet_attributes(self, owner_id: int, attributes: Dict) -> bool:
         """Update pet attributes."""
         pet = self.active_pets.get(owner_id)
         if not pet:
@@ -198,7 +171,7 @@ class PetManager:
                 WHERE id = $2
                 """,
                 pet.attributes,
-                pet.id
+                pet.id,
             )
 
         return True
@@ -210,10 +183,7 @@ class PetManager:
 
         try:
             async with self.bot.db.pool.acquire() as conn:
-                await conn.execute(
-                    "DELETE FROM osrs_pets WHERE user_id = $1",
-                    owner_id
-                )
+                await conn.execute("DELETE FROM osrs_pets WHERE user_id = $1", owner_id)
             del self.active_pets[owner_id]
             return True
         except Exception as e:
@@ -222,17 +192,9 @@ class PetManager:
 
     async def get_all_pets(self, owner_id: int) -> List[Pet]:
         """Get all pets owned by a player."""
-        return [
-            pet for pet in self.active_pets.values()
-            if pet.owner_id == owner_id
-        ]
+        return [pet for pet in self.active_pets.values() if pet.owner_id == owner_id]
 
-    async def apply_status(
-        self,
-        owner_id: int,
-        status: StatusEffect,
-        duration: int = 3
-    ) -> bool:
+    async def apply_status(self, owner_id: int, status: StatusEffect, duration: int = 3) -> bool:
         """Apply a status effect to a pet."""
         pet = self.active_pets.get(owner_id)
         if not pet:
@@ -251,7 +213,7 @@ class PetManager:
                 """,
                 status.value,
                 duration,
-                pet.id
+                pet.id,
             )
 
-        return True 
+        return True

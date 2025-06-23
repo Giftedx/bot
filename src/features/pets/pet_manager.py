@@ -6,6 +6,7 @@ from ...shared.base_pet import BasePet
 from ..osrs.osrs_pet import OSRSPet
 from ..pokemon.pokemon_pet import PokemonPet
 
+
 class PetManager:
     def __init__(self):
         self.pets: Dict[str, BasePet] = {}
@@ -14,7 +15,7 @@ class PetManager:
     def add_pet(self, owner_id: str, pet_type: str, **pet_kwargs) -> BasePet:
         """Add a new pet of specified type to the system"""
         pet_id = str(uuid.uuid4())
-        
+
         if pet_type.lower() == "osrs":
             pet = OSRSPet(pet_id, owner_id, **pet_kwargs)
         elif pet_type.lower() == "pokemon":
@@ -71,19 +72,19 @@ class PetManager:
             "highest_level": max((p.level for p in pets), default=0),
             "pet_types": {
                 "osrs": sum(1 for p in pets if isinstance(p, OSRSPet)),
-                "pokemon": sum(1 for p in pets if isinstance(p, PokemonPet))
-            }
+                "pokemon": sum(1 for p in pets if isinstance(p, PokemonPet)),
+            },
         }
 
     def save_pets_data(self) -> Dict[str, Any]:
         """Convert all pet data to dictionary format for storage"""
         return {
             "pets": {pid: pet.to_dict() for pid, pet in self.pets.items()},
-            "user_pets": self.user_pets
+            "user_pets": self.user_pets,
         }
 
     @classmethod
-    def load_pets_data(cls, data: Dict[str, Any]) -> 'PetManager':
+    def load_pets_data(cls, data: Dict[str, Any]) -> "PetManager":
         """Create PetManager instance from stored data"""
         manager = cls()
         for pid, pet_data in data["pets"].items():
@@ -94,4 +95,4 @@ class PetManager:
                 pet = PokemonPet.from_dict(pet_data)
             manager.pets[pid] = pet
         manager.user_pets = data["user_pets"]
-        return manager 
+        return manager

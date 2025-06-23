@@ -6,12 +6,11 @@ This repository contains a feature-rich Discord bot built with Python.
 
 - **Python Backend**:
   - Built using `discord.py` for Discord integration.
-  - Cog-based architecture for modular and extensible commands.
+  - Slash command based architecture for modular and extensible commands.
   - SQLite for data persistence.
-  - Features a pet battling game.
 
 - **Discord Integration**:
-  - Command handling via `!` prefix.
+  - Command handling via slash commands.
   - Rich embed messages for clean display.
 
 ## Setup and Running the Bot
@@ -23,46 +22,46 @@ This repository contains a feature-rich Discord bot built with Python.
     ```
 
 2.  **Install dependencies:**
-    This project uses Poetry for dependency management. If you don't have Poetry installed, you can find installation instructions [here](https://python-poetry.org/docs/#installation).
-
-    Once you have Poetry, install the dependencies from `pyproject.toml`:
+    This project uses `make` to streamline the development process. To install all necessary production and development dependencies, simply run:
     ```bash
-    poetry install
+    make dev-install
     ```
+    This command uses `pip` to install all packages defined in the `pyproject.toml` file.
 
 3.  **Configuration:**
-    -   Create a `config/secrets.yaml` file.
-    -   Edit `config/secrets.yaml` and add your Discord bot token:
-        ```yaml
-        discord:
-          token: YOUR_BOT_TOKEN_HERE
+    -   Create a `.env` file in the project root.
+    -   Add your Discord bot token to the `.env` file:
         ```
-    -   Alternatively, you can set the `DISCORD_TOKEN` environment variable.
+        DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
+        ```
 
 4.  **Run the bot:**
+    To run the bot in development mode, use the following command:
     ```bash
-    poetry run python -m src.main
+    make run-dev
     ```
-    Or, if you have activated the virtual environment with `poetry shell`:
-    ```bash
-    python -m src.main
-    ```
+    This will launch the bot and all its services inside Docker containers. The bot is configured for live-reloading, so any changes you make to the source code will cause it to automatically restart.
 
 ## Features
 
 ### OSRS Module
 A full-featured Old School RuneScape RPG experience right in your Discord server.
 
-- **Character System**: Create your own character with `/create`, view your skills with `/stats`, and see your inventory with `/inventory` and `/bank`.
-- **Combat**: Fight a variety of monsters using the `/fight`, `/attack`, and `/flee` commands. Gain XP and get drops!
-- **Quests**: Embark on quests with `/quests` and check your progress with `/quest_info`.
-- **Player Trading**: Trade items securely with other players using the `/trade` command group.
-- **Progression**: Track your `/achievements` and fill up your `/collection_log` with unique items.
-- **Grand Exchange (WIP)**: A server-wide marketplace to buy and sell items is under construction. Placeholder commands (`/ge`) are available.
+- **Grand Exchange**: A server-wide marketplace to buy and sell items using the `/osrs_ge` command group.
+- **Quests**: Check available quests and your progress with `/osrs_quest`.
 
-### Pet Battling
-- `!pets`: See a list of your pets.
-- `!battle @user`: (Under construction) Start a battle with another user.
+### Plex Module
+- **Search**: Search for media on your Plex server with `/plex_search`.
+- **Playback**: Play, pause, resume, and stop media with `/plex_play`, `/plex_pause`, `/plex_resume`, and `/plex_stop`.
+- **Status**: Check the status of the current playback with `/plex_status`.
+- **Libraries**: List available libraries with `/plex_libraries`.
+
+### Pokémon Module
+- **Info**: Get information on Pokémon, abilities, moves, items, types, and natures with the `/pokemon` command group.
+
+## Command Documentation
+
+For a full list of commands and their usage, please see the [Command Documentation](./docs/api/commands).
 
 ## Contributing
 

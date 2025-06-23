@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 class SkillType(Enum):
     """OSRS skill types."""
+
     ATTACK = "attack"
     STRENGTH = "strength"
     DEFENCE = "defence"
@@ -34,17 +35,18 @@ class SkillType(Enum):
 @dataclass
 class SkillLevel:
     """Represents a skill's level and experience."""
+
     type: SkillType
     level: int = 1
     xp: int = 0
-    
+
     def add_xp(self, amount: int) -> bool:
         """Add XP to the skill and return True if leveled up."""
         self.xp += amount
         old_level = self.level
         self.level = self._xp_to_level(self.xp)
         return self.level > old_level
-        
+
     @staticmethod
     def _xp_to_level(xp: int) -> int:
         """Convert XP to level using OSRS formula."""
@@ -52,7 +54,7 @@ class SkillLevel:
             if xp < SkillLevel.xp_for_level(level):
                 return level - 1
         return 99
-    
+
     @staticmethod
     def xp_for_level(level: int) -> int:
         """Calculate XP required for a given level using OSRS formula."""
@@ -64,6 +66,7 @@ class SkillLevel:
 
 class BitField(Enum):
     """User bitfield flags."""
+
     MINION_IRONMAN = auto()
     BOUGHT_INFINITE_AGILITY = auto()
     BOUGHT_TIER_1_BANK = auto()
@@ -183,4 +186,4 @@ class BitField(Enum):
     HAS_COMPLETED_ALL_QUESTS_COLLECTION = auto()
     HAS_COMPLETED_ALL_DIARIES_COLLECTION = auto()
     HAS_COMPLETED_ALL_MUSIC_COLLECTION = auto()
-    HAS_COMPLETED_ALL_COMBAT_TASKS_COLLECTION = auto() 
+    HAS_COMPLETED_ALL_COMBAT_TASKS_COLLECTION = auto()

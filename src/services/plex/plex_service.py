@@ -8,11 +8,7 @@ from plexapi.audio import Track
 from plexapi.photo import Photo
 from plexapi.exceptions import Unauthorized
 
-from src.core.exceptions import (
-    PlexConnectionError,
-    PlexAuthError,
-    MediaNotFoundError
-)
+from src.core.exceptions import PlexConnectionError, PlexAuthError, MediaNotFoundError
 from src.core.config import Settings
 
 settings = Settings()
@@ -22,12 +18,8 @@ logger = logging.getLogger(__name__)
 
 class PlaybackResult:
     """Result of a playback operation."""
-    def __init__(
-        self,
-        status: str,
-        media_id: str,
-        title: Optional[str] = None
-    ) -> None:
+
+    def __init__(self, status: str, media_id: str, title: Optional[str] = None) -> None:
         self.status = status
         self.media_id = media_id
         self.title = title
@@ -91,10 +83,7 @@ class PlexService:
         except Exception as e:
             raise PlexConnectionError(f"Health check failed: {e}")
 
-    async def search_media(
-        self,
-        query: str
-    ) -> List[Union[Video, Track, Photo]]:
+    async def search_media(self, query: str) -> List[Union[Video, Track, Photo]]:
         """Search for media across all libraries.
 
         Args:
@@ -113,9 +102,7 @@ class PlexService:
             if self._server:  # mypy check
                 results = self._server.library.search(query)
                 if not results:
-                    raise MediaNotFoundError(
-                        f"No media found matching '{query}'"
-                    )
+                    raise MediaNotFoundError(f"No media found matching '{query}'")
                 return cast(List[Union[Video, Track, Photo]], results)
             return []
         except (PlexConnectionError, MediaNotFoundError):
@@ -123,11 +110,7 @@ class PlexService:
         except Exception as e:
             raise PlexConnectionError(f"Search failed: {e}")
 
-    async def play_media(
-        self,
-        media_id: str,
-        client_id: Optional[str] = None
-    ) -> PlaybackResult:
+    async def play_media(self, media_id: str, client_id: Optional[str] = None) -> PlaybackResult:
         """Start playback of specified media.
 
         Args:
@@ -150,11 +133,7 @@ class PlexService:
                     raise MediaNotFoundError(f"Media ID {media_id} not found")
 
                 # For now just return success - actual playback needs client setup
-                return PlaybackResult(
-                    status="success",
-                    media_id=media_id,
-                    title=media.title
-                )
+                return PlaybackResult(status="success", media_id=media_id, title=media.title)
             return PlaybackResult(status="error", media_id=media_id)
         except (PlexConnectionError, MediaNotFoundError):
             raise
@@ -172,20 +151,19 @@ class PlexService:
                 await self.initialize()
             if not self._server:
                 return []
-                
+
             sessions = []
             for session in self._server.sessions():
-                username = (
-                    session.usernames[0]
-                    if session.usernames else 'Unknown'
+                username = session.usernames[0] if session.usernames else "Unknown"
+                sessions.append(
+                    {
+                        "username": username,
+                        "title": session.title,
+                        "type": session.type,
+                        "device": session.player.title,
+                        "state": session.player.state,
+                    }
                 )
-                sessions.append({
-                    'username': username,
-                    'title': session.title,
-                    'type': session.type,
-                    'device': session.player.title,
-                    'state': session.player.state
-                })
             return sessions
         except Exception as e:
             logger.error(f"Failed to get active sessions: {e}")

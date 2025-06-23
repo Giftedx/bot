@@ -6,20 +6,21 @@ from enum import Enum
 from typing import Any, Awaitable, Callable, Optional, TypeVar
 
 logger = logging.getLogger(__name__)
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CircuitState(Enum):
     """Circuit breaker states."""
-    CLOSED = 'closed'  # Normal operation
-    OPEN = 'open'     # Failing, reject requests
-    HALF_OPEN = 'half_open'  # Testing recovery
+
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failing, reject requests
+    HALF_OPEN = "half_open"  # Testing recovery
 
 
 class CircuitBreaker:
     """
     Circuit breaker for handling external service failures gracefully.
-    
+
     Features:
     - Exponential backoff
     - Half-open state testing
@@ -35,7 +36,7 @@ class CircuitBreaker:
         recovery_timeout: float = 60.0,
         backoff_factor: float = 2.0,
         max_backoff: float = 300.0,
-        window_size: int = 10
+        window_size: int = 10,
     ):
         self._state = CircuitState.CLOSED
         self._failure_count = 0
@@ -55,12 +56,7 @@ class CircuitBreaker:
         """Get current circuit state."""
         return self._state
 
-    async def call(
-        self,
-        func: Callable[..., Awaitable[T]],
-        *args: Any,
-        **kwargs: Any
-    ) -> T:
+    async def call(self, func: Callable[..., Awaitable[T]], *args: Any, **kwargs: Any) -> T:
         """
         Execute a function with circuit breaker protection.
 
@@ -82,8 +78,7 @@ class CircuitBreaker:
                     self._state = CircuitState.HALF_OPEN
                 else:
                     raise CircuitBreakerError(
-                        "Circuit breaker is open",
-                        retry_after=self._get_retry_after()
+                        "Circuit breaker is open", retry_after=self._get_retry_after()
                     )
 
             try:
@@ -111,30 +106,26 @@ class CircuitBreaker:
         now = datetime.now()
         self._last_failure_time = now
         self._failure_times.append(now)
-        
+
         # Maintain sliding window
         window_start = now - timedelta(seconds=self._window_size)
-        self._failure_times = [
-            t for t in self._failure_times if t >= window_start
-        ]
-        
+        self._failure_times = [t for t in self._failure_times if t >= window_start]
+
         self._failure_count = len(self._failure_times)
         if self._failure_count >= self._failure_threshold:
             self._state = CircuitState.OPEN
             self._success_count = 0
-            logger.warning(
-                f"Circuit breaker opened after {self._failure_count} failures"
-            )
+            logger.warning(f"Circuit breaker opened after {self._failure_count} failures")
 
     async def _should_attempt_reset(self) -> bool:
         """Check if enough time has passed to try resetting."""
         if not self._last_failure_time:
             return True
-            
+
         elapsed = (datetime.now() - self._last_failure_time).total_seconds()
         timeout = min(
-            self._recovery_timeout * (self._backoff_factor ** self._failure_count),
-            self._max_backoff
+            self._recovery_timeout * (self._backoff_factor**self._failure_count),
+            self._max_backoff,
         )
         return elapsed >= timeout
 
@@ -142,18 +133,18 @@ class CircuitBreaker:
         """Calculate time until next retry attempt."""
         if not self._last_failure_time:
             return 0
-            
+
         elapsed = (datetime.now() - self._last_failure_time).total_seconds()
         timeout = min(
-            self._recovery_timeout * (self._backoff_factor ** self._failure_count),
-            self._max_backoff
+            self._recovery_timeout * (self._backoff_factor**self._failure_count),
+            self._max_backoff,
         )
         return max(0, timeout - elapsed)
 
 
 class CircuitBreakerError(Exception):
     """Raised when circuit breaker prevents an operation."""
-    
+
     def __init__(self, message: str, retry_after: float):
         super().__init__(message)
         self.retry_after = retry_after

@@ -5,7 +5,7 @@ from collections import defaultdict
 
 class Bank:
     """Represents a bank of items and their quantities."""
-    
+
     def __init__(self, items: Optional[Dict[str, int]] = None):
         """Initialize bank with optional items dictionary."""
         self._items: Dict[str, int] = defaultdict(int)
@@ -17,7 +17,7 @@ class Bank:
         """Add quantity of item to bank."""
         if quantity <= 0:
             return
-        
+
         item_id = str(item)
         self._items[item_id] += quantity
 
@@ -28,11 +28,11 @@ class Bank:
         """
         if quantity <= 0:
             return True
-            
+
         item_id = str(item)
         if self._items[item_id] < quantity:
             return False
-            
+
         self._items[item_id] -= quantity
         if self._items[item_id] == 0:
             del self._items[item_id]
@@ -42,7 +42,7 @@ class Bank:
         """Check if bank has at least quantity of item."""
         if quantity <= 0:
             return True
-            
+
         item_id = str(item)
         return self._items[item_id] >= quantity
 
@@ -82,7 +82,7 @@ class Bank:
         """
         if not self.has_all(items):
             return False
-            
+
         for item, qty in items.items():
             self.remove(item, qty)
         return True
@@ -106,4 +106,4 @@ class Bank:
 
     def __repr__(self) -> str:
         """Detailed string representation of bank."""
-        return f"Bank({self._items})" 
+        return f"Bank({self._items})"

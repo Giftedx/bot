@@ -4,6 +4,7 @@ from enum import Enum
 from datetime import datetime
 import math
 
+
 class OSRSSkill(Enum):
     ATTACK = "attack"
     STRENGTH = "strength"
@@ -29,11 +30,13 @@ class OSRSSkill(Enum):
     CONSTRUCTION = "construction"
     HUNTER = "hunter"
 
+
 class OSRSCombatStyle(Enum):
     MELEE = "melee"
     RANGED = "ranged"
     MAGIC = "magic"
     MIXED = "mixed"
+
 
 class OSRSPetSource(Enum):
     BOSS = "boss"
@@ -42,12 +45,14 @@ class OSRSPetSource(Enum):
     QUEST = "quest"
     OTHER = "other"
 
+
 class OSRSPetRarity(Enum):
-    COMMON = "common"          # 1/1000 or more common
-    UNCOMMON = "uncommon"      # 1/1000 to 1/5000
-    RARE = "rare"             # 1/5000 to 1/10000
-    VERY_RARE = "very_rare"   # Less than 1/10000
+    COMMON = "common"  # 1/1000 or more common
+    UNCOMMON = "uncommon"  # 1/1000 to 1/5000
+    RARE = "rare"  # 1/5000 to 1/10000
+    VERY_RARE = "very_rare"  # Less than 1/10000
     GUARANTEED = "guaranteed"  # 100% drop rate (quest rewards etc)
+
 
 @dataclass
 class OSRSStats:
@@ -77,10 +82,11 @@ class OSRSStats:
 
     def get_combat_level(self) -> int:
         """Calculate combat level based on stats"""
-        base = 0.25 * (defence + hitpoints + math.floor(prayer/2))
+        base = 0.25 * (defence + hitpoints + math.floor(prayer / 2))
         melee = 0.325 * (attack + strength)
-        range_magic = 0.325 * (math.floor(3*ranged/2) + math.floor(3*magic/2))
+        range_magic = 0.325 * (math.floor(3 * ranged / 2) + math.floor(3 * magic / 2))
         return math.floor(base + max(melee, range_magic))
+
 
 @dataclass
 class OSRSCombatStats:
@@ -95,6 +101,7 @@ class OSRSCombatStats:
     attack_bonus: Dict[str, int]
     defence_bonus: Dict[str, int]
     other_bonuses: Dict[str, int]
+
 
 @dataclass
 class OSRSMonster:
@@ -118,6 +125,7 @@ class OSRSMonster:
     examine_text: str = ""
     wiki_url: str = ""
 
+
 @dataclass
 class OSRSLocation:
     name: str
@@ -126,6 +134,7 @@ class OSRSLocation:
     wilderness_level: int = 0
     requirements: Dict[str, Any] = None
     description: str = ""
+
 
 @dataclass
 class OSRSPetAbility:
@@ -137,12 +146,14 @@ class OSRSPetAbility:
     cooldown: int = 0
     requirements: Dict[str, Any] = None
 
+
 @dataclass
 class OSRSPetVariant:
     name: str
     examine_text: str
     metamorphic: bool = False
     requirements: Dict[str, Any] = None
+
 
 @dataclass
 class OSRSPet:
@@ -164,8 +175,9 @@ class OSRSPet:
     trivia: List[str] = None
     wiki_url: str = ""
 
-    def calculate_effective_drop_rate(self, player_stats: OSRSStats,
-                                    modifiers: Dict[str, float] = None) -> float:
+    def calculate_effective_drop_rate(
+        self, player_stats: OSRSStats, modifiers: Dict[str, float] = None
+    ) -> float:
         """Calculate effective drop rate with player stats and modifiers"""
         if not self.drop_rate:
             return 0.0
@@ -181,7 +193,7 @@ class OSRSPet:
                 if player_level > required_level:
                     # Small bonus for exceeding requirements
                     bonus = min((player_level - required_level) * 0.001, 0.1)
-                    base_rate *= (1 + bonus)
+                    base_rate *= 1 + bonus
 
         # Apply external modifiers
         for modifier_name, modifier_value in modifiers.items():
@@ -189,9 +201,12 @@ class OSRSPet:
 
         return min(base_rate, 1.0)  # Cap at 100%
 
-    def meets_requirements(self, player_stats: OSRSStats,
-                         completed_quests: List[str] = None,
-                         owned_items: List[str] = None) -> tuple[bool, List[str]]:
+    def meets_requirements(
+        self,
+        player_stats: OSRSStats,
+        completed_quests: List[str] = None,
+        owned_items: List[str] = None,
+    ) -> tuple[bool, List[str]]:
         """Check if player meets requirements for pet"""
         if not completed_quests:
             completed_quests = []
@@ -224,6 +239,7 @@ class OSRSPet:
 
         return len(missing_reqs) == 0, missing_reqs
 
+
 @dataclass
 class OSRSBoss(OSRSMonster):
     pet_drop: Optional[OSRSPet] = None
@@ -232,6 +248,7 @@ class OSRSBoss(OSRSMonster):
     recommended_items: List[str] = None
     protection_prayers: List[str] = None
     special_attacks: List[str] = None
+
 
 @dataclass
 class OSRSSkillingActivity:
@@ -244,6 +261,7 @@ class OSRSSkillingActivity:
     recommended_items: List[str] = None
     locations: List[OSRSLocation] = None
 
+
 @dataclass
 class OSRSMinigame:
     name: str
@@ -254,4 +272,4 @@ class OSRSMinigame:
     locations: List[OSRSLocation]
     team_based: bool = False
     combat_based: bool = False
-    skill_based: bool = False 
+    skill_based: bool = False

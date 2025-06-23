@@ -48,9 +48,7 @@ class BattleDatabase:
                 won = player_id == winner_id
                 await self._update_player_stats(conn, player_id, battle_type, won)
 
-    async def record_rewards(
-        self, battle_id: str, player_id: int, rewards: Dict[str, Any]
-    ) -> None:
+    async def record_rewards(self, battle_id: str, player_id: int, rewards: Dict[str, Any]) -> None:
         """Record battle rewards."""
         await self.pool.execute(
             """
@@ -67,9 +65,7 @@ class BattleDatabase:
             rewards.get("special_rewards"),
         )
 
-    async def get_player_stats(
-        self, player_id: int, battle_type: BattleType
-    ) -> Dict[str, Any]:
+    async def get_player_stats(self, player_id: int, battle_type: BattleType) -> Dict[str, Any]:
         """Get player's battle statistics."""
         return await self.pool.fetchrow(
             """
@@ -80,9 +76,7 @@ class BattleDatabase:
             battle_type.value,
         )
 
-    async def get_player_rating(
-        self, player_id: int, battle_type: BattleType
-    ) -> Tuple[int, float]:
+    async def get_player_rating(self, player_id: int, battle_type: BattleType) -> Tuple[int, float]:
         """Get player's battle rating and uncertainty."""
         row = await self.pool.fetchrow(
             """
@@ -155,10 +149,7 @@ class BattleDatabase:
 
             for achievement in rows:
                 # Check if requirement is met
-                if (
-                    stats[achievement["requirement_type"]]
-                    >= achievement["requirement_value"]
-                ):
+                if stats[achievement["requirement_type"]] >= achievement["requirement_value"]:
                     # Award achievement
                     await conn.execute(
                         """

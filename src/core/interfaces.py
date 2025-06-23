@@ -30,16 +30,12 @@ class IBattleSystem(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def is_valid_move(
-        self, battle_state: BattleState, move: str, player_id: int
-    ) -> bool:
+    def is_valid_move(self, battle_state: BattleState, move: str, player_id: int) -> bool:
         """Validate if a move is legal for the current state."""
         raise NotImplementedError
 
     @abstractmethod
-    def get_available_moves(
-        self, battle_state: BattleState, player_id: int
-    ) -> List[BattleMove]:
+    def get_available_moves(self, battle_state: BattleState, player_id: int) -> List[BattleMove]:
         """Get list of available moves for a player."""
         raise NotImplementedError
 
@@ -74,9 +70,7 @@ class IDataProvider(Protocol):
         """Load battle state from persistent storage."""
         ...
 
-    async def update_player_stats(
-        self, player_id: int, stat_updates: Dict[str, Any]
-    ) -> None:
+    async def update_player_stats(self, player_id: int, stat_updates: Dict[str, Any]) -> None:
         """Update player stats after battle."""
         ...
 
@@ -94,9 +88,7 @@ class IBattleLogger(Protocol):
         """Log battle turn event."""
         ...
 
-    def log_battle_end(
-        self, battle_state: BattleState, final_stats: Dict[str, Any]
-    ) -> None:
+    def log_battle_end(self, battle_state: BattleState, final_stats: Dict[str, Any]) -> None:
         """Log battle end event."""
         ...
 
@@ -137,6 +129,7 @@ class IBattleManager(Protocol):
 @dataclass
 class DisplayState:
     """Current state of the game display"""
+
     mode: str = "text"  # text or graphical
     content: str = ""
     graphics_data: Dict[str, Any] = None
@@ -145,15 +138,15 @@ class DisplayState:
 
 class GameDisplay:
     """Handles both text and graphical display modes for the game"""
-    
+
     def __init__(self):
         self.state = DisplayState()
-        
+
     def update_text(self, content: str):
         """Update text display content"""
         self.state.content = content
         self.state.last_update = datetime.now()
-        
+
     def update_graphics(self, player_state: Any):
         """Update graphical display state"""
         # Convert player state to graphics data
@@ -161,35 +154,35 @@ class GameDisplay:
             "location": player_state.location,
             "stats": {
                 "combat": player_state.combat_stats.calculate_combat_level(),
-                "skills": player_state.skills
+                "skills": player_state.skills,
             },
             "equipment": player_state.equipment.__dict__,
-            "inventory": player_state.inventory
+            "inventory": player_state.inventory,
         }
-        
+
         self.state.graphics_data = graphics_data
         self.state.last_update = datetime.now()
-        
+
     def get_display_data(self) -> Dict[str, Any]:
         """Get current display data in format suitable for Discord embed or iframe"""
         if self.state.mode == "text":
             return {
                 "type": "text",
                 "content": self.state.content,
-                "timestamp": self.state.last_update.isoformat()
+                "timestamp": self.state.last_update.isoformat(),
             }
         else:
             return {
                 "type": "graphical",
                 "data": self.state.graphics_data,
-                "timestamp": self.state.last_update.isoformat()
+                "timestamp": self.state.last_update.isoformat(),
             }
-            
+
     def get_iframe_html(self) -> str:
         """Generate HTML for iframe display"""
         if self.state.mode != "graphical":
             return ""
-            
+
         data = json.dumps(self.state.graphics_data)
         return f"""
         <iframe id="game-display" 

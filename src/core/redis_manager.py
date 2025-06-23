@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 import redis
 from redis.exceptions import ConnectionError as RedisConnectionError
 
-logger = logging.getLogger('RedisManager')
+logger = logging.getLogger("RedisManager")
 
 
 class RedisManager:
@@ -15,10 +15,7 @@ class RedisManager:
         """Initialize Redis connection"""
         try:
             self.redis: Optional[redis.Redis] = redis.Redis(
-                host='localhost',
-                port=6379,
-                db=0,
-                decode_responses=True
+                host="localhost", port=6379, db=0, decode_responses=True
             )
             self.redis.ping()  # Test connection
             logger.info("Connected to Redis")
@@ -33,11 +30,7 @@ class RedisManager:
             return False
 
         try:
-            serialized = (
-                json.dumps(value) 
-                if not isinstance(value, (str, int, float)) 
-                else value
-            )
+            serialized = json.dumps(value) if not isinstance(value, (str, int, float)) else value
             self.redis.set(key, serialized, ex=expiry)
             return True
         except Exception as e:
@@ -54,7 +47,7 @@ class RedisManager:
             value = self.redis.get(key)
             if value is None:
                 return None
-                
+
             try:
                 return json.loads(value)
             except json.JSONDecodeError:
@@ -97,11 +90,9 @@ class RedisManager:
             hash_data = self.redis.hgetall(key)
             if not hash_data:
                 return None
-                
+
             return {
-                k: json.loads(v) 
-                if isinstance(v, str) and v.startswith('{') 
-                else v
+                k: json.loads(v) if isinstance(v, str) and v.startswith("{") else v
                 for k, v in hash_data.items()
             }
         except Exception as e:
@@ -116,11 +107,7 @@ class RedisManager:
 
         try:
             serialized = {
-                k: (
-                    json.dumps(v) 
-                    if not isinstance(v, (str, int, float)) 
-                    else v
-                )
+                k: (json.dumps(v) if not isinstance(v, (str, int, float)) else v)
                 for k, v in data.items()
             }
             self.redis.hmset(key, serialized)

@@ -119,9 +119,7 @@ class Player:
     def __post_init__(self) -> None:
         """Initialize default skills and stats"""
         if not self.skills:
-            self.skills = {
-                skill_type: Skill(type=skill_type) for skill_type in SkillType
-            }
+            self.skills = {skill_type: Skill(type=skill_type) for skill_type in SkillType}
             # Set Hitpoints to 10
             self.skills[SkillType.HITPOINTS].level = 10
             self.skills[SkillType.HITPOINTS].xp = self.xp_for_level(10)

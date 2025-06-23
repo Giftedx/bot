@@ -283,9 +283,7 @@ class PetCommands(commands.Cog):
             description=f"{ctx.author.mention} challenges {opponent.mention} to a pet battle!",
             color=discord.Color.red(),
         )
-        embed.set_footer(
-            text=f"{opponent.name}, use !pet accept to accept the challenge!"
-        )
+        embed.set_footer(text=f"{opponent.name}, use !pet accept to accept the challenge!")
 
         self.active_battles[battle_id] = {
             "challenger": ctx.author.id,

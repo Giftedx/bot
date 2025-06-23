@@ -57,7 +57,6 @@ except ImportError:
 
 
 class TestImports(unittest.TestCase):
-
     def test_api_routes_import(self):
         self.assertIsNotNone(app)
 
@@ -96,5 +95,5 @@ class TestImports(unittest.TestCase):
         self.assertIsNotNone(prometheus_client)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

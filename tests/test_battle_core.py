@@ -141,9 +141,7 @@ def test_calculate_accuracy(battle_move, battle_state):
         assert not calculate_accuracy(battle_move, attacker_stats, defender_stats)
 
     # Test perfect accuracy move
-    perfect_move = BattleMove(
-        name="Perfect Move", move_type="normal", base_power=50, accuracy=None
-    )
+    perfect_move = BattleMove(name="Perfect Move", move_type="normal", base_power=50, accuracy=None)
     assert calculate_accuracy(perfect_move, attacker_stats, defender_stats)
 
 

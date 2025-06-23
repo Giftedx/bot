@@ -2,9 +2,11 @@ from typing import Dict, List, Any
 from dataclasses import dataclass
 from enum import Enum
 
+
 class PetType(Enum):
     OSRS = "osrs"
     POKEMON = "pokemon"
+
 
 class Rarity(Enum):
     COMMON = "common"
@@ -13,6 +15,7 @@ class Rarity(Enum):
     EPIC = "epic"
     LEGENDARY = "legendary"
 
+
 @dataclass
 class PetConfig:
     base_catch_rate: float
@@ -20,11 +23,13 @@ class PetConfig:
     max_level: int
     exp_per_level: int
 
+
 @dataclass
 class OSRSPetConfig(PetConfig):
     pets: Dict[str, Dict[str, Any]]
     max_combat_level: int
     boss_exp_range: tuple[int, int]
+
 
 @dataclass
 class PokemonPetConfig(PetConfig):
@@ -32,6 +37,7 @@ class PokemonPetConfig(PetConfig):
     max_moves: int
     move_learn_chance: float
     evolution_level_multiplier: int
+
 
 class GameConfig:
     def __init__(self):
@@ -47,21 +53,21 @@ class GameConfig:
                     "rarity": Rarity.UNCOMMON,
                     "boss_origin": "Giant Mole",
                     "base_combat": 5,
-                    "skill_boost": "mining"
+                    "skill_boost": "mining",
                 },
                 "Prince Black Dragon": {
                     "rarity": Rarity.RARE,
                     "boss_origin": "King Black Dragon",
                     "base_combat": 15,
-                    "skill_boost": "combat"
+                    "skill_boost": "combat",
                 },
                 "Pet Chaos Elemental": {
                     "rarity": Rarity.EPIC,
                     "boss_origin": "Chaos Elemental",
                     "base_combat": 25,
-                    "skill_boost": "magic"
-                }
-            }
+                    "skill_boost": "magic",
+                },
+            },
         )
 
         self.pokemon_config = PokemonPetConfig(
@@ -78,23 +84,23 @@ class GameConfig:
                     "types": ["Electric"],
                     "base_stats": {"hp": 35, "attack": 55, "defense": 40},
                     "possible_moves": ["Thunder Shock", "Quick Attack", "Thunderbolt"],
-                    "evolution": "Raichu"
+                    "evolution": "Raichu",
                 },
                 "Charmander": {
                     "rarity": Rarity.UNCOMMON,
                     "types": ["Fire"],
                     "base_stats": {"hp": 39, "attack": 52, "defense": 43},
                     "possible_moves": ["Scratch", "Ember", "Fire Spin"],
-                    "evolution": "Charmeleon"
+                    "evolution": "Charmeleon",
                 },
                 "Bulbasaur": {
                     "rarity": Rarity.UNCOMMON,
                     "types": ["Grass", "Poison"],
                     "base_stats": {"hp": 45, "attack": 49, "defense": 49},
                     "possible_moves": ["Tackle", "Vine Whip", "Razor Leaf"],
-                    "evolution": "Ivysaur"
-                }
-            }
+                    "evolution": "Ivysaur",
+                },
+            },
         )
 
     def get_pet_config(self, pet_type: PetType) -> PetConfig:
@@ -111,7 +117,7 @@ class GameConfig:
             Rarity.UNCOMMON: 0.7,
             Rarity.RARE: 0.4,
             Rarity.EPIC: 0.2,
-            Rarity.LEGENDARY: 0.1
+            Rarity.LEGENDARY: 0.1,
         }
         return multipliers.get(rarity, 1.0)
 
@@ -119,4 +125,5 @@ class GameConfig:
         """Calculate experience needed for next level"""
         return current_level * self.osrs_config.exp_per_level  # Same for both types
 
-game_config = GameConfig() 
+
+game_config = GameConfig()

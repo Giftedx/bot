@@ -10,6 +10,7 @@ from ..utils.formatting import format_error
 
 logger = logging.getLogger(__name__)
 
+
 class BaseCog(commands.Cog):
     """Base cog class with shared functionality."""
 
@@ -23,18 +24,18 @@ class BaseCog(commands.Cog):
         return {
             "commands": metrics.counter(
                 f"{self.__class__.__name__.lower()}_commands_total",
-                f"Total number of {self.__class__.__name__} commands executed"
+                f"Total number of {self.__class__.__name__} commands executed",
             ),
             "errors": metrics.counter(
                 f"{self.__class__.__name__.lower()}_errors_total",
                 f"Total number of {self.__class__.__name__} errors",
-                ["type"]
+                ["type"],
             ),
             "latency": metrics.histogram(
                 f"{self.__class__.__name__.lower()}_command_latency_seconds",
                 f"Command execution time for {self.__class__.__name__}",
-                ["command"]
-            )
+                ["command"],
+            ),
         }
 
     async def cog_before_invoke(self, ctx: commands.Context) -> None:
@@ -48,11 +49,7 @@ class BaseCog(commands.Cog):
             latency = ctx.message.created_at.timestamp() - ctx.command_start_time
             self._metrics["latency"].labels(command=ctx.command.name).observe(latency)
 
-    async def cog_command_error(
-        self,
-        ctx: commands.Context,
-        error: commands.CommandError
-    ) -> None:
+    async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
         """Handle errors for all commands in this cog."""
         error_type = type(error).__name__
         self._metrics["errors"].labels(type=error_type).inc()
@@ -63,15 +60,10 @@ class BaseCog(commands.Cog):
         error_message = format_error(error)
         await ctx.send(error_message)
 
-        if not isinstance(error, (
-            commands.CommandNotFound,
-            commands.MissingPermissions,
-            commands.CheckFailure
-        )):
-            logger.error(
-                f"Error in {ctx.command} command: {error}",
-                exc_info=True
-            )
+        if not isinstance(
+            error, (commands.CommandNotFound, commands.MissingPermissions, commands.CheckFailure)
+        ):
+            logger.error(f"Error in {ctx.command} command: {error}", exc_info=True)
 
     def cog_check(self, ctx: commands.Context) -> bool:
         """Global check for all commands in this cog."""
@@ -95,16 +87,9 @@ class BaseCog(commands.Cog):
         """Standardized command response handling."""
         try:
             if file:
-                await ctx.send(
-                    content=content,
-                    embed=embed,
-                    file=file
-                )
+                await ctx.send(content=content, embed=embed, file=file)
             elif embed:
-                await ctx.send(
-                    content=content,
-                    embed=embed
-                )
+                await ctx.send(content=content, embed=embed)
             elif content:
                 await ctx.send(content)
 
@@ -118,6 +103,7 @@ class BaseCog(commands.Cog):
                 except Exception:
                     pass
 
+
 async def setup(bot: commands.Bot) -> None:
     """Set up the base cog."""
-    await bot.add_cog(BaseCog(bot)) 
+    await bot.add_cog(BaseCog(bot))

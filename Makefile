@@ -3,12 +3,19 @@ PYTHON = python3
 PIP = pip3
 DOCKER = docker
 DOCKER_COMPOSE = docker-compose
-PYTEST = pytest
-COVERAGE = coverage
-BLACK = black
-ISORT = isort
-MYPY = mypy
-FLAKE8 = flake8
+
+# Virtual Environment
+VENV_DIR = .venv
+VENV_ACTIVATE = $(VENV_DIR)/bin/activate
+PYTHON_VENV = $(VENV_DIR)/bin/python
+PIP_VENV = $(VENV_DIR)/bin/pip
+
+PYTEST = $(VENV_DIR)/bin/pytest
+COVERAGE = $(VENV_DIR)/bin/coverage
+BLACK = $(VENV_DIR)/bin/black
+ISORT = $(VENV_DIR)/bin/isort
+MYPY = $(VENV_DIR)/bin/mypy
+FLAKE8 = $(VENV_DIR)/bin/flake8
 
 # Docker image names
 BOT_IMAGE = osrs-discord-bot
@@ -20,25 +27,30 @@ GRAFANA_IMAGE = osrs-discord-bot-grafana
 help:
 	@echo "Available commands:"
 	@echo "  install        - Install production dependencies"
-	@echo "  dev-install   - Install development dependencies"
-	@echo "  test          - Run tests"
-	@echo "  lint          - Run linting"
-	@echo "  format        - Format code"
-	@echo "  type-check    - Run type checking"
-	@echo "  clean         - Clean up build artifacts"
-	@echo "  build         - Build Docker images"
-	@echo "  run           - Run in production mode"
-	@echo "  run-dev       - Run in development mode"
-	@echo "  stop          - Stop all containers"
-	@echo "  logs          - View logs"
-	@echo "  monitoring    - Start monitoring stack"
+	@echo "  dev-install    - Install all dependencies for development"
+	@echo "  test           - Run tests"
+	@echo "  lint           - Run linting"
+	@echo "  format         - Format code"
+	@echo "  type-check     - Run type checking"
+	@echo "  clean          - Clean up build artifacts"
+	@echo "  build          - Build Docker images"
+	@echo "  run            - Run in production mode"
+	@echo "  run-dev        - Run in development mode"
+	@echo "  stop           - Stop all containers"
+	@echo "  logs           - View logs from Docker containers"
+	@echo "  monitoring     - Start Prometheus and Grafana for monitoring"
 
 install:
-	$(PIP) install -r requirements.txt
+	@if [ ! -d "$(VENV_DIR)" ]; then \
+		$(PYTHON) -m venv $(VENV_DIR); \
+	fi
+	$(PIP_VENV) install .
 
 dev-install:
-	$(PIP) install -r requirements-dev.txt
-	pre-commit install
+	@if [ ! -d "$(VENV_DIR)" ]; then \
+		$(PYTHON) -m venv $(VENV_DIR); \
+	fi
+	$(PIP_VENV) install .[dev]
 
 test:
 	$(PYTEST) tests/ -v --cov=src --cov-report=term-missing
@@ -62,6 +74,7 @@ clean:
 	find . -type d -name ".coverage" -exec rm -rf {} +
 	find . -type d -name "htmlcov" -exec rm -rf {} +
 	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name ".venv" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
 	find . -type f -name "*.pyd" -delete
@@ -72,17 +85,16 @@ build:
 	$(DOCKER_COMPOSE) -f docker-compose.monitoring.yml build
 
 run:
-	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) -f docker/docker-compose.yml up -d --build
 
 run-dev:
-	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.monitoring.yml up -d
+	$(DOCKER_COMPOSE) -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up --build
 
 stop:
-	$(DOCKER_COMPOSE) down
-	$(DOCKER_COMPOSE) -f docker-compose.monitoring.yml down
+	$(DOCKER_COMPOSE) -f docker/docker-compose.yml -f docker/docker-compose.dev.yml down
 
 logs:
-	$(DOCKER_COMPOSE) logs -f
+	$(DOCKER_COMPOSE) -f docker/docker-compose.yml -f docker/docker-compose.dev.yml logs -f
 
 monitoring:
 	$(DOCKER_COMPOSE) -f docker-compose.monitoring.yml up -d
@@ -134,3 +146,5 @@ prune:
 	$(DOCKER) volume prune -f
 
 rebuild: clean build run
+
+ 

@@ -102,17 +102,11 @@ class TypeSystem:
     ) -> float:
         """Get type effectiveness multiplier."""
         if game_type == "osrs":
-            return self.osrs_effectiveness.get(attacker_type, {}).get(
-                defender_type, 1.0
-            )
+            return self.osrs_effectiveness.get(attacker_type, {}).get(defender_type, 1.0)
         else:
-            return self.pokemon_effectiveness.get(attacker_type, {}).get(
-                defender_type, 1.0
-            )
+            return self.pokemon_effectiveness.get(attacker_type, {}).get(defender_type, 1.0)
 
-    def apply_status_effect(
-        self, effect_name: str, target_stats: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def apply_status_effect(self, effect_name: str, target_stats: Dict[str, Any]) -> Dict[str, Any]:
         """Apply a status effect to target stats."""
         if effect_name not in self.status_effects:
             return target_stats
@@ -135,9 +129,7 @@ class TypeSystem:
 
         return modified_stats
 
-    def process_status_effects(
-        self, stats: Dict[str, Any]
-    ) -> Tuple[Dict[str, Any], Optional[str]]:
+    def process_status_effects(self, stats: Dict[str, Any]) -> Tuple[Dict[str, Any], Optional[str]]:
         """Process active status effects."""
         if "status_effect" not in stats:
             return stats, None
@@ -150,10 +142,7 @@ class TypeSystem:
         message = None
 
         # Try curing
-        if (
-            "cure_chance" in modified_stats
-            and random.random() < modified_stats["cure_chance"]
-        ):
+        if "cure_chance" in modified_stats and random.random() < modified_stats["cure_chance"]:
             del modified_stats["status_effect"]
             del modified_stats["status_duration"]
             message = f"Status effect {effect_name} was cured!"
@@ -163,9 +152,7 @@ class TypeSystem:
         if "status_damage" in modified_stats:
             if "current_hp" in modified_stats:
                 modified_stats["current_hp"] -= modified_stats["status_damage"]
-                message = (
-                    f"{effect_name} dealt {modified_stats['status_damage']} damage!"
-                )
+                message = f"{effect_name} dealt {modified_stats['status_damage']} damage!"
 
         # Reduce duration
         modified_stats["status_duration"] -= 1

@@ -5,6 +5,7 @@ from typing import Optional, List
 
 from ..lib.skilling.skills import Skills, SkillName, calculate_xp_for_level
 
+
 class SkillsCommands(commands.Cog):
     """OSRS Skills and Training Commands"""
 
@@ -33,34 +34,37 @@ class SkillsCommands(commands.Cog):
             SkillName.FARMING: "🌱",
             SkillName.RUNECRAFT: "🌀",
             SkillName.HUNTER: "🦊",
-            SkillName.CONSTRUCTION: "🏠"
+            SkillName.CONSTRUCTION: "🏠",
         }
 
-    @app_commands.command(name='stats', description='View your skill levels and experience')
-    async def stats(self, interaction: discord.Interaction, member: Optional[discord.Member] = None):
+    @app_commands.command(name="stats", description="View your skill levels and experience")
+    async def stats(
+        self, interaction: discord.Interaction, member: Optional[discord.Member] = None
+    ):
         """View your or another player's stats"""
         target = member or interaction.user
-        
+
         # Get player's skills from database
         player_skills = await self.get_player_skills(target.id)
         if not player_skills:
             await interaction.response.send_message(
                 f"{'You have' if target == interaction.user else f'{target.name} has'} no stats yet. "
                 "Start training to gain experience!",
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
-        embed = discord.Embed(
-            title=f"{target.name}'s Skills",
-            color=discord.Color.blue()
-        )
+        embed = discord.Embed(title=f"{target.name}'s Skills", color=discord.Color.blue())
 
         # Combat skills
         combat_skills = [
-            SkillName.ATTACK, SkillName.STRENGTH, SkillName.DEFENCE,
-            SkillName.HITPOINTS, SkillName.RANGED, SkillName.PRAYER,
-            SkillName.MAGIC
+            SkillName.ATTACK,
+            SkillName.STRENGTH,
+            SkillName.DEFENCE,
+            SkillName.HITPOINTS,
+            SkillName.RANGED,
+            SkillName.PRAYER,
+            SkillName.MAGIC,
         ]
         combat_text = ""
         for skill in combat_skills:
@@ -68,12 +72,14 @@ class SkillsCommands(commands.Cog):
             level = player_skills.get_skill_data(skill)["level"]
             xp = player_skills.get_skill_data(skill)["xp"]
             virtual_level = player_skills.get_skill_data(skill)["virtual_level"]
-            
+
             if virtual_level and virtual_level > level:
-                combat_text += f"{emoji} {skill.value.title()}: {level} ({virtual_level}) | {xp:,} XP\n"
+                combat_text += (
+                    f"{emoji} {skill.value.title()}: {level} ({virtual_level}) | {xp:,} XP\n"
+                )
             else:
                 combat_text += f"{emoji} {skill.value.title()}: {level} | {xp:,} XP\n"
-        
+
         embed.add_field(name="Combat Skills", value=combat_text, inline=True)
 
         # Other skills
@@ -84,12 +90,14 @@ class SkillsCommands(commands.Cog):
             level = player_skills.get_skill_data(skill)["level"]
             xp = player_skills.get_skill_data(skill)["xp"]
             virtual_level = player_skills.get_skill_data(skill)["virtual_level"]
-            
+
             if virtual_level and virtual_level > level:
-                other_text += f"{emoji} {skill.value.title()}: {level} ({virtual_level}) | {xp:,} XP\n"
+                other_text += (
+                    f"{emoji} {skill.value.title()}: {level} ({virtual_level}) | {xp:,} XP\n"
+                )
             else:
                 other_text += f"{emoji} {skill.value.title()}: {level} | {xp:,} XP\n"
-        
+
         embed.add_field(name="Other Skills", value=other_text, inline=True)
 
         # Total level and XP
@@ -100,18 +108,18 @@ class SkillsCommands(commands.Cog):
         embed.add_field(
             name="Overall",
             value=f"Total Level: {total_level:,}\nTotal XP: {total_xp:,}\nCombat Level: {combat_level}",
-            inline=False
+            inline=False,
         )
 
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='xp', description='Calculate XP needed for a level')
+    @app_commands.command(name="xp", description="Calculate XP needed for a level")
     async def xp_calc(
         self,
         interaction: discord.Interaction,
         skill: str,
         target_level: int,
-        current_level: Optional[int] = None
+        current_level: Optional[int] = None,
     ):
         """Calculate XP needed to reach a target level"""
         try:
@@ -119,21 +127,19 @@ class SkillsCommands(commands.Cog):
         except ValueError:
             await interaction.response.send_message(
                 f"Invalid skill name. Valid skills: {', '.join(s.value for s in SkillName)}",
-                ephemeral=True
+                ephemeral=True,
             )
             return
 
         if target_level < 1 or target_level > 99:
             await interaction.response.send_message(
-                "Target level must be between 1 and 99.",
-                ephemeral=True
+                "Target level must be between 1 and 99.", ephemeral=True
             )
             return
 
         if current_level is not None and (current_level < 1 or current_level >= target_level):
             await interaction.response.send_message(
-                "Current level must be between 1 and your target level.",
-                ephemeral=True
+                "Current level must be between 1 and your target level.", ephemeral=True
             )
             return
 
@@ -142,37 +148,25 @@ class SkillsCommands(commands.Cog):
         xp_needed = target_xp - current_xp
 
         embed = discord.Embed(
-            title=f"XP Calculator - {skill_name.value.title()}",
-            color=discord.Color.blue()
+            title=f"XP Calculator - {skill_name.value.title()}", color=discord.Color.blue()
         )
 
         if current_level:
             embed.add_field(
-                name="Current Level",
-                value=f"{current_level} ({current_xp:,} XP)",
-                inline=True
+                name="Current Level", value=f"{current_level} ({current_xp:,} XP)", inline=True
             )
 
         embed.add_field(
-            name="Target Level",
-            value=f"{target_level} ({target_xp:,} XP)",
-            inline=True
+            name="Target Level", value=f"{target_level} ({target_xp:,} XP)", inline=True
         )
 
-        embed.add_field(
-            name="XP Needed",
-            value=f"{xp_needed:,} XP",
-            inline=False
-        )
+        embed.add_field(name="XP Needed", value=f"{xp_needed:,} XP", inline=False)
 
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='hiscores', description='View the hiscores for a skill')
+    @app_commands.command(name="hiscores", description="View the hiscores for a skill")
     async def hiscores(
-        self,
-        interaction: discord.Interaction,
-        skill: Optional[str] = None,
-        page: int = 1
+        self, interaction: discord.Interaction, skill: Optional[str] = None, page: int = 1
     ):
         """View the hiscores for overall or a specific skill"""
         if page < 1:
@@ -188,7 +182,7 @@ class SkillsCommands(commands.Cog):
             except ValueError:
                 await interaction.response.send_message(
                     f"Invalid skill name. Valid skills: {', '.join(s.value for s in SkillName)}",
-                    ephemeral=True
+                    ephemeral=True,
                 )
                 return
         else:
@@ -204,15 +198,11 @@ class SkillsCommands(commands.Cog):
 
         if not players:
             await interaction.response.send_message(
-                f"No players found on page {page}.",
-                ephemeral=True
+                f"No players found on page {page}.", ephemeral=True
             )
             return
 
-        embed = discord.Embed(
-            title=title,
-            color=discord.Color.gold()
-        )
+        embed = discord.Embed(title=title, color=discord.Color.gold())
 
         for i, (player_id, level, xp) in enumerate(players, start=offset + 1):
             player = await self.bot.fetch_user(player_id)
@@ -221,13 +211,13 @@ class SkillsCommands(commands.Cog):
                     embed.add_field(
                         name=f"#{i}. {player.name}",
                         value=f"Level: {level} | XP: {xp:,}",
-                        inline=False
+                        inline=False,
                     )
                 else:
                     embed.add_field(
                         name=f"#{i}. {player.name}",
                         value=f"Total Level: {level:,} | Total XP: {xp:,}",
-                        inline=False
+                        inline=False,
                     )
 
         embed.set_footer(text=f"Page {page}")
@@ -251,12 +241,13 @@ class SkillsCommands(commands.Cog):
         # Return format: List of (player_id, total_level, total_xp)
         return []
 
+
 async def setup(bot: commands.Bot) -> None:
     """Set up the skills commands cog."""
     from ..lib.cog_utils import CogDependencies
-    
+
     # Get dependencies
     deps = CogDependencies.get_instance()
-    
+
     # Add cog to bot
-    await bot.add_cog(SkillsCommands(bot, **deps.get_dependencies())) 
+    await bot.add_cog(SkillsCommands(bot, **deps.get_dependencies()))

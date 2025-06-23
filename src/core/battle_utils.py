@@ -68,9 +68,7 @@ def calculate_type_effectiveness(move_type: str, defender_types: List[str]) -> f
     return 1.0
 
 
-def calculate_critical_hit(
-    attacker_stats: Dict[str, Any], move: BattleMove
-) -> Tuple[bool, float]:
+def calculate_critical_hit(attacker_stats: Dict[str, Any], move: BattleMove) -> Tuple[bool, float]:
     """Calculate if attack is critical hit.
 
     Args:
@@ -89,9 +87,7 @@ def calculate_critical_hit(
     return is_crit, 1.5 if is_crit else 1.0
 
 
-def apply_status_effect(
-    stats: Dict[str, Any], effect: StatusEffect
-) -> Tuple[Dict[str, Any], str]:
+def apply_status_effect(stats: Dict[str, Any], effect: StatusEffect) -> Tuple[Dict[str, Any], str]:
     """Apply a status effect to stats.
 
     Args:

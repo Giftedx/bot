@@ -1,10 +1,14 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    name="osrs-bot",
-    version="0.1.0",
+    name="osrs-discord-bot",
+    version="1.0.0",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
+    include_package_data=True,
+    exclude_package_data={
+        "": ["*.tests", "*.tests.*", "tests.*", "tests"],
+    },
     package_data={
         "data.osrs": ["*.json", "*.csv"],
         "data.pokemon": ["*.json", "*.csv"],

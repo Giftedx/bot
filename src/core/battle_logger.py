@@ -13,9 +13,7 @@ from .models import BattleMove, BattleState
 class BattleLogger:
     """Handles battle system logging and monitoring."""
 
-    def __init__(
-        self, log_dir: str = "logs/battles", log_level: int = logging.INFO
-    ) -> None:
+    def __init__(self, log_dir: str = "logs/battles", log_level: int = logging.INFO) -> None:
         """Initialize battle logger.
 
         Args:
@@ -34,9 +32,7 @@ class BattleLogger:
         file_handler.setLevel(log_level)
 
         # Create formatters
-        formatter = logging.Formatter(
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        )
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(formatter)
 
         # Add handlers
@@ -62,9 +58,7 @@ class BattleLogger:
 
             # Save detailed battle start state
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            file_path = (
-                self.log_dir / f"battle_{battle_state.battle_id}_{timestamp}.json"
-            )
+            file_path = self.log_dir / f"battle_{battle_state.battle_id}_{timestamp}.json"
 
             battle_data = {
                 "event": "battle_start",
@@ -133,9 +127,7 @@ class BattleLogger:
         except Exception as e:
             raise LoggingError(f"Failed to log battle turn: {e}")
 
-    def log_battle_end(
-        self, battle_state: BattleState, final_stats: Dict[str, Any]
-    ) -> None:
+    def log_battle_end(self, battle_state: BattleState, final_stats: Dict[str, Any]) -> None:
         """Log battle end event.
 
         Args:

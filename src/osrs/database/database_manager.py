@@ -6,31 +6,32 @@ from pathlib import Path
 
 from ..core.player_stats import PlayerStats
 
+
 class DatabaseManager:
     def __init__(self, db_path: str = "osrs_bot.db"):
         self.db_path = db_path
         self.setup_database()
-    
+
     def setup_database(self):
         """Initialize the database with schema."""
         schema_path = Path(__file__).parent / "schema.sql"
-        with open(schema_path, 'r') as f:
+        with open(schema_path, "r") as f:
             schema = f.read()
-            
+
         with sqlite3.connect(self.db_path) as conn:
             conn.executescript(schema)
-            
+
     def get_connection(self) -> sqlite3.Connection:
         """Get a database connection."""
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
-    
+
     def create_player(self, discord_id: int, username: str) -> int:
         """Create a new player record."""
         with self.get_connection() as conn:
             cursor = conn.cursor()
-            
+
             # Insert player
             cursor.execute(
                 """
@@ -41,10 +42,10 @@ class DatabaseManager:
                     last_seen = CURRENT_TIMESTAMP
                 RETURNING id
                 """,
-                (discord_id, username)
+                (discord_id, username),
             )
             player_id = cursor.fetchone()[0]
-            
+
             # Create stats record if it doesn't exist
             cursor.execute(
                 """
@@ -52,11 +53,11 @@ class DatabaseManager:
                 VALUES (?)
                 ON CONFLICT (player_id) DO NOTHING
                 """,
-                (player_id,)
+                (player_id,),
             )
-            
+
             return player_id
-    
+
     def get_player_stats(self, player_id: int) -> Optional[PlayerStats]:
         """Get player stats from database."""
         with self.get_connection() as conn:
@@ -67,62 +68,62 @@ class DatabaseManager:
                 FROM player_stats
                 WHERE player_id = ?
                 """,
-                (player_id,)
+                (player_id,),
             )
             row = cursor.fetchone()
-            
+
             if not row:
                 return None
-                
+
             return PlayerStats(
-                attack=row['attack_level'],
-                strength=row['strength_level'],
-                defence=row['defence_level'],
-                ranged=row['ranged_level'],
-                magic=row['magic_level'],
-                prayer=row['prayer_level'],
-                hitpoints=row['hitpoints_level'],
-                mining=row['mining_level'],
-                smithing=row['smithing_level'],
-                fishing=row['fishing_level'],
-                cooking=row['cooking_level'],
-                woodcutting=row['woodcutting_level'],
-                firemaking=row['firemaking_level'],
-                crafting=row['crafting_level'],
-                fletching=row['fletching_level'],
-                herblore=row['herblore_level'],
-                agility=row['agility_level'],
-                thieving=row['thieving_level'],
-                slayer=row['slayer_level'],
-                farming=row['farming_level'],
-                runecrafting=row['runecrafting_level'],
-                construction=row['construction_level'],
-                hunter=row['hunter_level'],
-                attack_xp=row['attack_xp'],
-                strength_xp=row['strength_xp'],
-                defence_xp=row['defence_xp'],
-                ranged_xp=row['ranged_xp'],
-                magic_xp=row['magic_xp'],
-                prayer_xp=row['prayer_xp'],
-                hitpoints_xp=row['hitpoints_xp'],
-                mining_xp=row['mining_xp'],
-                smithing_xp=row['smithing_xp'],
-                fishing_xp=row['fishing_xp'],
-                cooking_xp=row['cooking_xp'],
-                woodcutting_xp=row['woodcutting_xp'],
-                firemaking_xp=row['firemaking_xp'],
-                crafting_xp=row['crafting_xp'],
-                fletching_xp=row['fletching_xp'],
-                herblore_xp=row['herblore_xp'],
-                agility_xp=row['agility_xp'],
-                thieving_xp=row['thieving_xp'],
-                slayer_xp=row['slayer_xp'],
-                farming_xp=row['farming_xp'],
-                runecrafting_xp=row['runecrafting_xp'],
-                construction_xp=row['construction_xp'],
-                hunter_xp=row['hunter_xp']
+                attack=row["attack_level"],
+                strength=row["strength_level"],
+                defence=row["defence_level"],
+                ranged=row["ranged_level"],
+                magic=row["magic_level"],
+                prayer=row["prayer_level"],
+                hitpoints=row["hitpoints_level"],
+                mining=row["mining_level"],
+                smithing=row["smithing_level"],
+                fishing=row["fishing_level"],
+                cooking=row["cooking_level"],
+                woodcutting=row["woodcutting_level"],
+                firemaking=row["firemaking_level"],
+                crafting=row["crafting_level"],
+                fletching=row["fletching_level"],
+                herblore=row["herblore_level"],
+                agility=row["agility_level"],
+                thieving=row["thieving_level"],
+                slayer=row["slayer_level"],
+                farming=row["farming_level"],
+                runecrafting=row["runecrafting_level"],
+                construction=row["construction_level"],
+                hunter=row["hunter_level"],
+                attack_xp=row["attack_xp"],
+                strength_xp=row["strength_xp"],
+                defence_xp=row["defence_xp"],
+                ranged_xp=row["ranged_xp"],
+                magic_xp=row["magic_xp"],
+                prayer_xp=row["prayer_xp"],
+                hitpoints_xp=row["hitpoints_xp"],
+                mining_xp=row["mining_xp"],
+                smithing_xp=row["smithing_xp"],
+                fishing_xp=row["fishing_xp"],
+                cooking_xp=row["cooking_xp"],
+                woodcutting_xp=row["woodcutting_xp"],
+                firemaking_xp=row["firemaking_xp"],
+                crafting_xp=row["crafting_xp"],
+                fletching_xp=row["fletching_xp"],
+                herblore_xp=row["herblore_xp"],
+                agility_xp=row["agility_xp"],
+                thieving_xp=row["thieving_xp"],
+                slayer_xp=row["slayer_xp"],
+                farming_xp=row["farming_xp"],
+                runecrafting_xp=row["runecrafting_xp"],
+                construction_xp=row["construction_xp"],
+                hunter_xp=row["hunter_xp"],
             )
-    
+
     def update_player_stats(self, player_id: int, stats: PlayerStats):
         """Update player stats in database."""
         with self.get_connection() as conn:
@@ -151,26 +152,56 @@ class DatabaseManager:
                 WHERE player_id = ?
                 """,
                 (
-                    stats.attack, stats.strength, stats.defence,
-                    stats.ranged, stats.magic, stats.prayer,
-                    stats.hitpoints, stats.mining, stats.smithing,
-                    stats.fishing, stats.cooking, stats.woodcutting,
-                    stats.firemaking, stats.crafting, stats.fletching,
-                    stats.herblore, stats.agility, stats.thieving,
-                    stats.slayer, stats.farming, stats.runecrafting,
-                    stats.construction, stats.hunter,
-                    stats.attack_xp, stats.strength_xp, stats.defence_xp,
-                    stats.ranged_xp, stats.magic_xp, stats.prayer_xp,
-                    stats.hitpoints_xp, stats.mining_xp, stats.smithing_xp,
-                    stats.fishing_xp, stats.cooking_xp, stats.woodcutting_xp,
-                    stats.firemaking_xp, stats.crafting_xp, stats.fletching_xp,
-                    stats.herblore_xp, stats.agility_xp, stats.thieving_xp,
-                    stats.slayer_xp, stats.farming_xp, stats.runecrafting_xp,
-                    stats.construction_xp, stats.hunter_xp,
-                    player_id
-                )
+                    stats.attack,
+                    stats.strength,
+                    stats.defence,
+                    stats.ranged,
+                    stats.magic,
+                    stats.prayer,
+                    stats.hitpoints,
+                    stats.mining,
+                    stats.smithing,
+                    stats.fishing,
+                    stats.cooking,
+                    stats.woodcutting,
+                    stats.firemaking,
+                    stats.crafting,
+                    stats.fletching,
+                    stats.herblore,
+                    stats.agility,
+                    stats.thieving,
+                    stats.slayer,
+                    stats.farming,
+                    stats.runecrafting,
+                    stats.construction,
+                    stats.hunter,
+                    stats.attack_xp,
+                    stats.strength_xp,
+                    stats.defence_xp,
+                    stats.ranged_xp,
+                    stats.magic_xp,
+                    stats.prayer_xp,
+                    stats.hitpoints_xp,
+                    stats.mining_xp,
+                    stats.smithing_xp,
+                    stats.fishing_xp,
+                    stats.cooking_xp,
+                    stats.woodcutting_xp,
+                    stats.firemaking_xp,
+                    stats.crafting_xp,
+                    stats.fletching_xp,
+                    stats.herblore_xp,
+                    stats.agility_xp,
+                    stats.thieving_xp,
+                    stats.slayer_xp,
+                    stats.farming_xp,
+                    stats.runecrafting_xp,
+                    stats.construction_xp,
+                    stats.hunter_xp,
+                    player_id,
+                ),
             )
-    
+
     def record_combat(
         self,
         player_id: int,
@@ -180,7 +211,7 @@ class DatabaseManager:
         total_damage_dealt: int,
         total_damage_taken: int,
         experience_gained: float,
-        drops: List[Dict[str, Any]]
+        drops: List[Dict[str, Any]],
     ) -> int:
         """Record a combat encounter."""
         with self.get_connection() as conn:
@@ -196,13 +227,18 @@ class DatabaseManager:
                 RETURNING id
                 """,
                 (
-                    player_id, opponent_type, opponent_id, winner_id,
-                    total_damage_dealt, total_damage_taken,
-                    experience_gained, json.dumps(drops)
-                )
+                    player_id,
+                    opponent_type,
+                    opponent_id,
+                    winner_id,
+                    total_damage_dealt,
+                    total_damage_taken,
+                    experience_gained,
+                    json.dumps(drops),
+                ),
             )
             return cursor.fetchone()[0]
-    
+
     def record_combat_hit(
         self,
         combat_id: int,
@@ -211,7 +247,7 @@ class DatabaseManager:
         damage: int,
         hit_type: str,
         accuracy: float,
-        max_hit: int
+        max_hit: int,
     ):
         """Record a combat hit."""
         with self.get_connection() as conn:
@@ -224,17 +260,10 @@ class DatabaseManager:
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
-                (
-                    combat_id, attacker_id, defender_id,
-                    damage, hit_type, accuracy, max_hit
-                )
+                (combat_id, attacker_id, defender_id, damage, hit_type, accuracy, max_hit),
             )
-    
-    def get_combat_history(
-        self,
-        player_id: int,
-        limit: int = 10
-    ) -> List[Dict[str, Any]]:
+
+    def get_combat_history(self, player_id: int, limit: int = 10) -> List[Dict[str, Any]]:
         """Get recent combat history for a player."""
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -246,19 +275,17 @@ class DatabaseManager:
                 ORDER BY start_time DESC
                 LIMIT ?
                 """,
-                (player_id, limit)
+                (player_id, limit),
             )
             return [dict(row) for row in cursor.fetchall()]
-    
+
     def get_hiscores(
-        self,
-        skill: Optional[str] = None,
-        limit: int = 10
+        self, skill: Optional[str] = None, limit: int = 10
     ) -> List[Tuple[str, int, float]]:
         """Get hiscores for total level or a specific skill."""
         with self.get_connection() as conn:
             cursor = conn.cursor()
-            
+
             if skill:
                 # Get hiscores for specific skill
                 cursor.execute(
@@ -269,7 +296,7 @@ class DatabaseManager:
                     ORDER BY ps.{skill}_xp DESC
                     LIMIT ?
                     """,
-                    (limit,)
+                    (limit,),
                 )
             else:
                 # Get hiscores for total level
@@ -302,7 +329,7 @@ class DatabaseManager:
                     ORDER BY total_xp DESC
                     LIMIT ?
                     """,
-                    (limit,)
+                    (limit,),
                 )
-            
-            return [tuple(row) for row in cursor.fetchall()] 
+
+            return [tuple(row) for row in cursor.fetchall()]

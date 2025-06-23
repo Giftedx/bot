@@ -159,28 +159,23 @@ class ExperienceSystem:
 
 class ExperienceCalculator:
     def __init__(self):
-        self.base_exp_rates = {
-            "interaction": 20,
-            "battle": 100,
-            "training": 50,
-            "achievement": 200
-        }
-        
+        self.base_exp_rates = {"interaction": 20, "battle": 100, "training": 50, "achievement": 200}
+
         self.rarity_multipliers = {
             "common": 1.0,
             "uncommon": 1.2,
             "rare": 1.5,
             "epic": 2.0,
-            "legendary": 3.0
+            "legendary": 3.0,
         }
 
     def calculate_exp_for_level(self, level: int) -> int:
         """Calculate experience needed for next level"""
-        return int(100 * (level ** 1.5))
+        return int(100 * (level**1.5))
 
     def calculate_level_from_exp(self, exp: int) -> int:
         """Calculate level from total experience"""
-        return int((exp / 100) ** (1/1.5))
+        return int((exp / 100) ** (1 / 1.5))
 
 
 class ExperienceManager:
@@ -190,32 +185,32 @@ class ExperienceManager:
         self.exp_boosts: Dict[str, Dict[str, Any]] = {}  # pet_id -> boost data
         self.daily_exp_caps: Dict[str, Dict[str, Any]] = {}  # pet_id -> cap data
 
-    def add_exp_boost(self, pet_id: str, boost_value: float, 
-                     duration_hours: Optional[int] = None,
-                     source: Optional[str] = None) -> None:
+    def add_exp_boost(
+        self,
+        pet_id: str,
+        boost_value: float,
+        duration_hours: Optional[int] = None,
+        source: Optional[str] = None,
+    ) -> None:
         """Add an experience boost for a pet"""
         expires_at = None
         if duration_hours:
             expires_at = datetime.utcnow() + timedelta(hours=duration_hours)
 
-        self.exp_boosts[pet_id] = {
-            "value": boost_value,
-            "expires_at": expires_at,
-            "source": source
-        }
+        self.exp_boosts[pet_id] = {"value": boost_value, "expires_at": expires_at, "source": source}
 
     def get_active_boosts(self, pet_id: str) -> float:
         """Get total active experience boost for a pet"""
         now = datetime.utcnow()
         total_boost = 0.0
-        
+
         if pet_id in self.exp_boosts:
             boost_data = self.exp_boosts[pet_id]
             if not boost_data["expires_at"] or boost_data["expires_at"] > now:
                 total_boost += boost_data["value"]
             else:
                 del self.exp_boosts[pet_id]
-                
+
         return total_boost
 
     def set_daily_exp_cap(self, pet_id: str, cap: int) -> None:
@@ -223,7 +218,7 @@ class ExperienceManager:
         self.daily_exp_caps[pet_id] = {
             "cap": cap,
             "gained_today": 0,
-            "last_reset": datetime.utcnow()
+            "last_reset": datetime.utcnow(),
         }
 
     def can_gain_exp(self, pet_id: str, amount: int) -> bool:
@@ -241,14 +236,12 @@ class ExperienceManager:
 
         return cap_data["gained_today"] + amount <= cap_data["cap"]
 
-    def award_exp(self, pet: Pet, base_amount: int, source: str,
-                 metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def award_exp(
+        self, pet: Pet, base_amount: int, source: str, metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Award experience to a pet with boosts and caps applied"""
         if not self.can_gain_exp(pet.pet_id, base_amount):
-            return {
-                "gained": 0,
-                "reason": "daily_cap_reached"
-            }
+            return {"gained": 0, "reason": "daily_cap_reached"}
 
         # Apply rarity multiplier
         rarity_mult = self.calculator.rarity_multipliers.get(pet.rarity.value, 1.0)
@@ -257,15 +250,19 @@ class ExperienceManager:
         # Apply active boosts
         boost = self.get_active_boosts(pet.pet_id)
         if boost > 0:
-            amount *= (1 + boost)
+            amount *= 1 + boost
 
         # Apply cross-system bonuses
         if source == "battle" and metadata and "opponent_origin" in metadata:
-            if (pet.origin == PetOrigin.OSRS and 
-                metadata["opponent_origin"] == PetOrigin.POKEMON.value):
+            if (
+                pet.origin == PetOrigin.OSRS
+                and metadata["opponent_origin"] == PetOrigin.POKEMON.value
+            ):
                 amount *= 1.2  # Bonus for OSRS pets beating Pokemon
-            elif (pet.origin == PetOrigin.POKEMON and 
-                  metadata["opponent_origin"] == PetOrigin.OSRS.value):
+            elif (
+                pet.origin == PetOrigin.POKEMON
+                and metadata["opponent_origin"] == PetOrigin.OSRS.value
+            ):
                 amount *= 1.3  # Bigger bonus for Pokemon beating OSRS pets
 
         # Round and cap the final amount
@@ -277,13 +274,17 @@ class ExperienceManager:
 
         # Award experience and check for level up
         old_level = pet.stats.level
-        leveled_up = pet.stats.gain_exp(final_amount, self.event_manager, {
-            "pet_id": pet.pet_id,
-            "owner_id": pet.owner_id,
-            "origin": pet.origin,
-            "source": source,
-            **(metadata or {})
-        })
+        leveled_up = pet.stats.gain_exp(
+            final_amount,
+            self.event_manager,
+            {
+                "pet_id": pet.pet_id,
+                "owner_id": pet.owner_id,
+                "origin": pet.origin,
+                "source": source,
+                **(metadata or {}),
+            },
+        )
 
         result = {
             "base_amount": base_amount,
@@ -292,26 +293,28 @@ class ExperienceManager:
             "final_amount": final_amount,
             "leveled_up": leveled_up,
             "old_level": old_level,
-            "new_level": pet.stats.level
+            "new_level": pet.stats.level,
         }
 
         # Emit experience gained event
         if self.event_manager:
-            self.event_manager.emit(GameEvent(
-                type=EventType.EXPERIENCE_GAINED,
-                user_id=str(pet.owner_id),
-                timestamp=datetime.utcnow(),
-                data={
-                    "pet_id": pet.pet_id,
-                    "pet_type": pet.origin.value,
-                    "source": source,
-                    "base_amount": base_amount,
-                    "final_amount": final_amount,
-                    "leveled_up": leveled_up,
-                    "new_level": pet.stats.level,
-                    **(metadata or {})
-                }
-            ))
+            self.event_manager.emit(
+                GameEvent(
+                    type=EventType.EXPERIENCE_GAINED,
+                    user_id=str(pet.owner_id),
+                    timestamp=datetime.utcnow(),
+                    data={
+                        "pet_id": pet.pet_id,
+                        "pet_type": pet.origin.value,
+                        "source": source,
+                        "base_amount": base_amount,
+                        "final_amount": final_amount,
+                        "leveled_up": leveled_up,
+                        "new_level": pet.stats.level,
+                        **(metadata or {}),
+                    },
+                )
+            )
 
         return result
 
@@ -322,12 +325,12 @@ class CrossSystemExperienceHandler:
         self.milestone_bonuses = {
             "osrs_combat": {
                 50: {"value": 0.1, "duration": 24},  # 10% for 24h at combat 50
-                99: {"value": 0.2, "duration": 48}   # 20% for 48h at combat 99
+                99: {"value": 0.2, "duration": 48},  # 20% for 48h at combat 99
             },
             "pokemon_evolution": {
-                3: {"value": 0.1, "duration": 24},   # 10% for 24h after 3 evolutions
-                10: {"value": 0.2, "duration": 48}   # 20% for 48h after 10 evolutions
-            }
+                3: {"value": 0.1, "duration": 24},  # 10% for 24h after 3 evolutions
+                10: {"value": 0.2, "duration": 48},  # 20% for 48h after 10 evolutions
+            },
         }
 
     def check_milestones(self, pet: Pet, stat_type: str, value: int) -> None:
@@ -346,5 +349,5 @@ class CrossSystemExperienceHandler:
                     boost_pet_id,
                     bonus["value"],
                     bonus["duration"],
-                    f"{pet.origin.value}_{stat_type}_milestone"
+                    f"{pet.origin.value}_{stat_type}_milestone",
                 )

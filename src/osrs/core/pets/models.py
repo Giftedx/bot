@@ -4,14 +4,18 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 from datetime import datetime
 
+
 class PetType(Enum):
     """Types/elements for pets."""
+
     OSRS = "osrs"
     POKEMON = "pokemon"
     CUSTOM = "custom"
 
+
 class StatusEffect(Enum):
     """Status effects that can be applied to pets."""
+
     NONE = ""
     BURN = "🔥"
     FREEZE = "❄️"
@@ -20,9 +24,11 @@ class StatusEffect(Enum):
     HEAL = "💚"
     SHIELD = "🛡️"
 
+
 @dataclass
 class PetAbility:
     """Represents a pet ability/move."""
+
     name: str
     description: str
     effect_type: str
@@ -30,21 +36,20 @@ class PetAbility:
     cooldown: int  # in seconds
     last_used: Optional[datetime] = None
 
+
 @dataclass
 class PetStats:
     """Pet statistics and levels."""
+
     level: int = 1
     experience: int = 0
     happiness: int = 100
     loyalty: int = 0
     last_interaction: datetime = field(default_factory=datetime.now)
     achievements: List[str] = field(default_factory=list)
-    skill_levels: Dict[str, int] = field(default_factory=lambda: {
-        "attack": 1,
-        "defense": 1,
-        "special": 1,
-        "speed": 1
-    })
+    skill_levels: Dict[str, int] = field(
+        default_factory=lambda: {"attack": 1, "defense": 1, "special": 1, "speed": 1}
+    )
     training_points: int = 0
 
     def gain_exp(self, amount: int) -> bool:
@@ -53,17 +58,17 @@ class PetStats:
         old_level = self.level
         self.level = 1 + (self.experience // 1000)  # Simple leveling formula
         leveled_up = self.level > old_level
-        
+
         if leveled_up:
             self.training_points += 1
-            
+
         return leveled_up
 
     def train_skill(self, skill: str) -> bool:
         """Train a specific skill using training points."""
         if self.training_points <= 0 or skill not in self.skill_levels:
             return False
-            
+
         self.skill_levels[skill] += 1
         self.training_points -= 1
         return True
@@ -74,12 +79,14 @@ class PetStats:
         skill_power = sum(level * 5 for level in self.skill_levels.values())
         loyalty_bonus = min(self.loyalty * 2, 100)  # Cap at 100
         happiness_multiplier = self.happiness / 100  # 0.0 to 1.0
-        
+
         return int((base_power + skill_power + loyalty_bonus) * happiness_multiplier)
+
 
 @dataclass
 class Pet:
     """Base pet class."""
+
     id: int
     owner_id: int
     name: str
@@ -126,16 +133,16 @@ class Pet:
                 "happiness": self.stats.happiness,
                 "loyalty": self.stats.loyalty,
                 "skill_levels": self.stats.skill_levels,
-                "training_points": self.stats.training_points
+                "training_points": self.stats.training_points,
             },
             "status": self.status.value,
             "status_turns": self.status_turns,
             "creation_date": self.creation_date.isoformat(),
-            "attributes": self.attributes
+            "attributes": self.attributes,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict) -> 'Pet':
+    def from_dict(cls, data: Dict) -> "Pet":
         """Create pet instance from dictionary data."""
         stats = PetStats(
             level=data["stats"]["level"],
@@ -143,9 +150,9 @@ class Pet:
             happiness=data["stats"]["happiness"],
             loyalty=data["stats"]["loyalty"],
             skill_levels=data["stats"]["skill_levels"],
-            training_points=data["stats"]["training_points"]
+            training_points=data["stats"]["training_points"],
         )
-        
+
         return cls(
             id=data["id"],
             owner_id=data["owner_id"],
@@ -155,5 +162,5 @@ class Pet:
             status=StatusEffect(data["status"]),
             status_turns=data["status_turns"],
             creation_date=datetime.fromisoformat(data["creation_date"]),
-            attributes=data["attributes"]
-        ) 
+            attributes=data["attributes"],
+        )

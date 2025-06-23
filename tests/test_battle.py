@@ -32,14 +32,10 @@ def mock_pet_move() -> PetMove:
 
 
 @pytest.mark.asyncio
-async def test_start_battle(
-    battle_system: BattleSystem, mock_pet: Mock
-) -> None:
+async def test_start_battle(battle_system: BattleSystem, mock_pet: Mock) -> None:
     pet1: Pet = mock_pet
     pet2: Pet = mock_pet
-    battle_state: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
+    battle_state: BattleState = await battle_system.start_battle(pet1, pet2)
     assert isinstance(battle_state, BattleState)
     assert battle_state.pet1_id == id(pet1)
     assert battle_state.pet2_id == id(pet2)
@@ -53,12 +49,8 @@ async def test_start_battle_increments_battle_id(
 ) -> None:
     pet1: Pet = mock_pet
     pet2: Pet = mock_pet
-    battle1: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
-    battle2: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
+    battle1: BattleState = await battle_system.start_battle(pet1, pet2)
+    battle2: BattleState = await battle_system.start_battle(pet1, pet2)
     assert battle2.battle_id == battle1.battle_id + 1
 
 
@@ -71,9 +63,7 @@ async def test_start_battle_with_different_levels(
     pet2.max_health = 100
     pet2.level = 10
     pet2.element = PetType.WATER
-    battle_state: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
+    battle_state: BattleState = await battle_system.start_battle(pet1, pet2)
     assert isinstance(battle_state, BattleState)
     assert battle_state.pet1_id == id(pet1)
     assert battle_state.pet2_id == id(pet2)
@@ -87,12 +77,8 @@ async def test_process_turn_valid(
 ) -> None:
     pet1 = mock_pet
     pet2 = mock_pet
-    battle_state: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
-    result = await battle_system.process_turn(
-        battle_state.battle_id, mock_pet_move, pet1, pet2
-    )
+    battle_state: BattleState = await battle_system.start_battle(pet1, pet2)
+    result = await battle_system.process_turn(battle_state.battle_id, mock_pet_move, pet1, pet2)
     assert result["damage"] > 0
     assert result["move_name"] == "Test Move"
     assert result["attacker"] == id(pet1)
@@ -114,12 +100,8 @@ async def test_process_turn_ends_battle(
     pet2.max_health = 20  # Make pet2 weak
     pet2.level = 5
     pet2.element = PetType.FIRE
-    battle_state: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
-    result = await battle_system.process_turn(
-        battle_state.battle_id, mock_pet_move, pet1, pet2
-    )
+    battle_state: BattleState = await battle_system.start_battle(pet1, pet2)
+    result = await battle_system.process_turn(battle_state.battle_id, mock_pet_move, pet1, pet2)
     assert result["battle_over"]
     assert result["winner"] == id(pet1)
     assert battle_system.get_battle_state(battle_state.battle_id) is None
@@ -131,13 +113,9 @@ async def test_process_turn_invalid_turn(
 ) -> None:
     pet1 = mock_pet
     pet2 = mock_pet
-    battle_state: BattleState = await battle_system.start_battle(
-        pet1, pet2
-    )
+    battle_state: BattleState = await battle_system.start_battle(pet1, pet2)
     with pytest.raises(InvalidMoveError):
-        await battle_system.process_turn(
-            battle_state.battle_id, mock_pet_move, pet2, pet1
-        )
+        await battle_system.process_turn(battle_state.battle_id, mock_pet_move, pet2, pet1)
 
 
 @pytest.mark.asyncio
@@ -147,9 +125,7 @@ async def test_process_turn_battle_not_found(
     pet1 = mock_pet
     pet2 = mock_pet
     with pytest.raises(BattleNotFoundError):
-        await battle_system.process_turn(
-            999, mock_pet_move, pet1, pet2
-        )
+        await battle_system.process_turn(999, mock_pet_move, pet1, pet2)
 
 
 def test_battle_get_current_pet(battle_system, mock_pet):

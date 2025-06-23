@@ -5,6 +5,7 @@ from typing import Optional, List
 
 from ..lib.items.items import ItemManager, Bank, ItemSlot
 
+
 class ItemCommands(commands.Cog):
     """Item and Bank Management Commands"""
 
@@ -12,12 +13,9 @@ class ItemCommands(commands.Cog):
         self.bot = bot
         self.items = ItemManager()
 
-    @app_commands.command(name='bank', description='View your bank')
+    @app_commands.command(name="bank", description="View your bank")
     async def view_bank(
-        self,
-        interaction: discord.Interaction,
-        tab: Optional[int] = None,
-        page: int = 1
+        self, interaction: discord.Interaction, tab: Optional[int] = None, page: int = 1
     ):
         """View your bank contents"""
         if page < 1:
@@ -28,8 +26,7 @@ class ItemCommands(commands.Cog):
         bank = await self.get_player_bank(interaction.user.id)
         if not bank:
             await interaction.response.send_message(
-                "You don't have a bank account yet. Start collecting items!",
-                ephemeral=True
+                "You don't have a bank account yet. Start collecting items!", ephemeral=True
             )
             return
 
@@ -41,7 +38,7 @@ class ItemCommands(commands.Cog):
             if tab not in bank.tabs:
                 await interaction.response.send_message(f"Tab {tab} doesn't exist.", ephemeral=True)
                 return
-            
+
             items = bank.get_tab_contents(tab)
             title = f"Bank Tab {tab}"
         else:
@@ -53,27 +50,22 @@ class ItemCommands(commands.Cog):
         sorted_items = sorted(
             items.items(),
             key=lambda x: (
-                self.items.get_item(x[0]).data["cost"] * x[1]
-                if self.items.get_item(x[0]) else 0
+                self.items.get_item(x[0]).data["cost"] * x[1] if self.items.get_item(x[0]) else 0
             ),
-            reverse=True
+            reverse=True,
         )
 
         # Paginate items
         total_pages = (len(sorted_items) + per_page - 1) // per_page
         if page > total_pages:
             await interaction.response.send_message(
-                f"Invalid page number. Total pages: {total_pages}",
-                ephemeral=True
+                f"Invalid page number. Total pages: {total_pages}", ephemeral=True
             )
             return
 
-        page_items = sorted_items[offset:offset + per_page]
+        page_items = sorted_items[offset : offset + per_page]
 
-        embed = discord.Embed(
-            title=title,
-            color=discord.Color.gold()
-        )
+        embed = discord.Embed(title=title, color=discord.Color.gold())
 
         for item_id, quantity in page_items:
             item = self.items.get_item(item_id)
@@ -82,9 +74,7 @@ class ItemCommands(commands.Cog):
 
             value = item.data["cost"] * quantity
             embed.add_field(
-                name=f"{item.name} x{quantity:,}",
-                value=f"Value: {value:,} coins",
-                inline=False
+                name=f"{item.name} x{quantity:,}", value=f"Value: {value:,} coins", inline=False
             )
 
         total_value = bank.get_total_value(self.items)
@@ -92,7 +82,7 @@ class ItemCommands(commands.Cog):
 
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='price', description='Check the price of an item')
+    @app_commands.command(name="price", description="Check the price of an item")
     async def price_check(self, interaction: discord.Interaction, item: str):
         """Check the price and details of an item"""
         item_obj = self.items.get_item_by_name(item)
@@ -100,15 +90,12 @@ class ItemCommands(commands.Cog):
             await interaction.response.send_message(f"Item '{item}' not found.", ephemeral=True)
             return
 
-        embed = discord.Embed(
-            title=f"Item Details: {item_obj.name}",
-            color=discord.Color.blue()
-        )
+        embed = discord.Embed(title=f"Item Details: {item_obj.name}", color=discord.Color.blue())
 
         # Basic info
         embed.add_field(name="ID", value=str(item_obj.id), inline=True)
         embed.add_field(name="Cost", value=f"{item_obj.data['cost']:,} coins", inline=True)
-        
+
         if item_obj.data["examine"]:
             embed.add_field(name="Examine", value=item_obj.data["examine"], inline=False)
 
@@ -124,7 +111,7 @@ class ItemCommands(commands.Cog):
             properties.append("Noteable")
         if item_obj.data["quest_item"]:
             properties.append("Quest Item")
-        
+
         if properties:
             embed.add_field(name="Properties", value=", ".join(properties), inline=False)
 
@@ -153,18 +140,13 @@ class ItemCommands(commands.Cog):
             embed.add_field(
                 name="Alchemy",
                 value=f"High: {item_obj.data['high_alch']:,}\nLow: {item_obj.data['low_alch']:,}",
-                inline=True
+                inline=True,
             )
 
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='search', description='Search for items')
-    async def search_items(
-        self,
-        interaction: discord.Interaction,
-        query: str,
-        page: int = 1
-    ):
+    @app_commands.command(name="search", description="Search for items")
+    async def search_items(self, interaction: discord.Interaction, query: str, page: int = 1):
         """Search for items by name"""
         if page < 1:
             await interaction.response.send_message("Page number must be positive.", ephemeral=True)
@@ -179,8 +161,7 @@ class ItemCommands(commands.Cog):
 
         if not matches:
             await interaction.response.send_message(
-                f"No items found matching '{query}'.",
-                ephemeral=True
+                f"No items found matching '{query}'.", ephemeral=True
             )
             return
 
@@ -194,47 +175,37 @@ class ItemCommands(commands.Cog):
 
         if page > total_pages:
             await interaction.response.send_message(
-                f"Invalid page number. Total pages: {total_pages}",
-                ephemeral=True
+                f"Invalid page number. Total pages: {total_pages}", ephemeral=True
             )
             return
 
-        page_items = matches[offset:offset + per_page]
+        page_items = matches[offset : offset + per_page]
 
-        embed = discord.Embed(
-            title=f"Item Search: {query}",
-            color=discord.Color.blue()
-        )
+        embed = discord.Embed(title=f"Item Search: {query}", color=discord.Color.blue())
 
         for item in page_items:
             value_text = f"Cost: {item.data['cost']:,} coins"
             if item.data["equipment_slot"]:
                 value_text += f"\nSlot: {item.data['equipment_slot'].value.title()}"
-            
-            embed.add_field(
-                name=item.name,
-                value=value_text,
-                inline=False
-            )
+
+            embed.add_field(name=item.name, value=value_text, inline=False)
 
         embed.set_footer(text=f"Page {page}/{total_pages} | Found {len(matches)} items")
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name='equipment', description='View your equipment')
+    @app_commands.command(name="equipment", description="View your equipment")
     async def view_equipment(self, interaction: discord.Interaction):
         """View your equipped items"""
         # Get player's equipment from database
         equipment = await self.get_player_equipment(interaction.user.id)
         if not equipment:
             await interaction.response.send_message(
-                "You have no equipment. Start gearing up!",
-                ephemeral=True
+                "You have no equipment. Start gearing up!", ephemeral=True
             )
             return
 
         embed = discord.Embed(
-            title=f"{interaction.user.name}'s Equipment",
-            color=discord.Color.blue()
+            title=f"{interaction.user.name}'s Equipment", color=discord.Color.blue()
         )
 
         total_value = 0
@@ -245,7 +216,7 @@ class ItemCommands(commands.Cog):
                 if item:
                     value = item.data["cost"]
                     total_value += value
-                    
+
                     # Add stats if available
                     stats_text = ""
                     if item.data["equipment_stats"]:
@@ -255,18 +226,14 @@ class ItemCommands(commands.Cog):
                                 stats.append(f"{stat.title()}: {value:+d}")
                         if stats:
                             stats_text = f"\n{', '.join(stats)}"
-                    
+
                     embed.add_field(
                         name=slot.value.title(),
                         value=f"{item.name}\nValue: {value:,} coins{stats_text}",
-                        inline=True
+                        inline=True,
                     )
             else:
-                embed.add_field(
-                    name=slot.value.title(),
-                    value="Empty",
-                    inline=True
-                )
+                embed.add_field(name=slot.value.title(), value="Empty", inline=True)
 
         embed.set_footer(text=f"Total Value: {total_value:,} coins")
         await interaction.response.send_message(embed=embed)
@@ -283,12 +250,13 @@ class ItemCommands(commands.Cog):
         # Return format: Dict[ItemSlot, int] (slot -> item_id)
         return {}
 
+
 async def setup(bot: commands.Bot) -> None:
     """Set up the item commands cog."""
     from ..lib.cog_utils import CogDependencies
-    
+
     # Get dependencies
     deps = CogDependencies.get_instance()
-    
+
     # Add cog to bot
-    await bot.add_cog(ItemCommands(bot, **deps.get_dependencies())) 
+    await bot.add_cog(ItemCommands(bot, **deps.get_dependencies()))

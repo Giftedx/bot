@@ -1,13 +1,14 @@
 from discord.ext import commands
 import discord
 
+
 class HelpCommand(commands.Cog):
     """Custom help command implementation"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name='help')
+    @commands.command(name="help")
     async def help(self, ctx: commands.Context, command_name: str = None):
         """Show help about commands"""
         if command_name:
@@ -17,7 +18,7 @@ class HelpCommand(commands.Cog):
                 embed = discord.Embed(
                     title=f"Help: {command.name}",
                     description=command.help or "No description available",
-                    color=discord.Color.blue()
+                    color=discord.Color.blue(),
                 )
                 await ctx.send(embed=embed)
                 return
@@ -28,7 +29,7 @@ class HelpCommand(commands.Cog):
         embed = discord.Embed(
             title="Bot Commands",
             description="Here are all the available commands!",
-            color=discord.Color.blue()
+            color=discord.Color.blue(),
         )
 
         # Music & Audio Commands
@@ -125,6 +126,7 @@ class HelpCommand(commands.Cog):
 
         embed.set_footer(text="Use !help <command> for more details about a specific command!")
         await ctx.send(embed=embed)
+
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(HelpCommand(bot))

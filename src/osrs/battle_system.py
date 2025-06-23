@@ -111,9 +111,7 @@ class OSRSBattleSystem(BaseBattleSystem):
         if defender_prayers := defender_stats.get("active_prayers", []):
             for prayer in defender_prayers:
                 if "protect" in prayer and prayer.split("_")[1] in move:
-                    damage = int(
-                        damage * 0.6
-                    )  # Protection prayers reduce damage by 40%
+                    damage = int(damage * 0.6)  # Protection prayers reduce damage by 40%
                     break
 
         # Check if hit lands
@@ -136,18 +134,10 @@ class OSRSBattleSystem(BaseBattleSystem):
 
         # Get attacker and defender stats
         attacker_stats = battle_data[
-            (
-                "challenger_stats"
-                if attacker_id == battle_state.challenger_id
-                else "opponent_stats"
-            )
+            ("challenger_stats" if attacker_id == battle_state.challenger_id else "opponent_stats")
         ]
         defender_stats = battle_data[
-            (
-                "opponent_stats"
-                if attacker_id == battle_state.challenger_id
-                else "challenger_stats"
-            )
+            ("opponent_stats" if attacker_id == battle_state.challenger_id else "challenger_stats")
         ]
 
         # Apply combat effects
@@ -172,9 +162,7 @@ class OSRSBattleSystem(BaseBattleSystem):
             "message": message + battle_end_message,
             "attacker_id": attacker_id,
             "defender_hp": defender_stats["hitpoints"],
-            "xp_gained": self._calculate_xp_gain(
-                damage, self.combat_styles[move]["xp_type"]
-            ),
+            "xp_gained": self._calculate_xp_gain(damage, self.combat_styles[move]["xp_type"]),
         }
 
     def _calculate_xp_gain(self, damage: int, xp_type: str) -> Dict[str, float]:
@@ -190,9 +178,7 @@ class OSRSBattleSystem(BaseBattleSystem):
         else:
             return {xp_type: base_xp}
 
-    def is_valid_move(
-        self, battle_state: BattleState, move: str, player_id: int
-    ) -> bool:
+    def is_valid_move(self, battle_state: BattleState, move: str, player_id: int) -> bool:
         """Validate combat move."""
         if not battle_state or battle_state.is_finished:
             return False
@@ -202,17 +188,13 @@ class OSRSBattleSystem(BaseBattleSystem):
 
         return move in self.get_available_moves(battle_state, player_id)
 
-    def get_available_moves(
-        self, battle_state: BattleState, player_id: int
-    ) -> list[str]:
+    def get_available_moves(self, battle_state: BattleState, player_id: int) -> list[str]:
         """Get available combat moves."""
         if not battle_state or battle_state.is_finished:
             return []
 
         stats = battle_state.battle_data.get(
-            "challenger_stats"
-            if player_id == battle_state.challenger_id
-            else "opponent_stats"
+            "challenger_stats" if player_id == battle_state.challenger_id else "opponent_stats"
         )
 
         if not stats:

@@ -10,6 +10,7 @@ import discord
 
 logger = logging.getLogger(__name__)
 
+
 class ErrorHandler(commands.Cog):
     """Global error handling for bot commands"""
 
@@ -18,13 +19,11 @@ class ErrorHandler(commands.Cog):
         self.error_counts = defaultdict(int)
         self.last_errors = {}
         self.error_thresholds = {
-            'critical': 5,  # Number of errors before taking action
-            'warning': 3
+            "critical": 5,  # Number of errors before taking action
+            "warning": 3,
         }
         self.error_counter = Counter(
-            'bot_error_counts_total',
-            'Total number of errors handled',
-            ['error_type', 'severity']
+            "bot_error_counts_total", "Total number of errors handled", ["error_type", "severity"]
         )
         self.error_cooldowns = {}
         self.cooldown_time = 300  # 5 minutes cooldown between similar errors
@@ -45,15 +44,9 @@ class ErrorHandler(commands.Cog):
 
             # Reset counts older than 1 hour
             self.error_counts = defaultdict(int)
-            self.last_errors = {
-                k: v for k, v in self.last_errors.items()
-                if v > old_threshold
-            }
+            self.last_errors = {k: v for k, v in self.last_errors.items() if v > old_threshold}
             self._recovery_attempts = defaultdict(int)
-            self.error_cooldowns = {
-                k: v for k, v in self.error_cooldowns.items()
-                if v > now
-            }
+            self.error_cooldowns = {k: v for k, v in self.error_cooldowns.items() if v > now}
         except Exception as e:
             logger.error(f"Error in threshold check: {e}", exc_info=True)
 
@@ -104,11 +97,15 @@ class ErrorHandler(commands.Cog):
                 if 'Member "' in str(error) and '" not found' in str(error):
                     await ctx.send("Could not find that user!")
                 else:
-                    await ctx.send(f"Invalid argument. Use `{ctx.prefix}help {ctx.command}` to see proper usage")
+                    await ctx.send(
+                        f"Invalid argument. Use `{ctx.prefix}help {ctx.command}` to see proper usage"
+                    )
                 return
 
             if isinstance(error, commands.CommandOnCooldown):
-                await ctx.send(f"This command is on cooldown. Try again in {error.retry_after:.1f} seconds")
+                await ctx.send(
+                    f"This command is on cooldown. Try again in {error.retry_after:.1f} seconds"
+                )
                 return
 
             if isinstance(error, commands.NoPrivateMessage):
@@ -130,18 +127,15 @@ class ErrorHandler(commands.Cog):
                 error,
                 exc_info=error,
                 extra={
-                    'command': ctx.command.name if ctx.command else 'Unknown',
-                    'author': str(ctx.author),
-                    'channel': str(ctx.channel),
-                    'guild': str(ctx.guild) if ctx.guild else 'DM',
-                    'message': ctx.message.content
-                }
+                    "command": ctx.command.name if ctx.command else "Unknown",
+                    "author": str(ctx.author),
+                    "channel": str(ctx.channel),
+                    "guild": str(ctx.guild) if ctx.guild else "DM",
+                    "message": ctx.message.content,
+                },
             )
 
-            self.error_counter.labels(
-                error_type=error_type,
-                severity='error'
-            ).inc()
+            self.error_counter.labels(error_type=error_type, severity="error").inc()
 
             # Notify user of unexpected errors
             await ctx.send(
@@ -149,7 +143,7 @@ class ErrorHandler(commands.Cog):
             )
 
             # Notify bot owner of critical errors
-            if self.error_counts[error_type] >= self.error_thresholds['critical']:
+            if self.error_counts[error_type] >= self.error_thresholds["critical"]:
                 await self._notify_owner(error, ctx)
 
         except Exception as e:
@@ -159,8 +153,7 @@ class ErrorHandler(commands.Cog):
         """Get similar command suggestions using string similarity"""
         all_commands = [cmd.name for cmd in self.bot.commands]
         return [
-            cmd for cmd in all_commands
-            if self._string_similarity(attempted_command, cmd) > 0.75
+            cmd for cmd in all_commands if self._string_similarity(attempted_command, cmd) > 0.75
         ][:3]
 
     def _string_similarity(self, a: str, b: str) -> float:
@@ -184,14 +177,12 @@ class ErrorHandler(commands.Cog):
 
         for i in range(1, len(a) + 1):
             for j in range(1, len(b) + 1):
-                if a[i-1] == b[j-1]:
-                    distances[i][j] = distances[i-1][j-1]
+                if a[i - 1] == b[j - 1]:
+                    distances[i][j] = distances[i - 1][j - 1]
                 else:
-                    distances[i][j] = min(
-                        distances[i-1][j],
-                        distances[i][j-1],
-                        distances[i-1][j-1]
-                    ) + 1
+                    distances[i][j] = (
+                        min(distances[i - 1][j], distances[i][j - 1], distances[i - 1][j - 1]) + 1
+                    )
 
         max_len = max(len(a), len(b))
         similarity = 1 - (distances[len(a)][len(b)] / max_len)
@@ -215,6 +206,7 @@ class ErrorHandler(commands.Cog):
             await owner.send(error_msg[:1900] + "..." if len(error_msg) > 1900 else error_msg)
         except Exception as e:
             logger.error(f"Failed to notify owner: {e}", exc_info=True)
+
 
 async def setup(bot: commands.Bot) -> None:
     """Set up the error handler cog"""

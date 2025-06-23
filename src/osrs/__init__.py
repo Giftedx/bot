@@ -9,22 +9,22 @@ from .core import (
     GearSetup,
     GearBank,
     SkillType,
-    SkillLevel
+    SkillLevel,
 )
 from .models import User
 
-__version__ = '0.1.0'
+__version__ = "0.1.0"
 
 __all__ = [
-    'Bank',
-    'BitField',
-    'EquipmentSlot',
-    'GearStats',
-    'GearRequirements',
-    'GearItem',
-    'GearSetup',
-    'GearBank',
-    'SkillType',
-    'SkillLevel',
-    'User'
+    "Bank",
+    "BitField",
+    "EquipmentSlot",
+    "GearStats",
+    "GearRequirements",
+    "GearItem",
+    "GearSetup",
+    "GearBank",
+    "SkillType",
+    "SkillLevel",
+    "User",
 ]

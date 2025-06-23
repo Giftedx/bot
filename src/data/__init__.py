@@ -4,6 +4,6 @@ from . import osrs
 from . import pokemon
 
 __all__ = [
-    'osrs',
-    'pokemon',
-] 
+    "osrs",
+    "pokemon",
+]

@@ -10,22 +10,19 @@ from .base import Base
 
 logger = logging.getLogger(__name__)
 
+
 class DatabaseManager:
     """Manages database connections and sessions."""
-    
+
     def __init__(self, database_url: str):
         """Initialize database connection.
-        
+
         Args:
             database_url: Database connection URL
         """
         self.engine = create_engine(database_url)
-        self.SessionLocal = sessionmaker(
-            autocommit=False,
-            autoflush=False,
-            bind=self.engine
-        )
-        
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+
     def create_tables(self) -> None:
         """Create all database tables."""
         try:
@@ -34,10 +31,10 @@ class DatabaseManager:
         except SQLAlchemyError as e:
             logger.error(f"Error creating database tables: {e}")
             raise
-            
+
     def get_session(self) -> Generator[Session, None, None]:
         """Get database session.
-        
+
         Yields:
             Database session
         """
@@ -50,7 +47,7 @@ class DatabaseManager:
             raise
         finally:
             session.close()
-            
+
     def cleanup(self) -> None:
         """Cleanup database connections."""
         try:
@@ -58,4 +55,4 @@ class DatabaseManager:
             logger.info("Database connections cleaned up")
         except SQLAlchemyError as e:
             logger.error(f"Error cleaning up database connections: {e}")
-            raise 
+            raise

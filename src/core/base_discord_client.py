@@ -36,7 +36,7 @@ COGS = [
 
 class BaseDiscordClient(commands.Bot):
     """Base Discord client with cog loading and core services.
-    
+
     Extends commands.Bot to provide:
     - Automated cog loading
     - Integration with command processor, health monitor, and metrics
@@ -45,7 +45,7 @@ class BaseDiscordClient(commands.Bot):
 
     def __init__(self, config: BotConfig):
         """Initialize the Discord client and core services.
-        
+
         Args:
             config: BotConfig instance with bot configuration
         """
@@ -68,9 +68,9 @@ class BaseDiscordClient(commands.Bot):
 
     async def setup_hook(self) -> None:
         """Initialize bot services and load cogs.
-        
+
         Loads all cogs listed in COGS and starts core services.
-        
+
         Raises:
             Exception: If initialization fails
         """
@@ -93,7 +93,7 @@ class BaseDiscordClient(commands.Bot):
 
     async def close(self) -> None:
         """Clean shutdown of bot services.
-        
+
         Stops metrics and health monitor services before closing the bot.
         """
         try:
@@ -104,7 +104,7 @@ class BaseDiscordClient(commands.Bot):
 
     async def process_commands(self, message: discord.Message) -> None:
         """Process commands through command processor.
-        
+
         Args:
             message: Discord message to process
         """

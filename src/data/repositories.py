@@ -4,6 +4,7 @@ from datetime import datetime
 import yaml
 from pathlib import Path
 
+
 @dataclass
 class Repository:
     name: str
@@ -20,37 +21,38 @@ class Repository:
     def to_dict(self) -> dict:
         """Convert repository to dictionary format."""
         return {
-            'name': self.name,
-            'description': self.description,
-            'category': self.category,
-            'features': self.features,
-            'url': self.url,
-            'stars': self.stars,
-            'last_updated': self.last_updated.isoformat() if self.last_updated else None,
-            'language': self.language,
-            'tags': self.tags,
-            'metadata': self.metadata
+            "name": self.name,
+            "description": self.description,
+            "category": self.category,
+            "features": self.features,
+            "url": self.url,
+            "stars": self.stars,
+            "last_updated": self.last_updated.isoformat() if self.last_updated else None,
+            "language": self.language,
+            "tags": self.tags,
+            "metadata": self.metadata,
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Repository':
+    def from_dict(cls, data: dict) -> "Repository":
         """Create repository from dictionary data."""
-        if 'last_updated' in data and data['last_updated']:
-            data['last_updated'] = datetime.fromisoformat(data['last_updated'])
+        if "last_updated" in data and data["last_updated"]:
+            data["last_updated"] = datetime.fromisoformat(data["last_updated"])
         return cls(**data)
+
 
 class RepositoryManager:
     def __init__(self):
         self.categories = {
-            'core_libraries': [],
-            'ai_integration': [],
-            'multi_purpose': [],
-            'study_tools': [],
-            'media_voice': [],
-            'game_integration': [],
-            'image_processing': [],
-            'utility_tools': [],
-            'plex_integration': []
+            "core_libraries": [],
+            "ai_integration": [],
+            "multi_purpose": [],
+            "study_tools": [],
+            "media_voice": [],
+            "game_integration": [],
+            "image_processing": [],
+            "utility_tools": [],
+            "plex_integration": [],
         }
         self._category_stats: Dict[str, Dict] = {}
         self._last_updated: Optional[datetime] = None
@@ -69,9 +71,7 @@ class RepositoryManager:
         """Remove a repository by name and category. Returns True if successful."""
         if category in self.categories:
             initial_length = len(self.categories[category])
-            self.categories[category] = [
-                r for r in self.categories[category] if r.name != name
-            ]
+            self.categories[category] = [r for r in self.categories[category] if r.name != name]
             if len(self.categories[category]) < initial_length:
                 self._last_updated = datetime.now()
                 return True
@@ -92,68 +92,68 @@ class RepositoryManager:
     def get_statistics(self) -> Dict[str, any]:
         """Get statistics about the repositories."""
         stats = {
-            'total_repositories': sum(len(repos) for repos in self.categories.values()),
-            'repositories_by_category': {
+            "total_repositories": sum(len(repos) for repos in self.categories.values()),
+            "repositories_by_category": {
                 category: len(repos) for category, repos in self.categories.items()
             },
-            'languages': {},
-            'total_stars': 0,
-            'last_updated': self._last_updated
+            "languages": {},
+            "total_stars": 0,
+            "last_updated": self._last_updated,
         }
 
         for repos in self.categories.values():
             for repo in repos:
                 if repo.language:
-                    stats['languages'][repo.language] = stats['languages'].get(repo.language, 0) + 1
+                    stats["languages"][repo.language] = stats["languages"].get(repo.language, 0) + 1
                 if repo.stars:
-                    stats['total_stars'] += repo.stars
+                    stats["total_stars"] += repo.stars
 
         return stats
 
     def export_to_yaml(self, filename: str):
         """Export repositories to YAML file."""
         data = {
-            'metadata': {
-                'last_updated': self._last_updated.isoformat() if self._last_updated else None,
-                'statistics': self.get_statistics()
+            "metadata": {
+                "last_updated": self._last_updated.isoformat() if self._last_updated else None,
+                "statistics": self.get_statistics(),
             },
-            'categories': {
+            "categories": {
                 category: [repo.to_dict() for repo in repos]
                 for category, repos in self.categories.items()
-            }
+            },
         }
-        
+
         # Ensure directory exists
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(filename, 'w') as f:
+
+        with open(filename, "w") as f:
             yaml.dump(data, f, default_flow_style=False, sort_keys=False)
 
     @classmethod
-    def from_yaml(cls, filename: str) -> 'RepositoryManager':
+    def from_yaml(cls, filename: str) -> "RepositoryManager":
         """Create RepositoryManager from YAML file."""
         manager = cls()
-        
+
         if not Path(filename).exists():
             return manager
-            
-        with open(filename, 'r') as f:
+
+        with open(filename, "r") as f:
             data = yaml.safe_load(f)
 
-        if isinstance(data, dict) and 'categories' in data:
-            for category, repos in data['categories'].items():
+        if isinstance(data, dict) and "categories" in data:
+            for category, repos in data["categories"].items():
                 for repo_data in repos:
                     repo = Repository.from_dict(repo_data)
                     manager.add_repository(repo)
 
-        if isinstance(data, dict) and 'metadata' in data:
-            if data['metadata'].get('last_updated'):
-                manager._last_updated = datetime.fromisoformat(data['metadata']['last_updated'])
+        if isinstance(data, dict) and "metadata" in data:
+            if data["metadata"].get("last_updated"):
+                manager._last_updated = datetime.fromisoformat(data["metadata"]["last_updated"])
 
         return manager
 
-    def merge(self, other: 'RepositoryManager') -> None:
+    def merge(self, other: "RepositoryManager") -> None:
         """Merge another RepositoryManager into this one."""
         for category, repos in other.categories.items():
             for repo in repos:
-                self.add_repository(repo) 
+                self.add_repository(repo)

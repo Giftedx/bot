@@ -50,9 +50,7 @@ class ErrorHandler:
         except Exception as e:
             self._current_try += 1
             if self._current_try >= self.max_retries:
-                logger.error(
-                    f"Failed after {self.max_retries} attempts: {e}", exc_info=True
-                )
+                logger.error(f"Failed after {self.max_retries} attempts: {e}", exc_info=True)
                 raise
             logger.warning(f"Error on attempt {self._current_try}: {e}")
             # Let the caller handle the retry timing
@@ -79,16 +77,12 @@ class ErrorHandler:
 
             if isinstance(error, commands.MissingPermissions):
                 perms = ", ".join(error.missing_permissions)
-                await ctx.send(
-                    f"You need these permissions to use this command: `{perms}`"
-                )
+                await ctx.send(f"You need these permissions to use this command: `{perms}`")
                 return
 
             if isinstance(error, commands.BotMissingPermissions):
                 perms = ", ".join(error.missing_permissions)
-                await ctx.send(
-                    f"I need these permissions to run this command: `{perms}`"
-                )
+                await ctx.send(f"I need these permissions to run this command: `{perms}`")
                 return
 
             if isinstance(error, commands.MissingRequiredArgument):
@@ -110,8 +104,7 @@ class ErrorHandler:
 
             if isinstance(error, commands.CommandOnCooldown):
                 await ctx.send(
-                    f"This command is on cooldown. Try again in "
-                    f"{error.retry_after:.1f} seconds"
+                    f"This command is on cooldown. Try again in " f"{error.retry_after:.1f} seconds"
                 )
                 return
 
@@ -147,9 +140,7 @@ class ErrorHandler:
         except Exception as e:
             logger.error("Error in error handler: %s", e, exc_info=True)
 
-    def log_error(
-        self, error: Exception, context: Optional[Dict[str, Any]] = None
-    ) -> None:
+    def log_error(self, error: Exception, context: Optional[Dict[str, Any]] = None) -> None:
         """Log an error with additional context and update metrics"""
         error_type = type(error).__name__
         self.error_counts[error_type] += 1
@@ -186,9 +177,7 @@ class ErrorHandler:
                 f"Context: {context}\n"
                 f"```py\n{traceback.format_exc()}\n```"
             )
-            await owner.send(
-                error_msg[:1900] + "..." if len(error_msg) > 1900 else error_msg
-            )
+            await owner.send(error_msg[:1900] + "..." if len(error_msg) > 1900 else error_msg)
         except Exception as e:
             logger.error("Failed to notify owner: %s", e, exc_info=True)
 
@@ -225,9 +214,7 @@ class ErrorHandlerCog(commands.Cog):
     async def on_error(self, event: str, *args, **kwargs) -> None:
         """Handle non-command errors"""
         error = sys.exc_info()[1]
-        self.error_handler.log_error(
-            error, {"event": event, "args": args, "kwargs": kwargs}
-        )
+        self.error_handler.log_error(error, {"event": event, "args": args, "kwargs": kwargs})
 
 
 async def setup(bot: commands.Bot) -> None:

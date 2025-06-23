@@ -56,33 +56,21 @@ class GatheringSystem:
     def __init__(self):
         self.resources = {
             # Mining resources
-            "copper": Resource(
-                "Copper ore", SkillType.MINING, 1, 17.5, 1, 1, "pickaxe"
-            ),
+            "copper": Resource("Copper ore", SkillType.MINING, 1, 17.5, 1, 1, "pickaxe"),
             "tin": Resource("Tin ore", SkillType.MINING, 1, 17.5, 1, 1, "pickaxe"),
-            "iron": Resource(
-                "Iron ore", SkillType.MINING, 15, 35.0, 1, 1, "pickaxe", 0.5, 3
-            ),
-            "coal": Resource(
-                "Coal", SkillType.MINING, 30, 50.0, 1, 1, "pickaxe", 0.4, 10
-            ),
+            "iron": Resource("Iron ore", SkillType.MINING, 15, 35.0, 1, 1, "pickaxe", 0.5, 3),
+            "coal": Resource("Coal", SkillType.MINING, 30, 50.0, 1, 1, "pickaxe", 0.4, 10),
             "mithril": Resource(
                 "Mithril ore", SkillType.MINING, 55, 80.0, 1, 1, "pickaxe", 0.3, 20
             ),
             # Woodcutting resources
             "normal": Resource("Logs", SkillType.WOODCUTTING, 1, 25.0, 1, 1, "axe"),
-            "oak": Resource(
-                "Oak logs", SkillType.WOODCUTTING, 15, 37.5, 1, 1, "axe", 0.4, 4
-            ),
-            "willow": Resource(
-                "Willow logs", SkillType.WOODCUTTING, 30, 67.5, 1, 1, "axe", 0.3, 8
-            ),
+            "oak": Resource("Oak logs", SkillType.WOODCUTTING, 15, 37.5, 1, 1, "axe", 0.4, 4),
+            "willow": Resource("Willow logs", SkillType.WOODCUTTING, 30, 67.5, 1, 1, "axe", 0.3, 8),
             "maple": Resource(
                 "Maple logs", SkillType.WOODCUTTING, 45, 100.0, 1, 1, "axe", 0.25, 12
             ),
-            "yew": Resource(
-                "Yew logs", SkillType.WOODCUTTING, 60, 175.0, 1, 1, "axe", 0.2, 20
-            ),
+            "yew": Resource("Yew logs", SkillType.WOODCUTTING, 60, 175.0, 1, 1, "axe", 0.2, 20),
         }
 
     def get_best_tool(self, tool_type: str, skill_level: int) -> Optional[Tool]:

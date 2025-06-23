@@ -12,8 +12,10 @@ from dataclasses import dataclass
 from enum import Enum
 from datetime import timedelta
 
+
 class RewardType(Enum):
     """Types of rewards that can be earned."""
+
     EXPERIENCE = "experience"
     ITEM = "item"
     CURRENCY = "currency"
@@ -23,6 +25,7 @@ class RewardType(Enum):
 @dataclass
 class RewardTier:
     """Defines a tier of possible rewards."""
+
     min_level: int
     rewards: Dict[RewardType, float]  # type -> drop rate
     bonus_multiplier: float
@@ -50,10 +53,7 @@ class RewardSystem:
         #           )
 
     async def calculate_task_reward(
-        self,
-        task_difficulty: int,
-        pet_level: int,
-        completion_time: timedelta
+        self, task_difficulty: int, pet_level: int, completion_time: timedelta
     ) -> Dict[RewardType, int]:
         """Calculate rewards for completing a task.
 
@@ -69,10 +69,7 @@ class RewardSystem:
         return {}
 
     async def award_battle_rewards(
-        self,
-        winner_id: int,
-        loser_id: int,
-        battle_duration: timedelta
+        self, winner_id: int, loser_id: int, battle_duration: timedelta
     ) -> Dict[str, Dict[RewardType, int]]:
         """Award rewards for a battle outcome.
 

@@ -7,6 +7,7 @@ from discord.ext import commands
 
 from ..core.base_cog import BaseCog, check_permissions
 
+
 class ModerationCog(BaseCog):
     """Commands for server moderation."""
 
@@ -19,14 +20,10 @@ class ModerationCog(BaseCog):
     @commands.guild_only()
     @check_permissions(manage_messages=True)
     async def warn_user(
-        self,
-        ctx: commands.Context,
-        member: discord.Member,
-        *,
-        reason: str = "No reason provided"
+        self, ctx: commands.Context, member: discord.Member, *, reason: str = "No reason provided"
     ) -> None:
         """Warn a user.
-        
+
         Args:
             member: The member to warn
             reason: The reason for the warning
@@ -51,38 +48,29 @@ class ModerationCog(BaseCog):
         embed = discord.Embed(
             title="⚠️ Warning",
             description=f"{member.mention} has been warned.",
-            color=discord.Color.yellow()
+            color=discord.Color.yellow(),
         )
         embed.add_field(name="Reason", value=reason)
-        embed.add_field(
-            name="Warning Count",
-            value=str(self._warn_counts[member.id])
-        )
+        embed.add_field(name="Warning Count", value=str(self._warn_counts[member.id]))
         embed.set_footer(
             text=f"Warned by {ctx.author}",
-            icon_url=ctx.author.avatar.url if ctx.author.avatar else None
+            icon_url=ctx.author.avatar.url if ctx.author.avatar else None,
         )
 
         await ctx.send(embed=embed)
 
         # DM the user
         try:
-            await member.send(
-                f"You have been warned in {ctx.guild.name} for: {reason}"
-            )
+            await member.send(f"You have been warned in {ctx.guild.name} for: {reason}")
         except discord.HTTPException:
             await ctx.send("Could not DM user about the warning.")
 
     @commands.command(name="clear")
     @commands.guild_only()
     @check_permissions(manage_messages=True)
-    async def clear_messages(
-        self,
-        ctx: commands.Context,
-        amount: int = 10
-    ) -> None:
+    async def clear_messages(self, ctx: commands.Context, amount: int = 10) -> None:
         """Clear a number of messages from the channel.
-        
+
         Args:
             amount: Number of messages to clear (default: 10)
         """
@@ -92,8 +80,7 @@ class ModerationCog(BaseCog):
 
         if amount > 100:
             confirm = await self.confirm_action(
-                ctx,
-                f"Are you sure you want to delete {amount} messages?"
+                ctx, f"Are you sure you want to delete {amount} messages?"
             )
             if not confirm:
                 await ctx.send("Operation cancelled.")
@@ -101,10 +88,7 @@ class ModerationCog(BaseCog):
 
         try:
             deleted = await ctx.channel.purge(limit=amount + 1)  # +1 for command message
-            await ctx.send(
-                f"Deleted {len(deleted)-1} messages.",
-                delete_after=5
-            )
+            await ctx.send(f"Deleted {len(deleted)-1} messages.", delete_after=5)
         except discord.Forbidden:
             await ctx.send("I don't have permission to delete messages.")
         except discord.HTTPException as e:
@@ -119,10 +103,10 @@ class ModerationCog(BaseCog):
         member: discord.Member,
         duration: int,
         *,
-        reason: str = "No reason provided"
+        reason: str = "No reason provided",
     ) -> None:
         """Timeout a user for a specified duration.
-        
+
         Args:
             member: The member to timeout
             duration: Timeout duration in minutes
@@ -133,23 +117,20 @@ class ModerationCog(BaseCog):
             return
 
         try:
-            await member.timeout(
-                timedelta(minutes=duration),
-                reason=f"By {ctx.author}: {reason}"
-            )
-            
+            await member.timeout(timedelta(minutes=duration), reason=f"By {ctx.author}: {reason}")
+
             embed = discord.Embed(
                 title="🔇 Timeout",
                 description=f"{member.mention} has been timed out.",
-                color=discord.Color.orange()
+                color=discord.Color.orange(),
             )
             embed.add_field(name="Duration", value=f"{duration} minutes")
             embed.add_field(name="Reason", value=reason)
             embed.set_footer(
                 text=f"Timed out by {ctx.author}",
-                icon_url=ctx.author.avatar.url if ctx.author.avatar else None
+                icon_url=ctx.author.avatar.url if ctx.author.avatar else None,
             )
-            
+
             await ctx.send(embed=embed)
 
             # DM the user
@@ -170,29 +151,23 @@ class ModerationCog(BaseCog):
     @commands.guild_only()
     @check_permissions(manage_messages=True)
     async def view_infractions(
-        self,
-        ctx: commands.Context,
-        member: Optional[discord.Member] = None
+        self, ctx: commands.Context, member: Optional[discord.Member] = None
     ) -> None:
         """View warning count for a user or all users.
-        
+
         Args:
             member: Optional member to view infractions for
         """
         if member:
             count = self._warn_counts.get(member.id, 0)
-            await ctx.send(
-                f"{member.mention} has {count} warning(s)."
-            )
+            await ctx.send(f"{member.mention} has {count} warning(s).")
         else:
             # Create list of all infractions
             infractions = []
             for user_id, count in self._warn_counts.items():
                 member = ctx.guild.get_member(user_id)
                 if member:
-                    infractions.append(
-                        f"{member.mention}: {count} warning(s)"
-                    )
+                    infractions.append(f"{member.mention}: {count} warning(s)")
 
             if not infractions:
                 await ctx.send("No infractions recorded.")
@@ -200,13 +175,10 @@ class ModerationCog(BaseCog):
 
             # Send paginated embed
             await self.send_paginated_embed(
-                ctx,
-                "📋 Infractions",
-                infractions,
-                items_per_page=10,
-                color=discord.Color.blue()
+                ctx, "📋 Infractions", infractions, items_per_page=10, color=discord.Color.blue()
             )
+
 
 async def setup(bot: commands.Bot) -> None:
     """Add the cog to the bot."""
-    await bot.add_cog(ModerationCog(bot)) 
+    await bot.add_cog(ModerationCog(bot))

@@ -3,26 +3,29 @@ from datetime import datetime
 
 from src.core.models.trade import TradeOffer, TradeStatus
 
+
 class TradeManager:
     """Manages all active trade sessions."""
-    
+
     def __init__(self):
         self._trades: Dict[int, TradeOffer] = {}
         self._next_trade_id = 1
 
-    def create_trade(self, sender_id: int, receiver_id: int, item_name: str, item_quantity: int) -> TradeOffer:
+    def create_trade(
+        self, sender_id: int, receiver_id: int, item_name: str, item_quantity: int
+    ) -> TradeOffer:
         """Creates a new trade offer."""
         trade_id = self._next_trade_id
         self._next_trade_id += 1
-        
+
         offer = TradeOffer(
             id=trade_id,
             sender_id=sender_id,
             receiver_id=receiver_id,
             item_name=item_name,
-            item_quantity=item_quantity
+            item_quantity=item_quantity,
         )
-        
+
         self._trades[trade_id] = offer
         return offer
 
@@ -39,11 +42,13 @@ class TradeManager:
         trade = self.get_trade(trade_id)
         if trade:
             # Check for expired trades
-            if trade.status != TradeStatus.PENDING or (trade.expires_at and datetime.now() > trade.expires_at):
+            if trade.status != TradeStatus.PENDING or (
+                trade.expires_at and datetime.now() > trade.expires_at
+            ):
                 trade.status = TradeStatus.EXPIRED
                 # We can remove it from active trades later with a cleanup task
                 return None
-            
+
             trade.status = new_status
             return trade
         return None
@@ -61,4 +66,4 @@ class TradeManager:
         trade = self.get_trade(trade_id)
         if trade and trade.sender_id == requester_id:
             return self._update_trade_status(trade_id, TradeStatus.CANCELLED)
-        return None 
+        return None

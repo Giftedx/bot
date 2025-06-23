@@ -79,9 +79,7 @@ class PetBattleSystem(BaseBattleSystem):
             defense *= self.status_effects["vulnerable"]["stat_mod"]["defense"]
 
         # Calculate final damage
-        damage = (
-            (base_damage * attack / defense) * level_mod * effectiveness * loyalty_mod
-        )
+        damage = (base_damage * attack / defense) * level_mod * effectiveness * loyalty_mod
         damage = max(1, int(damage))
 
         # Build effect message
@@ -98,9 +96,9 @@ class PetBattleSystem(BaseBattleSystem):
         if status := move_data.get("status_effect"):
             if random.random() < move_data.get("status_chance", 0):
                 if status not in defender_stats.get("status_effects", {}):
-                    defender_stats.setdefault("status_effects", {})[status] = (
-                        self.status_effects[status].copy()
-                    )
+                    defender_stats.setdefault("status_effects", {})[status] = self.status_effects[
+                        status
+                    ].copy()
                     messages.append(f"Inflicted {status}!")
 
         return damage, " ".join(messages)
@@ -170,17 +168,13 @@ class PetBattleSystem(BaseBattleSystem):
             "attacker_energy": attacker["current_energy"],
         }
 
-    def _calculate_element_bonus(
-        self, attack_element: str, defend_element: str
-    ) -> float:
+    def _calculate_element_bonus(self, attack_element: str, defend_element: str) -> float:
         """Calculate elemental effectiveness modifier."""
         if multiplier := self.element_chart.get(attack_element, {}).get(defend_element):
             return multiplier
         return 1.0
 
-    def _apply_dot_effects(
-        self, attacker: Dict[str, Any], defender: Dict[str, Any]
-    ) -> str:
+    def _apply_dot_effects(self, attacker: Dict[str, Any], defender: Dict[str, Any]) -> str:
         """Apply damage over time effects and return message."""
         messages = []
         for pet, name in [(attacker, "attacker"), (defender, "defender")]:
@@ -188,15 +182,11 @@ class PetBattleSystem(BaseBattleSystem):
                 if "dot" in self.status_effects[status]:
                     damage = self.status_effects[status]["dot"]
                     pet["current_hp"] -= damage
-                    messages.append(
-                        f"{pet['name']} took {damage} damage from {status}!"
-                    )
+                    messages.append(f"{pet['name']} took {damage} damage from {status}!")
 
         return "\n".join(messages)
 
-    def _update_status_effects(
-        self, attacker: Dict[str, Any], defender: Dict[str, Any]
-    ) -> str:
+    def _update_status_effects(self, attacker: Dict[str, Any], defender: Dict[str, Any]) -> str:
         """Update status effect durations and return message."""
         messages = []
         for pet in [attacker, defender]:
@@ -208,9 +198,7 @@ class PetBattleSystem(BaseBattleSystem):
 
         return "\n".join(messages)
 
-    def is_valid_move(
-        self, battle_state: BattleState, move: str, player_id: int
-    ) -> bool:
+    def is_valid_move(self, battle_state: BattleState, move: str, player_id: int) -> bool:
         """Validate pet move."""
         if not battle_state or battle_state.is_finished:
             return False
@@ -220,9 +208,7 @@ class PetBattleSystem(BaseBattleSystem):
 
         # Get pet data
         pet = battle_state.battle_data.get(
-            "challenger_pet"
-            if player_id == battle_state.challenger_id
-            else "opponent_pet"
+            "challenger_pet" if player_id == battle_state.challenger_id else "opponent_pet"
         )
 
         # Check move exists and energy cost
@@ -234,17 +220,13 @@ class PetBattleSystem(BaseBattleSystem):
 
         return pet["current_energy"] >= pet["moves"][move]["energy_cost"]
 
-    def get_available_moves(
-        self, battle_state: BattleState, player_id: int
-    ) -> list[str]:
+    def get_available_moves(self, battle_state: BattleState, player_id: int) -> list[str]:
         """Get available pet moves."""
         if not battle_state or battle_state.is_finished:
             return []
 
         pet = battle_state.battle_data.get(
-            "challenger_pet"
-            if player_id == battle_state.challenger_id
-            else "opponent_pet"
+            "challenger_pet" if player_id == battle_state.challenger_id else "opponent_pet"
         )
 
         if not pet:

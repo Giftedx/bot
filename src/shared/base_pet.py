@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any
 from datetime import datetime
 
+
 class BasePet(ABC):
     def __init__(self, pet_id: str, owner_id: str, name: str):
         self.pet_id = pet_id
@@ -42,11 +43,11 @@ class BasePet(ABC):
             "level": self.level,
             "happiness": self.happiness,
             "rarity": self.rarity,
-            "type": self.__class__.__name__
+            "type": self.__class__.__name__,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'BasePet':
+    def from_dict(cls, data: Dict[str, Any]) -> "BasePet":
         """Create pet instance from dictionary data"""
         pet = cls(data["pet_id"], data["owner_id"], data["name"])
         pet.creation_date = datetime.fromisoformat(data["creation_date"])
@@ -54,4 +55,4 @@ class BasePet(ABC):
         pet.level = data["level"]
         pet.happiness = data["happiness"]
         pet.rarity = data["rarity"]
-        return pet 
+        return pet

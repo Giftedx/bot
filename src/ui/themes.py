@@ -14,6 +14,7 @@ from enum import Enum
 
 class ThemeMode(Enum):
     """Available theme modes."""
+
     LIGHT = "light"
     DARK = "dark"
     AUTO = "auto"
@@ -22,6 +23,7 @@ class ThemeMode(Enum):
 @dataclass
 class ColorScheme:
     """Color scheme definition for a theme."""
+
     primary: str
     secondary: str
     background: str
@@ -96,4 +98,5 @@ class ThemeManager:
 
 class ThemeNotFound(Exception):
     """Exception raised when a theme is not found."""
+
     pass

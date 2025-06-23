@@ -6,6 +6,7 @@ from collections import defaultdict
 import asyncio
 import json
 
+
 class InfractionManager:
     def __init__(self):
         self.warnings: Dict[int, Dict[int, List[Dict]]] = defaultdict(lambda: defaultdict(list))
@@ -17,7 +18,7 @@ class InfractionManager:
             "reason": reason,
             "mod_id": mod_id,
             "timestamp": datetime.now().isoformat(),
-            "id": len(self.warnings[guild_id][user_id]) + 1
+            "id": len(self.warnings[guild_id][user_id]) + 1,
         }
         self.warnings[guild_id][user_id].append(warning)
         return warning
@@ -33,13 +34,16 @@ class InfractionManager:
                 return True
         return False
 
+
 class Moderation(commands.Cog):
     """Advanced moderation commands and infraction tracking"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.infraction_manager = InfractionManager()
-        self.raid_protection = defaultdict(lambda: {"enabled": False, "join_threshold": 5, "time_threshold": 10})
+        self.raid_protection = defaultdict(
+            lambda: {"enabled": False, "join_threshold": 5, "time_threshold": 10}
+        )
         self.auto_mod_settings = defaultdict(
             lambda: {
                 "enabled": False,
@@ -48,7 +52,7 @@ class Moderation(commands.Cog):
                 "emoji_threshold": 10,
                 "caps_threshold": 0.7,
                 "invite_filter": True,
-                "link_filter": False
+                "link_filter": False,
             }
         )
         self.active_mutes = {}
@@ -62,13 +66,12 @@ class Moderation(commands.Cog):
             await ctx.send("Cannot warn bots!")
             return
 
-        warning = self.infraction_manager.add_warning(ctx.guild.id, member.id, reason, ctx.author.id)
+        warning = self.infraction_manager.add_warning(
+            ctx.guild.id, member.id, reason, ctx.author.id
+        )
         warnings = self.infraction_manager.get_warnings(ctx.guild.id, member.id)
 
-        embed = discord.Embed(
-            title="⚠️ Warning Issued",
-            color=discord.Color.yellow()
-        )
+        embed = discord.Embed(title="⚠️ Warning Issued", color=discord.Color.yellow())
         embed.add_field(name="User", value=f"{member.mention} ({member.id})", inline=False)
         embed.add_field(name="Reason", value=reason, inline=False)
         embed.add_field(name="Warning ID", value=str(warning["id"]), inline=True)
@@ -91,7 +94,9 @@ class Moderation(commands.Cog):
         elif len(warnings) >= 3:
             try:
                 duration = timedelta(hours=12)
-                await self.mute_member(ctx, member, duration, "Exceeded warning threshold (3 warnings)")
+                await self.mute_member(
+                    ctx, member, duration, "Exceeded warning threshold (3 warnings)"
+                )
             except discord.Forbidden:
                 await ctx.send("I don't have permission to mute this user!")
 
@@ -100,25 +105,22 @@ class Moderation(commands.Cog):
     async def warnings(self, ctx: commands.Context, member: discord.Member):
         """View a member's warnings"""
         warnings = self.infraction_manager.get_warnings(ctx.guild.id, member.id)
-        
+
         if not warnings:
             await ctx.send(f"{member} has no warnings!")
             return
 
-        embed = discord.Embed(
-            title=f"Warnings for {member}",
-            color=discord.Color.yellow()
-        )
+        embed = discord.Embed(title=f"Warnings for {member}", color=discord.Color.yellow())
 
         for warning in warnings:
             mod = ctx.guild.get_member(warning["mod_id"])
             mod_name = mod.name if mod else "Unknown Moderator"
             timestamp = datetime.fromisoformat(warning["timestamp"]).strftime("%Y-%m-%d %H:%M:%S")
-            
+
             embed.add_field(
                 name=f"Warning #{warning['id']}",
                 value=f"**Reason:** {warning['reason']}\n**By:** {mod_name}\n**When:** {timestamp}",
-                inline=False
+                inline=False,
             )
 
         await ctx.send(embed=embed)
@@ -141,66 +143,77 @@ class Moderation(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)
-    async def mute(self, ctx: commands.Context, member: discord.Member, duration: str, *, reason: str = "No reason provided"):
+    async def mute(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        duration: str,
+        *,
+        reason: str = "No reason provided",
+    ):
         """Temporarily mute a member"""
         try:
             value = int(duration[:-1])
             unit = duration[-1].lower()
-            
-            if unit == 'h':
+
+            if unit == "h":
                 delta = timedelta(hours=value)
-            elif unit == 'm':
+            elif unit == "m":
                 delta = timedelta(minutes=value)
-            elif unit == 'd':
+            elif unit == "d":
                 delta = timedelta(days=value)
             else:
                 await ctx.send("Invalid duration! Use format: 10m, 2h, 1d")
                 return
-                
+
             await self.mute_member(ctx, member, delta, reason)
-            
+
         except ValueError:
             await ctx.send("Invalid duration format! Use format: 10m, 2h, 1d")
 
-    async def mute_member(self, ctx: commands.Context, member: discord.Member, duration: timedelta, reason: str):
+    async def mute_member(
+        self, ctx: commands.Context, member: discord.Member, duration: timedelta, reason: str
+    ):
         """Helper function to mute members"""
         mute_role = discord.utils.get(ctx.guild.roles, name="Muted")
         if not mute_role:
             # Create muted role if it doesn't exist
             try:
                 mute_role = await ctx.guild.create_role(
-                    name="Muted",
-                    reason="Created for mute command"
+                    name="Muted", reason="Created for mute command"
                 )
-                
+
                 # Set up permissions for the muted role
                 for channel in ctx.guild.channels:
-                    await channel.set_permissions(mute_role, send_messages=False, add_reactions=False)
+                    await channel.set_permissions(
+                        mute_role, send_messages=False, add_reactions=False
+                    )
             except discord.Forbidden:
                 await ctx.send("I don't have permission to create and set up the Muted role!")
                 return
 
         try:
             await member.add_roles(mute_role, reason=reason)
-            
-            embed = discord.Embed(
-                title="🔇 Member Muted",
-                color=discord.Color.red()
-            )
+
+            embed = discord.Embed(title="🔇 Member Muted", color=discord.Color.red())
             embed.add_field(name="User", value=f"{member.mention} ({member.id})", inline=False)
             embed.add_field(name="Duration", value=str(duration), inline=True)
             embed.add_field(name="Reason", value=reason, inline=False)
             embed.set_footer(text=f"Muted by {ctx.author}")
-            
+
             await ctx.send(embed=embed)
-            
+
             # Schedule unmute
-            self.active_mutes[member.id] = asyncio.create_task(self.auto_unmute(member, mute_role, duration))
-            
+            self.active_mutes[member.id] = asyncio.create_task(
+                self.auto_unmute(member, mute_role, duration)
+            )
+
         except discord.Forbidden:
             await ctx.send("I don't have permission to mute this user!")
 
-    async def auto_unmute(self, member: discord.Member, mute_role: discord.Role, duration: timedelta):
+    async def auto_unmute(
+        self, member: discord.Member, mute_role: discord.Role, duration: timedelta
+    ):
         """Helper function to handle auto-unmute"""
         await asyncio.sleep(duration.total_seconds())
         if member.get_role(mute_role.id):
@@ -235,21 +248,26 @@ class Moderation(commands.Cog):
     async def raidprotection(self, ctx: commands.Context):
         """View or modify raid protection settings"""
         settings = self.raid_protection[ctx.guild.id]
-        
-        embed = discord.Embed(
-            title="🛡️ Raid Protection Settings",
-            color=discord.Color.blue()
+
+        embed = discord.Embed(title="🛡️ Raid Protection Settings", color=discord.Color.blue())
+        embed.add_field(
+            name="Status", value="Enabled" if settings["enabled"] else "Disabled", inline=False
         )
-        embed.add_field(name="Status", value="Enabled" if settings["enabled"] else "Disabled", inline=False)
-        embed.add_field(name="Join Threshold", value=f"{settings['join_threshold']} joins", inline=True)
-        embed.add_field(name="Time Threshold", value=f"{settings['time_threshold']} seconds", inline=True)
-        
+        embed.add_field(
+            name="Join Threshold", value=f"{settings['join_threshold']} joins", inline=True
+        )
+        embed.add_field(
+            name="Time Threshold", value=f"{settings['time_threshold']} seconds", inline=True
+        )
+
         await ctx.send(embed=embed)
 
     @raidprotection.command(name="toggle")
     async def raidprotection_toggle(self, ctx: commands.Context):
         """Toggle raid protection"""
-        self.raid_protection[ctx.guild.id]["enabled"] = not self.raid_protection[ctx.guild.id]["enabled"]
+        self.raid_protection[ctx.guild.id]["enabled"] = not self.raid_protection[ctx.guild.id][
+            "enabled"
+        ]
         status = "enabled" if self.raid_protection[ctx.guild.id]["enabled"] else "disabled"
         await ctx.send(f"Raid protection {status}")
 
@@ -268,10 +286,13 @@ class Moderation(commands.Cog):
 
         now = datetime.now()
         threshold_time = timedelta(seconds=self.raid_protection[member.guild.id]["time_threshold"])
-        
+
         # Track recent joins
-        recent_joins = [j for j in self.spam_tracker[member.guild.id]["joins"] 
-                       if now - datetime.fromisoformat(j) < threshold_time]
+        recent_joins = [
+            j
+            for j in self.spam_tracker[member.guild.id]["joins"]
+            if now - datetime.fromisoformat(j) < threshold_time
+        ]
         recent_joins.append(now.isoformat())
         self.spam_tracker[member.guild.id]["joins"] = recent_joins
 
@@ -279,7 +300,7 @@ class Moderation(commands.Cog):
         if len(recent_joins) >= self.raid_protection[member.guild.id]["join_threshold"]:
             try:
                 await member.guild.edit(verification_level=discord.VerificationLevel.high)
-                
+
                 # Try to notify moderators
                 mod_role = discord.utils.get(member.guild.roles, name="Moderator")
                 if mod_role:
@@ -291,6 +312,7 @@ class Moderation(commands.Cog):
                     )
             except discord.Forbidden:
                 pass
+
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Moderation(bot))

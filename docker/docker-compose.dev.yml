@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - ../src:/app/src
+    command: ["watchmedo", "auto-restart", "--directory=./src", "--pattern=*.py", "--recursive", "--", "python", "-m", "src.main"]
+    environment:
+      - PYTHONUNBUFFERED=1 

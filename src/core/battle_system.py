@@ -6,8 +6,9 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar
 from enum import Enum
 from datetime import datetime
 
-from src.core.battle_manager import BattleState, BattleType
-from src.core.models.pet import Pet, PetOrigin, PetAbility, StatusEffect
+from src.core.models import BattleState, BattleType, StatusEffect
+from src.pets.models import Pet
+from src.core.pet_system import PetOrigin, PetAbility
 from ..features.pets.event_system import EventManager, EventType, GameEvent
 
 T = TypeVar("T", bound="BaseBattleSystem")
@@ -45,15 +46,11 @@ class BaseBattleSystem(ABC):
         """Process a turn and return the turn results."""
 
     @abstractmethod
-    def is_valid_move(
-        self, battle_state: BattleState, move: str, player_id: int
-    ) -> bool:
+    def is_valid_move(self, battle_state: BattleState, move: str, player_id: int) -> bool:
         """Validate if a move is legal for the current state."""
 
     @abstractmethod
-    def get_available_moves(
-        self, battle_state: BattleState, player_id: int
-    ) -> List[str]:
+    def get_available_moves(self, battle_state: BattleState, player_id: int) -> List[str]:
         """Get list of available moves for a player."""
 
     def apply_stat_changes(
@@ -80,9 +77,7 @@ class BaseBattleSystem(ABC):
 
         return modified, messages
 
-    def check_turn_order(
-        self, attacker: Dict[str, Any], defender: Dict[str, Any]
-    ) -> bool:
+    def check_turn_order(self, attacker: Dict[str, Any], defender: Dict[str, Any]) -> bool:
         """Determine if attacker should move first based on speed/priority."""
         attacker_speed = attacker.get("speed", 0)
         defender_speed = defender.get("speed", 0)
@@ -134,9 +129,7 @@ class BaseBattleSystem(ABC):
 
         return True, None
 
-    def apply_end_turn_effects(
-        self, battle_state: BattleState
-    ) -> Tuple[Dict[str, Any], str]:
+    def apply_end_turn_effects(self, battle_state: BattleState) -> Tuple[Dict[str, Any], str]:
         """Apply effects that trigger at end of turn."""
         messages = []
         battle_data = battle_state.battle_data.copy()
@@ -152,9 +145,7 @@ class BaseBattleSystem(ABC):
                 if "dot_damage" in status:
                     damage = status["dot_damage"]
                     stats["current_hp"] -= damage
-                    messages.append(
-                        f"{stats['name']} took {damage} damage from {status['name']}!"
-                    )
+                    messages.append(f"{stats['name']} took {damage} damage from {status['name']}!")
 
                 # Status duration
                 status["turns"] -= 1
@@ -220,8 +211,15 @@ class BaseBattleSystem(ABC):
 
 
 class BattleResult:
-    def __init__(self, winner: Pet, loser: Pet, battle_type: BattleType,
-                 rounds: int, exp_gained: int, ability_logs: List[Dict[str, Any]]):
+    def __init__(
+        self,
+        winner: Pet,
+        loser: Pet,
+        battle_type: BattleType,
+        rounds: int,
+        exp_gained: int,
+        ability_logs: List[Dict[str, Any]],
+    ):
         self.winner = winner
         self.loser = loser
         self.battle_type = battle_type
@@ -232,8 +230,13 @@ class BattleResult:
 
 
 class Battle:
-    def __init__(self, pet1: Pet, pet2: Pet, battle_type: BattleType,
-                 event_manager: Optional[EventManager] = None):
+    def __init__(
+        self,
+        pet1: Pet,
+        pet2: Pet,
+        battle_type: BattleType,
+        event_manager: Optional[EventManager] = None,
+    ):
         self.pet1 = pet1
         self.pet2 = pet2
         self.battle_type = battle_type
@@ -244,7 +247,9 @@ class Battle:
         self.ability_logs: List[Dict[str, Any]] = []
         self.last_ability_used: Dict[str, datetime] = {}
 
-    def _calculate_damage(self, attacker: Pet, defender: Pet, ability: Optional[PetAbility] = None) -> int:
+    def _calculate_damage(
+        self, attacker: Pet, defender: Pet, ability: Optional[PetAbility] = None
+    ) -> int:
         """Calculate damage for an attack"""
         # Base damage from attack stat
         base_damage = attacker.stats.skill_levels["attack"] * 5
@@ -269,12 +274,16 @@ class Battle:
             if ability.effect_type == "damage":
                 ability_multiplier += ability.effect_value
             elif ability.effect_type == "defense_break":
-                defender.stats.skill_levels["defense"] *= (1 - ability.effect_value)
+                defender.stats.skill_levels["defense"] *= 1 - ability.effect_value
 
         # Apply defense reduction
-        defense_reduction = defender.stats.skill_levels["defense"] / 100  # 1% reduction per defense level
-        final_damage = int(base_damage * (1 - defense_reduction) * type_multiplier * ability_multiplier)
-        
+        defense_reduction = (
+            defender.stats.skill_levels["defense"] / 100
+        )  # 1% reduction per defense level
+        final_damage = int(
+            base_damage * (1 - defense_reduction) * type_multiplier * ability_multiplier
+        )
+
         # Add randomness
         return max(1, final_damage + random.randint(-5, 5))
 
@@ -289,8 +298,7 @@ class Battle:
     def _try_use_ability(self, pet: Pet) -> Optional[PetAbility]:
         """Try to use a random available ability"""
         available_abilities = [
-            ability for ability in pet.abilities
-            if self._can_use_ability(pet, ability)
+            ability for ability in pet.abilities if self._can_use_ability(pet, ability)
         ]
         if not available_abilities:
             return None
@@ -319,24 +327,24 @@ class Battle:
         pets.sort(key=lambda p: p.stats.skill_levels["speed"], reverse=True)
 
         round_data = {"actions": []}
-        
+
         # Execute turns
         for attacker in pets:
             defender = self.pet2 if attacker == self.pet1 else self.pet1
-            
+
             # Try to use an ability
             ability = self._try_use_ability(attacker)
             damage = self._calculate_damage(attacker, defender, ability)
-            
+
             # Record action
             action = {
                 "attacker": attacker.pet_id,
                 "defender": defender.pet_id,
                 "damage": damage,
-                "ability_used": ability.name if ability else None
+                "ability_used": ability.name if ability else None,
             }
             round_data["actions"].append(action)
-            
+
             # Apply damage
             defender_power = defender.stats.calculate_power()
             if damage >= defender_power:
@@ -351,16 +359,18 @@ class Battle:
 
         self.state = BattleState.IN_PROGRESS
         if self.event_manager:
-            self.event_manager.emit(GameEvent(
-                type=EventType.BATTLE_STARTED,
-                user_id=str(self.pet1.owner_id),
-                timestamp=datetime.utcnow(),
-                data={
-                    "battle_type": self.battle_type.value,
-                    "pet1_id": self.pet1.pet_id,
-                    "pet2_id": self.pet2.pet_id
-                }
-            ))
+            self.event_manager.emit(
+                GameEvent(
+                    type=EventType.BATTLE_STARTED,
+                    user_id=str(self.pet1.owner_id),
+                    timestamp=datetime.utcnow(),
+                    data={
+                        "battle_type": self.battle_type.value,
+                        "pet1_id": self.pet1.pet_id,
+                        "pet2_id": self.pet2.pet_id,
+                    },
+                )
+            )
 
     def end_battle(self, winner: Pet) -> BattleResult:
         """End the battle and calculate rewards"""
@@ -374,18 +384,22 @@ class Battle:
             BattleType.FRIENDLY: 0.5,
             BattleType.RANKED: 1.0,
             BattleType.TOURNAMENT: 1.5,
-            BattleType.CROSS_SYSTEM: 2.0
+            BattleType.CROSS_SYSTEM: 2.0,
         }[self.battle_type]
 
         exp_gained = int((base_exp + level_diff_bonus) * battle_type_multiplier)
 
         # Award experience
-        winner.stats.gain_exp(exp_gained, self.event_manager, {
-            "pet_id": winner.pet_id,
-            "owner_id": winner.owner_id,
-            "origin": winner.origin,
-            "battle_type": self.battle_type.value
-        })
+        winner.stats.gain_exp(
+            exp_gained,
+            self.event_manager,
+            {
+                "pet_id": winner.pet_id,
+                "owner_id": winner.owner_id,
+                "origin": winner.origin,
+                "battle_type": self.battle_type.value,
+            },
+        )
 
         # Create battle result
         result = BattleResult(
@@ -394,23 +408,25 @@ class Battle:
             battle_type=self.battle_type,
             rounds=self.current_round,
             exp_gained=exp_gained,
-            ability_logs=self.ability_logs
+            ability_logs=self.ability_logs,
         )
 
         # Emit battle completed event
         if self.event_manager:
-            self.event_manager.emit(GameEvent(
-                type=EventType.BATTLE_COMPLETED,
-                user_id=str(winner.owner_id),
-                timestamp=datetime.utcnow(),
-                data={
-                    "battle_type": self.battle_type.value,
-                    "winner_id": winner.pet_id,
-                    "loser_id": loser.pet_id,
-                    "rounds": self.current_round,
-                    "exp_gained": exp_gained
-                }
-            ))
+            self.event_manager.emit(
+                GameEvent(
+                    type=EventType.BATTLE_COMPLETED,
+                    user_id=str(winner.owner_id),
+                    timestamp=datetime.utcnow(),
+                    data={
+                        "battle_type": self.battle_type.value,
+                        "winner_id": winner.pet_id,
+                        "loser_id": loser.pet_id,
+                        "rounds": self.current_round,
+                        "exp_gained": exp_gained,
+                    },
+                )
+            )
 
         return result
 
@@ -446,30 +462,30 @@ class BattleManager:
         while True:
             winner, round_data = battle.execute_round()
             battle.ability_logs.append(round_data)
-            
+
             if winner:
                 result = battle.end_battle(winner)
                 self.battle_history.append(result)
                 del self.active_battles[battle_id]
-                
+
                 # Update rankings for ranked battles
                 if battle.battle_type == BattleType.RANKED:
                     self._update_rankings(result)
-                
+
                 return result
 
     def _update_rankings(self, result: BattleResult) -> None:
         """Update rankings after a ranked battle"""
         winner_current = self.rankings.get(result.winner.pet_id, 1000)
         loser_current = self.rankings.get(result.loser.pet_id, 1000)
-        
+
         # Simple ELO-like system
         k_factor = 32
         expected_winner = 1 / (1 + 10 ** ((loser_current - winner_current) / 400))
-        
+
         winner_new = winner_current + k_factor * (1 - expected_winner)
         loser_new = loser_current + k_factor * (0 - (1 - expected_winner))
-        
+
         self.rankings[result.winner.pet_id] = int(winner_new)
         self.rankings[result.loser.pet_id] = int(loser_new)
 
@@ -477,13 +493,18 @@ class BattleManager:
         """Get top ranked pets"""
         return sorted(self.rankings.items(), key=lambda x: x[1], reverse=True)[:limit]
 
-    def get_battle_history(self, pet_id: Optional[str] = None, 
-                          battle_type: Optional[BattleType] = None,
-                          limit: int = 10) -> List[BattleResult]:
+    def get_battle_history(
+        self,
+        pet_id: Optional[str] = None,
+        battle_type: Optional[BattleType] = None,
+        limit: int = 10,
+    ) -> List[BattleResult]:
         """Get battle history with optional filters"""
         filtered = self.battle_history
         if pet_id:
-            filtered = [r for r in filtered if r.winner.pet_id == pet_id or r.loser.pet_id == pet_id]
+            filtered = [
+                r for r in filtered if r.winner.pet_id == pet_id or r.loser.pet_id == pet_id
+            ]
         if battle_type:
             filtered = [r for r in filtered if r.battle_type == battle_type]
         return sorted(filtered, key=lambda r: r.timestamp, reverse=True)[:limit]

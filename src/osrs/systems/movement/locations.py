@@ -3,6 +3,7 @@ from enum import Enum
 from dataclasses import dataclass
 from .movement_system import Tile, TileType
 
+
 class TransportType(Enum):
     TELEPORT = "teleport"
     FAIRY_RING = "fairy_ring"
@@ -18,6 +19,7 @@ class TransportType(Enum):
     POH_PORTAL = "poh_portal"
     ACHIEVEMENT_DIARY = "achievement_diary"
     QUEST = "quest"
+
 
 class LocationType(Enum):
     BANK = "bank"
@@ -39,6 +41,7 @@ class LocationType(Enum):
     QUEST_START = "quest_start"
     MINIGAME_AREA = "minigame_area"
 
+
 class RegionType(Enum):
     CITY = "city"
     DUNGEON = "dungeon"
@@ -46,6 +49,7 @@ class RegionType(Enum):
     GUILD = "guild"
     MINIGAME = "minigame"
     SLAYER = "slayer"
+
 
 class TravelMethod(Enum):
     WALK = "walk"
@@ -56,9 +60,11 @@ class TravelMethod(Enum):
     AGILITY = "agility"
     UNDERGROUND = "underground"
 
+
 @dataclass
 class TransportNode:
     """Represents a transportation method in OSRS."""
+
     type: TransportType
     source: Tile
     destinations: List[Tuple[Tile, Dict[str, any]]]  # (destination, requirements)
@@ -67,44 +73,54 @@ class TransportNode:
     requirements: Dict[str, any] = None
     interaction_text: str = ""
 
+
 @dataclass
 class LocationNode:
     """Represents a point of interest in OSRS."""
+
     type: LocationType
     tile: Tile
     name: str
     requirements: Dict[str, any] = None
     features: Set[str] = None  # Special features like "deposit_box", "poll_booth", etc.
 
+
 @dataclass
 class LocationRequirements:
     """Requirements to access a location"""
+
     quests: List[str] = None
     skills: Dict[str, int] = None
     items: List[str] = None
     achievement_diary: Dict[str, str] = None  # region -> tier
     combat_level: Optional[int] = None
 
+
 @dataclass
 class TravelRequirements:
     """Requirements for a travel method"""
+
     quests: List[str] = None
     skills: Dict[str, int] = None
     items: List[str] = None
     cost: Optional[int] = None
     energy_cost: Optional[float] = None
 
+
 @dataclass
 class Connection:
     """Connection between two locations"""
+
     destination: str
     method: TravelMethod
     requirements: TravelRequirements
     distance: int  # In tiles
     wilderness_level: Optional[int] = None
 
+
 class TeleportGroups:
     """Groups of teleport locations by type."""
+
     STANDARD_SPELLBOOK = {
         "varrock": (3213, 3424, 0),
         "lumbridge": (3222, 3218, 0),
@@ -116,7 +132,7 @@ class TeleportGroups:
         "ape_atoll": (2796, 2799, 0),
         "house": None,  # Varies by house location
     }
-    
+
     ANCIENT_SPELLBOOK = {
         "paddewwa": (3099, 9882, 0),
         "senntisten": (3322, 3336, 0),
@@ -127,7 +143,7 @@ class TeleportGroups:
         "annakarl": (3288, 3886, 0),
         "ghorrock": (2977, 3873, 0),
     }
-    
+
     LUNAR_SPELLBOOK = {
         "moonclan": (2114, 3915, 0),
         "ourania": (2468, 3246, 0),
@@ -138,7 +154,7 @@ class TeleportGroups:
         "catherby": (2802, 3449, 0),
         "ice_plateau": (2973, 3939, 0),
     }
-    
+
     ARCEUUS_SPELLBOOK = {
         "arceuus_library": (1632, 3838, 0),
         "draynor_manor": (3108, 3352, 0),
@@ -150,8 +166,10 @@ class TeleportGroups:
         "cemetery": (2978, 3763, 0),
     }
 
+
 class FairyRings:
     """All fairy ring locations and codes."""
+
     LOCATIONS = {
         "AIQ": ((2996, 3114, 0), "Asgarnia: Mudskipper Point"),
         "AIR": ((2700, 3247, 0), "Islands: South of Witchaven"),
@@ -192,8 +210,10 @@ class FairyRings:
         "DLR": ((2213, 3099, 0), "Islands: Poison Waste"),
     }
 
+
 class SpiritTrees:
     """All spirit tree locations."""
+
     LOCATIONS = {
         "tree_gnome_village": (2542, 3170, 0),
         "tree_gnome_stronghold": (2461, 3444, 0),
@@ -202,19 +222,23 @@ class SpiritTrees:
         "poh": None,  # Varies by house location
     }
 
+
 class GnomeGliders:
     """All gnome glider locations."""
+
     LOCATIONS = {
         "ta_quir_priw": (2465, 3501, 3),  # Grand Tree
-        "kar_hewo": (3284, 3213, 0),      # Al Kharid
+        "kar_hewo": (3284, 3213, 0),  # Al Kharid
         "lemanto_andra": (3321, 3427, 0),  # White Wolf Mountain
-        "sindarpos": (2850, 3498, 0),      # Crashed Grand Tree
-        "gandius": (2894, 2729, 0),        # Karamja
-        "lemantolly_undri": (2544, 2970, 0), # Feldip Hills
+        "sindarpos": (2850, 3498, 0),  # Crashed Grand Tree
+        "gandius": (2894, 2729, 0),  # Karamja
+        "lemantolly_undri": (2544, 2970, 0),  # Feldip Hills
     }
+
 
 class MinigameTeleports:
     """All minigame teleport locations."""
+
     LOCATIONS = {
         "barbarian_assault": (2531, 3577, 0),
         "blast_furnace": (1948, 4959, 0),
@@ -231,9 +255,10 @@ class MinigameTeleports:
         "tzhaar_fight_pit": (2399, 5177, 0),
     }
 
+
 class Location:
     """Represents an OSRS location"""
-    
+
     def __init__(
         self,
         name: str,
@@ -245,7 +270,7 @@ class Location:
         altar: bool = False,
         shops: List[str] = None,
         monsters: List[str] = None,
-        resources: List[str] = None
+        resources: List[str] = None,
     ):
         self.name = name
         self.region_type = region_type
@@ -258,12 +283,13 @@ class Location:
         self.monsters = monsters or []
         self.resources = resources or []
 
+
 class LocationManager:
     """Manages game locations and travel"""
-    
+
     def __init__(self):
         self.locations = self._load_locations()
-        
+
     def _load_locations(self) -> Dict[str, Location]:
         """Load all location definitions"""
         return {
@@ -277,31 +303,29 @@ class LocationManager:
                         destination="Al Kharid",
                         method=TravelMethod.WALK,
                         requirements=TravelRequirements(cost=10),
-                        distance=30
+                        distance=30,
                     ),
                     "Draynor Village": Connection(
                         destination="Draynor Village",
                         method=TravelMethod.WALK,
                         requirements=TravelRequirements(),
-                        distance=50
+                        distance=50,
                     ),
                     "Varrock": Connection(
                         destination="Varrock",
                         method=TravelMethod.TELEPORT,
                         requirements=TravelRequirements(
-                            skills={"magic": 25},
-                            items=["Air rune", "Law rune", "Fire rune"]
+                            skills={"magic": 25}, items=["Air rune", "Law rune", "Fire rune"]
                         ),
-                        distance=0
-                    )
+                        distance=0,
+                    ),
                 },
                 bank=True,
                 altar=True,
                 shops=["General Store", "Combat Shop"],
                 monsters=["Goblin", "Giant rat", "Spider"],
-                resources=["Oak tree", "Copper ore", "Tin ore"]
+                resources=["Oak tree", "Copper ore", "Tin ore"],
             ),
-            
             "Varrock": Location(
                 name="Varrock",
                 region_type=RegionType.CITY,
@@ -312,68 +336,54 @@ class LocationManager:
                         destination="Grand Exchange",
                         method=TravelMethod.WALK,
                         requirements=TravelRequirements(),
-                        distance=20
+                        distance=20,
                     ),
                     "Wilderness": Connection(
                         destination="Wilderness",
                         method=TravelMethod.WALK,
                         requirements=TravelRequirements(),
                         distance=10,
-                        wilderness_level=1
+                        wilderness_level=1,
                     ),
                     "Lumbridge": Connection(
                         destination="Lumbridge",
                         method=TravelMethod.TELEPORT,
                         requirements=TravelRequirements(
-                            skills={"magic": 25},
-                            items=["Air rune", "Law rune", "Earth rune"]
+                            skills={"magic": 25}, items=["Air rune", "Law rune", "Earth rune"]
                         ),
-                        distance=0
-                    )
+                        distance=0,
+                    ),
                 },
                 bank=True,
                 altar=True,
-                shops=[
-                    "General Store",
-                    "Sword Shop",
-                    "Staff Shop",
-                    "Armor Shop",
-                    "Rune Shop"
-                ],
+                shops=["General Store", "Sword Shop", "Staff Shop", "Armor Shop", "Rune Shop"],
                 monsters=["Guard", "Dark wizard"],
-                resources=["Willow tree", "Iron ore", "Clay"]
+                resources=["Willow tree", "Iron ore", "Clay"],
             ),
-            
             "Warriors' Guild": Location(
                 name="Warriors' Guild",
                 region_type=RegionType.GUILD,
                 coordinates=(2855, 3543, 0),
-                requirements=LocationRequirements(
-                    skills={
-                        "attack": 65,
-                        "strength": 65
-                    }
-                ),
+                requirements=LocationRequirements(skills={"attack": 65, "strength": 65}),
                 connections={
                     "Burthorpe": Connection(
                         destination="Burthorpe",
                         method=TravelMethod.WALK,
                         requirements=TravelRequirements(),
-                        distance=15
+                        distance=15,
                     )
                 },
                 bank=True,
                 shops=["Equipment Shop"],
-                monsters=["Animated armor"]
+                monsters=["Animated armor"],
             ),
-            
             # Add more locations...
         }
-        
+
     def get_location(self, name: str) -> Optional[Location]:
         """Get location by name"""
         return self.locations.get(name)
-        
+
     def can_access_location(
         self,
         location: Location,
@@ -381,37 +391,37 @@ class LocationManager:
         player_skills: Dict[str, int],
         player_items: Set[str],
         player_achievements: Dict[str, Dict[str, bool]],
-        combat_level: int
+        combat_level: int,
     ) -> bool:
         """Check if player can access a location"""
         reqs = location.requirements
-        
+
         # Check quest requirements
         if reqs.quests and not all(q in player_quests for q in reqs.quests):
             return False
-            
+
         # Check skill requirements
         if reqs.skills:
             for skill, level in reqs.skills.items():
                 if player_skills.get(skill, 0) < level:
                     return False
-                    
+
         # Check item requirements
         if reqs.items and not all(i in player_items for i in reqs.items):
             return False
-            
+
         # Check achievement diary requirements
         if reqs.achievement_diary:
             for region, tier in reqs.achievement_diary.items():
                 if not player_achievements.get(region, {}).get(tier, False):
                     return False
-                    
+
         # Check combat level
         if reqs.combat_level and combat_level < reqs.combat_level:
             return False
-            
+
         return True
-        
+
     def can_use_travel_method(
         self,
         connection: Connection,
@@ -419,35 +429,35 @@ class LocationManager:
         player_skills: Dict[str, int],
         player_items: Set[str],
         player_coins: int,
-        player_energy: float
+        player_energy: float,
     ) -> bool:
         """Check if player can use a travel method"""
         reqs = connection.requirements
-        
+
         # Check quest requirements
         if reqs.quests and not all(q in player_quests for q in reqs.quests):
             return False
-            
+
         # Check skill requirements
         if reqs.skills:
             for skill, level in reqs.skills.items():
                 if player_skills.get(skill, 0) < level:
                     return False
-                    
+
         # Check item requirements
         if reqs.items and not all(i in player_items for i in reqs.items):
             return False
-            
+
         # Check cost
         if reqs.cost and player_coins < reqs.cost:
             return False
-            
+
         # Check energy
         if reqs.energy_cost and player_energy < reqs.energy_cost:
             return False
-            
+
         return True
-        
+
     def get_available_destinations(
         self,
         current_location: str,
@@ -455,27 +465,22 @@ class LocationManager:
         player_skills: Dict[str, int],
         player_items: Set[str],
         player_coins: int,
-        player_energy: float
+        player_energy: float,
     ) -> List[Tuple[str, TravelMethod]]:
         """Get list of available destinations from current location"""
         location = self.get_location(current_location)
         if not location:
             return []
-            
+
         available = []
         for dest, conn in location.connections.items():
             if self.can_use_travel_method(
-                conn,
-                player_quests,
-                player_skills,
-                player_items,
-                player_coins,
-                player_energy
+                conn, player_quests, player_skills, player_items, player_coins, player_energy
             ):
                 available.append((dest, conn.method))
-                
+
         return available
-        
+
     def find_path(
         self,
         start: str,
@@ -485,62 +490,57 @@ class LocationManager:
         player_items: Set[str],
         player_coins: int,
         player_energy: float,
-        avoid_wilderness: bool = True
+        avoid_wilderness: bool = True,
     ) -> Optional[List[Tuple[str, Connection]]]:
         """Find shortest path between locations"""
         if start not in self.locations or end not in self.locations:
             return None
-            
+
         # Dijkstra's algorithm
-        distances = {loc: float('inf') for loc in self.locations}
+        distances = {loc: float("inf") for loc in self.locations}
         distances[start] = 0
         previous = {loc: None for loc in self.locations}
         unvisited = set(self.locations.keys())
-        
+
         while unvisited:
             # Get closest unvisited location
             current = min(unvisited, key=lambda x: distances[x])
             if current == end:
                 break
-                
+
             unvisited.remove(current)
-            
+
             # Check each connection
             location = self.locations[current]
             for dest, conn in location.connections.items():
                 if dest not in unvisited:
                     continue
-                    
+
                 # Skip wilderness if avoiding
                 if avoid_wilderness and conn.wilderness_level:
                     continue
-                    
+
                 # Check if can use connection
                 if not self.can_use_travel_method(
-                    conn,
-                    player_quests,
-                    player_skills,
-                    player_items,
-                    player_coins,
-                    player_energy
+                    conn, player_quests, player_skills, player_items, player_coins, player_energy
                 ):
                     continue
-                    
+
                 # Update distance
                 distance = distances[current] + conn.distance
                 if distance < distances[dest]:
                     distances[dest] = distance
                     previous[dest] = (current, conn)
-                    
+
         # Build path
-        if distances[end] == float('inf'):
+        if distances[end] == float("inf"):
             return None
-            
+
         path = []
         current = end
         while current != start:
             prev, conn = previous[current]
             path.append((prev, conn))
             current = prev
-            
-        return list(reversed(path)) 
+
+        return list(reversed(path))

@@ -7,6 +7,7 @@ import asyncio
 
 from .movement import Tile, TileType, MovementSystem
 
+
 class ObstacleType(Enum):
     BALANCE = "balance"
     CLIMB = "climb"
@@ -16,6 +17,7 @@ class ObstacleType(Enum):
     CROSS = "cross"
     SQUEEZE = "squeeze"
     VAULT = "vault"
+
 
 @dataclass
 class AgilityObstacle:
@@ -32,6 +34,7 @@ class AgilityObstacle:
     fail_message: str
     success_message: str
 
+
 @dataclass
 class AgilityCourse:
     name: str
@@ -42,6 +45,7 @@ class AgilityCourse:
     completion_bonus: float
     mark_of_grace_chance: float
     lap_count: int = 0
+
 
 class AgilitySystem:
     def __init__(self, movement_system: MovementSystem):
@@ -66,7 +70,7 @@ class AgilitySystem:
         """Calculate actual fail rate based on player's level."""
         if self.level < obstacle.level_required:
             return 1.0  # 100% fail if under required level
-        
+
         level_difference = self.level - obstacle.level_required
         reduction = min(0.9, level_difference * 0.05)  # Up to 90% reduction
         return max(0.01, obstacle.fail_rate * (1 - reduction))  # Minimum 1% fail rate
@@ -100,9 +104,13 @@ class AgilitySystem:
         await asyncio.sleep(obstacle.completion_delay)
         self.experience += obstacle.experience
         self.level = self.calculate_level()
-        self.movement.current_position = (obstacle.next_tile.x, obstacle.next_tile.y, obstacle.next_tile.z)
+        self.movement.current_position = (
+            obstacle.next_tile.x,
+            obstacle.next_tile.y,
+            obstacle.next_tile.z,
+        )
         self.current_obstacle = None
-        
+
         return True, obstacle.success_message
 
     async def start_course(self, course_name: str) -> Tuple[bool, str]:
@@ -125,7 +133,7 @@ class AgilitySystem:
         # Award completion bonus
         self.experience += self.current_course.completion_bonus
         self.current_course.lap_count += 1
-        
+
         # Check for Mark of Grace
         rewards = {"experience": self.current_course.completion_bonus}
         if random.random() < self.calculate_mark_of_grace_chance(self.current_course):
@@ -156,16 +164,20 @@ class AgilitySystem:
             "total_exp": course.total_experience,
             "completion_bonus": course.completion_bonus,
             "mark_chance": course.mark_of_grace_chance,
-            "best_exp_rate": course.total_experience * (3600 / (len(course.obstacles) * 2.5))  # Estimated exp/hr
+            "best_exp_rate": course.total_experience
+            * (3600 / (len(course.obstacles) * 2.5)),  # Estimated exp/hr
         }
 
     def get_progress_to_level(self) -> Tuple[int, float, float]:
         """Get progress to next level."""
         current_level = self.level
         current_xp = self.experience
-        next_level_xp = sum(math.floor(current_level + 1 + 300 * (2 ** ((current_level + 1) / 7.0))) for level in range(1, current_level + 1))
-        
+        next_level_xp = sum(
+            math.floor(current_level + 1 + 300 * (2 ** ((current_level + 1) / 7.0)))
+            for level in range(1, current_level + 1)
+        )
+
         xp_needed = next_level_xp - current_xp
         progress = (current_xp / next_level_xp) * 100 if next_level_xp > 0 else 100
 
-        return current_level, xp_needed, progress 
+        return current_level, xp_needed, progress

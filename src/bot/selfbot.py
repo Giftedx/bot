@@ -19,19 +19,14 @@ logger = logging.getLogger(__name__)
 
 class SelfBot(commands.Bot):
     """Self-bot implementation. Only used in specific approved scenarios."""
-    
+
     @inject
     def __init__(
-        self,
-        *args: Any,
-        settings: Settings = Provide[Container.config],
-        **kwargs: Any
+        self, *args: Any, settings: Settings = Provide[Container.config], **kwargs: Any
     ) -> None:
         intents = discord.Intents.default()
         super().__init__(
-            command_prefix=settings.get("COMMAND_PREFIX", "!"),
-            self_bot=True,
-            intents=intents
+            command_prefix=settings.get("COMMAND_PREFIX", "!"), self_bot=True, intents=intents
         )
         self.settings = settings
 
@@ -51,19 +46,19 @@ class VoiceCommandsCog(commands.Cog):
 
     @commands.command()
     async def play(
-        self, 
-        ctx: commands.Context, 
-        channel: Optional[discord.VoiceChannel] = None, 
-        *, 
-        media: str
+        self, ctx: commands.Context, channel: Optional[discord.VoiceChannel] = None, *, media: str
     ) -> None:
         """Play media in a voice channel from Plex"""
-        target_channel = channel or (ctx.author.voice.channel if isinstance(ctx.author, discord.Member) and ctx.author.voice else self._last_channel)
-        
+        target_channel = channel or (
+            ctx.author.voice.channel
+            if isinstance(ctx.author, discord.Member) and ctx.author.voice
+            else self._last_channel
+        )
+
         if not target_channel:
             await ctx.send("No voice channel specified or found in history.")
             return
-            
+
         try:
             media_url = await PlexService().fetch_media_url(media)
             voice_client: discord.VoiceClient = await target_channel.connect()
@@ -82,7 +77,12 @@ class VoiceCommandsCog(commands.Cog):
     @commands.command()
     async def skip(self, ctx: commands.Context) -> None:
         """Vote to skip current track"""
-        if not ctx.guild or not isinstance(ctx.author, discord.Member) or not ctx.author.voice or not ctx.author.voice.channel:
+        if (
+            not ctx.guild
+            or not isinstance(ctx.author, discord.Member)
+            or not ctx.author.voice
+            or not ctx.author.voice.channel
+        ):
             await ctx.send("Not in a voice channel")
             return
 
@@ -91,7 +91,7 @@ class VoiceCommandsCog(commands.Cog):
         current_votes = await RedisManager.increment(vote_key)
         members = len(ctx.author.voice.channel.members) - 1  # exclude bot
         required = max(2, members // 2)
-        
+
         if current_votes >= required:
             if ctx.voice_client:
                 ctx.voice_client.stop()

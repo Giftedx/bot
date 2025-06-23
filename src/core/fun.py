@@ -5,19 +5,33 @@ import asyncio
 from typing import Dict, List, Optional
 import aiohttp
 
+
 class FunCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.marriages = {}
         self.pet_cooldowns = {}
         self.eight_ball_responses = [
-            "It is certain.", "It is decidedly so.", "Without a doubt.",
-            "Yes - definitely.", "You may rely on it.", "As I see it, yes.",
-            "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.",
-            "Reply hazy, try again.", "Ask again later.", "Better not tell you now.",
-            "Cannot predict now.", "Concentrate and ask again.",
-            "Don't count on it.", "My reply is no.", "My sources say no.",
-            "Outlook not so good.", "Very doubtful."
+            "It is certain.",
+            "It is decidedly so.",
+            "Without a doubt.",
+            "Yes - definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Most likely.",
+            "Outlook good.",
+            "Yes.",
+            "Signs point to yes.",
+            "Reply hazy, try again.",
+            "Ask again later.",
+            "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and ask again.",
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no.",
+            "Outlook not so good.",
+            "Very doubtful.",
         ]
 
     @commands.command()
@@ -26,11 +40,10 @@ class FunCommands(commands.Cog):
         hug_gifs = [
             "https://media.giphy.com/media/od5H3PmEG5EVq/giphy.gif",
             "https://media.giphy.com/media/3M4NpbLCTxBqU/giphy.gif",
-            "https://media.giphy.com/media/PHZ7v9tfQu0o0/giphy.gif"
+            "https://media.giphy.com/media/PHZ7v9tfQu0o0/giphy.gif",
         ]
         embed = discord.Embed(
-            description=f"{ctx.author.mention} hugs {member.mention} 🤗",
-            color=discord.Color.pink()
+            description=f"{ctx.author.mention} hugs {member.mention} 🤗", color=discord.Color.pink()
         )
         embed.set_image(url=random.choice(hug_gifs))
         await ctx.send(embed=embed)
@@ -41,11 +54,10 @@ class FunCommands(commands.Cog):
         pat_gifs = [
             "https://media.giphy.com/media/5tmRHwTlHAA9WkVxTU/giphy.gif",
             "https://media.giphy.com/media/N0CIxcyPLputW/giphy.gif",
-            "https://media.giphy.com/media/109ltuoSQT212w/giphy.gif"
+            "https://media.giphy.com/media/109ltuoSQT212w/giphy.gif",
         ]
         embed = discord.Embed(
-            description=f"{ctx.author.mention} pats {member.mention} 🤚",
-            color=discord.Color.blue()
+            description=f"{ctx.author.mention} pats {member.mention} 🤚", color=discord.Color.blue()
         )
         embed.set_image(url=random.choice(pat_gifs))
         await ctx.send(embed=embed)
@@ -59,12 +71,15 @@ class FunCommands(commands.Cog):
         await ctx.send(f"{member.mention}, do you accept {ctx.author.mention}'s proposal? (yes/no)")
 
         def check(m):
-            return m.author == member and m.channel == ctx.channel and \
-                   m.content.lower() in ['yes', 'no']
+            return (
+                m.author == member
+                and m.channel == ctx.channel
+                and m.content.lower() in ["yes", "no"]
+            )
 
         try:
-            msg = await self.bot.wait_for('message', check=check, timeout=30.0)
-            if msg.content.lower() == 'yes':
+            msg = await self.bot.wait_for("message", check=check, timeout=30.0)
+            if msg.content.lower() == "yes":
                 self.marriages[ctx.author.id] = member.id
                 self.marriages[member.id] = ctx.author.id
                 await ctx.send(f"💕 {ctx.author.mention} and {member.mention} are now married! 💕")
@@ -95,9 +110,11 @@ class FunCommands(commands.Cog):
         """Adopt a pet"""
         try:
             await self.bot.db.execute(
-                '''INSERT INTO pets (owner_id, name, type)
-                   VALUES ($1, $2, $3)''',
-                ctx.author.id, name, type.lower()
+                """INSERT INTO pets (owner_id, name, type)
+                   VALUES ($1, $2, $3)""",
+                ctx.author.id,
+                name,
+                type.lower(),
             )
             await ctx.send(f"You've adopted a {type} named {name}! 🐾")
         except Exception as e:
@@ -114,21 +131,17 @@ class FunCommands(commands.Cog):
 
         try:
             pet = await self.bot.db.fetchrow(
-                'SELECT * FROM pets WHERE owner_id = $1 AND name = $2',
-                ctx.author.id, name
+                "SELECT * FROM pets WHERE owner_id = $1 AND name = $2", ctx.author.id, name
             )
             if not pet:
                 return await ctx.send("You don't have a pet with that name!")
 
             # Update pet stats
-            stats = pet['stats'] or {}
-            stats['level'] = stats.get('level', 0) + 1
-            stats['experience'] = stats.get('experience', 0) + random.randint(10, 20)
+            stats = pet["stats"] or {}
+            stats["level"] = stats.get("level", 0) + 1
+            stats["experience"] = stats.get("experience", 0) + random.randint(10, 20)
 
-            await self.bot.db.execute(
-                'UPDATE pets SET stats = $1 WHERE id = $2',
-                stats, pet['id']
-            )
+            await self.bot.db.execute("UPDATE pets SET stats = $1 WHERE id = $2", stats, pet["id"])
 
             # Set cooldown (1 hour)
             self.pet_cooldowns[ctx.author.id] = ctx.message.created_at.timestamp() + 3600
@@ -164,10 +177,12 @@ class FunCommands(commands.Cog):
 
             try:
                 guess = await self.bot.wait_for(
-                    'message',
-                    check=lambda m: m.author == ctx.author and m.channel == ctx.channel and \
-                                  len(m.content) == 1 and m.content.isalpha(),
-                    timeout=30.0
+                    "message",
+                    check=lambda m: m.author == ctx.author
+                    and m.channel == ctx.channel
+                    and len(m.content) == 1
+                    and m.content.isalpha(),
+                    timeout=30.0,
                 )
             except asyncio.TimeoutError:
                 await ctx.send("Game over - you took too long!")
@@ -185,8 +200,8 @@ class FunCommands(commands.Cog):
                     await ctx.send(f"Game over! The word was {word}!")
                     return
 
-            await message.edit(content=
-                f"Hangman Game!\nWord: {get_display()}\n"
+            await message.edit(
+                content=f"Hangman Game!\nWord: {get_display()}\n"
                 f"Tries left: {tries}\nGuessed letters: {', '.join(sorted(guessed))}"
             )
 
@@ -194,18 +209,9 @@ class FunCommands(commands.Cog):
     async def trivia(self, ctx):
         """Play a trivia game"""
         questions = [
-            {
-                "question": "What programming language is Discord.py written in?",
-                "answer": "python"
-            },
-            {
-                "question": "What year was Discord launched?",
-                "answer": "2015"
-            },
-            {
-                "question": "What is the maximum length of a Discord message?",
-                "answer": "2000"
-            }
+            {"question": "What programming language is Discord.py written in?", "answer": "python"},
+            {"question": "What year was Discord launched?", "answer": "2015"},
+            {"question": "What is the maximum length of a Discord message?", "answer": "2000"},
         ]
 
         question = random.choice(questions)
@@ -215,22 +221,22 @@ class FunCommands(commands.Cog):
             return m.author == ctx.author and m.channel == ctx.channel
 
         try:
-            guess = await self.bot.wait_for('message', check=check, timeout=30.0)
-            if guess.content.lower() == question['answer'].lower():
+            guess = await self.bot.wait_for("message", check=check, timeout=30.0)
+            if guess.content.lower() == question["answer"].lower():
                 await ctx.send("Correct! 🎉")
             else:
                 await ctx.send(f"Wrong! The answer was {question['answer']}.")
         except asyncio.TimeoutError:
             await ctx.send(f"Time's up! The answer was {question['answer']}.")
 
-    @commands.command(name='8ball')
+    @commands.command(name="8ball")
     async def eight_ball(self, ctx, *, question: str):
         """Ask the magic 8-ball a question"""
         response = random.choice(self.eight_ball_responses)
         embed = discord.Embed(
             title="🎱 Magic 8-Ball",
             description=f"**Q:** {question}\n**A:** {response}",
-            color=discord.Color.blue()
+            color=discord.Color.blue(),
         )
         await ctx.send(embed=embed)
 
@@ -238,10 +244,10 @@ class FunCommands(commands.Cog):
     async def roll(self, ctx, dice: str = "1d6"):
         """Roll dice in NdN format"""
         try:
-            rolls, limit = map(int, dice.split('d'))
+            rolls, limit = map(int, dice.split("d"))
         except Exception:
             return await ctx.send("Format has to be in NdN!")
-        
+
         if rolls > 25:
             return await ctx.send("Too many dice! Maximum is 25")
         if limit > 100:
@@ -249,13 +255,13 @@ class FunCommands(commands.Cog):
 
         results = [random.randint(1, limit) for r in range(rolls)]
         total = sum(results)
-        
+
         embed = discord.Embed(
             title="🎲 Dice Roll",
             description=f"Rolling {dice}...\n"
-                      f"Results: {', '.join(map(str, results))}\n"
-                      f"Total: {total}",
-            color=discord.Color.green()
+            f"Results: {', '.join(map(str, results))}\n"
+            f"Total: {total}",
+            color=discord.Color.green(),
         )
         await ctx.send(embed=embed)
 
@@ -264,12 +270,12 @@ class FunCommands(commands.Cog):
         """Choose between multiple options"""
         if len(choices) < 2:
             return await ctx.send("Please provide at least 2 choices!")
-        
+
         embed = discord.Embed(
             title="🤔 Choice Maker",
             description=f"Options: {', '.join(choices)}\n"
-                      f"I choose: **{random.choice(choices)}**",
-            color=discord.Color.gold()
+            f"I choose: **{random.choice(choices)}**",
+            color=discord.Color.gold(),
         )
         await ctx.send(embed=embed)
 
@@ -282,17 +288,15 @@ class FunCommands(commands.Cog):
             return await ctx.send("Please provide at least 2 options!")
 
         # Number emojis for reactions
-        number_emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+        number_emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
         # Create the poll message
         description = [f"{number_emojis[idx]} {option}" for idx, option in enumerate(options)]
         embed = discord.Embed(
-            title=f"📊 {question}",
-            description="\n".join(description),
-            color=discord.Color.blue()
+            title=f"📊 {question}", description="\n".join(description), color=discord.Color.blue()
         )
         embed.set_footer(text=f"Poll by {ctx.author.display_name}")
-        
+
         poll_msg = await ctx.send(embed=embed)
 
         # Add reactions
@@ -303,13 +307,13 @@ class FunCommands(commands.Cog):
     async def joke(self, ctx):
         """Tell a random joke"""
         async with aiohttp.ClientSession() as session:
-            async with session.get('https://official-joke-api.appspot.com/random_joke') as response:
+            async with session.get("https://official-joke-api.appspot.com/random_joke") as response:
                 if response.status == 200:
                     joke = await response.json()
                     embed = discord.Embed(
                         title="😄 Random Joke",
                         description=f"{joke['setup']}\n\n||{joke['punchline']}||",
-                        color=discord.Color.orange()
+                        color=discord.Color.orange(),
                     )
                     await ctx.send(embed=embed)
                 else:
@@ -322,13 +326,13 @@ class FunCommands(commands.Cog):
             return await ctx.send("Please specify a time between 1 and 300 seconds!")
 
         message = await ctx.send(f"⏰ Countdown: {seconds}")
-        
+
         while seconds > 0:
             await asyncio.sleep(1)
             seconds -= 1
             if seconds % 5 == 0 or seconds <= 5:  # Update every 5 seconds and last 5 seconds
                 await message.edit(content=f"⏰ Countdown: {seconds}")
-        
+
         await message.edit(content="🔔 Time's up!")
 
     @commands.command()
@@ -336,16 +340,38 @@ class FunCommands(commands.Cog):
         """Convert text to emoji letters"""
         # Map for letter to emoji conversion
         emoji_map = {
-            'a': '🇦', 'b': '🇧', 'c': '🇨', 'd': '🇩', 'e': '🇪',
-            'f': '🇫', 'g': '🇬', 'h': '🇭', 'i': '🇮', 'j': '🇯',
-            'k': '🇰', 'l': '🇱', 'm': '🇲', 'n': '🇳', 'o': '🇴',
-            'p': '🇵', 'q': '🇶', 'r': '🇷', 's': '🇸', 't': '🇹',
-            'u': '🇺', 'v': '🇻', 'w': '🇼', 'x': '🇽', 'y': '🇾',
-            'z': '🇿', ' ': '  '
+            "a": "🇦",
+            "b": "🇧",
+            "c": "🇨",
+            "d": "🇩",
+            "e": "🇪",
+            "f": "🇫",
+            "g": "🇬",
+            "h": "🇭",
+            "i": "🇮",
+            "j": "🇯",
+            "k": "🇰",
+            "l": "🇱",
+            "m": "🇲",
+            "n": "🇳",
+            "o": "🇴",
+            "p": "🇵",
+            "q": "🇶",
+            "r": "🇷",
+            "s": "🇸",
+            "t": "🇹",
+            "u": "🇺",
+            "v": "🇻",
+            "w": "🇼",
+            "x": "🇽",
+            "y": "🇾",
+            "z": "🇿",
+            " ": "  ",
         }
-        
-        emojified = ' '.join(emoji_map.get(c.lower(), c) for c in text)
+
+        emojified = " ".join(emoji_map.get(c.lower(), c) for c in text)
         await ctx.send(emojified)
 
+
 async def setup(bot):
-    await bot.add_cog(FunCommands(bot)) 
+    await bot.add_cog(FunCommands(bot))

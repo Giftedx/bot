@@ -21,15 +21,13 @@ plex_cb = CircuitBreaker(failure_threshold=3, recovery_timeout=30)
 
 # Add metrics
 health_check_duration = Histogram(
-    'health_check_duration_seconds', 'Duration of health check', ['service']
+    "health_check_duration_seconds", "Duration of health check", ["service"]
 )
 health_check_failures = Counter(
-    'health_check_failures_total', 'Total health check failures', ['service']
+    "health_check_failures_total", "Total health check failures", ["service"]
 )
-service_up = Gauge('service_up', 'Service operational status', ['service'])
-circuit_breaker_state = Gauge(
-    'circuit_breaker_state', 'Circuit breaker state', ['service']
-)
+service_up = Gauge("service_up", "Service operational status", ["service"])
+circuit_breaker_state = Gauge("circuit_breaker_state", "Circuit breaker state", ["service"])
 
 
 async def check_redis() -> bool:
@@ -87,11 +85,7 @@ async def health_check(response: Response) -> dict:
             if not (redis_ok and plex_ok):
                 response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
-            checks = {
-                'redis': redis_ok,
-                'plex': plex_ok,
-                'transcoder': await check_transcoder()
-            }
+            checks = {"redis": redis_ok, "plex": plex_ok, "transcoder": await check_transcoder()}
             is_healthy = all(checks.values())
     except Exception as e:
         logger.error(f"Health check failure: {e}")
@@ -99,15 +93,10 @@ async def health_check(response: Response) -> dict:
         checks = {"error": str(e)}
     duration = (datetime.now() - start).total_seconds()
     health_check_duration.labels(service="all").observe(duration)
-    response.status_code = (
-        status.HTTP_200_OK if is_healthy else status.HTTP_503_SERVICE_UNAVAILABLE
-    )
+    response.status_code = status.HTTP_200_OK if is_healthy else status.HTTP_503_SERVICE_UNAVAILABLE
     for component, stat in checks.items():
         service_up.labels(service=component).set(1 if stat is True else 0)
-    return {
-        'status': 'healthy' if is_healthy else 'unhealthy',
-        'checks': checks
-    }
+    return {"status": "healthy" if is_healthy else "unhealthy", "checks": checks}
 
 
 async def check_transcoder() -> bool:
@@ -121,5 +110,6 @@ async def check_transcoder() -> bool:
         return True
     except Exception:
         return False
+
 
 health_app.include_router(router)

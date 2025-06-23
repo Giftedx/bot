@@ -6,11 +6,13 @@ import math
 import json
 from pathlib import Path
 
+
 class CombatStyle(Enum):
     MELEE = "melee"
     RANGED = "ranged"
     MAGIC = "magic"
     MIXED = "mixed"
+
 
 class AttackType(Enum):
     STAB = "stab"
@@ -19,12 +21,14 @@ class AttackType(Enum):
     MAGIC = "magic"
     RANGED = "ranged"
 
+
 class DefenseType(Enum):
     STAB = "stab"
     SLASH = "slash"
     CRUSH = "crush"
     MAGIC = "magic"
     RANGED = "ranged"
+
 
 @dataclass
 class CombatStats:
@@ -38,10 +42,11 @@ class CombatStats:
 
     def get_combat_level(self) -> int:
         """Calculate combat level."""
-        base = 0.25 * (self.defense + self.hitpoints + math.floor(self.prayer/2))
+        base = 0.25 * (self.defense + self.hitpoints + math.floor(self.prayer / 2))
         melee = 0.325 * (self.attack + self.strength)
-        range_magic = 0.325 * (math.floor(3*self.ranged/2) + math.floor(3*self.magic/2))
+        range_magic = 0.325 * (math.floor(3 * self.ranged / 2) + math.floor(3 * self.magic / 2))
         return math.floor(base + max(melee, range_magic))
+
 
 @dataclass
 class DropTableItem:
@@ -52,6 +57,7 @@ class DropTableItem:
     rarity: float  # Drop rate (0.0 to 1.0)
     requirements: Optional[Dict[str, any]] = None
 
+
 @dataclass
 class DropTable:
     always: List[DropTableItem]
@@ -59,6 +65,7 @@ class DropTable:
     uncommon: List[DropTableItem]
     rare: List[DropTableItem]
     very_rare: List[DropTableItem]
+
 
 @dataclass
 class MonsterMechanic:
@@ -70,6 +77,7 @@ class MonsterMechanic:
     cooldown: int  # In game ticks
     protection_prayer: Optional[str] = None
     avoidance_method: Optional[str] = None
+
 
 @dataclass
 class Monster:
@@ -89,6 +97,7 @@ class Monster:
     slayer_level: int = 1
     slayer_xp: float = 0
 
+
 class DropCalculator:
     def __init__(self):
         self.ring_of_wealth: bool = False
@@ -102,7 +111,7 @@ class DropCalculator:
             "base": 1.0,
             "wealth": 1.0 + (0.01 if self.ring_of_wealth else 0),
             "slayer": 1.0 + (0.1 if self.on_slayer_task else 0),
-            "achievements": 1.0
+            "achievements": 1.0,
         }
 
         # Apply combat achievement bonuses
@@ -114,7 +123,9 @@ class DropCalculator:
 
         return modifiers
 
-    def roll_drop_table(self, monster: Monster, modifiers: Dict[str, float] = None) -> List[DropTableItem]:
+    def roll_drop_table(
+        self, monster: Monster, modifiers: Dict[str, float] = None
+    ) -> List[DropTableItem]:
         """Roll on a monster's drop table."""
         if not modifiers:
             modifiers = self.calculate_drop_modifiers(monster)
@@ -142,7 +153,7 @@ class DropCalculator:
             (monster.drop_table.common, 1),
             (monster.drop_table.uncommon, 0.5),
             (monster.drop_table.rare, 0.1),
-            (monster.drop_table.very_rare, 0.01)
+            (monster.drop_table.very_rare, 0.01),
         ]
 
         for table, base_chance in tables:
@@ -153,6 +164,7 @@ class DropCalculator:
 
         return drops
 
+
 class CombatCalculator:
     def __init__(self):
         self.prayer_bonus: Dict[str, float] = {
@@ -161,12 +173,17 @@ class CombatCalculator:
             "augury": 1.25,
             "protect_melee": 0.0,  # Complete protection in OSRS
             "protect_range": 0.0,
-            "protect_magic": 0.0
+            "protect_magic": 0.0,
         }
 
-    def calculate_max_hit(self, stats: CombatStats, equipment_bonus: int,
-                         style: CombatStyle, prayer_multiplier: float = 1.0,
-                         other_multipliers: Dict[str, float] = None) -> int:
+    def calculate_max_hit(
+        self,
+        stats: CombatStats,
+        equipment_bonus: int,
+        style: CombatStyle,
+        prayer_multiplier: float = 1.0,
+        other_multipliers: Dict[str, float] = None,
+    ) -> int:
         """Calculate maximum hit."""
         if not other_multipliers:
             other_multipliers = {}
@@ -190,10 +207,14 @@ class CombatCalculator:
         max_hit = math.floor(0.5 + effective_level * (equipment_bonus + 64) / 640)
         return max_hit
 
-    def calculate_accuracy(self, attacker_stats: CombatStats,
-                          defender_stats: CombatStats,
-                          attack_bonus: int, defense_bonus: int,
-                          style: CombatStyle) -> float:
+    def calculate_accuracy(
+        self,
+        attacker_stats: CombatStats,
+        defender_stats: CombatStats,
+        attack_bonus: int,
+        defense_bonus: int,
+        style: CombatStyle,
+    ) -> float:
         """Calculate hit chance."""
         # Get effective attack level
         attack_level = 0
@@ -224,6 +245,7 @@ class CombatCalculator:
         if random.random() > accuracy:
             return 0  # Miss
         return random.randint(0, max_hit)
+
 
 class MonsterMechanicsHandler:
     def __init__(self, monster: Monster):
@@ -271,4 +293,4 @@ class MonsterMechanicsHandler:
 
     def can_trigger_mechanic(self, mechanic_name: str) -> bool:
         """Check if a specific mechanic can be triggered."""
-        return mechanic_name not in self.active_mechanics 
+        return mechanic_name not in self.active_mechanics

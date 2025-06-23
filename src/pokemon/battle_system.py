@@ -187,21 +187,15 @@ class PokemonBattleSystem(BaseBattleSystem):
         stab = 1.5 if move_data["type"] in attacker_stats["types"] else 1.0
 
         # Type effectiveness
-        effectiveness = self._calculate_effectiveness(
-            move_data["type"], defender_stats["types"]
-        )
+        effectiveness = self._calculate_effectiveness(move_data["type"], defender_stats["types"])
 
         # Critical hit (6.25% chance)
         is_crit = random.random() < 0.0625
         crit_mod = 1.5 if is_crit else 1.0
 
         # Stat stages and status effects
-        attack_stat = (
-            "special_attack" if move_data["category"] == "special" else "attack"
-        )
-        defense_stat = (
-            "special_defense" if move_data["category"] == "special" else "defense"
-        )
+        attack_stat = "special_attack" if move_data["category"] == "special" else "attack"
+        defense_stat = "special_defense" if move_data["category"] == "special" else "defense"
 
         attack = self._apply_stat_stages(
             attacker_stats["stats"][attack_stat],
@@ -214,10 +208,7 @@ class PokemonBattleSystem(BaseBattleSystem):
         )
 
         # Status effects
-        if (
-            attacker_stats.get("status") == "burn"
-            and move_data["category"] == "physical"
-        ):
+        if attacker_stats.get("status") == "burn" and move_data["category"] == "physical":
             attack *= 0.5
 
         # Final damage formula
@@ -294,9 +285,7 @@ class PokemonBattleSystem(BaseBattleSystem):
         move_data["pp"] -= 1
 
         # Calculate damage
-        damage, effect_message = self.calculate_damage(
-            move, attacker_stats, defender_stats
-        )
+        damage, effect_message = self.calculate_damage(move, attacker_stats, defender_stats)
 
         # Apply damage
         defender_stats["current_hp"] -= damage
@@ -304,9 +293,7 @@ class PokemonBattleSystem(BaseBattleSystem):
         # Apply move effects
         status_message = ""
         if effect := move_data.get("effect"):
-            status_message = self._apply_move_effect(
-                effect, attacker_stats, defender_stats
-            )
+            status_message = self._apply_move_effect(effect, attacker_stats, defender_stats)
 
         # Apply end of turn effects
         end_turn_message = self._apply_end_turn_effects(attacker_stats, defender_stats)
@@ -321,9 +308,7 @@ class PokemonBattleSystem(BaseBattleSystem):
             "defender_hp": defender_stats["current_hp"],
         }
 
-    def _calculate_effectiveness(
-        self, move_type: str, defender_types: list[str]
-    ) -> float:
+    def _calculate_effectiveness(self, move_type: str, defender_types: list[str]) -> float:
         """Calculate type effectiveness modifier."""
         effectiveness = 1.0
         for def_type in defender_types:
@@ -354,9 +339,7 @@ class PokemonBattleSystem(BaseBattleSystem):
             return True
         return False
 
-    def _apply_end_turn_effects(
-        self, attacker: Dict[str, Any], defender: Dict[str, Any]
-    ) -> str:
+    def _apply_end_turn_effects(self, attacker: Dict[str, Any], defender: Dict[str, Any]) -> str:
         """Apply end of turn status effects."""
         messages = []
 
@@ -377,9 +360,7 @@ class PokemonBattleSystem(BaseBattleSystem):
 
         return "\n".join(messages)
 
-    def is_valid_move(
-        self, battle_state: BattleState, move: str, player_id: int
-    ) -> bool:
+    def is_valid_move(self, battle_state: BattleState, move: str, player_id: int) -> bool:
         """Validate if a move can be used."""
         if not battle_state or battle_state.is_finished:
             return False
@@ -388,29 +369,21 @@ class PokemonBattleSystem(BaseBattleSystem):
             return False
 
         pokemon = battle_state.battle_data.get(
-            "challenger_pokemon"
-            if player_id == battle_state.challenger_id
-            else "opponent_pokemon"
+            "challenger_pokemon" if player_id == battle_state.challenger_id else "opponent_pokemon"
         )
 
         return move in pokemon.get("moves", {}) and pokemon["moves"][move]["pp"] > 0
 
-    def get_available_moves(
-        self, battle_state: BattleState, player_id: int
-    ) -> list[str]:
+    def get_available_moves(self, battle_state: BattleState, player_id: int) -> list[str]:
         """Get list of moves that can be used."""
         if not battle_state or battle_state.is_finished:
             return []
 
         pokemon = battle_state.battle_data.get(
-            "challenger_pokemon"
-            if player_id == battle_state.challenger_id
-            else "opponent_pokemon"
+            "challenger_pokemon" if player_id == battle_state.challenger_id else "opponent_pokemon"
         )
 
         if not pokemon:
             return []
 
-        return [
-            move for move, data in pokemon.get("moves", {}).items() if data["pp"] > 0
-        ]
+        return [move for move, data in pokemon.get("moves", {}).items() if data["pp"] > 0]

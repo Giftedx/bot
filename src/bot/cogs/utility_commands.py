@@ -2,21 +2,22 @@ import discord
 from discord.ext import commands
 import logging
 
-logger = logging.getLogger('DiscordBot')
+logger = logging.getLogger("DiscordBot")
+
 
 class UtilityCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='help')
+    @commands.command(name="help")
     async def help(self, ctx):
         """Show all available commands"""
         embed = discord.Embed(
             title="Available Commands",
             description="Here are all the commands you can use!",
-            color=discord.Color.blue()
+            color=discord.Color.blue(),
         )
-        
+
         fun_commands = """
 `!hello` - Basic greeting
 `!wizard` - Magical greeting
@@ -36,13 +37,13 @@ class UtilityCommands(commands.Cog):
 `!banana` - Peanut butter jelly time!
 """
         embed.add_field(name="Fun Commands", value=fun_commands, inline=False)
-        
+
         plex_commands = """
 `!play <query>` - Play media matching query
 `!search <query>` - Search for media
 """
         embed.add_field(name="Plex Commands", value=plex_commands, inline=False)
-        
+
         game_commands = """
 `!hangman` - Play a game of hangman
 `!battle <@user>` - Challenge someone to a battle
@@ -50,7 +51,7 @@ class UtilityCommands(commands.Cog):
 `!inventory` - Check your inventory
 """
         embed.add_field(name="Game Commands", value=game_commands, inline=False)
-        
+
         embed.set_footer(text=f"Requested by {ctx.author.name} | Bot Version 1.0")
         await ctx.send(embed=embed)
 
@@ -58,6 +59,7 @@ class UtilityCommands(commands.Cog):
         """Handle errors in utility commands"""
         logger.error(f"Error in utility command {ctx.command}: {error}", exc_info=error)
         await ctx.send("An error occurred while processing your command.")
+
 
 async def setup(bot):
     await bot.add_cog(UtilityCommands(bot))

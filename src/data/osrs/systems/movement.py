@@ -4,6 +4,7 @@ from enum import Enum
 import math
 import heapq
 
+
 class TileType(Enum):
     WALKABLE = "walkable"
     BLOCKED = "blocked"
@@ -13,6 +14,7 @@ class TileType(Enum):
     WATER = "water"
     LADDER = "ladder"
     STAIRS = "stairs"
+
 
 @dataclass
 class Tile:
@@ -24,14 +26,16 @@ class Tile:
     requirements: Dict[str, any] = None
     interaction_text: str = ""
 
+
 @dataclass
 class Area:
     name: str
     tiles: List[List[Tile]]  # 2D grid of tiles
-    connections: Dict[str, 'Area']  # Connected areas and their requirements
+    connections: Dict[str, "Area"]  # Connected areas and their requirements
     wilderness_level: int = 0
     is_pvp: bool = False
     is_multicombat: bool = False
+
 
 class MovementSystem:
     def __init__(self):
@@ -45,7 +49,7 @@ class MovementSystem:
         """Check if a tile can be accessed based on requirements."""
         if tile.type == TileType.BLOCKED:
             return False, "This tile is blocked."
-            
+
         if tile.type == TileType.AGILITY_OBSTACLE:
             if self.agility_level < tile.agility_level:
                 return False, f"You need {tile.agility_level} Agility to use this obstacle."
@@ -72,11 +76,13 @@ class MovementSystem:
         """Get available agility shortcuts from current position."""
         shortcuts = []
         x, y, z = current_pos
-        
+
         # Check adjacent tiles for obstacles
         for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
             new_x, new_y = x + dx, y + dy
-            if 0 <= new_x < len(self.current_area.tiles[0]) and 0 <= new_y < len(self.current_area.tiles):
+            if 0 <= new_x < len(self.current_area.tiles[0]) and 0 <= new_y < len(
+                self.current_area.tiles
+            ):
                 tile = self.current_area.tiles[new_y][new_x]
                 if tile.type == TileType.AGILITY_OBSTACLE:
                     can_use, reason = self.can_access_tile(tile)
@@ -85,28 +91,34 @@ class MovementSystem:
 
         return shortcuts
 
+
 class PathFinder:
     def __init__(self, movement_system: MovementSystem):
         self.movement = movement_system
 
-    def find_path(self, start: Tuple[int, int, int], end: Tuple[int, int, int]) -> Optional[List[Tuple[int, int, int]]]:
+    def find_path(
+        self, start: Tuple[int, int, int], end: Tuple[int, int, int]
+    ) -> Optional[List[Tuple[int, int, int]]]:
         """Find path using A* algorithm with agility shortcuts."""
+
         def heuristic(a: Tuple[int, int, int], b: Tuple[int, int, int]) -> float:
-            return math.sqrt((b[0] - a[0])**2 + (b[1] - a[1])**2)
+            return math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
 
         def get_neighbors(pos: Tuple[int, int, int]) -> List[Tuple[int, int, int]]:
             x, y, z = pos
             neighbors = []
-            
+
             # Regular movement
             for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
                 new_x, new_y = x + dx, y + dy
-                if 0 <= new_x < len(self.movement.current_area.tiles[0]) and 0 <= new_y < len(self.movement.current_area.tiles):
+                if 0 <= new_x < len(self.movement.current_area.tiles[0]) and 0 <= new_y < len(
+                    self.movement.current_area.tiles
+                ):
                     tile = self.movement.current_area.tiles[new_y][new_x]
                     can_move, _ = self.movement.can_access_tile(tile)
                     if can_move:
                         neighbors.append((new_x, new_y, z))
-            
+
             # Agility shortcuts
             shortcuts = self.movement.get_available_shortcuts((x, y, z))
             for tile, _ in shortcuts:
@@ -133,7 +145,9 @@ class PathFinder:
                 return path
 
             for next_pos in get_neighbors(current):
-                new_cost = cost_so_far[current] + 1  # Could be adjusted for different movement types
+                new_cost = (
+                    cost_so_far[current] + 1
+                )  # Could be adjusted for different movement types
                 if next_pos not in cost_so_far or new_cost < cost_so_far[next_pos]:
                     cost_so_far[next_pos] = new_cost
                     priority = new_cost + heuristic(next_pos, end)
@@ -141,6 +155,7 @@ class PathFinder:
                     came_from[next_pos] = current
 
         return None  # No path found
+
 
 class MovementHandler:
     def __init__(self, movement_system: MovementSystem, pathfinder: PathFinder):
@@ -152,7 +167,7 @@ class MovementHandler:
     async def move_to(self, destination: Tuple[int, int, int]):
         """Handle movement to a destination, including pathfinding and energy management."""
         self.current_path = self.pathfinder.find_path(self.movement.current_position, destination)
-        
+
         if not self.current_path:
             return False, "No valid path found."
 
@@ -160,11 +175,13 @@ class MovementHandler:
             # Calculate distance
             current_x, current_y, _ = self.movement.current_position
             next_x, next_y, _ = next_pos
-            distance = math.sqrt((next_x - current_x)**2 + (next_y - current_y)**2)
+            distance = math.sqrt((next_x - current_x) ** 2 + (next_y - current_y) ** 2)
 
             # Handle run energy
             if self.is_running:
-                energy_drain = self.movement.calculate_run_energy_drain(distance, self.movement.weight)
+                energy_drain = self.movement.calculate_run_energy_drain(
+                    distance, self.movement.weight
+                )
                 if self.movement.run_energy < energy_drain:
                     self.is_running = False
                 else:
@@ -182,6 +199,6 @@ class MovementHandler:
         """Toggle running on/off."""
         if not self.is_running and self.movement.run_energy <= 0:
             return False, "Not enough run energy."
-        
+
         self.is_running = not self.is_running
-        return True, f"Running {'enabled' if self.is_running else 'disabled'}." 
+        return True, f"Running {'enabled' if self.is_running else 'disabled'}."

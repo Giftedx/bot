@@ -5,7 +5,7 @@ from typing import AsyncGenerator, Generator
 import asyncio
 from discord.ext.commands import Bot
 
-from src.core.config import Settings
+from src.core.config import ConfigManager
 
 
 @pytest.fixture
@@ -22,13 +22,15 @@ async def bot() -> AsyncGenerator[MagicMock, None]:
     bot = MagicMock(spec=Bot)
     bot.add_cog = AsyncMock()
     bot.remove_cog = AsyncMock()
-    
-    # Mock settings
-    settings = Settings()
-    bot.settings = settings
-    
+
+    # Mock config manager
+    config_manager = MagicMock(spec=ConfigManager)
+    config_manager.get_config.return_value = "!"  # Default prefix
+    config_manager.get_secret.return_value = "fake_token"
+    bot.config_manager = config_manager
+
     yield bot
-    
+
     # Clean up
     for cog_name in bot.cogs.copy():
         await bot.remove_cog(cog_name)
@@ -39,9 +41,9 @@ async def setup_teardown() -> AsyncGenerator[None, None]:
     """Set up and tear down test environment."""
     # Setup
     asyncio.get_event_loop().set_debug(True)
-    
+
     yield
-    
+
     # Teardown
     await asyncio.sleep(0)  # Let any pending tasks complete
 
@@ -49,16 +51,11 @@ async def setup_teardown() -> AsyncGenerator[None, None]:
 def pytest_configure(config: pytest.Config) -> None:
     """Configure pytest for integration tests."""
     # Register markers
-    config.addinivalue_line(
-        "markers",
-        "integration: mark test as an integration test"
-    )
+    config.addinivalue_line("markers", "integration: mark test as an integration test")
 
 
 def pytest_collection_modifyitems(
-    session: pytest.Session,
-    config: pytest.Config,
-    items: list[pytest.Item]
+    session: pytest.Session, config: pytest.Config, items: list[pytest.Item]
 ) -> None:
     """Modify test collection."""
     # Add integration marker to all tests in this directory
@@ -109,16 +106,12 @@ def integration_timeout() -> Generator[None, None, None]:
     pytest.timeout.set_timeout(0)
 
 
-def pytest_assertrepr_compare(
-    op: str,
-    left: object,
-    right: object
-) -> list[str] | None:
+def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str] | None:
     """Provide custom assertion messages for integration tests."""
     if op == "in" and hasattr(left, "content") and isinstance(right, str):
         return [
             "Message content comparison failed:",
             f"Expected to find: {right}",
-            f"In message content: {getattr(left, 'content', 'No content')}"
+            f"In message content: {getattr(left, 'content', 'No content')}",
         ]
     return None

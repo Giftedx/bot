@@ -9,4 +9,4 @@ from src.bot.cogs.media_commands import MediaCommands as _MediaCommands
 # Re-export with original name
 MediaCommands = _MediaCommands
 
-__all__ = ['MediaCommands']
+__all__ = ["MediaCommands"]

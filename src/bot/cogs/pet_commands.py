@@ -8,6 +8,7 @@ from src.core.battle_system import BattleManager, BattleResult, BattleType
 
 logger = logging.getLogger(__name__)
 
+
 class PetCommands(commands.Cog):
     """Commands for interacting with pets (hybrid: classic and slash)."""
 
@@ -27,20 +28,15 @@ class PetCommands(commands.Cog):
                 await ctx.send("You don't have any pets yet!")
                 return
 
-            embed = discord.Embed(
-                title=f"{ctx.author.name}'s Pets",
-                color=discord.Color.green()
-            )
+            embed = discord.Embed(title=f"{ctx.author.name}'s Pets", color=discord.Color.green())
 
             for pet in pets:
-                pet_name = pet.get('name', 'Unnamed Pet')
-                pet_type = pet.get('type', 'Unknown Type')
-                pet_data = pet.get('data', {})
-                level = pet_data.get('level', 1)
+                pet_name = pet.get("name", "Unnamed Pet")
+                pet_type = pet.get("type", "Unknown Type")
+                pet_data = pet.get("data", {})
+                level = pet_data.get("level", 1)
                 embed.add_field(
-                    name=f"**{pet_name}**",
-                    value=f"Type: {pet_type}\nLevel: {level}",
-                    inline=False
+                    name=f"**{pet_name}**", value=f"Type: {pet_type}\nLevel: {level}", inline=False
                 )
             await ctx.send(embed=embed)
         except Exception as e:
@@ -70,10 +66,14 @@ class PetCommands(commands.Cog):
         # For simplicity, we'll use the first pet of each player
         challenger_pet = challenger_pets[0]
         opponent_pet = opponent_pets[0]
-        await ctx.send(f"A battle is starting between {challenger.name}'s **{challenger_pet.name}** and {opponent.name}'s **{opponent_pet.name}**!")
+        await ctx.send(
+            f"A battle is starting between {challenger.name}'s **{challenger_pet.name}** and {opponent.name}'s **{opponent_pet.name}**!"
+        )
 
         try:
-            battle_id = self.battle_manager.create_battle(challenger_pet, opponent_pet, BattleType.PET)
+            battle_id = self.battle_manager.create_battle(
+                challenger_pet, opponent_pet, BattleType.PET
+            )
             result: BattleResult = self.battle_manager.execute_battle(battle_id)
 
             if not result:
@@ -89,18 +89,25 @@ class PetCommands(commands.Cog):
             embed = discord.Embed(
                 title=f"Battle Over! {winner.name} is victorious!",
                 description=f"The battle lasted {result.rounds} rounds.",
-                color=discord.Color.gold()
+                color=discord.Color.gold(),
             )
-            embed.add_field(name="Winner", value=f"{winner.name} (Owner: <@{winner.owner_id}>)", inline=False)
+            embed.add_field(
+                name="Winner", value=f"{winner.name} (Owner: <@{winner.owner_id}>)", inline=False
+            )
             embed.add_field(name="Experience Gained", value=f"{result.exp_gained} XP", inline=True)
-            embed.add_field(name="Loser", value=f"{loser.name} (Owner: <@{loser.owner_id}>)", inline=False)
+            embed.add_field(
+                name="Loser", value=f"{loser.name} (Owner: <@{loser.owner_id}>)", inline=False
+            )
             await ctx.send(embed=embed)
         except Exception as e:
             logger.error(f"An error occurred during battle: {e}")
             await ctx.send("An unexpected error occurred during the battle.")
 
     @commands.hybrid_command(name="adopt", help="Adopt a new pet. Usage: /adopt <type> <name>")
-    @app_commands.describe(pet_type="Type of pet to adopt (dog, cat, dragon, phoenix, unicorn)", name="Name for your new pet")
+    @app_commands.describe(
+        pet_type="Type of pet to adopt (dog, cat, dragon, phoenix, unicorn)",
+        name="Name for your new pet",
+    )
     async def adopt(self, ctx: commands.Context, pet_type: str, name: str):
         """Adopt a new pet with the given type and name."""
         pet_type = pet_type.lower()
@@ -111,43 +118,44 @@ class PetCommands(commands.Cog):
         player_id = str(ctx.author.id)
         # Check for duplicate name
         pets = self.db_manager.get_player_pets(player_id)
-        if any(p.get('name', '').lower() == name.lower() for p in pets):
+        if any(p.get("name", "").lower() == name.lower() for p in pets):
             await ctx.send(f"You already have a pet named {name}!")
             return
         # Create pet data
         pet_data = {
-            'name': name,
-            'type': pet_type,
-            'data': {'level': 1, 'experience': 0, 'happiness': 100},
-            'owner_id': player_id
+            "name": name,
+            "type": pet_type,
+            "data": {"level": 1, "experience": 0, "happiness": 100},
+            "owner_id": player_id,
         }
         self.db_manager.save_pet(pet_data)
         embed = discord.Embed(
             title="🎉 New Pet Adopted!",
             description=f"Welcome {name} the {pet_type.title()} to your family!",
-            color=discord.Color.green()
+            color=discord.Color.green(),
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="info", help="View detailed information about one of your pets. Usage: /info <name>")
+    @commands.hybrid_command(
+        name="info", help="View detailed information about one of your pets. Usage: /info <name>"
+    )
     @app_commands.describe(name="Name of your pet")
     async def info(self, ctx: commands.Context, name: str):
         """View detailed information about your pet by name."""
         player_id = str(ctx.author.id)
         pets = self.db_manager.get_player_pets(player_id)
-        pet = next((p for p in pets if p.get('name', '').lower() == name.lower()), None)
+        pet = next((p for p in pets if p.get("name", "").lower() == name.lower()), None)
         if not pet:
             await ctx.send(f"You don't have a pet named {name}!")
             return
-        pet_data = pet.get('data', {})
+        pet_data = pet.get("data", {})
         embed = discord.Embed(
-            title=f"{pet.get('name', 'Unnamed Pet')}'s Info",
-            color=discord.Color.blue()
+            title=f"{pet.get('name', 'Unnamed Pet')}'s Info", color=discord.Color.blue()
         )
-        embed.add_field(name="Type", value=pet.get('type', 'Unknown'), inline=True)
-        embed.add_field(name="Level", value=pet_data.get('level', 1), inline=True)
-        embed.add_field(name="Experience", value=pet_data.get('experience', 0), inline=True)
-        embed.add_field(name="Happiness", value=pet_data.get('happiness', 100), inline=True)
+        embed.add_field(name="Type", value=pet.get("type", "Unknown"), inline=True)
+        embed.add_field(name="Level", value=pet_data.get("level", 1), inline=True)
+        embed.add_field(name="Experience", value=pet_data.get("experience", 0), inline=True)
+        embed.add_field(name="Happiness", value=pet_data.get("happiness", 100), inline=True)
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="train", help="Train one of your pets. Usage: /train <name>")
@@ -156,30 +164,35 @@ class PetCommands(commands.Cog):
         """Train your pet to gain experience and possibly level up."""
         player_id = str(ctx.author.id)
         pets = self.db_manager.get_player_pets(player_id)
-        pet = next((p for p in pets if p.get('name', '').lower() == name.lower()), None)
+        pet = next((p for p in pets if p.get("name", "").lower() == name.lower()), None)
         if not pet:
             await ctx.send(f"You don't have a pet named {name}!")
             return
-        pet_data = pet.get('data', {})
+        pet_data = pet.get("data", {})
         # Simulate training: gain experience, possibly level up
         exp_gain = 20
-        pet_data['experience'] = pet_data.get('experience', 0) + exp_gain
-        old_level = pet_data.get('level', 1)
-        new_level = 1 + (pet_data['experience'] // 100)
+        pet_data["experience"] = pet_data.get("experience", 0) + exp_gain
+        old_level = pet_data.get("level", 1)
+        new_level = 1 + (pet_data["experience"] // 100)
         leveled_up = new_level > old_level
-        pet_data['level'] = new_level
-        pet['data'] = pet_data
+        pet_data["level"] = new_level
+        pet["data"] = pet_data
         self.db_manager.save_pet(pet)
         embed = discord.Embed(
             title=f"Training {pet.get('name', 'Unnamed Pet')}",
             description=f"Gained {exp_gain} XP!",
-            color=discord.Color.blue()
+            color=discord.Color.blue(),
         )
         embed.add_field(name="Level", value=new_level, inline=True)
-        embed.add_field(name="Experience", value=pet_data['experience'], inline=True)
+        embed.add_field(name="Experience", value=pet_data["experience"], inline=True)
         if leveled_up:
-            embed.add_field(name="Level Up!", value=f"{pet.get('name', 'Unnamed Pet')} leveled up to {new_level}! 🎉", inline=False)
+            embed.add_field(
+                name="Level Up!",
+                value=f"{pet.get('name', 'Unnamed Pet')} leveled up to {new_level}! 🎉",
+                inline=False,
+            )
         await ctx.send(embed=embed)
 
+
 async def setup(bot: commands.Bot):
-    await bot.add_cog(PetCommands(bot)) 
+    await bot.add_cog(PetCommands(bot))

@@ -4,6 +4,7 @@ import hvac
 
 logger = logging.getLogger(__name__)
 
+
 def get_vault_client() -> hvac.Client | None:
     vault_addr = os.environ.get("VAULT_ADDR")
     vault_token = os.environ.get("VAULT_TOKEN")
@@ -15,6 +16,7 @@ def get_vault_client() -> hvac.Client | None:
         logger.error("Vault client authentication failed.")
         return None
     return client
+
 
 def get_secret(secret_path: str, secret_key: str) -> str | None:
     client = get_vault_client()

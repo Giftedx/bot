@@ -8,9 +8,11 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class BotConfig:
     """Bot configuration settings"""
+
     COMMAND_PREFIX: str = "!"
     MAX_CONCURRENT_COMMANDS: int = 10
     MAX_QUEUE_SIZE: int = 100
@@ -22,9 +24,10 @@ class BotConfig:
     GRACEFUL_SHUTDOWN_TIMEOUT: float = 30.0
     BOT_TYPE: str = "regular"
 
+
 class ConfigManager:
     """Manages bot configuration from multiple sources"""
-    
+
     def __init__(self, config_path: Optional[Path] = None):
         self._config = BotConfig()
         self._config_path = config_path or Path("config/bot_config.json")
@@ -34,7 +37,7 @@ class ConfigManager:
         """Load configuration from environment and config file"""
         # Load environment variables
         load_dotenv()
-        
+
         # Override from environment variables
         for field in BotConfig.__dataclass_fields__:
             env_value = os.getenv(field)
@@ -43,7 +46,7 @@ class ConfigManager:
                 field_type = type(getattr(self._config, field))
                 try:
                     if field_type == bool:
-                        value = env_value.lower() in ('true', '1', 'yes')
+                        value = env_value.lower() in ("true", "1", "yes")
                     else:
                         value = field_type(env_value)
                     setattr(self._config, field, value)
@@ -76,7 +79,7 @@ class ConfigManager:
         """Save current configuration to file"""
         try:
             self._config_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(self._config_path, 'w') as f:
+            with open(self._config_path, "w") as f:
                 json.dump(self._config.__dict__, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save config: {e}")

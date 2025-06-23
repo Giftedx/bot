@@ -25,9 +25,7 @@ def plex_cog(mock_bot: commands.Bot) -> PlexCog:
 
 
 @pytest.mark.asyncio
-async def test_init_plex_success(
-    plex_cog: PlexCog, mock_bot: commands.Bot
-) -> None:
+async def test_init_plex_success(plex_cog: PlexCog, mock_bot: commands.Bot) -> None:
     with patch("src.bot.discord.cogs.plex_cog.PlexServer") as MockPlexServer:
         mock_server = MockPlexServer.return_value
         mock_server.library = Mock()  # Simulate a successful connection
@@ -38,12 +36,8 @@ async def test_init_plex_success(
 
 
 @pytest.mark.asyncio
-async def test_init_plex_auth_failure(
-    plex_cog: PlexCog, mock_bot: commands.Bot
-) -> None:
-    with patch(
-        "src.bot.discord.cogs.plex_cog.PlexServer", side_effect=Unauthorized
-    ):
+async def test_init_plex_auth_failure(plex_cog: PlexCog, mock_bot: commands.Bot) -> None:
+    with patch("src.bot.discord.cogs.plex_cog.PlexServer", side_effect=Unauthorized):
         with pytest.raises(PlexAuthError):
             await plex_cog._init_plex()
         assert plex_cog._retry_count == 0
@@ -80,9 +74,7 @@ async def test_init_plex_connection_failure_max_retries(
 
 
 @pytest.mark.asyncio
-async def test_health_check_success(
-    plex_cog: PlexCog, mock_bot: commands.Bot
-) -> None:
+async def test_health_check_success(plex_cog: PlexCog, mock_bot: commands.Bot) -> None:
     with patch("src.bot.discord.cogs.plex_cog.PlexServer") as MockPlexServer:
         mock_server = MockPlexServer.return_value
         mock_server.library = Mock()
@@ -92,9 +84,7 @@ async def test_health_check_success(
 
 
 @pytest.mark.asyncio
-async def test_health_check_failure(
-    plex_cog: PlexCog, mock_bot: commands.Bot
-) -> None:
+async def test_health_check_failure(plex_cog: PlexCog, mock_bot: commands.Bot) -> None:
     with patch("src.bot.discord.cogs.plex_cog.PlexServer") as MockPlexServer:
         mock_server = MockPlexServer.return_value
         mock_server.library.side_effect = Exception("Test Error")

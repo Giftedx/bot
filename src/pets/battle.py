@@ -11,6 +11,7 @@ from typing import Dict, Optional, Any
 from dataclasses import dataclass
 from src.pets.models import Pet, PetType, StatusEffect, PetMove
 
+
 class BattleError(Exception):
     """Base class for battle-related errors."""
 
@@ -30,6 +31,7 @@ class BattleInProgressError(BattleError):
 @dataclass
 class BattleStats:
     """Stats for a pet in battle."""
+
     hp: int
     attack: int
     defense: int
@@ -40,6 +42,7 @@ class BattleStats:
 @dataclass
 class BattleState:
     """Represents the current state of a battle."""
+
     battle_id: int
     pet1_id: int
     pet2_id: int
@@ -53,17 +56,13 @@ class BattleState:
 
 class BattleSystem:
     """Core battle system implementation."""
-    
+
     def __init__(self) -> None:
         """Initialize battle system."""
         self._active_battles: Dict[int, BattleState] = {}
         self._battle_counter: int = 0
 
-    async def start_battle(
-        self,
-        pet1: Pet,
-        pet2: Pet
-    ) -> BattleState:
+    async def start_battle(self, pet1: Pet, pet2: Pet) -> BattleState:
         """Start a new battle between two pets.
 
         Args:
@@ -85,15 +84,15 @@ class BattleSystem:
             attack=10 + (pet1.level * 2),
             defense=5 + pet1.level,
             speed=10 + pet1.level,
-            level=pet1.level
+            level=pet1.level,
         )
-        
+
         pet2_stats = BattleStats(
             hp=pet2.max_health,
             attack=10 + (pet2.level * 2),
             defense=5 + pet2.level,
             speed=10 + pet2.level,
-            level=pet2.level
+            level=pet2.level,
         )
 
         # Create battle state
@@ -104,7 +103,7 @@ class BattleSystem:
             current_turn=1,
             pet1_stats=pet1_stats,
             pet2_stats=pet2_stats,
-            status_effects={}
+            status_effects={},
         )
 
         self._active_battles[battle_id] = battle
@@ -116,30 +115,23 @@ class BattleSystem:
         attacker_stats: BattleStats,
         defender_stats: BattleStats,
         attacker_element: PetType,
-        defender_element: PetType
+        defender_element: PetType,
     ) -> int:
         """Calculate damage for a move."""
         # Base damage
         damage = (move.damage * attacker_stats.attack) / defender_stats.defense
-        
+
         # Element effectiveness
-        effectiveness = self._get_element_effectiveness(
-            attacker_element,
-            defender_element
-        )
+        effectiveness = self._get_element_effectiveness(attacker_element, defender_element)
         damage *= effectiveness
-        
+
         # Level difference
         level_bonus = (attacker_stats.level - defender_stats.level) * 0.1
-        damage *= (1 + max(0, level_bonus))
-        
+        damage *= 1 + max(0, level_bonus)
+
         return max(1, int(damage))
 
-    def _get_element_effectiveness(
-        self,
-        attacker: PetType,
-        defender: PetType
-    ) -> float:
+    def _get_element_effectiveness(self, attacker: PetType, defender: PetType) -> float:
         """Get elemental damage multiplier."""
         effectiveness_chart = {
             PetType.FIRE: {PetType.EARTH: 2.0, PetType.AIR: 0.5},
@@ -147,17 +139,13 @@ class BattleSystem:
             PetType.EARTH: {PetType.AIR: 2.0, PetType.WATER: 0.5},
             PetType.AIR: {PetType.WATER: 2.0, PetType.FIRE: 0.5},
             PetType.LIGHT: {PetType.DARK: 2.0},
-            PetType.DARK: {PetType.LIGHT: 2.0}
+            PetType.DARK: {PetType.LIGHT: 2.0},
         }
-        
+
         return effectiveness_chart.get(attacker, {}).get(defender, 1.0)
 
     async def process_turn(
-        self,
-        battle_id: int,
-        move: PetMove,
-        pet: Pet,
-        opponent: Pet
+        self, battle_id: int, move: PetMove, pet: Pet, opponent: Pet
     ) -> Dict[str, Any]:
         """Process a single turn in a battle.
 
@@ -183,24 +171,14 @@ class BattleSystem:
             raise InvalidMoveError("Not your turn")
 
         # Get stats
-        attacker_stats = (
-            battle.pet1_stats if id(pet) == battle.pet1_id 
-            else battle.pet2_stats
-        )
-        defender_stats = (
-            battle.pet2_stats if id(pet) == battle.pet1_id
-            else battle.pet1_stats
-        )
+        attacker_stats = battle.pet1_stats if id(pet) == battle.pet1_id else battle.pet2_stats
+        defender_stats = battle.pet2_stats if id(pet) == battle.pet1_id else battle.pet1_stats
 
         # Calculate and apply damage
         damage = self._calculate_damage(
-            move,
-            attacker_stats,
-            defender_stats,
-            pet.element,
-            opponent.element
+            move, attacker_stats, defender_stats, pet.element, opponent.element
         )
-        
+
         defender_stats.hp -= damage
 
         # Check for battle end
@@ -218,7 +196,7 @@ class BattleSystem:
             "attacker": id(pet),
             "defender": id(opponent),
             "battle_over": battle.winner is not None,
-            "winner": battle.winner
+            "winner": battle.winner,
         }
 
     def get_battle_state(self, battle_id: int) -> Optional[BattleState]:

@@ -12,6 +12,7 @@ from ...models.user import User
 
 class TreeType(Enum):
     """Types of trees that can be cut."""
+
     REGULAR = auto()
     OAK = auto()
     WILLOW = auto()
@@ -24,6 +25,7 @@ class TreeType(Enum):
 @dataclass
 class TreeData:
     """Data for each tree type."""
+
     level: int
     xp: float
     log_id: str
@@ -34,12 +36,7 @@ class TreeData:
 
 TREE_DATA: Dict[TreeType, TreeData] = {
     TreeType.REGULAR: TreeData(
-        level=1,
-        xp=25.0,
-        log_id="logs",
-        respawn_ticks=4,
-        base_success_chance=0.5,
-        min_axe_tier=1
+        level=1, xp=25.0, log_id="logs", respawn_ticks=4, base_success_chance=0.5, min_axe_tier=1
     ),
     TreeType.OAK: TreeData(
         level=15,
@@ -47,7 +44,7 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="oak_logs",
         respawn_ticks=7,
         base_success_chance=0.45,
-        min_axe_tier=1
+        min_axe_tier=1,
     ),
     TreeType.WILLOW: TreeData(
         level=30,
@@ -55,7 +52,7 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="willow_logs",
         respawn_ticks=7,
         base_success_chance=0.4,
-        min_axe_tier=1
+        min_axe_tier=1,
     ),
     TreeType.MAPLE: TreeData(
         level=45,
@@ -63,7 +60,7 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="maple_logs",
         respawn_ticks=9,
         base_success_chance=0.35,
-        min_axe_tier=2
+        min_axe_tier=2,
     ),
     TreeType.YEW: TreeData(
         level=60,
@@ -71,7 +68,7 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="yew_logs",
         respawn_ticks=10,
         base_success_chance=0.3,
-        min_axe_tier=3
+        min_axe_tier=3,
     ),
     TreeType.MAGIC: TreeData(
         level=75,
@@ -79,7 +76,7 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="magic_logs",
         respawn_ticks=12,
         base_success_chance=0.25,
-        min_axe_tier=4
+        min_axe_tier=4,
     ),
     TreeType.REDWOOD: TreeData(
         level=90,
@@ -87,8 +84,8 @@ TREE_DATA: Dict[TreeType, TreeData] = {
         log_id="redwood_logs",
         respawn_ticks=15,
         base_success_chance=0.2,
-        min_axe_tier=5
-    )
+        min_axe_tier=5,
+    ),
 }
 
 
@@ -105,9 +102,7 @@ class WoodcuttingTask(BaseSkillTask):
 
     def get_requirements(self) -> TaskRequirements:
         """Get requirements for woodcutting."""
-        return TaskRequirements(
-            skills={SkillType.WOODCUTTING: self.tree_data.level}
-        )
+        return TaskRequirements(skills={SkillType.WOODCUTTING: self.tree_data.level})
 
     def get_rewards(self) -> TaskRewards:
         """Get estimated rewards for woodcutting session."""
@@ -118,13 +113,8 @@ class WoodcuttingTask(BaseSkillTask):
         successful_actions = int(actions * success_rate)
 
         return TaskRewards(
-            xp={
-                SkillType.WOODCUTTING: 
-                int(successful_actions * self.tree_data.xp)
-            },
-            items={
-                self.tree_data.log_id: successful_actions
-            }
+            xp={SkillType.WOODCUTTING: int(successful_actions * self.tree_data.xp)},
+            items={self.tree_data.log_id: successful_actions},
         )
 
     def calculate_end_time(self) -> datetime:
@@ -135,10 +125,10 @@ class WoodcuttingTask(BaseSkillTask):
         """Calculate chance of successfully cutting the tree."""
         level = self.user.skill_level(SkillType.WOODCUTTING)
         level_factor = (level - self.tree_data.level) / 99.0
-        
+
         # TODO: Factor in axe type when equipment system is implemented
         axe_bonus = 0.1  # Assume bronze axe for now
-        
+
         base = self.tree_data.base_success_chance
         return min(0.9, base + level_factor + axe_bonus)
 
@@ -153,4 +143,4 @@ class WoodcuttingTask(BaseSkillTask):
     def __str__(self) -> str:
         """String representation of woodcutting task."""
         base = super().__str__()
-        return f"{base} - {self.tree_type.name} Tree" 
+        return f"{base} - {self.tree_type.name} Tree"
