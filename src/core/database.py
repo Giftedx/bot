@@ -5,6 +5,9 @@ from datetime import datetime
 import json
 import logging
 
+from src.core.models.pet import Pet
+from src.core.models.player import Player, Skill
+
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
@@ -160,26 +163,42 @@ class DatabaseManager:
             }
         return None
     
-    def save_pet(self, owner_id: str, name: str, pet_type: str, data: Dict[str, Any]) -> None:
+    def save_pet(self, pet: Pet) -> None:
         """Save or update pet data"""
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
         
-        cursor.execute("""
-            INSERT INTO pets (owner_id, name, type, data, created_at)
-            VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(owner_id, name) DO UPDATE SET
-                data = excluded.data
-        """, (owner_id, name, pet_type, json.dumps(data), now))
+        pet_data = pet.to_dict()
         
+        # The unique id is not part of the JSON blob
+        pet_data.pop('id', None)
+
+        if pet.pet_id:
+             # Update existing pet
+            cursor.execute("""
+                UPDATE pets 
+                SET owner_id = ?, name = ?, type = ?, data = ?
+                WHERE pet_id = ?
+            """, (pet.owner_id, pet.name, pet.origin.value, json.dumps(pet_data), pet.pet_id))
+        else:
+            # Insert new pet
+            cursor.execute("""
+                INSERT INTO pets (owner_id, name, type, data, created_at)
+                VALUES (?, ?, ?, ?, ?)
+            """, (pet.owner_id, pet.name, pet.origin.value, json.dumps(pet_data), now))
+            pet.pet_id = cursor.lastrowid
+
         self.conn.commit()
     
-    def get_player_pets(self, player_id: str) -> List[Dict[str, Any]]:
+    def get_player_pets(self, player_id: str) -> List[Pet]:
         """Get all pets for a player"""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM pets WHERE owner_id = ?", (player_id,))
-        return [
-            {
+        cursor.execute("SELECT pet_id, owner_id, name, type, data, created_at FROM pets WHERE owner_id = ?", (player_id,))
+        
+        rows = cursor.fetchall()
+        pets = []
+        for row in rows:
+            row_dict = {
                 'pet_id': row[0],
                 'owner_id': row[1],
                 'name': row[2],
@@ -187,8 +206,8 @@ class DatabaseManager:
                 'data': json.loads(row[4]),
                 'created_at': row[5]
             }
-            for row in cursor.fetchall()
-        ]
+            pets.append(Pet.from_db_row(row_dict))
+        return pets
     
     def add_watch_record(self, player_id: str, content_data: Dict[str, Any]) -> None:
         """Add a watch history record"""
@@ -656,4 +675,64 @@ class DatabaseManager:
         
         count = cursor.rowcount
         self.conn.commit()
-        return count 
+        return count
+    
+    def create_player(self, player_id: int, username: str) -> Player:
+        """Create a new player and save them to the database."""
+        cursor = self.conn.cursor()
+        now = datetime.now().isoformat()
+
+        # Default skills for a new player
+        default_skills = {
+            "attack": Skill(),
+            "strength": Skill(),
+            "defence": Skill(),
+            "hitpoints": Skill(level=10, xp=1154),
+            "ranged": Skill(),
+            "magic": Skill(),
+            "prayer": Skill(),
+        }
+
+        new_player = Player(
+            user_id=player_id,
+            username=username,
+            skills=default_skills
+        )
+
+        player_data = new_player.to_dict()
+
+        cursor.execute(
+            "INSERT INTO players (player_id, username, data, last_seen, created_at) VALUES (?, ?, ?, ?, ?)",
+            (player_id, username, json.dumps(player_data), now, now)
+        )
+        self.conn.commit()
+        return new_player
+
+    def save_player(self, player: Player) -> None:
+        """Save or update a player's data."""
+        cursor = self.conn.cursor()
+        now = datetime.now().isoformat()
+
+        player_data = player.to_dict()
+
+        cursor.execute(
+            "UPDATE players SET data = ?, last_seen = ? WHERE player_id = ?",
+            (json.dumps(player_data), now, player.user_id)
+        )
+        self.conn.commit()
+
+    def get_player_by_name(self, username: str) -> Optional[Dict[str, Any]]:
+        """Retrieve a player by their username."""
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM players WHERE username = ?", (username,))
+        row = cursor.fetchone()
+        
+        if row:
+            return {
+                'player_id': row[0],
+                'username': row[1],
+                'data': json.loads(row[2]),
+                'last_seen': row[3],
+                'created_at': row[4]
+            }
+        return None 

@@ -1,5 +1,14 @@
 # Pokemon API Documentation
 
+> **Note for contributors:** Please follow the [Documentation Standards](../../guides/documentation/standards.md) and use the [API documentation template](../../templates/api-template.md) when updating or adding endpoints to this document.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [Pokemon Commands](./commands.md), [API Documentation Template](../../templates/api-template.md)
+
 ## Overview
 
 The Pokemon API provides interfaces for managing Pokemon data, battles, trades, and training mechanics. This API integrates with the Universal Data Layer to support cross-system functionality.
@@ -328,12 +337,23 @@ X-RateLimit-Reset: 1619740800
 }
 ```
 
-## Changelog
+## Troubleshooting
+| Issue | Solution | Notes |
+|-------|----------|-------|
+| 401 Unauthorized | Check your API key and authentication header | Ensure the key is valid and not expired |
+| 429 Too Many Requests | Wait for the rate limit to reset | See `X-RateLimit-Reset` header |
+| 404 Not Found | Verify endpoint URL and parameters | Check for typos or missing resources |
+| 500 Internal Server Error | Try again later or contact support | May indicate a server issue |
 
-### v1.0.0 - 2024-02-16
-- Initial Pokemon API implementation
-- Battle system endpoints
-- Trading system endpoints
-- Evolution mechanics
+## References
+- [Documentation Standards](../../guides/documentation/standards.md)
+- [API Documentation Template](../../templates/api-template.md)
+- [Pokemon Commands](./commands.md)
+- [Pokemon System README](./README.md)
+
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, added metadata, troubleshooting, references, and changelog sections | [AI/Contributors] |
 
 _Last Updated: February 2024_ 

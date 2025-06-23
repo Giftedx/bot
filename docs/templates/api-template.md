@@ -1,5 +1,7 @@
 # API Documentation Template
 
+> **Note for contributors:** Please follow the [Documentation Standards](../guides/documentation/standards.md) when using this template.
+
 ## Overview
 
 Brief description of the API's purpose and scope.

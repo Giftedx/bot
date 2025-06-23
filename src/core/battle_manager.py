@@ -40,7 +40,7 @@ class BattleReward:
     special_rewards: Optional[Dict[str, Any]] = None
 
 
-class BattleManager:
+class GenericBattleStateManager:
     """Manages all battle types and interactions."""
 
     def __init__(self) -> None:

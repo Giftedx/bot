@@ -3,6 +3,8 @@ import logging
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 from datetime import datetime
+import os
+import json
 
 from .enhanced_data_manager import EnhancedDataManager
 from scripts.data.enhanced_fetcher import EnhancedFetcher
@@ -28,6 +30,25 @@ class OSRSDataManager:
         # Data containers
         self.data: Dict[str, Any] = {}
         self.last_update: Optional[datetime] = None
+        
+        # Load data from files
+        self.load_data()
+        
+    def load_data(self):
+        """Load data from files"""
+        try:
+            with open(os.path.join(self.cache_dir, 'quests.json'), 'r') as f:
+                self.data['quests'] = json.load(f)
+        except FileNotFoundError:
+            self.data['quests'] = {}
+            logger.warning("quests.json not found.")
+
+        try:
+            with open(os.path.join(self.cache_dir, 'achievements.json'), 'r') as f:
+                self.data['achievements'] = json.load(f)
+        except FileNotFoundError:
+            self.data['achievements'] = []
+            logger.warning("achievements.json not found.")
         
     async def initialize(self):
         """Initialize the data manager and fetch all data"""
@@ -163,6 +184,10 @@ class OSRSDataManager:
             None
         )
         
+    def get_all_quests(self) -> Dict[str, Any]:
+        """Get all quests."""
+        return self.data.get('quests', {})
+
     def get_quest_info(self, quest_name: str) -> Optional[Dict[str, Any]]:
         """Get detailed information about a quest"""
         quests = self.data.get('quests', {})
@@ -302,6 +327,18 @@ class OSRSDataManager:
         if skill_info:
             return skill_info.get('training_methods')
         return None
+
+    def get_all_achievements(self) -> List[Dict[str, Any]]:
+        """Get all achievements."""
+        return self.data.get('achievements', [])
+
+    def get_achievement(self, achievement_id: int) -> Optional[Dict[str, Any]]:
+        """Get a specific achievement by its ID."""
+        achievements = self.get_all_achievements()
+        return next(
+            (ach for ach in achievements if ach.get('id') == achievement_id),
+            None
+        )
 
 if __name__ == "__main__":
     async def main():

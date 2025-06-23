@@ -3,12 +3,15 @@ import asyncio
 import logging
 from typing import Optional, Dict, Any, Set
 from pathlib import Path
+import os
 
 import discord
 from discord.ext import commands
 
-from ..core.config import Config
+from ..core.config import ConfigManager
+from ..core.database import DatabaseManager
 from ..core.metrics import MetricsRegistry
+from ..core.battle_system import BattleManager as BattleManager
 from ..utils.formatting import format_error
 
 logger = logging.getLogger(__name__)
@@ -18,7 +21,7 @@ class BaseBot(commands.Bot):
     
     def __init__(
         self,
-        config: Config,
+        config_manager: ConfigManager,
         command_prefix: str = "!",
         description: Optional[str] = None,
         **kwargs: Any
@@ -37,10 +40,13 @@ class BaseBot(commands.Bot):
             **kwargs
         )
 
-        self.config = config
+        self.config_manager = config_manager
+        self.db_manager = DatabaseManager(db_path=self.config_manager.get_config('database.path'))
+        self.battle_manager = BattleManager()
         self.metrics = MetricsRegistry()
         self._ready = asyncio.Event()
         self._cleanup_tasks: Set[asyncio.Task] = set()
+        self.extensions_path = Path("src/bot/cogs")
 
     async def setup_hook(self) -> None:
         """Set up the bot before it starts running."""
@@ -58,14 +64,15 @@ class BaseBot(commands.Bot):
 
     async def load_extensions(self) -> None:
         """Load all extensions from the cogs directory."""
-        cogs_dir = Path(__file__).parent.parent / "cogs"
+        cogs_dir = self.extensions_path
         
-        for extension in self.config.ENABLED_EXTENSIONS:
-            try:
-                await self.load_extension(f"cogs.{extension}")
-                logger.info(f"Loaded extension: {extension}")
-            except Exception as e:
-                logger.error(f"Failed to load extension {extension}: {e}")
+        for f in cogs_dir.iterdir():
+            if f.is_file() and f.suffix == ".py" and f.name != "__init__.py":
+                try:
+                    await self.load_extension(f"src.bot.cogs.{f.stem}")
+                    logger.info(f"Loaded extension: {f.stem}")
+                except Exception as e:
+                    logger.error(f"Failed to load extension {f.stem}: {e}", exc_info=True)
 
     def _setup_metrics_tasks(self) -> None:
         """Set up background tasks for metrics collection."""

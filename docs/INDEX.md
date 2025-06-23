@@ -2,10 +2,36 @@
 
 This index lists all documents found in the `docs/` and `notes/` directories. Each document's status will be updated as the audit and restructuring progresses.
 
-## Documents in /docs
+## Current Status (As of recent refactor)
+
+The project has undergone a significant refactoring to unify the bot architecture and implement the core pet battling system.
+
+- **Unified Bot Core:** The old monolithic `OSRSBot` and various self-bots have been removed. The bot now runs on a single, cog-based `BaseBot` architecture, with `src/main.py` as the entry point.
+- **Functional Pet Battle System:** The `!pets` and `!battle` commands are now fully functional. This was achieved by:
+    - Consolidating a canonical `Pet` model in `src/core/models/pet.py`.
+    - Refactoring the `DatabaseManager` to use this canonical model.
+    - Resolving conflicts and integrating the `BattleManager`.
+- **Updated README:** The root `README.md` has been updated with current setup and execution instructions.
+
+## Key Architectural Files
+
+- **`README.md`**: **Audited & Current** - Provides up-to-date instructions for setup and running the bot.
+- **`docs/project/ANALYSIS.md`**: **Audited & In Progress** - The guiding document for the current refactoring effort. The highest priority items are being addressed.
+- **`src/main.py`**: The main entry point for the application.
+- **`src/bot/base_bot.py`**: The core `BaseBot` class.
+- **`src/core/models/pet.py`**: **New File** - The canonical data model for all Pets.
+- **`src/core/database.py`**: **Refactored** - Handles all database interactions, now using the canonical `Pet` model.
+- **`src/core/battle_system.py`**: **Refactored** - Contains the `BattleManager` and core battle logic.
+- **`src/bot/cogs/pet_commands.py`**: **New File** - Implements the `!pets` and `!battle` commands.
+
+---
+
+## Full Documentation Audit
+
+### Documents in `/docs`
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) - To Be Audited
 - [guides/documentation/README.md](./guides/documentation/README.md) - To Be Audited
-- [guides/documentation/standards.md](./guides/documentation/standards.md) - To Be Audited
+- [guides/documentation/standards.md](./guides/documentation/standards.md) - Audited & Current (reviewed for alignment with current architecture and documentation needs)
 - [guides/README.md](./guides/README.md) - To Be Audited
 - [index.html](./index.html) - To Be Audited
 - [commands/README.md](./commands/README.md) - To Be Audited
@@ -24,20 +50,20 @@ This index lists all documents found in the `docs/` and `notes/` directories. Ea
 - [systems/pokemon/trading-system.md](./systems/pokemon/trading-system.md) - To Be Audited
 - [systems/pokemon/battle-system.md](./systems/pokemon/battle-system.md) - To Be Audited
 - [systems/pokemon/evolution-system.md](./systems/pokemon/evolution-system.md) - To Be Audited
-- [systems/pokemon/api.md](./systems/pokemon/api.md) - To Be Audited
-- [systems/pokemon/README.md](./systems/pokemon/README.md) - To Be Audited
-- [systems/osrs/commands.md](./systems/osrs/commands.md) - To Be Audited
-- [systems/osrs/api.md](./systems/osrs/api.md) - To Be Audited
-- [systems/osrs/README.md](./systems/osrs/README.md) - To Be Audited
-- [systems/economy/README.md](./systems/economy/README.md) - To Be Audited
+- [systems/pokemon/api.md](./systems/pokemon/api.md) - Audited & Updated (2024-06-07)
+- [systems/pokemon/README.md](./systems/pokemon/README.md) - Audited & Updated (2024-06-07)
+- [systems/osrs/commands.md](./systems/osrs/commands.md) - Audited & Updated (2024-06-07)
+- [systems/osrs/api.md](./systems/osrs/api.md) - Audited & Updated (2024-06-07)
+- [systems/osrs/README.md](./systems/osrs/README.md) - Audited & Updated (2024-06-07)
+- [systems/economy/README.md](./systems/economy/README.md) - Audited & Updated (2024-06-07)
 - [systems/plex/README.md](./systems/plex/README.md) - Audited - Largely Current, aligns with src/app/commands/plex.py and app model. Describes intended functionality.
-- [systems/README.md](./systems/README.md) - To Be Audited
+- [systems/README.md](./systems/README.md) - **Updated: Cross-System Integration Roadmap Added**
 - [README-plex.md](./README-plex.md) - Audited - Outdated (describes selfbot, not current application).
-- [templates/DOCUMENTATION_TEMPLATE.md](./templates/DOCUMENTATION_TEMPLATE.md) - To Be Audited
-- [templates/api-template.md](./templates/api-template.md) - To Be Audited
-- [templates/README-template.md](./templates/README-template.md) - To Be Audited
+- [templates/DOCUMENTATION_TEMPLATE.md](./templates/DOCUMENTATION_TEMPLATE.md) - Audited & Current (2024-06-07)
+- [templates/api-template.md](./templates/api-template.md) - Audited & Current (2024-06-07)
+- [templates/README-template.md](./templates/README-template.md) - Audited & Current (2024-06-07)
 - [templates/README.md](./templates/README.md) - To Be Audited
-- [templates/configuration-guide-template.md](./templates/configuration-guide-template.md) - To Be Audited
+- [templates/configuration-guide-template.md](./templates/configuration-guide-template.md) - Audited & Current (2024-06-07)
 - [overview.md](./architecture/overview.md) - Migrated from ./ARCHITECTURE.md, Appears Current (describes modern multi-integration Discord app)
 - [configuration/configuration-guide.md](./configuration/configuration-guide.md) - To Be Audited
 - [configuration/README.md](./configuration/README.md) - To Be Audited
@@ -45,7 +71,6 @@ This index lists all documents found in the `docs/` and `notes/` directories. Ea
 - [architecture/overview.md](./architecture/overview.md) - To Be Audited
 - [system_overview_Feb2024.md](./architecture/system_overview_Feb2024.md) - New file (preserved from existing docs/architecture/overview.md), To Be Audited
 - [quickstart.md](./quickstart.md) - To Be Audited
-- [project/ANALYSIS.md](./project/ANALYSIS.md) - To Be Audited
 - [project/COMMAND_MIGRATION.md](./project/COMMAND_MIGRATION.md) - Audited - Appears to be the active tracking document for command migration. Plex section is In Progress.
 - [project/SLASH_MIGRATION.md](./project/SLASH_MIGRATION.md) - Audited - Active tracking for slash command migration. Plex section is In Progress.
 - [project/DOCUMENTATION_AUDIT.md](./project/DOCUMENTATION_AUDIT.md) - To Be Audited
@@ -58,12 +83,17 @@ This index lists all documents found in the `docs/` and `notes/` directories. Ea
 - [DOCUMENTATION_STRUCTURE.md](./DOCUMENTATION_STRUCTURE.md) - To Be Audited
 - [development/setup.md](./development/setup.md) - To Be Audited
 - [development/development-guide.md](./development/development-guide.md) - To Be Audited
-- [README.md](./README.md) - Audited - Partially Outdated (describes older Plex bot model, see ARCHITECTURE.md for newer app model)
+- [README.md](./README.md) - **Audited & Current**
 - [external-repos.md](./external-repos.md) - To Be Audited
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Audited - Potentially Outdated (refers to 'Discord Plex Player', may need update for broader app scope)
 - [LICENSE](./LICENSE) - To Be Audited
+- [systems/entity/README.md](./systems/entity/README.md) - Draft - New (2024-06-07)
+- [systems/inventory/README.md](./systems/inventory/README.md) - Draft - New (2024-06-07)
+- [systems/combat/README.md](./systems/combat/README.md) - Draft - New (2024-06-07)
+- [systems/achievement/README.md](./systems/achievement/README.md) - Draft - New (2024-06-07)
+- [systems/integration_guide.md](./systems/integration_guide.md) - **Planned: Will track technical integration details and progress**
 
-## Documents in /notes
+### Documents in /notes
 - [../notes/technical-implementation.py](../notes/technical-implementation.py) - To Be Audited
 - [../notes/implementation_plan.md](../notes/implementation_plan.md) - To Be Audited
 - [diagrams/system-architecture(1).mermaid](./architecture/diagrams/system-architecture(1).mermaid) - Migrated from ../notes/system-architecture(1).mermaid, To Be Audited
@@ -83,7 +113,7 @@ This index lists all documents found in the `docs/` and `notes/` directories. Ea
 - [diagrams/system-overview.mermaid](./architecture/diagrams/system-overview.mermaid) - Migrated from ../notes/system-overview.mermaid, To Be Audited
 - [../notes/package_configuration.md](../notes/package_configuration.md) - To Be Audited
 - [diagrams/system-architecture.mermaid](./architecture/diagrams/system-architecture.mermaid) - Migrated from ../notes/system-architecture.mermaid, To Be Audited
-- [../notes/game_systems_integration_todo.md](../notes/game_systems_integration_todo.md) - To Be Audited
+- [../notes/game_systems_integration_todo.md](../notes/game_systems_integration_todo.md) - **Migrated & Integrated (see docs/systems/README.md)**
 - [../notes/adaptive_quality_test_plan.md](../notes/adaptive_quality_test_plan.md) - To Be Audited
 - [diagrams/optimal-stack.mermaid](./architecture/diagrams/optimal-stack.mermaid) - Migrated from ../notes/optimal-stack.mermaid, To Be Audited
 - [../notes/security_concerns.md](../notes/security_concerns.md) - To Be Audited

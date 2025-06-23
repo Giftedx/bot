@@ -1,5 +1,7 @@
 # Command Reference
 
+> **Note for contributors:** Please follow the [Documentation Standards](../guides/documentation/standards.md) and use the [documentation templates](../templates/) when updating or adding commands to this reference.
+
 ## Table of Contents
 1. [General Commands](#general-commands)
 2. [Media Commands](#media-commands)
@@ -8,6 +10,12 @@
 5. [Playlist Commands](#playlist-commands)
 6. [Voice Channel Commands](#voice-channel-commands)
 7. [Admin Commands](#admin-commands)
+8. [OSRS Combat Commands](#osrs-combat-commands)
+9. [OSRS Quest Commands](#osrs-quest-commands)
+10. [OSRS Trading Commands](#osrs-trading-commands)
+11. [OSRS Grand Exchange](#osrs-grand-exchange)
+12. [OSRS Progression Commands](#osrs-progression-commands)
+13. [Pokemon Commands](#pokemon-commands)
 
 ## General Commands
 
@@ -133,23 +141,83 @@
 
 ## Admin Commands
 
-### Server Management
+> **Note:** All admin commands are now available as both classic (prefix) and slash commands. Use `/config`, `/cmd`, `/welcome`, `/autorole`, `/backup`, `/restore` or their classic equivalents. For full details, see the admin documentation.
+
+### Configuration
+- `/config prefix <new_prefix>` or `!config prefix <new_prefix>` — Change the bot's prefix for this server
+
+### Custom Commands
+- `/cmd add <name> <response>` or `!cmd add <name> <response>` — Add a custom command
+- `/cmd remove <name>` or `!cmd remove <name>` — Remove a custom command
+- `/cmd list` or `!cmd list` — List all custom commands
+
+### Welcome & Autorole
+- `/welcome #channel <message>` or `!welcome #channel <message>` — Set up or view the welcome message
+- `/autorole @role` or `!autorole @role` — Set up or view the autorole for new members
+
+### Backup & Restore
+- `/backup` or `!backup` — Create a backup of server settings
+- `/restore` or `!restore` — Restore server settings from a backup (attach backup file in classic mode)
+
+## OSRS Combat Commands
 
 | Command | Description | Usage | Example |
 |---------|-------------|--------|---------|
-| `!setup` | Initial server setup | `!setup` | `!setup` |
-| `!permissions` | Manage permissions | `!permissions <role> <command>` | `!permissions DJ play` |
-| `!blacklist` | Manage blacklist | `!blacklist <add/remove> <user>` | `!blacklist add @User` |
-| `!config` | Server configuration | `!config <setting> <value>` | `!config prefix !` |
+| `/fight` | Preview and start a fight with a monster | `/fight <monster_name>` | `/fight Goblin` |
+| `/attack` | Attack the monster you are fighting | `/attack` | `/attack` |
+| `/flee` | Attempt to flee from combat | `/flee` | `/flee` |
 
-### Bot Management
+## OSRS Quest Commands
 
 | Command | Description | Usage | Example |
 |---------|-------------|--------|---------|
-| `!restart` | Restart bot | `!restart` | `!restart` |
-| `!update` | Update bot | `!update` | `!update` |
-| `!maintenance` | Toggle maintenance mode | `!maintenance` | `!maintenance` |
-| `!logs` | View bot logs | `!logs [lines]` | `!logs 50` |
+| `/quests` | View your quest list. | `/quests [filter] [page]` | `/quests in_progress 2` |
+| `/quest_info` | Get information about a specific quest. | `/quest_info <quest_name>` | `/quest_info "Cook's Assistant"` |
+
+## OSRS Trading Commands
+
+| Command | Description | Usage | Example |
+|---------|-------------|--------|---------|
+| `/trade offer` | Offer an item to another player. | `/trade offer <recipient> <item_name> [quantity]` | `/trade offer @User "Tuna" 10` |
+| `/trade accept` | Accept a trade offer. | `/trade accept <trade_id>` | `/trade accept 123` |
+| `/trade decline` | Decline a trade offer. | `/trade decline <trade_id>` | `/trade decline 123` |
+| `/trade cancel` | Cancel a trade offer you sent. | `/trade cancel <trade_id>` | `/trade cancel 123` |
+| `/trade list` | List your pending trades. | `/trade list` | `/trade list` |
+
+## OSRS Grand Exchange
+
+| Command | Description | Usage | Example |
+|---------|-------------|--------|---------|
+| `/ge buy` | Place a buy offer. | `/ge buy <item> <quantity> <price>` | `/ge buy "Lobster" 100 250` |
+| `/ge sell` | Place a sell offer. | `/ge sell <item> <quantity> <price>` | `/ge sell "Yew logs" 500 300` |
+| `/ge status` | Check your offers. | `/ge status` | `/ge status` |
+| `/ge cancel` | Cancel an offer. | `/ge cancel <offer_id>` | `/ge cancel 456` |
+| `/ge price` | Check item price. | `/ge price <item>` | `/ge price "Cannonball"` |
+| `/ge history` | View item price history. | `/ge history <item>` | `/ge history "Rune platebody"` |
+
+## OSRS Progression Commands
+
+| Command | Description | Usage | Example |
+|---------|-------------|--------|---------|
+| `/achievements` | View your achievements. | `/achievements [category] [page]` | `/achievements Combat 1` |
+| `/collection_log` | View your collection log. | `/collection_log [category] [page]` | `/collection_log Bosses 2` |
+
+## Pokemon Commands
+
+> **Note:** All main Pokemon commands are now available as both classic (prefix) and slash commands. See [Pokemon System Commands](../systems/pokemon/commands.md) for full details and usage examples.
+
+- `/pokemon catch <name>` or `!pokemon catch <name>` — Catch a wild Pokemon
+- `/pokemon list` or `!pokemon list` — View your Pokemon collection
+- `/pokemon info <name>` or `!pokemon info <name>` — View details about a specific Pokemon
+- `/pokemon release <name>` or `!pokemon release <name>` — Release a Pokemon from your collection
+- `/pokemon battle @user` or `!pokemon battle @user` — Challenge another trainer to a battle
+- `/pokemon accept` or `!pokemon accept` — Accept a pending battle challenge
+- `/pokemon move <name>` or `!pokemon move <name>` — Use a move in battle
+- `/pokemon switch <name>` or `!pokemon switch <name>` — Switch your active Pokemon in battle
+- `/pokemon train <name>` or `!pokemon train <name>` — Train your Pokemon
+- `/pokemon evolve <name>` or `!pokemon evolve <name>` — Evolve your Pokemon if eligible
+- `/pokemon stats <name>` or `!pokemon stats <name>` — View your Pokemon's training progress
+- `/pokemon moves <name>` or `!pokemon moves <name>` — View or manage your Pokemon's moves
 
 ## Command Syntax
 

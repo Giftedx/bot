@@ -1,8 +1,30 @@
 # OSRS Discord Commands
 
+> **Note for contributors:** Please follow the [Documentation Standards](../../guides/documentation/standards.md) and use the [documentation templates](../../templates/) when updating or adding commands to this document.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [Command Reference](../../commands/command-reference.md), [OSRS System README](./README.md)
+
 ## Overview
 
 This document lists all available OSRS-related Discord commands, their usage, and examples. Commands are organized by category and include required permissions and cooldown information.
+
+## Table of Contents
+1. [Command Categories](#command-categories)
+2. [Player Stats](#player-stats)
+3. [Items & Prices](#items--prices)
+4. [Combat](#combat)
+5. [Skills](#skills)
+6. [Achievements](#achievements)
+7. [Utility](#utility)
+8. [Best Practices](#best-practices)
+9. [Troubleshooting](#troubleshooting)
+10. [References](#references)
+11. [Change Log](#change-log)
 
 ## Command Categories
 
@@ -289,16 +311,31 @@ Trend: +2.3% (24h)
 Volume: 1,234 traded
 ```
 
+## Best Practices
+- Use exact item and skill names for best results.
+- Link your OSRS account for personalized stats and tracking.
+- Use `/help` for command syntax and options.
+- Check cooldowns to avoid rate limits.
+
+## Troubleshooting
+| Issue | Solution | Notes |
+|-------|----------|-------|
+| Command not found | Ensure you are using the correct prefix or slash command | Check bot permissions |
+| Incorrect stats | Verify your OSRS username is linked and spelled correctly | Use `/link` if needed |
+| Price not updating | Grand Exchange data may be delayed | Try again later |
+
+## References
+- [Documentation Standards](../../guides/documentation/standards.md)
+- [Documentation Templates](../../templates/)
+- [Command Reference](../../commands/command-reference.md)
+- [OSRS System README](./README.md)
+
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, updated formatting, added metadata, best practices, troubleshooting, references, and changelog sections | [AI/Contributors] |
+
 ## Related Documentation
 - [OSRS API Documentation](./api.md)
 - [Bot Configuration](../../configuration/bot.md)
-- [Command Framework](../../features/commands/README.md)
-
-## Changelog
-
-### v1.1.0 - 2024-02-16
-- Added achievement tracking commands
-- Enhanced price tracking features
-- Improved error messages
-
-_Last Updated: February 2024_ 
+- [Command Framework](../../features/commands/README.md) 

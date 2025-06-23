@@ -1,5 +1,7 @@
 # [Document Title]
 
+> **Note for contributors:** Please follow the [Documentation Standards](../guides/documentation/standards.md) when using this template.
+
 ## Overview
 [A brief 2-3 sentence description of what this document covers]
 

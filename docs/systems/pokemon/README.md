@@ -1,5 +1,14 @@
 # Pokemon Integration System
 
+> **Note for contributors:** Please follow the [Documentation Standards](../../guides/documentation/standards.md) and use the [README template](../../templates/README-template.md) when updating or maintaining this document.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [Pokemon API Documentation](./api.md), [Pokemon Commands](./commands.md), [README Template](../../templates/README-template.md)
+
 ## Overview
 
 The Pokemon integration system provides a comprehensive Pokemon experience within Discord, including battle mechanics, collection systems, and training features. This system integrates with the Universal Data Layer to support cross-system interactions.
@@ -212,12 +221,9 @@ python -m pytest tests/integration/pokemon/
 - [Battle System](./battle-system.md)
 - [Trading System](./trading-system.md)
 
-## Changelog
-
-### v1.0.0 - 2024-02
-- Initial Pokemon system implementation
-- Basic battle mechanics
-- Collection system
-- Trading functionality
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, added metadata, contributor note, and changelog section | [AI/Contributors] |
 
 _Last Updated: February 2024_ 

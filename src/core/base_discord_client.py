@@ -1,3 +1,16 @@
+"""Base Discord client implementation for unified bot architecture.
+
+This module defines the BaseDiscordClient, which provides:
+- Unified cog loading
+- Integration with core services (command processor, health monitor, metrics)
+- Standardized bot initialization and shutdown
+
+Typical usage example:
+    from src.core.base_discord_client import BaseDiscordClient
+    bot = BaseDiscordClient(config)
+    bot.run()
+"""
+
 import logging
 
 import discord
@@ -22,9 +35,20 @@ COGS = [
 
 
 class BaseDiscordClient(commands.Bot):
-    """Base Discord client with cog loading and core services."""
+    """Base Discord client with cog loading and core services.
+    
+    Extends commands.Bot to provide:
+    - Automated cog loading
+    - Integration with command processor, health monitor, and metrics
+    - Standardized setup and shutdown procedures
+    """
 
     def __init__(self, config: BotConfig):
+        """Initialize the Discord client and core services.
+        
+        Args:
+            config: BotConfig instance with bot configuration
+        """
         intents = discord.Intents.default()
         intents.message_content = True
         intents.voice_states = True
@@ -43,7 +67,13 @@ class BaseDiscordClient(commands.Bot):
         self._metrics = MetricsManager()
 
     async def setup_hook(self) -> None:
-        """Initialize bot services and load cogs"""
+        """Initialize bot services and load cogs.
+        
+        Loads all cogs listed in COGS and starts core services.
+        
+        Raises:
+            Exception: If initialization fails
+        """
         try:
             # Load all cogs
             for cog in COGS:
@@ -62,7 +92,10 @@ class BaseDiscordClient(commands.Bot):
             raise
 
     async def close(self) -> None:
-        """Clean shutdown of bot services"""
+        """Clean shutdown of bot services.
+        
+        Stops metrics and health monitor services before closing the bot.
+        """
         try:
             await self._metrics.stop()
             await self._health_monitor.stop()
@@ -70,5 +103,9 @@ class BaseDiscordClient(commands.Bot):
             await super().close()
 
     async def process_commands(self, message: discord.Message) -> None:
-        """Process commands through command processor"""
+        """Process commands through command processor.
+        
+        Args:
+            message: Discord message to process
+        """
         await self.command_processor.process_message(message)

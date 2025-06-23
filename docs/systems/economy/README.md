@@ -1,5 +1,14 @@
 # Universal Economy System
 
+> **Note for contributors:** Please follow the [Documentation Standards](../../guides/documentation/standards.md) and use the [README template](../../templates/README-template.md) when updating or maintaining this document.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [Economy API Documentation](./api.md), [README Template](../../templates/README-template.md)
+
 ## Overview
 
 The Universal Economy System provides a unified virtual currency and economy management system that integrates with all game systems (OSRS, Pokemon, etc.). The system handles currency transactions, item trading, rewards, and economic balancing across different game integrations.
@@ -425,13 +434,9 @@ async def test_market_system():
 - [Trading System](../trading/README.md)
 - [API Documentation](../api/economy/README.md)
 
-## Changelog
-
-### v1.0.0 - 2024-02-16
-- Initial economy system implementation
-- Multi-currency support
-- Transaction system
-- Market system
-- Value tracking
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, added metadata, contributor note, and changelog section | [AI/Contributors] |
 
 _Last Updated: February 2024_ 

@@ -4,9 +4,8 @@ import logging
 import sys
 from pathlib import Path
 
-# from src.core.config import Config # Removed Config import
-from src.core.config import ConfigManager # Added ConfigManager import
-from src.bot.osrs_bot import OSRSBot
+from src.core.config import ConfigManager
+from src.bot.base_bot import BaseBot
 
 def setup_logging() -> None:
     """Set up logging configuration."""
@@ -31,25 +30,30 @@ async def main() -> None:
         # Set up logging
         setup_logging()
         logger = logging.getLogger(__name__)
-        logger.info("Starting OSRS Discord Game...")
+        logger.info("Starting Discord Bot...")
         
-        # ConfigManager is now instantiated within OSRSBot directly
-        # # Load config
-        # config = Config() # Old config loading removed
+        # Load config
+        config_manager = ConfigManager()
         
         # Initialize bot
-        bot = OSRSBot() # OSRSBot now instantiates its own ConfigManager
-        
-        # Start display update task
-        asyncio.create_task(bot.start_display_updates())
+        bot = BaseBot(config_manager=config_manager)
         
         # Run the bot
-        await bot.start() # OSRSBot's start method now fetches its own token
+        discord_token = config_manager.get_secret("discord.token")
+        if not discord_token:
+            logger.error(
+                "Discord token not found. "
+                "Please set DISCORD_TOKEN environment variable "
+                "or add it to config/secrets.yaml"
+            )
+            sys.exit(1)
+            
+        await bot.start(discord_token)
         
     except KeyboardInterrupt:
         logger.info("Shutting down...")
     except Exception as e:
-        logger.error(f"Fatal error: {e}")
+        logger.error(f"Fatal error: {e}", exc_info=True)
         sys.exit(1)
 
 if __name__ == "__main__":

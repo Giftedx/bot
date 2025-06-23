@@ -7,7 +7,7 @@ from enum import Enum
 from datetime import datetime
 
 from src.core.battle_manager import BattleState, BattleType
-from .pet_system import Pet, PetOrigin, PetAbility
+from src.core.models.pet import Pet, PetOrigin, PetAbility, StatusEffect
 from ..features.pets.event_system import EventManager, EventType, GameEvent
 
 T = TypeVar("T", bound="BaseBattleSystem")

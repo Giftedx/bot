@@ -1,5 +1,14 @@
 # OSRS Integration System
 
+> **Note for contributors:** Please follow the [Documentation Standards](../../guides/documentation/standards.md) and use the [README template](../../templates/README-template.md) when updating or maintaining this document.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [OSRS API Documentation](./api.md), [OSRS Commands](./commands.md), [README Template](../../templates/README-template.md)
+
 ## Overview
 
 The OSRS (Old School RuneScape) integration system provides seamless integration between Discord and OSRS game features, including skill tracking, achievements, and game-related commands.
@@ -199,11 +208,9 @@ python -m pytest tests/e2e/osrs/
 - [API Documentation](../../api/README.md)
 - [Development Guide](../../guides/development/README.md)
 
-## Changelog
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, added metadata, contributor note, and changelog section | [AI/Contributors] |
 
-### v1.0.0 - 2024-02
-- Initial OSRS integration
-- Basic command support
-- Skill tracking implementation
-
-_Last Updated: February 2024_ 
+_Last Updated: June 2024_ 

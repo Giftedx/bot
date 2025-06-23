@@ -1,184 +1,77 @@
-# OSRS Discord Activity Server
+# Discord Bot Project
 
-A server-side implementation of Old School RuneScape that runs entirely on the backend and displays through Discord's activity feature. All game logic, calculations, and state management happen server-side, with Discord serving purely as the display and input interface.
+This repository contains a feature-rich Discord bot built with Python.
 
 ## Architecture Overview
 
-- **Server-Side Game Engine**:
-  - Complete OSRS game logic implementation
-  - State management and persistence
-  - Real-time game calculations
-  - Player session handling
-  - Multiplayer coordination
-  
+- **Python Backend**:
+  - Built using `discord.py` for Discord integration.
+  - Cog-based architecture for modular and extensible commands.
+  - SQLite for data persistence.
+  - Features a pet battling game.
+
 - **Discord Integration**:
-  - Activity iframe display
-  - Text channel fallback mode
-  - Command handling
-  - Real-time state updates
-  - Voice channel integration
+  - Command handling via `!` prefix.
+  - Rich embed messages for clean display.
 
-## Display Methods
+## Setup and Running the Bot
 
-1. **Discord Activity Mode**:
-   - Runs in Discord's built-in activity iframe
-   - Real-time WebSocket updates
-   - Visual game rendering
-   - Integrated with voice channels
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
 
-2. **Text Channel Fallback**:
-   - ASCII-style representation
-   - Command-based interaction
-   - Full feature parity with visual mode
-   - Works in any Discord channel
+2.  **Install dependencies:**
+    This project uses Poetry for dependency management. If you don't have Poetry installed, you can find installation instructions [here](https://python-poetry.org/docs/#installation).
 
-## Server Features
+    Once you have Poetry, install the dependencies from `pyproject.toml`:
+    ```bash
+    poetry install
+    ```
 
-- **Game Logic**:
-  - Exact OSRS formulas and mechanics
-  - Complete combat system
-  - All skills and training methods
-  - Inventory and equipment management
-  - NPC interactions
-  - World map and navigation
+3.  **Configuration:**
+    -   Create a `config/secrets.yaml` file.
+    -   Edit `config/secrets.yaml` and add your Discord bot token:
+        ```yaml
+        discord:
+          token: YOUR_BOT_TOKEN_HERE
+        ```
+    -   Alternatively, you can set the `DISCORD_TOKEN` environment variable.
 
-- **Multiplayer**:
-  - Synchronized game state
-  - Player interactions
-  - Trading system
-  - Chat functionality
-  - Party system
+4.  **Run the bot:**
+    ```bash
+    poetry run python -m src.main
+    ```
+    Or, if you have activated the virtual environment with `poetry shell`:
+    ```bash
+    python -m src.main
+    ```
 
-- **Data Management**:
-  - Persistent player data
-  - State synchronization
-  - Session management
-  - Secure data storage
+## Features
 
-## Server Setup
+### OSRS Module
+A full-featured Old School RuneScape RPG experience right in your Discord server.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/osrs-discord-server.git
-cd osrs-discord-server
-```
+- **Character System**: Create your own character with `/create`, view your skills with `/stats`, and see your inventory with `/inventory` and `/bank`.
+- **Combat**: Fight a variety of monsters using the `/fight`, `/attack`, and `/flee` commands. Gain XP and get drops!
+- **Quests**: Embark on quests with `/quests` and check your progress with `/quest_info`.
+- **Player Trading**: Trade items securely with other players using the `/trade` command group.
+- **Progression**: Track your `/achievements` and fill up your `/collection_log` with unique items.
+- **Grand Exchange (WIP)**: A server-wide marketplace to buy and sell items is under construction. Placeholder commands (`/ge`) are available.
 
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Configure Discord Application:
-   - Create application at https://discord.com/developers/applications
-   - Enable Activity Feature
-   - Configure Activity Settings
-   - Set up OAuth2 credentials
-   - Enable required gateway intents
-
-4. Environment Configuration:
-```env
-# Discord Configuration
-DISCORD_APP_ID=your_app_id
-DISCORD_PUBLIC_KEY=your_public_key
-DISCORD_BOT_TOKEN=your_bot_token
-
-# Server Configuration
-PORT=8080
-WS_PORT=8081
-NODE_ENV=development
-
-# Database Configuration (if using)
-DATABASE_URL=your_database_url
-```
-
-5. Start the server:
-```bash
-npm run dev
-```
-
-## Technical Implementation
-
-### Server Architecture
-- Node.js/TypeScript backend
-- WebSocket server for real-time updates
-- State management system
-- Player session handling
-- Discord API integration
-
-### Game Engine
-- OSRS mechanics implementation
-- Combat calculations
-- Skill systems
-- World management
-- NPC AI
-- Pathfinding
-
-### Discord Integration
-- Activity API implementation
-- Voice channel integration
-- Command handling
-- State synchronization
-- Real-time updates
-
-## Usage in Discord
-
-1. Start an activity in a voice channel:
-   ```
-   /osrs start
-   ```
-
-2. Join the voice channel to access the activity
-
-3. Game commands:
-   ```
-   /move <x> <y>     - Move to location
-   /attack <target>   - Attack NPC/player
-   /skill <action>    - Perform skill action
-   /inventory        - Check inventory
-   /stats           - View stats
-   /help            - Show all commands
-   ```
-
-## Development
-
-### Adding New Features
-1. Implement server-side logic
-2. Add state management
-3. Create Discord command handlers
-4. Update display system
-5. Test multiplayer synchronization
-
-### Testing
-```bash
-# Run server tests
-npm test
-
-# Run integration tests
-npm run test:integration
-
-# Test Discord integration
-npm run test:discord
-```
+### Pet Battling
+- `!pets`: See a list of your pets.
+- `!battle @user`: (Under construction) Start a battle with another user.
 
 ## Contributing
 
-1. Fork the repository
-2. Create feature branch
-3. Implement server-side changes
-4. Test thoroughly
-5. Submit pull request
+1.  Fork the repository.
+2.  Create a feature branch.
+3.  Implement your changes.
+4.  Test thoroughly.
+5.  Submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- OSRS Wiki for game mechanics data
-- Discord for Activity API
-- RuneLite for inspiration
-- OSRS community for testing
-
-## Support
-
-For server issues or feature requests, please create an issue in the repository. 
+This project is licensed under the MIT License - see the LICENSE file for details. 

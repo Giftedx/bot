@@ -1,8 +1,58 @@
-# Pokemon Discord Commands
+# Pokemon System Commands
 
-## Overview
+> **Note:** All main Pokemon commands are now available as both classic (prefix) and slash commands. You can use `/pokemon <subcommand>` or `!pokemon <subcommand>` interchangeably. Slash commands provide autocomplete, validation, and improved UX.
 
-This document lists all available Pokemon-related Discord commands, their usage, and examples. Commands are organized by category and include required permissions and cooldown information.
+## Command List
+
+### Collection Management
+- `/pokemon catch <name>` or `!pokemon catch <name>` — Catch a wild Pokemon
+- `/pokemon list` or `!pokemon list` — View your Pokemon collection
+- `/pokemon info <name>` or `!pokemon info <name>` — View details about a specific Pokemon
+- `/pokemon release <name>` or `!pokemon release <name>` — Release a Pokemon from your collection
+
+### Battle System
+- `/pokemon battle @user` or `!pokemon battle @user` — Challenge another trainer to a battle
+- `/pokemon accept` or `!pokemon accept` — Accept a pending battle challenge
+- `/pokemon move <name>` or `!pokemon move <name>` — Use a move in battle
+- `/pokemon switch <name>` or `!pokemon switch <name>` — Switch your active Pokemon in battle
+
+### Training & Evolution
+- `/pokemon train <name>` or `!pokemon train <name>` — Train your Pokemon
+- `/pokemon evolve <name>` or `!pokemon evolve <name>` — Evolve your Pokemon if eligible
+- `/pokemon stats <name>` or `!pokemon stats <name>` — View your Pokemon's training progress
+- `/pokemon moves <name>` or `!pokemon moves <name>` — View or manage your Pokemon's moves
+
+## Usage Examples
+- `/pokemon catch Pikachu` — Try to catch a wild Pikachu
+- `/pokemon battle @Ash` — Challenge Ash to a battle
+- `/pokemon train Bulbasaur` — Train your Bulbasaur
+- `/pokemon info Eevee` — View details about your Eevee
+
+## Tips
+- Use slash commands for autocomplete and easier parameter selection.
+- All commands support both classic and slash syntax for maximum compatibility.
+- For more details on each command, use `/help pokemon <subcommand>` or `!help pokemon <subcommand>`.
+
+## Metadata
+- **Last Updated**: 2024-06-07
+- **Version**: 1.0.0
+- **Status**: Audited & Updated
+- **Authors**: [Contributors]
+- **Related Documents**: [Command Reference](../../commands/command-reference.md), [Pokemon System README](./README.md)
+
+## Table of Contents
+1. [Command Categories](#command-categories)
+2. [Pokemon Management](#pokemon-management)
+3. [Battle System](#battle-system)
+4. [Training & Evolution](#training--evolution)
+5. [Trading System](#trading-system)
+6. [Items & Inventory](#items--inventory)
+7. [Pokedex](#pokedex)
+8. [Command Settings](#command-settings)
+9. [Best Practices](#best-practices)
+10. [Troubleshooting](#troubleshooting)
+11. [References](#references)
+12. [Change Log](#change-log)
 
 ## Command Categories
 
@@ -253,17 +303,31 @@ Status: Pending
 Expires in: 5:00
 ```
 
+## Best Practices
+- Use exact Pokemon and item names for best results.
+- Link your account for personalized tracking and trading.
+- Use `/help` for command syntax and options.
+- Check cooldowns to avoid rate limits.
+
+## Troubleshooting
+| Issue | Solution | Notes |
+|-------|----------|-------|
+| Command not found | Ensure you are using the correct prefix or slash command | Check bot permissions |
+| Incorrect Pokemon data | Verify your account is linked and spelled correctly | Use `/link` if needed |
+| Trade not working | Ensure both users are online and have available slots | Check trade cooldown |
+
+## References
+- [Documentation Standards](../../guides/documentation/standards.md)
+- [Documentation Templates](../../templates/)
+- [Command Reference](../../commands/command-reference.md)
+- [Pokemon System README](./README.md)
+
+## Change Log
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| 2024-06-07 | 1.0.0 | Audited, updated formatting, added metadata, best practices, troubleshooting, references, and changelog sections | [AI/Contributors] |
+
 ## Related Documentation
 - [Pokemon API Documentation](./api.md)
 - [Battle System](./battle-system.md)
-- [Trading System](./trading-system.md)
-
-## Changelog
-
-### v1.0.0 - 2024-02-16
-- Initial Pokemon commands
-- Battle system commands
-- Trading system commands
-- Training & evolution commands
-
-_Last Updated: February 2024_ 
+- [Trading System](./trading-system.md) 

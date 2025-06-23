@@ -84,49 +84,6 @@ class PetStats:
         
         return int((base_power + skill_power + loyalty_bonus) * happiness_multiplier)
 
-class Pet:
-    """Represents a pet."""
-    def __init__(
-        self,
-        id: int,
-        owner_id: int,
-        name: str,
-        pet_type: str,
-        level: int = 1,
-        experience: int = 0,
-        happiness: int = 100,
-        creation_date: Optional[datetime] = None,
-        attributes: Optional[Dict] = None
-    ):
-        self.id = id
-        self.owner_id = owner_id
-        self.name = name
-        self.pet_type = pet_type
-        self.level = level
-        self.experience = experience
-        self.happiness = happiness
-        self.creation_date = creation_date or datetime.now()
-        self.attributes = attributes or {}
-
-    def add_experience(self, amount: int) -> bool:
-        """Add experience and check for level up."""
-        self.experience += amount
-        old_level = self.level
-        self.level = self._calculate_level()
-        return self.level > old_level
-
-    def _calculate_level(self) -> int:
-        """Calculate level from experience."""
-        for level in range(1, 100):
-            if self.experience < self._experience_for_level(level):
-                return level - 1
-        return 99
-
-    @staticmethod
-    def _experience_for_level(level: int) -> int:
-        """Calculate experience required for a level."""
-        return int((level ** 3) * 0.2)
-
 class PetSystem:
     """Manages the pet system."""
     

@@ -50,23 +50,15 @@ def _format_ms_to_time(ms: int) -> str:
 class PlexDiscordPlayer:
     """Handles Plex media playback through Discord's embedded player."""
     
-    # def __init__(self, bot: commands.Bot, plex_url: str, plex_token: str): # Old __init__
-    def __init__(self, bot: commands.Bot): # New __init__
+    def __init__(self, bot: commands.Bot, plex_url: str, plex_token: str):
         self.bot = bot
 
-        self.config_manager = ConfigManager(config_dir="config") # Instantiated ConfigManager
-        plex_url = self.config_manager.get('plex.url')
-        plex_token = self.config_manager.get('plex.token')
-
         if not plex_url or not plex_token:
-            logger.error("Plex URL or Token not found in configuration. PlexDiscordPlayer cannot initialize.")
-            # This will likely cause PlexServer to fail or misbehave.
-            # Consider raising an error or specific handling if PlexServer cannot init with None.
-            # For now, PlexServer will raise its own errors if URL/token are invalid/None.
-            raise ValueError("Plex URL and/or Token is not configured. PlexDiscordPlayer cannot operate.") # This remains a config guard
+            logger.error("Plex URL or Token not provided. PlexDiscordPlayer cannot initialize.")
+            raise ValueError("Plex URL and/or Token is not configured. PlexDiscordPlayer cannot operate.")
 
         try:
-            self.plex = PlexServer(plex_url, plex_token, timeout=10) # Added timeout
+            self.plex = PlexServer(plex_url, plex_token, timeout=10)
             logger.info(f"Successfully connected to Plex server for PlexDiscordPlayer: {plex_url}")
         except Unauthorized:
             logger.error(f"Plex authentication failed for PlexDiscordPlayer: Invalid token or credentials for {plex_url}.")

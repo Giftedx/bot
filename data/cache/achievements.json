@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": "First Kill",
+        "description": "Defeat your first monster.",
+        "category": "Combat",
+        "rewards": {
+            "xp": 50
+        }
+    },
+    {
+        "id": 2,
+        "name": "Goblin Slayer",
+        "description": "Defeat 10 Goblins.",
+        "category": "Combat",
+        "rewards": {
+            "xp": 100,
+            "coins": 250
+        }
+    },
+    {
+        "id": 3,
+        "name": "A New Beginning",
+        "description": "Complete the tutorial quest.",
+        "category": "Questing",
+        "rewards": {
+            "xp": 250
+        }
+    }
+] 

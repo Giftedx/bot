@@ -191,8 +191,8 @@ Brief description of the endpoint.
 
 ## Related Documents
 - [Documentation Templates](../templates/README.md)
-- [Style Guide](style-guide.md)
-- [API Standards](../../api/standards.md)
+- [Style Guide (TODO)](style-guide.md)
+- [API Standards (TODO)](../../api/standards.md)
 - [Contributing Guide](../../CONTRIBUTING.md)
 
 _Last Updated: February 2024_ 
