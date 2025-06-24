@@ -2,8 +2,10 @@ from typing import Dict, Optional, List
 import random
 from discord.ext import commands
 import discord
+from discord import app_commands
 
 from src.core.pet_system import Pet, PetManager, PetOrigin, PetRarity
+from src.core.bot import Bot
 
 
 class PokemonPetData:
@@ -98,7 +100,7 @@ class PokemonPetData:
 
 
 class PokemonPets(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Bot):
         self.bot = bot
         self.pet_manager = PetManager()
 
@@ -111,29 +113,28 @@ class PokemonPets(commands.Cog):
         else:
             return PokemonPetData.COMMON_POKEMON
 
-    @commands.command()
-    async def encounter(self, ctx, encounter_type: str = "common"):
+    @app_commands.command(name="pokemon_encounter", description="Encounter a Pokemon that might become your pet")
+    @app_commands.describe(encounter_type="The type of encounter (common, rare, legendary)")
+    async def encounter(self, interaction: discord.Interaction, encounter_type: str = "common"):
         """Encounter a Pokemon that might become your pet"""
         encounter_type = encounter_type.lower()
         if encounter_type not in ["common", "rare", "legendary"]:
-            await ctx.send("Invalid encounter type! Choose from: common, rare, legendary")
+            await interaction.response.send_message("Invalid encounter type! Choose from: common, rare, legendary", ephemeral=True)
             return
 
         pokemon_pool = self.get_pokemon_pool(encounter_type)
         pokemon_name = random.choice(list(pokemon_pool.keys()))
         pokemon_data = pokemon_pool[pokemon_name]
 
-        # Roll for catch chance
         catch_chance = self.pet_manager.roll_for_pet(PetOrigin.POKEMON)
         if catch_chance and catch_chance.value >= pokemon_data["rarity"].value:
-            # Successfully caught the Pokemon as a pet
-            pet_id = f"pokemon_{pokemon_name.lower()}_{ctx.author.id}"
+            pet_id = f"pokemon_{pokemon_name.lower()}_{interaction.user.id}"
             new_pet = Pet(
                 pet_id=pet_id,
                 name=pokemon_name,
                 origin=PetOrigin.POKEMON,
                 rarity=pokemon_data["rarity"],
-                owner_id=ctx.author.id,
+                owner_id=interaction.user.id,
                 base_stats=pokemon_data["base_stats"],
                 abilities=pokemon_data["abilities"],
                 metadata={"type": pokemon_data["type"]},
@@ -150,14 +151,15 @@ class PokemonPets(commands.Cog):
             embed.add_field(name="Rarity", value=pokemon_data["rarity"].name)
             embed.add_field(name="Abilities", value=", ".join(pokemon_data["abilities"]))
 
-            await ctx.send(embed=embed)
+            await interaction.response.send_message(embed=embed)
         else:
-            await ctx.send(f"Oh no! The {pokemon_name} got away!")
+            await interaction.response.send_message(f"Oh no! The {pokemon_name} got away!", ephemeral=True)
 
-    @commands.command()
-    async def train_pokemon(self, ctx, pokemon_name: str):
+    @app_commands.command(name="pokemon_train", description="Train a specific Pokemon pet")
+    @app_commands.describe(pokemon_name="The name of your pokemon to train.")
+    async def train_pokemon(self, interaction: discord.Interaction, pokemon_name: str):
         """Train a specific Pokemon pet"""
-        pets = self.pet_manager.get_pets_by_owner(ctx.author.id)
+        pets = self.pet_manager.get_pets_by_owner(interaction.user.id)
         pokemon_pets = [
             p
             for p in pets
@@ -165,7 +167,7 @@ class PokemonPets(commands.Cog):
         ]
 
         if not pokemon_pets:
-            await ctx.send(f"You don't have a {pokemon_name} pet!")
+            await interaction.response.send_message(f"You don't have a {pokemon_name} pet!", ephemeral=True)
             return
 
         pokemon = pokemon_pets[0]
@@ -182,16 +184,16 @@ class PokemonPets(commands.Cog):
         if training_result["leveled_up"]:
             embed.add_field(name="Level Up!", value="Your Pokemon grew stronger! 💪", inline=False)
 
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
-    @commands.command()
-    async def my_pokemon(self, ctx):
+    @app_commands.command(name="my_pokemon", description="Display all Pokemon pets owned by the user")
+    async def my_pokemon(self, interaction: discord.Interaction):
         """Display all Pokemon pets owned by the user"""
-        pets = self.pet_manager.get_pets_by_owner(ctx.author.id)
+        pets = self.pet_manager.get_pets_by_owner(interaction.user.id)
         pokemon_pets = [p for p in pets if p.origin == PetOrigin.POKEMON]
 
         if not pokemon_pets:
-            await ctx.send("You don't have any Pokemon pets yet!")
+            await interaction.response.send_message("You don't have any Pokemon pets yet!", ephemeral=True)
             return
 
         embed = discord.Embed(
@@ -209,8 +211,8 @@ class PokemonPets(commands.Cog):
             )
             embed.add_field(name=pokemon.name, value=pokemon_info, inline=False)
 
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 
-async def setup(bot):
-    await bot.add_cog(PokemonPets(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(PokemonPets(bot)) 

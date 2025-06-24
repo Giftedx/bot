@@ -1,0 +1,12 @@
+[flake8]
+max-line-length = 88
+extend-ignore =
+    # E203: Whitespace before ':' - Not compatible with black
+    E203,
+    # W503: Line break before binary operator - Not compatible with black
+    W503,
+    # E501: It is what it is
+    E501
+per-file-ignores =
+    # F401: Unused imports in __init__.py files are common and often intended
+    */__init__.py: F401 

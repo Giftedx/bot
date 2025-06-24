@@ -1,0 +1,12 @@
+site_name: Discord Bot Documentation
+nav:
+  - Home: index.md
+  - Systems:
+      - Unified Architecture: unified_systems.md
+  - Guides:
+      - Extending a Cog: extending_cog.md
+theme:
+  name: material
+markdown_extensions:
+  - admonition
+  - codehilite 

@@ -1,6 +1,6 @@
 import logging
 import asyncio
-from fastapi import FastAPI, status, Response, APIRouter, HTTPException
+from fastapi import FastAPI, status, Response, APIRouter
 from opentelemetry import trace
 from prometheus_client import Counter, Histogram, Gauge
 from src.core.redis_manager import RedisManager
@@ -65,10 +65,6 @@ async def health_check(response: Response) -> dict:
         with tracer.start_as_current_span("health_check") as span:
             redis_ok = False
             plex_ok = False
-            redis_latency = None
-            plex_latency = None
-            start_time = datetime.utcnow()
-            redis_metrics = {}
             try:
                 with tracer.start_span("redis_check"):
                     redis_ok = await redis_cb.call(check_redis)
@@ -84,8 +80,6 @@ async def health_check(response: Response) -> dict:
                 logger.error("Plex health check timed out")
             except Exception as e:
                 span.set_attribute("error", str(e))
-
-            status_value = "healthy" if redis_ok and plex_ok else "degraded"
 
             # Set degraded status code
             if not (redis_ok and plex_ok):

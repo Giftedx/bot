@@ -5,14 +5,16 @@ import logging
 from datetime import datetime, timedelta
 import random
 
+from ..lib.cog_utils import CogBase  # Unified dependencies
+
 logger = logging.getLogger(__name__)
 
 
-class EffectCommands(commands.Cog):
+class EffectCommands(CogBase):
     """Effect and buff system commands"""
 
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot, **kwargs):
+        super().__init__(bot, **kwargs)
 
     @commands.group(name="effect", aliases=["buff"], invoke_without_command=True)
     async def effect(self, ctx):
@@ -23,7 +25,7 @@ class EffectCommands(commands.Cog):
     async def effect_list(self, ctx, target: Optional[discord.Member] = None):
         """List active effects"""
         player_id = str(target.id if target else ctx.author.id)
-        effects = self.bot.db.get_active_effects(player_id)
+        effects = self.database.get_active_effects(int(player_id))
 
         if not effects:
             await ctx.send(f"No active effects for " f"{target.display_name if target else 'you'}!")
@@ -77,7 +79,7 @@ class EffectCommands(commands.Cog):
     @effect.command(name="info")
     async def effect_info(self, ctx, effect_id: int):
         """Show detailed effect information"""
-        effect = self.bot.db.get_effect(effect_id)
+        effect = self.database.get_effect(effect_id)
         if not effect:
             await ctx.send("Effect not found!")
             return
@@ -134,7 +136,7 @@ class EffectCommands(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def effect_remove(self, ctx, effect_id: int):
         """Remove an effect (Mod only)"""
-        effect = self.bot.db.get_effect(effect_id)
+        effect = self.database.get_effect(effect_id)
         if not effect:
             await ctx.send("Effect not found!")
             return
@@ -159,7 +161,7 @@ class EffectCommands(commands.Cog):
             return
 
         # Remove effect
-        self.bot.db.remove_effect(effect_id)
+        self.database.remove_effect(effect_id)
 
         await ctx.send(f"Removed {effect['type']} effect from {username}.")
 
@@ -193,8 +195,8 @@ class EffectCommands(commands.Cog):
                 return
 
         # Add effect
-        effect_id = self.bot.db.add_effect(
-            player_id,
+        effect_id = self.database.add_effect(
+            int(player_id),
             effect_type,
             "admin",
             {"description": f"Added by {ctx.author.display_name}", "stats": {"admin_buff": 1}},
@@ -241,7 +243,7 @@ class EffectCommands(commands.Cog):
             return
 
         # Clear effects
-        count = self.bot.db.clear_effects(player_id)
+        count = self.database.clear_effects(int(player_id))
 
         await ctx.send(f"Cleared {count} effects from {target.display_name}.")
 

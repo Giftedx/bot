@@ -3,18 +3,17 @@ from discord.ext import commands
 from discord import app_commands
 import logging
 
-from src.core.database import DatabaseManager
+from src.lib.cog_utils import CogBase  # Unified dependencies
 from src.core.battle_system import BattleManager, BattleResult, BattleType
 
 logger = logging.getLogger(__name__)
 
 
-class PetCommands(commands.Cog):
+class PetCommands(CogBase):
     """Commands for interacting with pets (hybrid: classic and slash)."""
 
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
-        self.db_manager: DatabaseManager = self.bot.db_manager
+    def __init__(self, bot: commands.Bot, **kwargs):
+        super().__init__(bot, **kwargs)
         self.battle_manager: BattleManager = self.bot.battle_manager
 
     @commands.hybrid_command(name="pets", help="Lists your pets.")
@@ -22,7 +21,7 @@ class PetCommands(commands.Cog):
         """Lists the pets owned by the user."""
         try:
             player_id = str(ctx.author.id)
-            pets = self.db_manager.get_player_pets(player_id)
+            pets = self.database.get_player_pets(player_id)
 
             if not pets:
                 await ctx.send("You don't have any pets yet!")
@@ -53,8 +52,8 @@ class PetCommands(commands.Cog):
             await ctx.send("You can't battle yourself!")
             return
 
-        challenger_pets = self.db_manager.get_player_pets(str(challenger.id))
-        opponent_pets = self.db_manager.get_player_pets(str(opponent.id))
+        challenger_pets = self.database.get_player_pets(str(challenger.id))
+        opponent_pets = self.database.get_player_pets(str(opponent.id))
 
         if not challenger_pets:
             await ctx.send("You don't have a pet to battle with!")
@@ -83,8 +82,8 @@ class PetCommands(commands.Cog):
             winner = result.winner
             loser = result.loser
             # Persist changes
-            self.db_manager.save_pet(winner)
-            self.db_manager.save_pet(loser)
+            self.database.save_pet(winner)
+            self.database.save_pet(loser)
 
             embed = discord.Embed(
                 title=f"Battle Over! {winner.name} is victorious!",
@@ -117,7 +116,7 @@ class PetCommands(commands.Cog):
             return
         player_id = str(ctx.author.id)
         # Check for duplicate name
-        pets = self.db_manager.get_player_pets(player_id)
+        pets = self.database.get_player_pets(player_id)
         if any(p.get("name", "").lower() == name.lower() for p in pets):
             await ctx.send(f"You already have a pet named {name}!")
             return
@@ -128,7 +127,7 @@ class PetCommands(commands.Cog):
             "data": {"level": 1, "experience": 0, "happiness": 100},
             "owner_id": player_id,
         }
-        self.db_manager.save_pet(pet_data)
+        self.database.save_pet(pet_data)
         embed = discord.Embed(
             title="🎉 New Pet Adopted!",
             description=f"Welcome {name} the {pet_type.title()} to your family!",
@@ -143,7 +142,7 @@ class PetCommands(commands.Cog):
     async def info(self, ctx: commands.Context, name: str):
         """View detailed information about your pet by name."""
         player_id = str(ctx.author.id)
-        pets = self.db_manager.get_player_pets(player_id)
+        pets = self.database.get_player_pets(player_id)
         pet = next((p for p in pets if p.get("name", "").lower() == name.lower()), None)
         if not pet:
             await ctx.send(f"You don't have a pet named {name}!")
@@ -163,7 +162,7 @@ class PetCommands(commands.Cog):
     async def train(self, ctx: commands.Context, name: str):
         """Train your pet to gain experience and possibly level up."""
         player_id = str(ctx.author.id)
-        pets = self.db_manager.get_player_pets(player_id)
+        pets = self.database.get_player_pets(player_id)
         pet = next((p for p in pets if p.get("name", "").lower() == name.lower()), None)
         if not pet:
             await ctx.send(f"You don't have a pet named {name}!")
@@ -177,7 +176,7 @@ class PetCommands(commands.Cog):
         leveled_up = new_level > old_level
         pet_data["level"] = new_level
         pet["data"] = pet_data
-        self.db_manager.save_pet(pet)
+        self.database.save_pet(pet)
         embed = discord.Embed(
             title=f"Training {pet.get('name', 'Unnamed Pet')}",
             description=f"Gained {exp_gain} XP!",

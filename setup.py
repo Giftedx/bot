@@ -50,6 +50,7 @@ setup(
         # Utility Dependencies
         "humanize>=4.9.0",
         "colorama>=0.4.6",
+        "dependency-injector==4.40.0",
 
         # Development Dependencies
         "black>=24.1.1",

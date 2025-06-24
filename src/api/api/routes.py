@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, WebSocket
 from typing import Dict, Any, List, Optional
-from ..core.user_preferences import PreferencesManager, UserPreferences
+from ..core.user_preferences import PreferencesManager
 from ..ui.themes import ThemeManager
 import os
 import logging
@@ -11,11 +11,11 @@ from ..core.notifications import notification_center as notification_manager
 from pydantic import BaseModel, validator
 from src.security.input_validation import SecurityValidator
 import redis.exceptions
-from src.core.exceptions import RedisConnectionError, RedisOperationError
+from ..core.settings import SettingsManager
+from datetime import datetime
 
 router = APIRouter()
 prefs_manager = PreferencesManager(os.getenv("REDIS_URL"))
-notification_center = NotificationCenter()
 settings_manager = SettingsManager()
 logger = logging.getLogger(__name__)
 
@@ -156,25 +156,6 @@ async def control_media(media_control: MediaControl):
     return {"status": "success"}
 
 
-@router.websocket("/ws/notifications")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        # Register client
-        notification_center.add_client(websocket)
-
-        while True:
-            # Keep connection alive and handle client messages
-            data = await websocket.receive_json()
-            if data.get("type") == "ack":
-                await notification_center.mark_as_read(data["notification_id"])
-    except Exception as e:
-        logger.error(f"Notification WebSocket error: {e}")
-    finally:
-        notification_center.remove_client(websocket)
-        await websocket.close()
-
-
 @router.get("/api/settings/{category}")
 async def get_settings(category: str):
     return await settings_manager.get_category(category)
@@ -183,20 +164,6 @@ async def get_settings(category: str):
 @router.post("/api/settings")
 async def update_settings(settings_update: SettingsUpdate):
     result = await settings_manager.apply_settings(settings_update.settings)
-
-    # Notify clients of settings changes
-    await notification_center.broadcast_notification(
-        Notification(
-            id=str(uuid4()),
-            type="info",
-            title="Settings Updated",
-            message="Settings have been updated successfully",
-            timestamp=datetime.now(),
-            source="settings",
-            icon="gear",
-            priority=0,
-        )
-    )
 
     return result
 

@@ -4,6 +4,8 @@ import logging
 from discord.ext import commands
 from discord import VoiceChannel, VoiceClient, Member, Embed, Color, Guild, VoiceState
 
+from src.lib.cog_utils import CogBase
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,12 +14,11 @@ def is_guild_context(ctx: commands.Context) -> bool:
     return ctx.guild is not None and isinstance(ctx.author, Member)
 
 
-class MediaCommands(commands.Cog):
+class MediaCommands(CogBase):
     """Media playback commands."""
 
-    def __init__(self, bot: commands.Bot) -> None:
-        """Initialize media commands."""
-        self.bot = bot
+    def __init__(self, bot: commands.Bot, **kwargs):
+        super().__init__(bot, **kwargs)
         self.voice_clients: Dict[int, VoiceClient] = {}
         self.queues: Dict[int, List[Dict[str, Any]]] = {}
 

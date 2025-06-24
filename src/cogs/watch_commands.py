@@ -6,14 +6,16 @@ from datetime import datetime, timedelta
 import random
 import asyncio
 
+from ..lib.cog_utils import CogBase  # Unified dependencies
+
 logger = logging.getLogger(__name__)
 
 
-class WatchCommands(commands.Cog):
+class WatchCommands(CogBase):
     """Watch party commands"""
 
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot, **kwargs):
+        super().__init__(bot, **kwargs)
         self.active_parties = {}
         self.party_tasks = {}
 
@@ -145,8 +147,8 @@ class WatchCommands(commands.Cog):
 
         # Record watch for all members
         for member_id in party["members"]:
-            self.bot.db.add_watch_record(
-                member_id,
+            self.database.add_watch_record(
+                int(member_id),
                 {
                     "id": party_id,
                     "type": "group_watch",
@@ -346,9 +348,7 @@ class WatchCommands(commands.Cog):
         """Clean up a party after timeout"""
         try:
             # Wait for auto-end timeout
-            timeout = self.bot.config.get_config(
-                "watch_parties.auto_end_minutes", 360  # 6 hours default
-            )
+            timeout = self.config.get("watch_parties.auto_end_minutes", 360)  # 6 hours default
             await asyncio.sleep(timeout * 60)
 
             # End party if still active
