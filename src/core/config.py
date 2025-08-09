@@ -8,6 +8,9 @@ import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
+# Import _SENTINEL from unified_database to fix undefined variable error
+from .unified_database import _SENTINEL
+
 load_dotenv()
 
 logger = logging.getLogger(__name__)
