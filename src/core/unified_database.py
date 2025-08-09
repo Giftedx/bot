@@ -150,12 +150,19 @@ class PetRepository(DatabaseRepository[Pet]):
                 (
                     pet.owner_id,
                     pet.name,
-                    pet.type,
-                    json.dumps(pet.to_dict()),
+                    pet.element.value,  # Use element instead of type
+                    json.dumps({
+                        "element": pet.element.value,
+                        "level": pet.level,
+                        "experience": pet.experience,
+                        "max_hp": pet.max_hp,
+                        "base_damage": pet.base_damage,
+                        "moves": pet.moves
+                    }),
                     datetime.now().isoformat(),
                 ),
             )
-            pet.pet_id = cursor.lastrowid
+            pet.id = cursor.lastrowid  # Use 'id' field from Pet model
             return pet
 
     def get_by_id(self, pet_id: Union[int, str]) -> Optional[Pet]:
@@ -166,7 +173,7 @@ class PetRepository(DatabaseRepository[Pet]):
             if row:
                 data = json.loads(row["data"]) if row["data"] else {}
                 return Pet(
-                    id=row["pet_id"],
+                    id=row["pet_id"],  # Map pet_id to id
                     name=row["name"],
                     owner_id=row["owner_id"],
                     element=PetType(data.get("element", "FIRE")),
@@ -187,7 +194,7 @@ class PetRepository(DatabaseRepository[Pet]):
             for row in rows:
                 data = json.loads(row["data"]) if row["data"] else {}
                 pet = Pet(
-                    id=row["pet_id"],
+                    id=row["pet_id"],  # Map pet_id to id
                     name=row["name"],
                     owner_id=row["owner_id"],
                     element=PetType(data.get("element", "FIRE")),
@@ -217,7 +224,7 @@ class PetRepository(DatabaseRepository[Pet]):
                 SET name = ?, data = ?
                 WHERE pet_id = ?
                 """,
-                (pet.name, json.dumps(pet_data), pet.id),
+                (pet.name, json.dumps(pet_data), pet.id),  # Use pet.id (maps to pet_id in DB)
             )
             return pet
 
