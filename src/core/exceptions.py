@@ -1,5 +1,35 @@
 """Custom exceptions for the application."""
 
+from typing import Optional, Dict, Any
+
+
+# --- General Application Exceptions ---
+class AppError(Exception):
+    """Base exception for application errors."""
+
+    def __init__(self, message: str, context: Optional[Dict[str, Any]] = None):
+        super().__init__(message)
+        self.context = context or {}
+
+
+class ErrorContext:
+    """Context information for error handling."""
+
+    def __init__(self, **kwargs):
+        self.data = kwargs
+
+    def __getitem__(self, key: str):
+        return self.data[key]
+
+    def __setitem__(self, key: str, value):
+        self.data[key] = value
+
+    def get(self, key: str, default=None):
+        return self.data.get(key, default)
+
+    def update(self, **kwargs):
+        self.data.update(kwargs)
+
 
 # --- Battle System Exceptions ---
 class BattleSystemError(Exception):
@@ -84,8 +114,6 @@ class LoggingError(BattleSystemError):
 
 
 # --- General Application Exceptions ---
-
-
 class ConfigurationError(Exception):  # More general ConfigurationError
     """Raised when there's an error with configuration."""
 

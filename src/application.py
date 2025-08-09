@@ -49,6 +49,7 @@ class Application:
 
 async def my_async_function():
     """Example async function using the time_operation context manager."""
+    app = Application()
     async with app.time_operation("my_async_function"):
         # Simulate some work
         await asyncio.sleep(1)

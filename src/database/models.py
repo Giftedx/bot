@@ -106,8 +106,10 @@ class Item:
 class Player:
     """Represents a player character"""
 
-    id: int
-    name: str
+    id: Optional[int] = None
+    discord_id: Optional[int] = None
+    username: Optional[str] = None
+    name: Optional[str] = None
     skills: Dict[SkillType, Skill] = field(default_factory=dict)
     inventory: List[InventoryItem] = field(default_factory=list)
     equipment: Equipment = field(default_factory=Equipment)
@@ -118,6 +120,12 @@ class Player:
 
     def __post_init__(self) -> None:
         """Initialize default skills and stats"""
+        # Set name from username if not provided
+        if self.name is None and self.username is not None:
+            self.name = self.username
+        elif self.username is None and self.name is not None:
+            self.username = self.name
+            
         if not self.skills:
             self.skills = {skill_type: Skill(type=skill_type) for skill_type in SkillType}
             # Set Hitpoints to 10

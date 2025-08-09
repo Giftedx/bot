@@ -17,7 +17,7 @@ from abc import ABC, abstractmethod
 
 from .exceptions import DatabaseError
 from ..database.models import Player
-from ..bot.pets.models import Pet
+from ..bot.pets.models import Pet, PetType
 
 logger = logging.getLogger(__name__)
 
@@ -164,26 +164,60 @@ class PetRepository(DatabaseRepository[Pet]):
             cursor.execute("SELECT * FROM pets WHERE pet_id = ?", (pet_id,))
             row = cursor.fetchone()
             if row:
-                return Pet.from_dict(json.loads(row["data"]))
+                data = json.loads(row["data"]) if row["data"] else {}
+                return Pet(
+                    id=row["pet_id"],
+                    name=row["name"],
+                    owner_id=row["owner_id"],
+                    element=PetType(data.get("element", "FIRE")),
+                    level=data.get("level", 1),
+                    experience=data.get("experience", 0),
+                    max_hp=data.get("max_hp", 100),
+                    base_damage=data.get("base_damage", 10),
+                    moves=data.get("moves", [])
+                )
             return None
 
-    def get_by_owner(self, owner_id: str) -> List[Pet]:
+    def get_by_owner(self, owner_id: int) -> List[Pet]:
         """Get all pets for an owner."""
         with self.db.get_cursor() as cursor:
             cursor.execute("SELECT * FROM pets WHERE owner_id = ?", (owner_id,))
             rows = cursor.fetchall()
-            return [Pet.from_dict(json.loads(row["data"])) for row in rows]
+            pets = []
+            for row in rows:
+                data = json.loads(row["data"]) if row["data"] else {}
+                pet = Pet(
+                    id=row["pet_id"],
+                    name=row["name"],
+                    owner_id=row["owner_id"],
+                    element=PetType(data.get("element", "FIRE")),
+                    level=data.get("level", 1),
+                    experience=data.get("experience", 0),
+                    max_hp=data.get("max_hp", 100),
+                    base_damage=data.get("base_damage", 10),
+                    moves=data.get("moves", [])
+                )
+                pets.append(pet)
+            return pets
 
     def update(self, pet: Pet) -> Pet:
         """Update a pet."""
         with self.db.transaction() as cursor:
+            pet_data = {
+                "element": pet.element.value,
+                "level": pet.level,
+                "experience": pet.experience,
+                "max_hp": pet.max_hp,
+                "base_damage": pet.base_damage,
+                "moves": pet.moves
+            }
             cursor.execute(
                 """
                 UPDATE pets 
-                SET name = ?, type = ?, data = ?
+                SET name = ?, data = ?
                 WHERE pet_id = ?
                 """,
-                (pet.name, pet.type, json.dumps(pet.to_dict()), pet.pet_id),
+                (pet.name, json.dumps(pet_data), pet.id),
             )
             return pet
 
@@ -249,7 +283,7 @@ class UnifiedDatabaseManager:
         "pets": """
             CREATE TABLE IF NOT EXISTS pets (
                 pet_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                owner_id TEXT NOT NULL,
+                owner_id INTEGER NOT NULL,
                 name TEXT NOT NULL,
                 type TEXT NOT NULL,
                 data JSON NOT NULL,
