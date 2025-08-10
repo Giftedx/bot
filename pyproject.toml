@@ -14,107 +14,104 @@ authors = [
 ]
 dependencies = [
     # Core
-    "aiohttp==3.9.1",
-    "asyncio==3.4.3",
-    "python-dotenv==1.0.0",
-    "pydantic==2.5.2",
-    "PyJWT==2.8.0",
-    "bcrypt==4.1.1",
-    "requests==2.31.0",
-    "aiofiles==23.2.1",
-    "ujson==5.8.0",
-    "python-dateutil==2.8.2",
-    "pytz==2023.3.post1",
+    "aiohttp>=3.9.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.5.0",
+    "PyJWT>=2.8.0",
+    "bcrypt>=4.1.0",
+    "requests>=2.31.0",
+    "aiofiles>=23.2.0",
+    "ujson>=5.8.0",
+    "python-dateutil>=2.8.0",
+    "pytz>=2023.3",
     "humanize>=4.9.0",
     "colorama>=0.4.6",
     "websockets>=12.0",
-    "dataclasses>=0.6",
     "typing-extensions>=4.7.1",
     "PyYAML>=6.0.1",
 
     # Database
-    "SQLAlchemy==2.0.23",
-    "alembic==1.13.0",
-    "psycopg2-binary==2.9.9",
-    "asyncpg==0.29.0",
+    "SQLAlchemy>=2.0.0",
+    "alembic>=1.13.0",
     "aiosqlite>=0.19.0",
 
     # Caching
-    "redis==5.0.1",
-    "aioredis==2.0.1",
+    "redis>=5.0.0",
+    "aioredis>=2.0.0",
 
     # Discord
-    "discord.py==2.3.2",
-    "discord-py-slash-command==4.2.1",
+    "discord.py>=2.3.0",
 
     # Web Framework
-    "fastapi==0.104.1",
-    "uvicorn==0.24.0",
-    "starlette==0.27.0",
-    "httpx==0.25.2",
-    "Flask>=3.0.1",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "starlette>=0.27.0",
+    "httpx>=0.25.0",
+    "Flask>=3.0.0",
     "Flask-CORS>=4.0.0",
     "gunicorn>=21.2.0",
 
     # APIs and Parsing
     "plexapi>=4.0.0",
-    "mwclient>=0.10.1",
+    "mwclient>=0.10.0",
     "beautifulsoup4>=4.12.0",
     "lxml>=5.1.0",
     "pokebase>=1.3.0",
-    "requests-cache>=0.9.8",
-    "mwparserfromhell>=0.6.6",
+    "requests-cache>=0.9.0",
+    "mwparserfromhell>=0.6.0",
     "pokemontcgsdk>=2.0.0",
-    "PyGithub>=2.1.1",
+    "PyGithub>=2.1.0",
     "spotipy>=2.23.0",
     "google-api-python-client>=2.108.0",
     "stackapi>=0.3.0",
     "vdf>=3.4",
-    "wikitextparser>=0.55.1",
+    "wikitextparser>=0.55.0",
 
     # Media
     "PyNaCl>=1.4.0",
     "wavelink>=3.2.0",
-    "yt-dlp>=2023.12.30",
+    "yt-dlp>=2023.12.0",
     "ffmpeg-python>=0.2.0",
 
     # Security
-    "cryptography==41.0.5",
-    "passlib==1.7.4",
-    "python-jose==3.3.0",
+    "cryptography>=41.0.0",
+    "passlib>=1.7.0",
+    "python-jose>=3.3.0",
     "prometheus_client>=0.19.0",
-    "dependency-injector==4.41.0",
+    "dependency-injector>=4.41.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     # Testing
-    "pytest==7.4.3",
-    "pytest-asyncio==0.21.1",
-    "pytest-cov==4.1.0",
-    "pytest-mock==3.12.0",
-    "coverage>=7.4.1",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "coverage>=7.4.0",
 
     # Linters and Formatters
-    "black==23.11.0",
-    "isort==5.12.0",
-    "mypy==1.7.1",
-    "flake8==6.1.0",
-    "pylint",
-    "bandit",
-    
-    # Pre-commit
-    "pre-commit==3.5.0",
+    "black>=23.11.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.7.0",
+    "pre-commit>=3.5.0",
 
     # Documentation
-    "Sphinx==7.2.6",
-    "sphinx-rtd-theme==1.3.0",
-    "autodoc==0.5.0",
-    
-    # Other Dev Tools
-    "bump2version",
-    "safety",
-    "pip-audit"
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.4.0",
+    "mkdocstrings>=0.24.0",
+    "mkdocstrings-python>=1.7.0",
+]
+
+postgres = [
+    "psycopg2-binary>=2.9.0",
+    "asyncpg>=0.29.0",
+]
+
+monitoring = [
+    "prometheus_client>=0.19.0",
+    "grafana-api>=1.0.0",
 ]
 
 [tool.pytest.ini_options]

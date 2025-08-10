@@ -9,7 +9,8 @@ from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 
 from .client import DiscordAppClient
-from .commands.plex import PlexCommands
+# from .commands.plex import PlexCommands
+# TODO: Update when PlexCommands class is implemented
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +42,11 @@ class DiscordApp:
         plex_token = os.getenv("PLEX_TOKEN")
 
         if all([plex_url, plex_token]):
-            plex_commands = PlexCommands(self.client.tree, plex_url, plex_token)
-            await plex_commands.initialize()
-            self.commands["plex"] = plex_commands
-            logger.info("Initialized Plex commands")
+            # TODO: Implement PlexCommands class
+            # plex_commands = PlexCommands(self.client.tree, plex_url, plex_token)
+            # await plex_commands.initialize()
+            # self.commands["plex"] = plex_commands
+            logger.info("Plex commands initialization pending")
         else:
             logger.warning("Plex configuration missing. Plex commands will not be available.")
 
