@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from typing import Optional
 import logging
 
 logger = logging.getLogger(__name__)

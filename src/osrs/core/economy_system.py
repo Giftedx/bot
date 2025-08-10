@@ -2,10 +2,7 @@
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 import logging
-import random
 
-from ..models.user import User
-from ..models.item import Item
 
 logger = logging.getLogger(__name__)
 

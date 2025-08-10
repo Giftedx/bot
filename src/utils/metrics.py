@@ -1,5 +1,4 @@
 """Prometheus metrics collection for the application."""
-from typing import Dict, Any, Optional
 from dataclasses import dataclass, field
 from prometheus_client import Counter, Histogram, Gauge, Summary, start_http_server
 import time

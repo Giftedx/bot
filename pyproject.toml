@@ -111,6 +111,7 @@ dev = [
 
     # Dev-only integrations
     "hvac>=1.2.1",
+    "asynctest>=0.13.0",
 ]
 
 postgres = [

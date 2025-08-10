@@ -3,7 +3,6 @@ Configuration for data collection and integration.
 Defines data sources, APIs, and settings for various integrations.
 """
 
-from typing import Dict, List, Optional
 import os
 
 # API Configuration

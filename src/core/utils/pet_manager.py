@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 from discord.ext import commands
 import discord
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from src.core.pet_system import Pet, PetManager, PetOrigin, PetRarity
 

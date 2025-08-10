@@ -222,7 +222,7 @@ class QuestManager:
         # Check item requirements
         for item_id, quantity in quest.requirements.items.items():
             if inventory.get(item_id, 0) < quantity:
-                return (False, f"Missing required items")
+                return (False, "Missing required items")
 
         return (True, None)
 

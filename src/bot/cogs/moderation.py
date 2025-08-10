@@ -1,10 +1,9 @@
 import discord
 from discord.ext import commands
-from typing import Dict, List, Optional, Union
+from typing import Dict, List
 from datetime import datetime, timedelta
 from collections import defaultdict
 import asyncio
-import json
 
 
 class InfractionManager:

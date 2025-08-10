@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 import random
-import math
 
 from .skills import SkillType, SkillManager
 

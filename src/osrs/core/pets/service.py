@@ -3,9 +3,9 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 import uuid
 
-from .base_models import BasePet, PetStats, PetAbility, PetOrigin, PetRarity, StatusEffect
+from .base_models import BasePet, PetOrigin, PetRarity
 from .database import PetDatabase
-from .battle_system import BattleSystem, Battle
+from .battle_system import BattleSystem
 from .event_system import EventManager, EventType, GameEvent, AchievementManager
 
 

@@ -1,6 +1,5 @@
-from prometheus_client import Counter, Gauge, Histogram, start_http_server
+from prometheus_client import Counter, Gauge, Histogram
 from contextlib import asynccontextmanager
-from typing import Dict, Any, List
 import asyncio
 import logging
 import time

@@ -5,7 +5,6 @@ import re
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 import logging
-from bs4 import BeautifulSoup
 import mwclient  # For Wiki API
 import aiofiles
 import os

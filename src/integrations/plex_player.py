@@ -12,8 +12,7 @@ import discord
 from discord.ext import commands
 from plexapi.server import PlexServer
 from plexapi.video import Video
-from plexapi.audio import Track
-from plexapi.exceptions import NotFound, Unauthorized, BadRequest, PlexApiException
+from plexapi.exceptions import NotFound, Unauthorized, PlexApiException
 from requests.exceptions import (
     ConnectionError as RequestsConnectionError,
     Timeout as RequestsTimeout,
@@ -29,15 +28,12 @@ class MediaSession:
     """Mock MediaSession for now."""
     pass
 
-from src.core.config import ConfigManager
 from src.core.exceptions import (
     PlexConnectionError,
     PlexAPIError,
     MediaNotFoundError,
     StreamingError,
 )
-import av
-import websockets
 
 logger = logging.getLogger(__name__)
 

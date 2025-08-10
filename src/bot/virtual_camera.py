@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import cv2
-import numpy as np
 import pyvirtualcam
 
 

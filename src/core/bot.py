@@ -1,16 +1,15 @@
 import discord
 from discord.ext import commands, tasks
-from typing import Dict, List, Any, Optional
+from typing import Optional
 import logging
 from datetime import datetime, timedelta
 import random
-import asyncio
 import json
 
 from .unified_database import UnifiedDatabaseManager
 from .personal_system import PersonalSystem
-from .unified_config import UnifiedConfig, get_config, init_config, UnifiedConfigSettings
-from .error_manager import ErrorManager, setup_error_handling
+from .unified_config import init_config, UnifiedConfigSettings
+from .error_manager import setup_error_handling
 
 logger = logging.getLogger(__name__)
 
@@ -346,7 +345,7 @@ class PersonalBot(commands.Bot):
 
                     effect_list.append(f"• {effect['type']} - {expires_text}")
 
-                await ctx.send(f"Your active effects:\n" + "\n".join(effect_list))
+                await ctx.send("Your active effects:\n" + "\n".join(effect_list))
 
             except Exception as e:
                 error_msg = await self.error_manager.handle_error(

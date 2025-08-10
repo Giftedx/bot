@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import random
 import uuid
 
-from .pet_system import Pet, PetOrigin, PetRarity, PetStats, PetAbility
+from .pet_system import Pet, PetRarity, PetAbility
 from ..features.pets.event_system import EventManager, EventType, GameEvent
 
 

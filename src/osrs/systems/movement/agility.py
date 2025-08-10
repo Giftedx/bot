@@ -298,7 +298,7 @@ class AgilityManager:
         # Check for mark of grace
         mark_chance = course.reward.marks_of_grace
         if random.random() < mark_chance:
-            message = f"You find a Mark of grace!"
+            message = "You find a Mark of grace!"
         else:
             message = f"You successfully pass the {obstacle.name}"
 

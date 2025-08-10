@@ -1,7 +1,5 @@
 import asyncio
 import random
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional
 
 import discord
 from discord.ext import commands

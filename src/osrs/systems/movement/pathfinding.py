@@ -1,10 +1,9 @@
-from typing import List, Dict, Optional, Tuple, Set
+from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 import heapq
-import math
-from .movement_system import MovementSystem, Tile, TileType, Area
+from .movement_system import MovementSystem, Tile
 from .web_walking import WebWalking
-from .locations import TransportationManager, TransportType, LocationType, TransportNode
+from .locations import TransportationManager, TransportType, LocationType
 
 
 @dataclass

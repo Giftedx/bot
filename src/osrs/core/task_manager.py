@@ -1,5 +1,5 @@
 """OSRS task manager implementation."""
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional
 from datetime import datetime
 import asyncio
 import logging

@@ -4,7 +4,6 @@ from functools import wraps
 import asyncio
 import random
 import time
-from datetime import datetime
 from .logger import get_logger
 from .metrics import metrics
 from .exceptions import AppError
@@ -158,7 +157,7 @@ def circuit_breaker(
                     metrics.record_circuit_state(metric_name, "closed")
                 return result
 
-            except Exception as e:
+            except Exception:
                 failures += 1
                 last_failure = time.time()
 
@@ -198,7 +197,7 @@ def circuit_breaker(
                     metrics.record_circuit_state(metric_name, "closed")
                 return result
 
-            except Exception as e:
+            except Exception:
                 failures += 1
                 last_failure = time.time()
 

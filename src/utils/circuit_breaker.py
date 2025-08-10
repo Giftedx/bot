@@ -86,7 +86,7 @@ class CircuitBreaker:
                 await self._handle_success()
                 return result
 
-            except Exception as exc:
+            except Exception:
                 await self._handle_failure()
                 raise
 

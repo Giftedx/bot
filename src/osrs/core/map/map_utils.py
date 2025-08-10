@@ -1,6 +1,6 @@
 """OSRS map utility functions."""
 from typing import List, Optional, Tuple
-from ...database.models import TransportLocation, TeleportLocation, SpecialLocation
+from ...database.models import TransportLocation, TeleportLocation
 from .WorldMap import WorldPoint
 
 

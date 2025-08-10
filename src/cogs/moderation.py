@@ -1,6 +1,6 @@
 """Moderation commands cog."""
 from datetime import timedelta
-from typing import Optional, Union
+from typing import Optional
 
 import discord
 from discord.ext import commands

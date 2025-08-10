@@ -1,9 +1,8 @@
-from typing import Dict, List, Optional, Any, Callable
+from typing import Dict, List, Optional, Any
 from enum import Enum
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
 
-from .pet_system import Pet, PetOrigin, PetRarity
+from .pet_system import Pet, PetOrigin
 from ..features.pets.event_system import EventManager, EventType, GameEvent
 
 

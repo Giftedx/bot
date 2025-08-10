@@ -2,15 +2,13 @@
 import logging
 from typing import List, Optional, Dict, Any
 from dataclasses import dataclass
-import asyncio
 import redis
 import json
 from datetime import datetime, timedelta
 
 from plexapi.server import PlexServer
 from plexapi.video import Video
-from plexapi.media import Media
-from plexapi.exceptions import NotFound, Unauthorized, BadRequest
+from plexapi.exceptions import NotFound
 
 from .models import MediaInfo, StreamInfo
 

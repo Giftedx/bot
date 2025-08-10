@@ -9,7 +9,6 @@ from typing import Dict, List, Optional, Any
 import json
 import re
 import struct
-from pathlib import Path
 
 from ..base_collector import BaseCollector
 from ..config import GAME_DATA_SOURCES

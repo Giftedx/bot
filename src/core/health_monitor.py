@@ -1,6 +1,6 @@
 import logging
 import asyncio
-from typing import Dict, Callable, Any, Optional
+from typing import Dict, Callable, Any
 from datetime import datetime, timedelta
 from prometheus_client import Counter, Gauge
 

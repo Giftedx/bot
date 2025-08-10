@@ -5,7 +5,6 @@ from enum import Enum
 import random
 from datetime import datetime
 
-from .game_math import calculate_hit_chance, calculate_max_hit
 
 
 class MinigameType(Enum):

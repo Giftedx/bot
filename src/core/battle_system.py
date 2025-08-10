@@ -3,10 +3,9 @@
 import random
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, TypeVar
-from enum import Enum
 from datetime import datetime
 
-from src.core.models import BattleState, BattleType, StatusEffect
+from src.core.models import BattleState, BattleType
 from src.pets.models import Pet
 from src.core.pet_system import PetOrigin, PetAbility
 from ..features.pets.event_system import EventManager, EventType, GameEvent

@@ -1,4 +1,4 @@
-from typing import Optional, Union, Dict, List, Any, Tuple
+from typing import Optional, Dict, List, Any, Tuple
 from enum import Enum
 from datetime import datetime
 import random

@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from typing import Optional
 
-from ..core.skills import SkillType, SkillManager
+from ..core.skills import SkillType
 from ..core.skilling import ResourceType, SkillingManager
 from ..models import Player
 

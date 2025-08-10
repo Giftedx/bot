@@ -6,7 +6,6 @@ from enum import Enum
 import random
 import asyncio
 
-from ..mechanics import CombatStats, Equipment, CombatFormulas
 from ..core.combat.combat_manager import CombatManager
 
 

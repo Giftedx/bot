@@ -1,7 +1,7 @@
 """OSRS location data."""
-from typing import Dict, List, Tuple
+from typing import List
 
-from ..core.map.WorldMap import WorldPoint, WorldArea, Location, MapRegion
+from ..core.map.WorldMap import WorldArea, Location, MapRegion
 from ..database.models import TransportLocation, TeleportLocation, SpecialLocation
 from ..database.models import TransportationType, TeleportType
 

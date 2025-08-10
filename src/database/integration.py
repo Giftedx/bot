@@ -1,8 +1,7 @@
 """Database integration layer to unify different storage systems."""
 
 import logging
-from typing import Optional, Dict, Any, List
-from datetime import datetime
+from typing import Optional, Dict, Any
 
 from src.core.database import DatabaseManager as CoreDB
 from src.core.battle_database import BattleDatabase

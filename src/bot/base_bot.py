@@ -3,14 +3,13 @@ import asyncio
 import logging
 from typing import Optional, Dict, Any, Set
 from pathlib import Path
-import os
 
 import discord
 from discord.ext import commands
 
 from ..core.config import ConfigManager
 from ..core.unified_database import UnifiedDatabaseManager, DatabaseConfig
-from ..core.metrics import MetricsRegistry, setup_metrics
+from ..core.metrics import setup_metrics
 from ..core.battle_system import BattleManager as BattleManager
 from ..utils.formatting import format_error
 from ..core.metrics_endpoint import start_metrics_server

@@ -1,5 +1,5 @@
 """OSRS event manager."""
-from typing import Callable, Dict, List, Optional, Set, Tuple, Union
+from typing import Callable, Dict, List, Optional
 from datetime import datetime
 import logging
 from enum import Enum, auto

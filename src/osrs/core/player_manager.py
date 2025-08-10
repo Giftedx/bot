@@ -1,14 +1,13 @@
 """Player manager for handling player state and actions."""
 
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 import math
 
 from .game_tick import GameTick, TickPriority
 from .movement import Position, MovementSystem
-from .skill_manager import SkillType, SkillAction
-from .resource_manager import ResourceType, Resource
+from .skill_manager import SkillType
 
 
 class PlayerState(Enum):

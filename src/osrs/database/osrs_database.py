@@ -1,19 +1,12 @@
 """PostgreSQL database implementation for OSRS."""
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 import asyncpg
 from datetime import datetime
 import json
 import logging
-from pathlib import Path
 
 from ..data import (
-    get_item_data,
     get_quest_data,
-    get_skill_data,
-    get_equipment_data,
-    get_monster_data,
-    get_achievement_data,
-    get_item_price,
 )
 
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 """Event system for pet-related events and achievements."""
 from enum import Enum, auto
 from dataclasses import dataclass
-from typing import Dict, List, Callable, Any, Optional
+from typing import Dict, List, Callable, Any
 from datetime import datetime
 
 

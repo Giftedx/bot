@@ -1,13 +1,10 @@
 """Health check system for monitoring service health."""
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Optional
 from dataclasses import dataclass
 import asyncio
-import time
 from datetime import datetime, timedelta
 from .logger import get_logger
 from .metrics import metrics
-from .config import config
-from .exceptions import AppError
 
 logger = get_logger(__name__)
 

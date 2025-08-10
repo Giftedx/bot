@@ -12,7 +12,6 @@ from discord.ext import commands
 from plexapi.server import PlexServer
 from plexapi.video import Video
 from plexapi.audio import Track
-from plexapi.photo import Photo
 
 logger = logging.getLogger(__name__)
 
@@ -160,8 +159,8 @@ class PlexDiscordPlayer:
 
             await ctx.send(f"Seeked to {timestamp}!")
 
-        except ValueError as e:
-            await ctx.send(f"Invalid timestamp format! Use HH:MM:SS or MM:SS")
+        except ValueError:
+            await ctx.send("Invalid timestamp format! Use HH:MM:SS or MM:SS")
         except Exception as e:
             logger.error(f"Error seeking: {e}")
             await ctx.send(f"Error seeking: {str(e)}")

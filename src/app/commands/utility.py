@@ -1,6 +1,5 @@
 """Utility commands cog."""
 import platform
-import time
 import asyncio
 from datetime import datetime
 from typing import Optional, List

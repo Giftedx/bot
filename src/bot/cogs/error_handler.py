@@ -1,7 +1,5 @@
 import logging
 import traceback
-import asyncio
-from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 from collections import defaultdict
 from discord.ext import commands, tasks

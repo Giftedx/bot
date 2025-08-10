@@ -2,10 +2,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Union, Any
+from typing import Dict, Optional, Set, Union
 from enum import Enum, auto
 
-from .bank import Bank
 from .constants import SkillType
 from ..models.user import User
 

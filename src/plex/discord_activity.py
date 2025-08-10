@@ -1,7 +1,6 @@
 """Discord activity client for voice channel media playback."""
 
 import json
-import asyncio
 from typing import Dict, Optional
 import discord
 from discord import Activity, ActivityType

@@ -3,7 +3,6 @@
 from enum import Enum
 from typing import Dict, Optional, Any
 from datetime import datetime, timedelta
-import math
 
 from ..features.pets.event_system import EventManager, EventType, GameEvent
 from .pet_system import Pet, PetOrigin

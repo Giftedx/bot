@@ -1,10 +1,9 @@
 import asyncio
 import json
 import logging
-from typing import Any, AsyncGenerator, Dict, List, Optional, TypeVar
+from typing import Any, Dict, List, Optional, TypeVar
 from redis.asyncio import Redis
 from redis.exceptions import RedisError
-from datetime import datetime, timedelta
 
 from src.core.exceptions import RedisConnectionError, RedisOperationError
 from src.utils.circuit_breaker import CircuitBreaker

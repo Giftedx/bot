@@ -1,5 +1,5 @@
 """OSRS bank implementation."""
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, Optional, Union, Any
 from collections import defaultdict
 
 

@@ -1,14 +1,13 @@
 from discord.ext import commands
 from discord import Embed, Color
 import random
-from typing import Optional
 from datetime import datetime
 
 from .pet_manager import PetManager
 from ..osrs.osrs_pet import OSRSPet
 from ..pokemon.pokemon_pet import PokemonPet
-from ...config.game_config import game_config, PetType, Rarity
-from ...config.achievements import achievement_config, AchievementType
+from ...config.game_config import game_config, PetType
+from ...config.achievements import achievement_config
 from .event_system import EventManager, EventType, GameEvent, SpecialEventHandler
 from .achievement_manager import AchievementManager
 from ...database.db_service import DatabaseService

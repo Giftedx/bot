@@ -1,11 +1,10 @@
 """Unified battle system for pet battles."""
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any
-from datetime import datetime
 import random
 import uuid
 
-from .base_models import BasePet, PetAbility, StatusEffect, PetOrigin
+from .base_models import BasePet, StatusEffect
 
 
 @dataclass

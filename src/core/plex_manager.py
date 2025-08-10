@@ -61,7 +61,7 @@ class PlexManager:
             raise PlexConnectionError(f"Could not connect to Plex server at {self._url}.")
         except RequestsTimeout as e:
             logger.error(f"Plex connection timed out while trying to reach {self._url}. Error: {e}")
-            raise PlexConnectionError(f"Connection to Plex server timed out.")
+            raise PlexConnectionError("Connection to Plex server timed out.")
         except PlexApiException as e:  # Catch other plexapi specific errors
             logger.error(f"Plex API error during connection: {e}")
             raise PlexAPIError(f"Plex API error during connection: {e}")

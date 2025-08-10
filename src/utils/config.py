@@ -1,6 +1,6 @@
 """Configuration management for the application."""
 from typing import Any, Dict, Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 import os
 import json

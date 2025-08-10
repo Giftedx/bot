@@ -1,7 +1,7 @@
 """Pet battle system implementation."""
 
 import random
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 from src.core.battle_manager import BattleState, BattleType
 from src.core.battle_system import BaseBattleSystem

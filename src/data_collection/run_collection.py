@@ -13,7 +13,7 @@ from typing import Dict, Any
 from .game_data.pokemon_collector import PokemonDataCollector
 from .api_integration.repo_scanner import RepoScanner
 from .api_integration.game_repo_scanner import GameRepoScanner
-from .config import API_CONFIG, COLLECTION_CONFIG
+from .config import COLLECTION_CONFIG
 
 # Configure logging
 logging.basicConfig(
@@ -151,13 +151,13 @@ class DataCollectionOrchestrator:
         api_data = data.get("api_data", {})
         rom_data = data.get("rom_data", {})
 
-        f.write(f"API Data:\n")
+        f.write("API Data:\n")
         f.write(f"- Pokemon: {len(api_data.get('pokemon', []))}\n")
         f.write(f"- Moves: {len(api_data.get('moves', []))}\n")
         f.write(f"- Items: {len(api_data.get('items', []))}\n")
         f.write(f"- Locations: {len(api_data.get('locations', []))}\n\n")
 
-        f.write(f"ROM Data:\n")
+        f.write("ROM Data:\n")
         for game, game_data in rom_data.items():
             f.write(f"- {game}:\n")
             f.write(f"  - Pokemon: {len(game_data.get('pokemon', []))}\n")
@@ -178,7 +178,7 @@ class DataCollectionOrchestrator:
             f.write(f"  - Last Updated: {repo['last_updated']}\n")
 
             analysis = repo.get("analysis", {})
-            f.write(f"  - Code Stats:\n")
+            f.write("  - Code Stats:\n")
             for stat, value in analysis.get("code_stats", {}).items():
                 f.write(f"    - {stat}: {value}\n")
             f.write(f"  - API Endpoints: {len(analysis.get('api_endpoints', []))}\n")
@@ -192,7 +192,7 @@ class DataCollectionOrchestrator:
             f.write(f"  - Last Updated: {repo['last_updated']}\n")
 
             analysis = repo.get("analysis", {})
-            f.write(f"  - Code Stats:\n")
+            f.write("  - Code Stats:\n")
             for stat, value in analysis.get("code_stats", {}).items():
                 f.write(f"    - {stat}: {value}\n")
             f.write(f"  - API Endpoints: {len(analysis.get('api_endpoints', []))}\n")
@@ -224,7 +224,7 @@ class DataCollectionOrchestrator:
             f.write(f"  - Constants: {len(game_data.get('constants', {}))}\n")
 
             assets = game_data.get("assets", {})
-            f.write(f"  - Assets:\n")
+            f.write("  - Assets:\n")
             for asset_type, assets_list in assets.items():
                 f.write(f"    - {asset_type}: {len(assets_list)}\n")
 

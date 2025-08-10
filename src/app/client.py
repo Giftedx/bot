@@ -3,8 +3,7 @@ Discord application client implementation.
 """
 
 import logging
-import asyncio
-from typing import Dict, Optional, Any
+from typing import Dict, Any
 import discord
 from discord import app_commands
 

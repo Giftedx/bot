@@ -1,8 +1,7 @@
 from discord.ext import commands
 import discord
-from typing import Optional
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 import random
 import asyncio
 

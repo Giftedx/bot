@@ -1,5 +1,5 @@
 """OSRS game state manager."""
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional
 from datetime import datetime
 import logging
 
@@ -7,10 +7,6 @@ from ..database.models import Database
 from ..core.map.WorldMap import WorldPoint
 from ..core.map.map_utils import (
     calculate_distance,
-    find_nearest_transport,
-    find_teleport_to_destination,
-    get_path_between_points,
-    is_in_members_area,
 )
 
 logger = logging.getLogger(__name__)

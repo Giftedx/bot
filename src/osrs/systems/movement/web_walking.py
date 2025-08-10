@@ -4,11 +4,10 @@ from dataclasses import dataclass
 import math
 import heapq
 from .movement_system import MovementSystem, Tile, TileType
-import asyncio
 import random
 from datetime import datetime
 
-from .locations import LocationManager, Location, Connection, TravelMethod, RegionType
+from .locations import LocationManager, Connection, TravelMethod
 
 
 @dataclass
