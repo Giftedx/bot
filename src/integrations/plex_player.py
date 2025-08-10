@@ -19,7 +19,15 @@ from requests.exceptions import (
     Timeout as RequestsTimeout,
     RequestException,
 )
-from discord_sdk import DiscordSDK, MediaSession
+# from discord_sdk import DiscordSDK, MediaSession
+# TODO: Implement Discord SDK integration when available
+class DiscordSDK:
+    """Mock DiscordSDK for now."""
+    pass
+
+class MediaSession:
+    """Mock MediaSession for now."""
+    pass
 
 from src.core.config import ConfigManager
 from src.core.exceptions import (

@@ -50,7 +50,21 @@ dev-install:
 	@if [ ! -d "$(VENV_DIR)" ]; then \
 		$(PYTHON) -m venv $(VENV_DIR); \
 	fi
-	$(PIP_VENV) install .[dev]
+	$(PIP_VENV) install --upgrade pip
+	$(PIP_VENV) install -e .
+	$(PIP_VENV) install -e .[dev]
+
+setup:
+	@echo "Running comprehensive environment setup..."
+	$(PYTHON_VENV) setup_env.py
+
+quick-setup:
+	@echo "Running quick setup (dependencies only)..."
+	@if [ ! -d "$(VENV_DIR)" ]; then \
+		$(PYTHON) -m venv $(VENV_DIR); \
+	fi
+	$(PIP_VENV) install --upgrade pip
+	$(PIP_VENV) install python-dotenv PyYAML discord.py aiohttp pydantic fastapi uvicorn prometheus_client
 
 test:
 	$(PYTEST) tests/ -v --cov=src --cov-report=term-missing
