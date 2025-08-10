@@ -80,8 +80,8 @@ async def main() -> None:
         try:
             if 'health_runner' in locals():
                 await health_runner.cleanup()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Error during health server cleanup: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
