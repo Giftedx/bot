@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: false
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
@@ -23,7 +25,7 @@ jobs:
           fi
           if [ -f pyproject.toml ]; then pip install .; else pip install -e .; fi
       - name: Lint (ruff)
-        run: ruff .
+        run: ruff check .
       - name: Format check (black)
         run: black --check .
       - name: Run tests
