@@ -78,7 +78,7 @@ async def main() -> None:
     finally:
         # Cleanup health server if it was started
         try:
-            if 'health_runner' in locals():
+            if health_runner is not None:
                 await health_runner.cleanup()
         except Exception as e:
             logger.error(f"Error during health server cleanup: {e}", exc_info=True)
