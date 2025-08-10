@@ -30,12 +30,12 @@ async def _health_handler(_: web.Request) -> web.Response:
     return web.json_response({"status": "ok"})
 
 
-async def start_health_server() -> web.AppRunner:
+async def start_health_server(port: int = 8000) -> web.AppRunner:
     app = web.Application()
     app.router.add_get("/health", _health_handler)
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, host="0.0.0.0", port=8000)
+    site = web.TCPSite(runner, host="0.0.0.0", port=port)
     await site.start()
     return runner
 
