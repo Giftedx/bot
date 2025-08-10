@@ -42,6 +42,19 @@ This repository contains a feature-rich Discord bot built with Python.
     ```
     This will launch the bot and its services in Docker with live-reloading via watchdog.
 
+## Repository Layout
+
+- `src/`: Python source code
+  - `src/bot/`: Discord bot implementation (cogs, commands)
+  - `src/core/`: core systems (battle, economy, config, persistence)
+  - `src/services/`: external integrations (e.g., Plex)
+  - `src/web_server/`: lightweight Flask API and Socket.IO events
+  - `src/server/`: TypeScript-based game server (Node.js). Build/run with `npm run build` / `npm start`.
+- `docs/`: MkDocs documentation (see `mkdocs.yml`). Serve with `make docs-serve`.
+- `docker/`: Dockerfiles and compose configurations for dev/prod/monitoring
+- `tests/`: automated tests
+- `prometheus/`, `grafana/`: monitoring configuration
+
 ## Features
 
 ### OSRS Module
