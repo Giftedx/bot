@@ -1,6 +1,13 @@
 site_name: Discord Bot Documentation
 nav:
   - Home: index.md
+  - Commands: commands/command-reference.md
+  - Development:
+      - Guide: development/development-guide.md
+      - Setup: development/setup.md
+  - Deployment:
+      - Guide: deployment/deployment-guide.md
+      - Setup: deployment/setup.md
   - Systems:
       - Unified Architecture: unified_systems.md
   - Guides:

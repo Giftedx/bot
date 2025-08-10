@@ -7,7 +7,7 @@ name = "osrs-discord-bot"
 version = "1.0.0"
 description = "Discord bot with OSRS integration, Plex streaming, and game features"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = {file = "LICENSE"}
 authors = [
     {name = "Project Contributors"}
@@ -96,12 +96,17 @@ dev = [
     "flake8>=6.0.0",
     "mypy>=1.7.0",
     "pre-commit>=3.5.0",
+    "bandit>=1.7.7",
+    "safety>=3.2.4",
+    "pip-audit>=2.7.3",
+    "bump2version>=1.0.1",
 
     # Documentation
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.4.0",
     "mkdocstrings>=0.24.0",
     "mkdocstrings-python>=1.7.0",
+    "watchdog>=4.0.0",
 ]
 
 postgres = [
@@ -147,7 +152,7 @@ exclude_lines = [
 
 [tool.black]
 line-length = 100
-target-version = ['py38']
+target-version = ['py311']
 include = '\.pyi?$'
 
 [tool.isort]
@@ -161,7 +166,7 @@ known_first_party = ["src"]
 known_third_party = ["discord", "pytest", "redis"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -217,7 +222,7 @@ venv = "venv"
 reportMissingImports = true
 reportMissingTypeStubs = false
 
-pythonVersion = "3.8"
+pythonVersion = "3.11"
 pythonPlatform = "All"
 
 executionEnvironments = [

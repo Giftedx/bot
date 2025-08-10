@@ -148,7 +148,10 @@ security-check:
 
 # Documentation
 docs:
-	cd docs && make html
+	mkdocs build
+
+docs-serve:
+	mkdocs serve -a 0.0.0.0:8001
 
 # Version management
 bump-version:
