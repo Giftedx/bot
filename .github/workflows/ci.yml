@@ -23,7 +23,7 @@ jobs:
           fi
           if [ -f pyproject.toml ]; then pip install .; else pip install -e .; fi
       - name: Lint (ruff)
-        run: ruff .
+        run: ruff check .
       - name: Format check (black)
         run: black --check .
       - name: Run tests
