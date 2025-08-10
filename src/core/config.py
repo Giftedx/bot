@@ -120,6 +120,10 @@ class ConfigManager:
             except Exception as e:
                 logger.error(f"Error loading secrets: {e}")
 
+        # Save secrets file if it doesn't exist (similar to load_config behavior)
+        if not self.secrets_path.exists():
+            self.save_secrets(secrets)
+
         return secrets
 
     def save_config(self, config: Dict[str, Any]) -> None:
