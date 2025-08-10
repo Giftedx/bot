@@ -40,7 +40,7 @@ This repository contains a feature-rich Discord bot built with Python.
     ```bash
     make run-dev
     ```
-    This will launch the bot and all its services inside Docker containers. The bot is configured for live-reloading, so any changes you make to the source code will cause it to automatically restart.
+    This will launch the bot and its services in Docker with live-reloading via watchdog.
 
 ## Features
 
@@ -61,7 +61,7 @@ A full-featured Old School RuneScape RPG experience right in your Discord server
 
 ## Command Documentation
 
-For a full list of commands and their usage, please see the [Command Documentation](./docs/api/commands).
+For a full list of commands and their usage, please see the [Command Reference](./docs/commands/command-reference.md).
 
 ## Contributing
 

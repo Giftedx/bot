@@ -7,6 +7,9 @@ from pathlib import Path
 from src.core.config import ConfigManager
 from src.bot.base_bot import BaseBot
 
+# Health server
+from aiohttp import web
+
 
 def setup_logging() -> None:
     """Set up logging configuration."""
@@ -23,6 +26,20 @@ def setup_logging() -> None:
     )
 
 
+async def _health_handler(_: web.Request) -> web.Response:
+    return web.json_response({"status": "ok"})
+
+
+async def start_health_server() -> web.AppRunner:
+    app = web.Application()
+    app.router.add_get("/health", _health_handler)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, host="0.0.0.0", port=8000)
+    await site.start()
+    return runner
+
+
 async def main() -> None:
     """Main entry point for the game."""
     try:
@@ -30,6 +47,10 @@ async def main() -> None:
         setup_logging()
         logger = logging.getLogger(__name__)
         logger.info("Starting Discord Bot...")
+
+        # Start health server
+        health_runner = await start_health_server()
+        logger.info("Health endpoint available at /health on port 8000")
 
         # Load config
         config_manager = ConfigManager()
@@ -54,6 +75,13 @@ async def main() -> None:
     except Exception as e:
         logger.error(f"Fatal error: {e}", exc_info=True)
         sys.exit(1)
+    finally:
+        # Cleanup health server if it was started
+        try:
+            if 'health_runner' in locals():
+                await health_runner.cleanup()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
