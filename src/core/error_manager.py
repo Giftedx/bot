@@ -311,8 +311,13 @@ class ErrorManager:
 
                 retries += 1
 
-    def retry_on_error(self, max_retries: Optional[int] = None, exceptions: Optional[tuple] = None):
-        """Decorator for retrying functions on error."""
+    @staticmethod
+    def retry_on_error(max_retries: Optional[int] = None, exceptions: Optional[tuple] = None):
+        """Decorator for retrying functions on error.
+
+        Implemented as a staticmethod so it can be used as
+        `@ErrorManager.retry_on_error(...)` without an instance.
+        """
 
         def decorator(func):
             @wraps(func)
@@ -329,18 +334,20 @@ class ErrorManager:
                             return func(*args, **kwargs)
                     except target_exceptions as e:
                         if retries >= effective_max_retries:
-                            await self.handle_error(e, {"function": func.__name__}, retries)
+                            # Best-effort logging without instance
+                            logger.error(
+                                "Max retries reached for %s: %s", func.__name__, e, exc_info=True
+                            )
                             raise
 
-                        policy = self.get_policy(e)
-                        delay = min(
-                            policy.retry_delay * (policy.backoff_multiplier**retries),
-                            policy.max_delay,
-                        )
-
+                        # Use a simple exponential backoff
+                        delay = min(1.0 * (2.0 ** retries), 60.0)
                         logger.warning(
-                            f"Retrying {func.__name__} after error "
-                            f"(attempt {retries + 1}/{effective_max_retries + 1}): {e}"
+                            "Retrying %s after error (attempt %s/%s): %s",
+                            func.__name__,
+                            retries + 1,
+                            effective_max_retries + 1,
+                            e,
                         )
 
                         if delay > 0:
