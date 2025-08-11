@@ -58,7 +58,7 @@ class PlexClient:
             result.append(PlexSessionInfo(title=title, usernames=usernames))
         return result
 
-    async def get_library_sections(self):
+    async def get_library_sections(self) -> list:
         if not self._server:
             await self.connect()
         assert self._server is not None
