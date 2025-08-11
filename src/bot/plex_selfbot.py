@@ -13,11 +13,18 @@ class PlexSelfBot(commands.Bot):
     def __init__(self, url: str, token: str):
         intents = discord.Intents.default()
         super().__init__(command_prefix="!", self_bot=True, intents=intents)
-        self._plex: Optional[PlexServer] = PlexServer(url, token)
+        try:
+            self._plex: Optional[PlexServer] = PlexServer(url, token)
+        except Exception as e:
+            logging.error(f"Failed to connect to Plex server: {e}")
+            self._plex = None
         self._player = MediaPlayer()
 
         @self.command(name="search")
         async def search(ctx: commands.Context, *, query: str):
+            if self._plex is None:
+                await ctx.send("Plex server is not available. Please try again later.")
+                return
             section = self._plex.library.section("Movies")
             results = section.search(query)
             embed = discord.Embed(title=f"Search results for {query}")
