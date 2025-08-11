@@ -5,7 +5,7 @@ import asyncio
 from discord.ext import commands
 from discord import VoiceChannel, VoiceClient, Member, Embed, Color, Guild, VoiceState
 
-from src.lib.cog_utils import CogBase
+from src.bot.cogs.base_cog import BaseCog
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ def is_guild_context(ctx: commands.Context) -> bool:
     return ctx.guild is not None and isinstance(ctx.author, Member)
 
 
-class MediaCommands(CogBase):
+class MediaCommands(BaseCog):
     """Media playback commands."""
 
     def __init__(self, bot: commands.Bot, **kwargs):
