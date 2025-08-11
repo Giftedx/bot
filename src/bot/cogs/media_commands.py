@@ -15,7 +15,7 @@ def is_guild_context(ctx: commands.Context) -> bool:
     return ctx.guild is not None and isinstance(ctx.author, Member)
 
 
-class MediaCommands(CogBase):
+class MediaCommands(BaseCog):
     """Media playback commands."""
 
     def __init__(self, bot: commands.Bot, **kwargs):

@@ -145,6 +145,13 @@ class MetricsError(Exception):
     pass
 
 
+# --- Dependency Injection Exceptions ---
+class DIError(Exception):
+    """Raised for dependency injection container errors."""
+
+    pass
+
+
 # --- Plex / Streaming Specific Exceptions ---
 class StreamingError(Exception):  # Base for Plex streaming/API issues
     """Base exception for streaming-related errors."""

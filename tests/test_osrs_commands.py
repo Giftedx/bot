@@ -1,10 +1,30 @@
 """Test OSRS Discord commands."""
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, AsyncMock
+from typing import List, Optional, Union, Any
+from discord import Message
 
 from src.bot.cogs.osrs_commands import OSRSCommands
 from src.osrs.models import Player
 from .conftest import assert_embed_matches, EmbedField
+
+
+@pytest.fixture
+def ctx(bot: MagicMock) -> MagicMock:
+    messages: List[Message] = []
+    ctx = MagicMock()
+    ctx.guild = MagicMock()
+    ctx.author = MagicMock()
+    ctx.author.id = 12345
+
+    async def send(content: Optional[Union[str, Any]] = None, **kwargs: Any) -> None:
+        message = MagicMock(spec=Message)
+        message.content = str(content) if content is not None else None
+        message.embeds = [kwargs["embed"]] if "embed" in kwargs else []
+        messages.append(message)
+
+    ctx.send = AsyncMock(side_effect=send)
+    return ctx
 
 
 @pytest.fixture

@@ -339,9 +339,20 @@ class ErrorManager:
                         max_delay = 60.0
                         delay = min(retry_delay * (backoff_multiplier**retries), max_delay)
 
+                            # Best-effort logging without instance
+                            logger.error(
+                                "Max retries reached for %s: %s", func.__name__, e, exc_info=True
+                            )
+                            raise
+
+                        # Use a simple exponential backoff
+                        delay = min(1.0 * (2.0 ** retries), 60.0)
                         logger.warning(
-                            f"Retrying {func.__name__} after error "
-                            f"(attempt {retries + 1}/{effective_max_retries + 1}): {e}"
+                            "Retrying %s after error (attempt %s/%s): %s",
+                            func.__name__,
+                            retries + 1,
+                            effective_max_retries + 1,
+                            e,
                         )
 
                         if delay > 0:
