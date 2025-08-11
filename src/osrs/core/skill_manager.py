@@ -2,7 +2,7 @@
 
 import math
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 

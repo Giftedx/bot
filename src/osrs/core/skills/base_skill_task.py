@@ -1,9 +1,8 @@
 """Base implementation for skilling tasks."""
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from typing import Dict, Optional
 
-from ..task import Task, TaskRequirements, TaskRewards
+from ..task import Task
 from ..constants import SkillType
 from ...models.user import User
 

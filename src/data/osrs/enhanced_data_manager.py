@@ -3,10 +3,9 @@ import asyncio
 import json
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any
 from pathlib import Path
 import logging
-from bs4 import BeautifulSoup
 import mwclient
 
 from .models import (
@@ -20,7 +19,6 @@ from .models import (
     OSRSSkill,
     OSRSBoss,
     OSRSSkillingActivity,
-    OSRSMinigame,
 )
 
 logger = logging.getLogger(__name__)

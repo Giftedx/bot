@@ -3,7 +3,7 @@
 import os
 import json
 import sqlite3
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, Optional, Any
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -220,7 +220,7 @@ class DatabaseManager:
             self.cursor.execute("INSERT INTO players (username) VALUES (?)", (username,))
             self.conn.commit()
             return self.cursor.lastrowid
-        except sqlite3.Error as e:
+        except sqlite3.Error:
             self.conn.rollback()
             raise
 
@@ -269,7 +269,7 @@ class DatabaseManager:
 
             self.conn.commit()
 
-        except sqlite3.Error as e:
+        except sqlite3.Error:
             self.conn.rollback()
             raise
 
@@ -301,7 +301,7 @@ class DatabaseManager:
 
             self.conn.commit()
 
-        except sqlite3.Error as e:
+        except sqlite3.Error:
             self.conn.rollback()
             raise
 
@@ -324,7 +324,7 @@ class DatabaseManager:
 
             self.conn.commit()
 
-        except sqlite3.Error as e:
+        except sqlite3.Error:
             self.conn.rollback()
             raise
 
@@ -355,7 +355,7 @@ class DatabaseManager:
 
             self.conn.commit()
 
-        except sqlite3.Error as e:
+        except sqlite3.Error:
             self.conn.rollback()
             raise
 

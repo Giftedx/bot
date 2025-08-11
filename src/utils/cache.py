@@ -1,5 +1,5 @@
 """Caching system for improved performance."""
-from typing import Any, Optional, Dict, Callable
+from typing import Any, Optional, Callable
 from pathlib import Path
 import json
 import time

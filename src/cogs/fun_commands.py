@@ -3,7 +3,7 @@ import json
 import os
 import random
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable, Dict, Optional
 
 import aiohttp
 import discord

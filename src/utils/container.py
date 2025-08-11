@@ -1,5 +1,5 @@
 """Dependency injection container for service management."""
-from typing import Any, Dict, Optional, Type, TypeVar, cast
+from typing import Any, Dict, Optional, Type, TypeVar
 from dataclasses import dataclass, field
 from .exceptions import AppError
 from .logger import get_logger

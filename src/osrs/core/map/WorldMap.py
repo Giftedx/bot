@@ -1,5 +1,5 @@
 """OSRS world map implementation."""
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Set, Tuple
 from enum import Enum
 

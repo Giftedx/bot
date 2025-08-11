@@ -5,7 +5,7 @@ import random
 import math
 import asyncio
 
-from .movement import Tile, TileType, MovementSystem
+from .movement import Tile, MovementSystem
 
 
 class ObstacleType(Enum):

@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Any
 import asyncpg
 from datetime import datetime
 
-from .base_models import BasePet, PetStats, PetAbility, PetOrigin, PetRarity, StatusEffect
+from .base_models import BasePet, PetStats, PetAbility, PetOrigin, PetRarity
 
 
 class PetDatabase:

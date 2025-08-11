@@ -1,5 +1,5 @@
 """Performance profiling utilities."""
-from typing import Any, Dict, List, Optional
+from typing import Dict, Optional
 from dataclasses import dataclass, field
 import cProfile
 import pstats

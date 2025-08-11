@@ -1,13 +1,11 @@
 """OSRS battle system implementation."""
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from datetime import datetime
 import random
 import logging
-import asyncio
 
-from ..models.user import User
 from .constants import SkillType
-from .game_math import calculate_max_hit, calculate_hit_chance, calculate_combat_level
+from .game_math import calculate_max_hit, calculate_hit_chance
 
 logger = logging.getLogger(__name__)
 

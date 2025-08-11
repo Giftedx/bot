@@ -1,13 +1,10 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-import asyncio
 import random
 import math
-from typing import Dict, List, Optional
-from datetime import datetime, timezone
+from typing import Dict, Optional
 import json
-import aiohttp
 
 class TournamentCreateModal(discord.ui.Modal, title="Create a new Pokemon Tournament"):
     name = discord.ui.TextInput(label="Tournament Name")

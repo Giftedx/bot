@@ -1,17 +1,15 @@
 """Media integration cog for Plex and Discord integration."""
 import asyncio
 from datetime import datetime, timedelta
-from typing import Optional, Dict, List, Any
+from typing import Optional
 import uuid
-import aiohttp
 
 import discord
 from discord.ext import commands, tasks
 from plexapi.server import PlexServer
-from plexapi.video import Movie, Show, Episode
-from plexapi.exceptions import NotFound, Unauthorized
+from plexapi.video import Movie
 
-from ..core.base_cog import BaseCog, check_permissions
+from ..core.base_cog import BaseCog
 from ..media.data.data_manager import MediaDataManager
 
 

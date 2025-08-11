@@ -1,10 +1,9 @@
 """OSRS Combat System"""
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Set
+from typing import Dict, Optional
 from enum import Enum
 import random
 import math
-import asyncio
 
 
 class CombatStyle(Enum):

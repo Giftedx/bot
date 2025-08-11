@@ -1,7 +1,7 @@
 """Combat manager for handling combat calculations and formulas."""
 
 import math
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 from .data_manager import DataManager
 
 

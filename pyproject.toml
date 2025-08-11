@@ -26,6 +26,7 @@ dependencies = [
     "pytz>=2023.3",
     "humanize>=4.9.0",
     "colorama>=0.4.6",
+    "rich>=13.0.0",
     "websockets>=12.0",
     "typing-extensions>=4.7.1",
     "PyYAML>=6.0.1",
@@ -107,6 +108,10 @@ dev = [
     "mkdocstrings>=0.24.0",
     "mkdocstrings-python>=1.7.0",
     "watchdog>=4.0.0",
+
+    # Dev-only integrations
+    "hvac>=1.2.1",
+    "asynctest>=0.13.0",
 ]
 
 postgres = [
@@ -153,7 +158,7 @@ exclude_lines = [
 [tool.black]
 line-length = 100
 target-version = ['py311']
-include = '\.pyi?$'
+include = '\\.pyi?$'
 
 [tool.isort]
 profile = "black"

@@ -1,12 +1,11 @@
 """Rate limiter for API calls."""
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 from dataclasses import dataclass
 import time
 import asyncio
 from datetime import datetime
 from .logger import get_logger
 from .metrics import metrics
-from .config import config
 
 logger = get_logger(__name__)
 

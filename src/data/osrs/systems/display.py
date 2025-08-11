@@ -1,16 +1,15 @@
 from typing import List, Dict, Optional, Tuple, Union
 from dataclasses import dataclass
 from enum import Enum
-import json
 import math
 import asyncio
 from pathlib import Path
 import discord
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 import io
 
-from .movement import Tile, TileType, Area, MovementSystem
-from .agility import AgilityObstacle, AgilityCourse, AgilitySystem
+from .movement import Tile, TileType, MovementSystem
+from .agility import AgilityObstacle, AgilitySystem
 
 
 class DisplayMode(Enum):

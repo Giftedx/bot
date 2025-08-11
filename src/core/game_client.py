@@ -15,8 +15,6 @@ from src.core.mechanics import (
     DropRates,
     CombatStyle,
     AttackType,
-    AgilityCourse,
-    AGILITY_COURSES,
 )
 
 # from src.core.config import Config # Removed Config import

@@ -2,7 +2,7 @@ import asyncio
 import json
 from pathlib import Path
 import logging
-from typing import List, Dict, Any
+from typing import List
 
 from .fetcher import OSRSDataFetcher
 from .models import OSRSPet

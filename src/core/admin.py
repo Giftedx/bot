@@ -1,9 +1,8 @@
 from discord.ext import commands
 import discord
 from discord import app_commands
-from typing import Optional, Union
+from typing import Optional
 import asyncio
-import yaml
 import json
 
 

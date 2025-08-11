@@ -1,13 +1,11 @@
 """Base cog class with advanced features."""
-from typing import Optional, Callable, Any, Dict, List, Union
+from typing import Optional, Callable, Dict, List
 import asyncio
-import functools
 import logging
 from datetime import datetime, timedelta
 
 import discord
 from discord.ext import commands
-from discord import app_commands
 
 from .config import Config
 from ..utils.formatting import format_error

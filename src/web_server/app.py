@@ -5,7 +5,7 @@ from functools import wraps
 import jwt
 import redis
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)

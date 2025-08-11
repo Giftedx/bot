@@ -7,7 +7,7 @@ across all bot components.
 import logging
 import traceback
 import asyncio
-from typing import Dict, List, Any, Optional, Callable, Type, Union
+from typing import Dict, List, Any, Optional, Callable, Type
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from enum import Enum
@@ -18,7 +18,6 @@ import discord
 from discord.ext import commands
 from prometheus_client import Counter, Histogram
 
-from .exceptions import AppError, ErrorContext
 
 logger = logging.getLogger(__name__)
 

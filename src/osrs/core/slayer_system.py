@@ -3,7 +3,6 @@ import random
 from dataclasses import dataclass
 from datetime import datetime
 
-from .combat.monster_manager import MonsterDefinition
 
 
 @dataclass

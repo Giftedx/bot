@@ -2,7 +2,6 @@
 Plex Activity integration for Discord.
 Handles the lifecycle and communication between Plex media playback and Discord Activities.
 """
-import asyncio
 import logging
 from typing import Dict, Optional, Any
 import time

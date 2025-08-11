@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 import random
 import asyncio
-from typing import Dict, List, Optional
 import aiohttp
 
 

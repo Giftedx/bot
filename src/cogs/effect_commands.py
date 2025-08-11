@@ -2,8 +2,7 @@ from discord.ext import commands
 import discord
 from typing import Optional
 import logging
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
 
 from ..lib.cog_utils import CogBase  # Unified dependencies
 

@@ -138,7 +138,14 @@ class WebSocketError(Exception):
     pass
 
 
-# --- Plex Specific Exceptions (as refactored) ---
+# --- Metrics Exceptions ---
+class MetricsError(Exception):
+    """Raised when there is an error with metrics operations."""
+
+    pass
+
+
+# --- Plex / Streaming Specific Exceptions ---
 class StreamingError(Exception):  # Base for Plex streaming/API issues
     """Base exception for streaming-related errors."""
 
@@ -159,6 +166,37 @@ class PlexConnectionError(StreamingError):
 
 class PlexAPIError(StreamingError):
     """Raised for general Plex API errors."""
+
+    pass
+
+
+class PlexAuthError(StreamingError):
+    """Raised when Plex authentication fails."""
+
+    pass
+
+
+class FFmpegError(StreamingError):
+    """Raised for FFmpeg-related errors."""
+
+    pass
+
+
+# --- Redis Exceptions ---
+class RedisConnectionError(AppError):
+    """Raised when a connection to Redis cannot be established."""
+
+    pass
+
+
+class RedisOperationError(AppError):
+    """Raised when a Redis operation fails."""
+
+    pass
+
+
+class RedisRateLimitExceededError(AppError):
+    """Raised when a Redis-based rate limit is exceeded."""
 
     pass
 

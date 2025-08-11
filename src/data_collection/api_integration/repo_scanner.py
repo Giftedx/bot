@@ -6,14 +6,12 @@ Handles cloning, code analysis, and data extraction from Git repositories.
 import os
 import logging
 from typing import Dict, List, Optional, Any
-import asyncio
-import aiohttp
 import git
 from github import Github
 import gitlab
 
 from ..base_collector import BaseCollector
-from ..config import REPO_SOURCES, API_CONFIG
+from ..config import REPO_SOURCES
 
 logger = logging.getLogger(__name__)
 

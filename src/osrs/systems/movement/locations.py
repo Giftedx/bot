@@ -1,7 +1,7 @@
 from typing import Dict, Set, List, Tuple, Optional
 from enum import Enum
 from dataclasses import dataclass
-from .movement_system import Tile, TileType
+from .movement_system import Tile
 
 
 class TransportType(Enum):

@@ -5,7 +5,7 @@ import json
 import logging
 from typing import Dict, Optional, Any
 
-from ..osrs.models import Player, SkillType, QuestStatus
+from ..osrs.models import Player
 
 
 logger = logging.getLogger("DatabaseService")

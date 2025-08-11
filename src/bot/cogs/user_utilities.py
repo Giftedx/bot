@@ -5,7 +5,6 @@ from discord.ext import commands
 from typing import Dict, Optional, DefaultDict
 from collections import defaultdict
 import time
-import asyncio
 
 
 class UserUtilities(commands.Cog):

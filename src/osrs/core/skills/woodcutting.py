@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum, auto
-from typing import Dict, Optional, Set
+from typing import Dict
 
 from .base_skill_task import BaseSkillTask
 from ..task import TaskRequirements, TaskRewards

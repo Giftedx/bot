@@ -1,13 +1,12 @@
 """Pet manager for handling pets and their mechanics."""
 
 import random
-from typing import Dict, List, Optional, Tuple, Set
+from typing import Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
 from .game_tick import GameTick, TickPriority
 from .movement import Position
-from .skill_manager import SkillType
 
 
 class PetSource(Enum):

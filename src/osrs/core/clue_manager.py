@@ -1,12 +1,11 @@
 """Clue scroll manager for handling treasure trails."""
 
 import random
-from typing import Dict, List, Optional, Tuple, Set
+from typing import Dict, List, Optional, Set
 from dataclasses import dataclass
 from enum import Enum
 
 from .game_tick import GameTick, TickPriority
-from .movement import Position
 from .skill_manager import SkillType
 
 

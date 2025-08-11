@@ -1,9 +1,6 @@
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 import aiohttp
-import json
 from datetime import datetime
-import asyncio
-from pathlib import Path
 import logging
 
 logger = logging.getLogger(__name__)

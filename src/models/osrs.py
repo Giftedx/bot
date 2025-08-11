@@ -1,7 +1,6 @@
 """OSRS data models."""
 
 from datetime import datetime
-from typing import Optional
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 

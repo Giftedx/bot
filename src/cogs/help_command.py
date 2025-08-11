@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import itertools
 
 from src.lib.cog_utils import CogBase
 

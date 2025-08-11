@@ -1,8 +1,6 @@
 """Skill system implementing exact OSRS skill mechanics."""
 
 import math
-import random
-from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 

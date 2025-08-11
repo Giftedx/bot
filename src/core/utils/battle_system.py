@@ -12,8 +12,7 @@ Typical usage:
         battle_commands = BattleCommands(bot)
         await battle_commands.battle_osrs(ctx, opponent)
 """
-import asyncio
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict
 
 import discord
 from discord import ButtonStyle

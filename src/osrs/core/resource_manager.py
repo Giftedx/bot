@@ -1,6 +1,5 @@
 """Resource manager for handling gathering resources and respawn timers."""
 
-import time
 from typing import Dict, List, Optional, Set, Tuple
 from dataclasses import dataclass
 from enum import Enum

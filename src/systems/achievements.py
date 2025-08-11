@@ -2,7 +2,7 @@
 
 import logging
 from enum import Enum
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from datetime import datetime
 
 from src.core.database import DatabaseManager

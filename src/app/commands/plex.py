@@ -64,7 +64,7 @@ class PlexSlash(commands.Cog):
                 # For now, we'll just send a message.
                 # TODO: Hook this up to the actual `plex_play` logic once migrated.
                 await select_interaction.followup.send(
-                    f"Playback for selected media will start shortly.", ephemeral=True
+                    "Playback for selected media will start shortly.", ephemeral=True
                 )
 
             select.callback = select_callback

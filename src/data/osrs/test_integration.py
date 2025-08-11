@@ -1,10 +1,9 @@
 import asyncio
 import logging
-from typing import List
 
 from .fetcher import OSRSDataFetcher
 from .loader import OSRSDataLoader
-from .models import OSRSPet, OSRSPetSource, OSRSPetRarity, OSRSSkill
+from .models import OSRSPetSource, OSRSPetRarity, OSRSSkill
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -19,7 +18,7 @@ async def test_data_fetching():
         # Test fetching a specific pet
         pet = await fetcher.fetch_pet_data("Baby mole")
         if pet:
-            logger.info(f"Successfully fetched Baby mole pet data:")
+            logger.info("Successfully fetched Baby mole pet data:")
             logger.info(f"  Name: {pet.name}")
             logger.info(f"  Source: {pet.source}")
             logger.info(f"  Rarity: {pet.rarity}")
@@ -90,16 +89,16 @@ def test_data_loading():
             logger.info(f"  Name: {example_pet.name}")
             logger.info(f"  Source: {example_pet.source.value}")
             logger.info(f"  Rarity: {example_pet.rarity.value}")
-            logger.info(f"  Combat stats:")
+            logger.info("  Combat stats:")
             logger.info(f"    Attack: {example_pet.base_stats.attack_level}")
             logger.info(f"    Strength: {example_pet.base_stats.strength_level}")
             logger.info(f"    Defence: {example_pet.base_stats.defence_level}")
             if example_pet.variants:
-                logger.info(f"  Variants:")
+                logger.info("  Variants:")
                 for variant in example_pet.variants:
                     logger.info(f"    - {variant.name}")
             if example_pet.requirements:
-                logger.info(f"  Skill requirements:")
+                logger.info("  Skill requirements:")
                 for skill, level in example_pet.requirements.items():
                     logger.info(f"    {skill.value}: {level}")
     else:

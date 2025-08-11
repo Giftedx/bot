@@ -28,6 +28,12 @@ from src.utils.container import Container
 
 
 @pytest.fixture
+def bot() -> MagicMock:
+    """Provide a mock Discord Bot for cog tests."""
+    return MagicMock(spec=Bot)
+
+
+@pytest.fixture
 def battle_config() -> BattleSystemConfig:
     """Fixture for battle system configuration."""
     return BattleSystemConfig()

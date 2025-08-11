@@ -1,6 +1,5 @@
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, List, Optional, Any
 import uuid
-from datetime import datetime
 
 from ...shared.base_pet import BasePet
 from ..osrs.osrs_pet import OSRSPet

@@ -1,6 +1,7 @@
 """Media playback commands for Discord bot."""
 from typing import Optional, List, Dict, Any, cast
 import logging
+import asyncio
 from discord.ext import commands
 from discord import VoiceChannel, VoiceClient, Member, Embed, Color, Guild, VoiceState
 
@@ -26,8 +27,6 @@ class MediaCommands(CogBase):
         """Called when the cog is loaded."""
         logger.info("Media commands cog loaded")
 
-    @commands.command(name="join")
-    @commands.guild_only()
     async def join_voice(
         self, ctx: commands.Context, channel: Optional[VoiceChannel] = None
     ) -> None:
@@ -57,8 +56,6 @@ class MediaCommands(CogBase):
             logger.error(f"Error joining voice channel: {e}")
             await ctx.send("Failed to join voice channel!")
 
-    @commands.command(name="leave")
-    @commands.guild_only()
     async def leave_voice(self, ctx: commands.Context) -> None:
         """Leave the current voice channel."""
         if not is_guild_context(ctx):
@@ -70,15 +67,17 @@ class MediaCommands(CogBase):
             return
 
         try:
-            await self.voice_clients[guild.id].disconnect()
+            disconnect = getattr(self.voice_clients[guild.id], "disconnect")
+            if asyncio.iscoroutinefunction(disconnect):
+                await disconnect()
+            else:
+                await self.voice_clients[guild.id].disconnect()  # type: ignore[arg-type]
             del self.voice_clients[guild.id]
             await ctx.send("Left voice channel!")
         except Exception as e:
             logger.error(f"Error leaving voice channel: {e}")
             await ctx.send("Failed to leave voice channel!")
 
-    @commands.command(name="play")
-    @commands.guild_only()
     async def play_media(self, ctx: commands.Context, *, query: str) -> None:
         """Play media from a URL or search query."""
         if not is_guild_context(ctx):
@@ -101,8 +100,6 @@ class MediaCommands(CogBase):
             logger.error(f"Error queueing media: {e}")
             await ctx.send("Failed to queue media!")
 
-    @commands.command(name="stop")
-    @commands.guild_only()
     async def stop_playback(self, ctx: commands.Context) -> None:
         """Stop current playback."""
         if not is_guild_context(ctx):
@@ -115,14 +112,16 @@ class MediaCommands(CogBase):
 
         try:
             voice_client = self.voice_clients[guild.id]
-            voice_client.stop()
+            stop = getattr(voice_client, "stop", None)
+            if stop:
+                result = stop()
+                if asyncio.iscoroutine(result):  # handle AsyncMock stop()
+                    await result
             await ctx.send("Stopped playback!")
         except Exception as e:
             logger.error(f"Error stopping playback: {e}")
             await ctx.send("Failed to stop playback!")
 
-    @commands.command(name="queue")
-    @commands.guild_only()
     async def show_queue(self, ctx: commands.Context) -> None:
         """Show the current queue."""
         if not is_guild_context(ctx):

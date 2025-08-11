@@ -1,12 +1,8 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-import asyncio
 import random
-import json
 from typing import Dict, Optional, List
-import aiohttp
-from datetime import datetime, timedelta
 
 class PokemonGym(commands.Cog):
     def __init__(self, bot):

@@ -3,7 +3,7 @@ Player models for the core system.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any
 
 
 @dataclass

@@ -16,12 +16,9 @@ from src.core.models.osrs_data import (
     COOKABLE_ITEMS,
     CRAFTABLE_ITEMS,
     JEWELRY_ITEMS,
-    AXES,
-    PICKAXES,
 )
 from src.data.osrs.data_manager import OSRSDataManager
 from src.core.battle_manager import GenericBattleStateManager, BattleType
-from src.core.models.quest import QuestStatus
 from src.core.trade_manager import TradeManager
 from src.core.models.trade import TradeStatus
 
@@ -206,7 +203,7 @@ class OSRSCommands(commands.Cog, name="OSRS"):
             return await ctx.send("You need to create a character first!")
 
         if item_name not in COOKABLE_ITEMS:
-            return await ctx.send(f"You can't cook that!")
+            return await ctx.send("You can't cook that!")
 
         cookable = COOKABLE_ITEMS[item_name]
         if player.skills["cooking"].level < cookable["level_req"]:
@@ -232,7 +229,7 @@ class OSRSCommands(commands.Cog, name="OSRS"):
             return await ctx.send("You need to create a character first!")
 
         if bar_name not in CRAFTABLE_ITEMS:
-            return await ctx.send(f"You can't smelt that!")
+            return await ctx.send("You can't smelt that!")
 
         craftable = CRAFTABLE_ITEMS[bar_name]
         if player.skills["smithing"].level < craftable["level_req"]:
@@ -262,7 +259,7 @@ class OSRSCommands(commands.Cog, name="OSRS"):
             return await ctx.send("You need to create a character first!")
 
         if item_name not in JEWELRY_ITEMS:
-            return await ctx.send(f"You can't craft that!")
+            return await ctx.send("You can't craft that!")
 
         craftable = JEWELRY_ITEMS[item_name]
         if player.skills["crafting"].level < craftable["level_req"]:

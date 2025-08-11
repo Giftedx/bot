@@ -1,5 +1,4 @@
 import aiohttp
-import asyncio
 import json
 import re
 from datetime import datetime
@@ -7,15 +6,12 @@ from typing import Dict, List, Optional, Any
 from pathlib import Path
 import logging
 import mwclient
-from bs4 import BeautifulSoup
 
 from .models import (
     OSRSPet,
     OSRSPetSource,
     OSRSPetRarity,
-    OSRSPetAbility,
     OSRSPetVariant,
-    OSRSLocation,
     OSRSCombatStats,
     OSRSSkill,
     OSRSBoss,

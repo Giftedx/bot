@@ -5,9 +5,8 @@ Implements ROM parsing for different Pokemon games and integrates with PokeAPI.
 
 import os
 import logging
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Optional, Any
 import struct
-import json
 import asyncio
 
 from ..base_collector import BaseCollector

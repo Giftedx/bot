@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import asyncio
 
 
 class Activities(commands.Cog):
@@ -38,7 +37,7 @@ class Activities(commands.Cog):
 
         activity_type = activity_type.lower()
         if activity_type not in activities:
-            return await ctx.send(f"Invalid activity! Use `!activity` to see available options.")
+            return await ctx.send("Invalid activity! Use `!activity` to see available options.")
 
         try:
             # Create invite with activity

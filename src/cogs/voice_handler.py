@@ -1,7 +1,5 @@
 """Voice connection handler for Discord."""
 import logging
-import asyncio
-from typing import Optional
 import discord
 from discord.ext import commands, tasks
 

@@ -3,7 +3,6 @@
 Master repository management script.
 Combines functionality from multiple repository management scripts into a single tool.
 """
-import asyncio
 import json
 import logging
 import os
@@ -13,7 +12,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional
 
 # Configure logging
 logging.basicConfig(
@@ -361,7 +360,7 @@ def main():
     except KeyboardInterrupt:
         logger.info("\nOperation cancelled by user")
         sys.exit(0)
-    except Exception as e:
+    except Exception:
         logger.error("Unexpected error", exc_info=True)
         sys.exit(1)
 

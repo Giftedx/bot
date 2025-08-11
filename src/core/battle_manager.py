@@ -1,7 +1,7 @@
 """Core battle management system."""
 
 import random
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from src.core.models import BattleReward, BattleState, BattleType
 

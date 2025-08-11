@@ -3,7 +3,6 @@ Component handlers for Discord application interactions.
 """
 
 import logging
-from typing import Optional
 import discord
 from discord.ui import View, Button
 
