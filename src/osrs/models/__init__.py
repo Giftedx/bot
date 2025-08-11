@@ -2,7 +2,21 @@
 from dataclasses import dataclass
 from typing import Dict
 
-from ..core.constants import SkillType, SkillLevel as Skill
+
+# Placeholder definitions for SkillType and SkillLevel (Skill)
+from enum import Enum
+
+class SkillType(Enum):
+    ATTACK = "Attack"
+    DEFENCE = "Defence"
+    STRENGTH = "Strength"
+    HITPOINTS = "Hitpoints"
+    # Add other skills as needed
+
+@dataclass
+class Skill:
+    level: int
+
 
 
 @dataclass
