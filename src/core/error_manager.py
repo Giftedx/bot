@@ -313,11 +313,7 @@ class ErrorManager:
 
     @staticmethod
     def retry_on_error(max_retries: Optional[int] = None, exceptions: Optional[tuple] = None):
-        """Decorator for retrying functions on error.
-
-        Implemented as a staticmethod so it can be used as
-        `@ErrorManager.retry_on_error(...)` without an instance.
-        """
+        """Decorator for retrying functions on error."""
 
         def decorator(func):
             @wraps(func)
@@ -334,6 +330,15 @@ class ErrorManager:
                             return func(*args, **kwargs)
                     except target_exceptions as e:
                         if retries >= effective_max_retries:
+                            # Fallback simple behavior without ErrorManager instance
+                            raise
+
+                        # Default backoff parameters
+                        retry_delay = 1.0
+                        backoff_multiplier = 2.0
+                        max_delay = 60.0
+                        delay = min(retry_delay * (backoff_multiplier**retries), max_delay)
+
                             # Best-effort logging without instance
                             logger.error(
                                 "Max retries reached for %s: %s", func.__name__, e, exc_info=True

@@ -3,7 +3,10 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
-import asyncpg
+try:
+    import asyncpg  # type: ignore
+except Exception:  # pragma: no cover
+    asyncpg = None  # type: ignore
 
 from src.core.battle_manager import BattleType
 
@@ -11,7 +14,7 @@ from src.core.battle_manager import BattleType
 class BattleDatabase:
     """Handles battle-related database operations."""
 
-    def __init__(self, pool: asyncpg.Pool):
+    def __init__(self, pool: "asyncpg.Pool"):
         self.pool = pool
 
     async def record_battle(
@@ -23,7 +26,8 @@ class BattleDatabase:
         winner_id: Optional[int],
         battle_data: Dict[str, Any],
     ) -> None:
-        """Record a completed battle."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         async with self.pool.acquire() as conn:
             # Record battle history
             await conn.execute(
@@ -49,7 +53,8 @@ class BattleDatabase:
                 await self._update_player_stats(conn, player_id, battle_type, won)
 
     async def record_rewards(self, battle_id: str, player_id: int, rewards: Dict[str, Any]) -> None:
-        """Record battle rewards."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         await self.pool.execute(
             """
             INSERT INTO battle_rewards (
@@ -66,7 +71,8 @@ class BattleDatabase:
         )
 
     async def get_player_stats(self, player_id: int, battle_type: BattleType) -> Dict[str, Any]:
-        """Get player's battle statistics."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         return await self.pool.fetchrow(
             """
             SELECT * FROM battle_stats
@@ -77,7 +83,8 @@ class BattleDatabase:
         )
 
     async def get_player_rating(self, player_id: int, battle_type: BattleType) -> Tuple[int, float]:
-        """Get player's battle rating and uncertainty."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         row = await self.pool.fetchrow(
             """
             SELECT rating, uncertainty FROM battle_ratings
@@ -95,7 +102,8 @@ class BattleDatabase:
         loser_id: int,
         k_factor: float = 32.0,
     ) -> None:
-        """Update players' ratings using ELO system."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         async with self.pool.acquire() as conn:
             # Get current ratings
             winner_rating, _ = await self.get_player_rating(winner_id, battle_type)
@@ -125,7 +133,8 @@ class BattleDatabase:
     async def check_achievements(
         self, player_id: int, battle_type: BattleType
     ) -> List[Dict[str, Any]]:
-        """Check and award any newly completed achievements."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         stats = await self.get_player_stats(player_id, battle_type)
         if not stats:
             return []
@@ -165,12 +174,13 @@ class BattleDatabase:
 
     async def _update_player_stats(
         self,
-        conn: asyncpg.Connection,
+        conn: "asyncpg.Connection",
         player_id: int,
         battle_type: BattleType,
         won: bool,
     ) -> None:
-        """Update player's battle statistics."""
+        if asyncpg is None:
+            raise RuntimeError("asyncpg is not available")
         await conn.execute(
             """
             INSERT INTO battle_stats (

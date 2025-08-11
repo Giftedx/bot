@@ -1,0 +1,6 @@
+FISHING_SPOTS = ["Lumbridge River", "Barbarian Village", "Catherby"]
+MINING_SPOTS = ["Varrock West Mine", "Al Kharid Mine", "Motherlode Mine"]
+WOODCUTTING_SPOTS = ["Draynor", "Seers' Village", "Forests"]
+COOKABLE_ITEMS = ["Shrimp", "Trout", "Lobster"]
+CRAFTABLE_ITEMS = ["Leather Gloves", "Gold Ring", "Amulet"]
+JEWELRY_ITEMS = ["Gold Necklace", "Ruby Ring", "Diamond Amulet"]

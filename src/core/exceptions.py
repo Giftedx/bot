@@ -209,3 +209,8 @@ class RedisRateLimitExceededError(AppError):
 
 
 # --- Other specific exceptions can be added below ---
+
+class DIError(Exception):
+    """Raised for dependency injection container errors."""
+
+    pass

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dependency_injector import containers, providers
 from src.services.plex.plex_service import PlexService
 from src.core.plex_manager import PlexManager
@@ -6,24 +7,31 @@ import sys
 import os
 from typing import Any
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+from typing import Any, Callable, Dict, Type, TypeVar
+
+from .exceptions import DIError
+
+T = TypeVar("T")
 
 
-class RedisService:
-    """Placeholder for Redis Service"""
+class DIContainer:
+    """A minimal dependency injection container supporting singleton, scoped, and transient."""
 
-    pass
+    def __init__(self) -> None:
+        self._singletons: Dict[Type[Any], Any] = {}
+        self._scoped_factories: Dict[Type[Any], Callable[[], Any]] = {}
+        self._transient_factories: Dict[Type[Any], Callable[[], Any]] = {}
 
+    def register_singleton(self, t: Type[T], instance: T) -> None:
+        if t in self._singletons:
+            raise DIError(f"Service {t.__name__} is already registered")
+        self._singletons[t] = instance
 
-class DiscordService:
-    """Placeholder for Discord Service"""
+    def register_scoped(self, t: Type[T], factory: Callable[[], T]) -> None:
+        self._scoped_factories[t] = factory
 
-    pass
-
-
-class Container(containers.DeclarativeContainer):
-    """Dependency Injection Container"""
-
+    def register_transient(self, t: Type[T], factory: Callable[[], T]) -> None:
+        self._transient_factories[t] = factory
     config = providers.Singleton(Settings)
 
     redis_service = providers.Singleton(RedisService)
