@@ -11,7 +11,7 @@ from .core import (
     SkillType,
     SkillLevel,
 )
-from .models import User
+from .models import Player as User
 
 __version__ = "0.1.0"
 

@@ -5,7 +5,7 @@ import asyncio
 from discord.ext import commands
 from discord import VoiceChannel, VoiceClient, Member, Embed, Color, Guild, VoiceState
 
-from src.lib.cog_utils import CogBase
+from src.bot.cogs.base_cog import BaseCog as CogBase
 
 logger = logging.getLogger(__name__)
 

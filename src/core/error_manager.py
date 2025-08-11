@@ -311,7 +311,8 @@ class ErrorManager:
 
                 retries += 1
 
-    def retry_on_error(self, max_retries: Optional[int] = None, exceptions: Optional[tuple] = None):
+    @staticmethod
+    def retry_on_error(max_retries: Optional[int] = None, exceptions: Optional[tuple] = None):
         """Decorator for retrying functions on error."""
 
         def decorator(func):
@@ -329,14 +330,14 @@ class ErrorManager:
                             return func(*args, **kwargs)
                     except target_exceptions as e:
                         if retries >= effective_max_retries:
-                            await self.handle_error(e, {"function": func.__name__}, retries)
+                            # Fallback simple behavior without ErrorManager instance
                             raise
 
-                        policy = self.get_policy(e)
-                        delay = min(
-                            policy.retry_delay * (policy.backoff_multiplier**retries),
-                            policy.max_delay,
-                        )
+                        # Default backoff parameters
+                        retry_delay = 1.0
+                        backoff_multiplier = 2.0
+                        max_delay = 60.0
+                        delay = min(retry_delay * (backoff_multiplier**retries), max_delay)
 
                         logger.warning(
                             f"Retrying {func.__name__} after error "

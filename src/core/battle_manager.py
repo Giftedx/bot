@@ -166,3 +166,8 @@ class BattleManager:
                 "training_bonus": config["training_bonus"],
             }
             loser_reward.special_rewards = {"loyalty_gain": config["loyalty_gain"] // 2}
+
+
+class GenericBattleStateManager(BattleManager):
+    """Backward-compatible alias for BattleManager used by older modules/tests."""
+    pass
