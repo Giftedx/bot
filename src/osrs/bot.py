@@ -1,3 +1,9 @@
+"""Standalone OSRS Discord Bot implementation.
+
+This module provides a specific bot instance focused solely on OSRS functionality,
+distinct from the main integrated bot. It handles command processing, error handling,
+and basic event loops for the OSRS feature set.
+"""
 import discord
 from discord.ext import commands
 import os
@@ -12,8 +18,11 @@ bot = commands.Bot(command_prefix="!osrs ", intents=discord.Intents.all())
 
 
 @bot.event
-async def on_ready():
-    """When the bot is ready"""
+async def on_ready() -> None:
+    """Event handler triggered when the bot is connected and ready.
+
+    Prints connection details and the list of connected guilds to the console.
+    """
     print(f"{bot.user} has connected to Discord!")
     print("Connected to the following guilds:")
     for guild in bot.guilds:
@@ -21,8 +30,13 @@ async def on_ready():
 
 
 @bot.event
-async def on_command_error(ctx, error):
-    """Handle command errors"""
+async def on_command_error(ctx: commands.Context, error: commands.CommandError) -> None:
+    """Global error handler for bot commands.
+
+    Args:
+        ctx (commands.Context): The context where the error occurred.
+        error (commands.CommandError): The error raised during command execution.
+    """
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Missing required argument. Please check the command usage.")
     elif isinstance(error, commands.BadArgument):
@@ -32,8 +46,15 @@ async def on_command_error(ctx, error):
 
 
 @bot.command(name="help")
-async def custom_help(ctx):
-    """Show custom help message"""
+async def custom_help(ctx: commands.Context) -> None:
+    """Display a custom help message listing all available OSRS commands.
+
+    Overrides the default help command to provide a categorized embed
+    of OSRS-specific functionality.
+
+    Args:
+        ctx (commands.Context): The command context.
+    """
     embed = discord.Embed(
         title="OSRS Bot Commands", description="All commands use the prefix !osrs", color=0x00FF00
     )
@@ -98,21 +119,32 @@ async def custom_help(ctx):
 
 
 @bot.command(name="ping")
-async def ping(ctx):
-    """Check bot latency"""
+async def ping(ctx: commands.Context) -> None:
+    """Check and display the bot's current latency.
+
+    Args:
+        ctx (commands.Context): The command context.
+    """
     latency = round(bot.latency * 1000)
     await ctx.send(f"Pong! Latency: {latency}ms")
 
 
-def main():
-    """Main entry point"""
+def main() -> None:
+    """Main entry point for the OSRS bot.
+
+    Loads the Discord commands extension and starts the bot loop.
+    """
     # Load OSRS commands
+    # Note: This assumes src.osrs.discord_commands exists.
     from .discord_commands import setup
 
     setup(bot)
 
     # Start the bot
-    bot.run(TOKEN)
+    if TOKEN:
+        bot.run(TOKEN)
+    else:
+        print("Error: DISCORD_TOKEN not found in environment.")
 
 
 if __name__ == "__main__":

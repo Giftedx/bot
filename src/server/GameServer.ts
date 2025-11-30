@@ -2,6 +2,9 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { GameState, Player, GameClientMessage, GameServerMessage, Position } from '../types';
 import { randomUUID } from 'crypto';
 
+/**
+ * Represents the main game server handling WebSocket connections and game state.
+ */
 export class GameServer {
     private wss: WebSocketServer;
     private gameState: GameState;
@@ -9,6 +12,10 @@ export class GameServer {
     private tickInterval: NodeJS.Timeout | null = null;
     private readonly TICK_RATE = 600; // ms
 
+    /**
+     * Initializes the GameServer instance.
+     * @param port - The port number to listen on.
+     */
     constructor(port: number) {
         this.wss = new WebSocketServer({ port });
         this.gameState = {
@@ -22,6 +29,9 @@ export class GameServer {
         this.startGameLoop();
     }
 
+    /**
+     * Sets up the WebSocket server event listeners.
+     */
     private setupWebSocketServer(): void {
         this.wss.on('connection', (ws: WebSocket) => {
             const playerId = randomUUID();
@@ -90,6 +100,11 @@ export class GameServer {
         });
     }
 
+    /**
+     * Handles incoming messages from clients.
+     * @param ws - The WebSocket connection.
+     * @param message - The parsed message object.
+     */
     private handleClientMessage(ws: WebSocket, message: GameClientMessage): void {
         const playerId = this.clientMap.get(ws);
         if (!playerId || message.playerId !== playerId) {
@@ -122,6 +137,11 @@ export class GameServer {
         }
     }
 
+    /**
+     * Updates a player's position.
+     * @param player - The player object.
+     * @param newPosition - The new coordinates.
+     */
     private handlePlayerMove(player: Player, newPosition: Position): void {
         // Simple collision detection (you can expand this)
         if (this.isValidPosition(newPosition)) {
@@ -130,6 +150,11 @@ export class GameServer {
         }
     }
 
+    /**
+     * Processes a chat message from a player.
+     * @param player - The player sending the message.
+     * @param content - The message content.
+     */
     private handleChatMessage(player: Player, content: string): void {
         const message = {
             playerName: player.name,
@@ -148,17 +173,30 @@ export class GameServer {
         });
     }
 
+    /**
+     * Handles player interactions with the world.
+     * @param player - The player initiating interaction.
+     * @param targetId - The ID of the target object/entity.
+     */
     private handleInteraction(player: Player, targetId: string): void {
         // Handle player interactions with objects or other players
         // This is a placeholder for future implementation
     }
 
+    /**
+     * Validates if a position is within the world bounds.
+     * @param position - The position to check.
+     * @returns True if valid, false otherwise.
+     */
     private isValidPosition(position: Position): boolean {
         // Simple boundary check (you can expand this)
         return position.x >= 0 && position.x < 100 && 
                position.y >= 0 && position.y < 100;
     }
 
+    /**
+     * Starts the main game loop.
+     */
     private startGameLoop(): void {
         this.tickInterval = setInterval(() => {
             this.gameState.tick++;
@@ -167,6 +205,9 @@ export class GameServer {
         }, this.TICK_RATE);
     }
 
+    /**
+     * Broadcasts the full game state to all connected clients.
+     */
     private broadcastGameState(): void {
         this.broadcast({
             type: 'STATE_UPDATE',
@@ -174,12 +215,22 @@ export class GameServer {
         });
     }
 
+    /**
+     * Sends a message to a specific client.
+     * @param client - The WebSocket client.
+     * @param message - The message to send.
+     */
     private sendMessage(client: WebSocket, message: GameServerMessage): void {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(message));
         }
     }
 
+    /**
+     * Broadcasts a message to all clients, optionally excluding one.
+     * @param message - The message to broadcast.
+     * @param exclude - (Optional) A client to exclude from the broadcast.
+     */
     private broadcast(message: GameServerMessage, exclude?: WebSocket): void {
         this.wss.clients.forEach(client => {
             if (client !== exclude && client.readyState === WebSocket.OPEN) {
@@ -188,10 +239,13 @@ export class GameServer {
         });
     }
 
+    /**
+     * Stops the server and closes all connections.
+     */
     public stop(): void {
         if (this.tickInterval) {
             clearInterval(this.tickInterval);
         }
         this.wss.close();
     }
-} 
+}

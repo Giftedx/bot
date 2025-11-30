@@ -1,4 +1,9 @@
-"""Database manager for handling all data storage operations."""
+"""Database manager for handling all data storage operations.
+
+This module provides a robust interface for SQLite database interactions,
+including table creation, data persistence for player stats/inventory/quests,
+backup management, and logging for chat and trade events.
+"""
 
 import os
 import json
@@ -11,7 +16,14 @@ from pathlib import Path
 
 @dataclass
 class DatabaseConfig:
-    """Database configuration settings."""
+    """Database configuration settings.
+
+    Attributes:
+        db_path (str): File path to the SQLite database.
+        backup_dir (str): Directory path for storing backups.
+        max_backup_count (int, optional): Maximum number of backups to keep. Defaults to 5.
+        auto_backup (bool, optional): Whether to perform backups on close. Defaults to True.
+    """
 
     db_path: str
     backup_dir: str
@@ -20,7 +32,11 @@ class DatabaseConfig:
 
 
 class DatabaseManager:
-    """Manages all database operations."""
+    """Manages all database operations.
+
+    Handles connection lifecycle, schema initialization, backup routines,
+    and CRUD operations for player data and logs.
+    """
 
     # SQL statements for table creation
     CREATE_TABLES = {
@@ -141,15 +157,15 @@ class DatabaseManager:
         """,
     }
 
-    def __init__(self, config: DatabaseConfig):
+    def __init__(self, config: DatabaseConfig) -> None:
         """Initialize database manager.
 
         Args:
-            config: Database configuration
+            config (DatabaseConfig): Database configuration object.
         """
         self.config = config
-        self.conn = None
-        self.cursor = None
+        self.conn: Optional[sqlite3.Connection] = None
+        self.cursor: Optional[sqlite3.Cursor] = None
 
         # Ensure directories exist
         os.makedirs(os.path.dirname(config.db_path), exist_ok=True)
@@ -158,8 +174,12 @@ class DatabaseManager:
         # Initialize database
         self._initialize_database()
 
-    def _initialize_database(self):
-        """Initialize database and create tables."""
+    def _initialize_database(self) -> None:
+        """Initialize database connection and create schema tables.
+
+        Raises:
+            sqlite3.Error: If connection or query execution fails.
+        """
         try:
             self.conn = sqlite3.connect(self.config.db_path)
             self.cursor = self.conn.cursor()
@@ -177,8 +197,15 @@ class DatabaseManager:
             print(f"Error initializing database: {e}")
             raise
 
-    def backup_database(self):
-        """Create a backup of the database."""
+    def backup_database(self) -> None:
+        """Create a backup of the database file.
+
+        Copies the current database to the configured backup directory
+        and rotates old backups.
+
+        Raises:
+            sqlite3.Error: If the backup operation fails.
+        """
         if not self.config.auto_backup:
             return
 
@@ -186,6 +213,9 @@ class DatabaseManager:
         backup_path = os.path.join(self.config.backup_dir, f"backup_{timestamp}.db")
 
         try:
+            if not self.conn:
+                return
+
             # Create backup connection
             backup_conn = sqlite3.connect(backup_path)
 
@@ -200,40 +230,50 @@ class DatabaseManager:
             print(f"Error creating backup: {e}")
             raise
 
-    def _clean_old_backups(self):
-        """Remove old backups exceeding max_backup_count."""
+    def _clean_old_backups(self) -> None:
+        """Remove old backups exceeding the configured max_backup_count."""
         backups = sorted(Path(self.config.backup_dir).glob("backup_*.db"), key=os.path.getctime)
 
         while len(backups) > self.config.max_backup_count:
             os.remove(backups.pop(0))
 
     def create_player(self, username: str) -> int:
-        """Create a new player.
+        """Create a new player record.
 
         Args:
-            username: Player's username
+            username (str): The player's unique username.
 
         Returns:
-            Player ID
+            int: The ID of the newly created player.
+
+        Raises:
+            sqlite3.Error: If the insert fails (e.g., duplicate username).
         """
         try:
+            if not self.cursor:
+                raise RuntimeError("Database not initialized")
             self.cursor.execute("INSERT INTO players (username) VALUES (?)", (username,))
+            if not self.conn:
+                raise RuntimeError("Database connection lost")
             self.conn.commit()
             return self.cursor.lastrowid
         except sqlite3.Error:
-            self.conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             raise
 
     def get_player(self, player_id: int) -> Optional[Dict[str, Any]]:
-        """Get player data.
+        """Retrieve player data by ID.
 
         Args:
-            player_id: Player's ID
+            player_id (int): The player's unique ID.
 
         Returns:
-            Player data dictionary if found, None otherwise
+            Optional[Dict[str, Any]]: A dictionary of player data, or None if not found.
         """
         try:
+            if not self.cursor:
+                return None
             self.cursor.execute("SELECT * FROM players WHERE id = ?", (player_id,))
             row = self.cursor.fetchone()
 
@@ -246,16 +286,18 @@ class DatabaseManager:
             print(f"Error getting player: {e}")
             return None
 
-    def update_player_stats(self, player_id: int, skill: str, level: int, experience: float):
-        """Update player skill stats.
+    def update_player_stats(self, player_id: int, skill: str, level: int, experience: float) -> None:
+        """Update or insert player skill statistics.
 
         Args:
-            player_id: Player's ID
-            skill: Skill name
-            level: New level
-            experience: New experience amount
+            player_id (int): The player's ID.
+            skill (str): The name of the skill.
+            level (int): The new skill level.
+            experience (float): The new experience amount.
         """
         try:
+            if not self.cursor or not self.conn:
+                return
             self.cursor.execute(
                 """
                 INSERT INTO player_stats (player_id, skill, level, experience)
@@ -270,20 +312,23 @@ class DatabaseManager:
             self.conn.commit()
 
         except sqlite3.Error:
-            self.conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             raise
 
-    def update_player_location(self, player_id: int, x: int, y: int, plane: int, region_id: int):
-        """Update player location.
+    def update_player_location(self, player_id: int, x: int, y: int, plane: int, region_id: int) -> None:
+        """Update or insert the player's world location.
 
         Args:
-            player_id: Player's ID
-            x: X coordinate
-            y: Y coordinate
-            plane: Plane level
-            region_id: Region identifier
+            player_id (int): The player's ID.
+            x (int): X coordinate.
+            y (int): Y coordinate.
+            plane (int): Z/Plane level.
+            region_id (int): OSRS Region ID.
         """
         try:
+            if not self.cursor or not self.conn:
+                return
             self.cursor.execute(
                 """
                 INSERT INTO player_locations 
@@ -302,18 +347,21 @@ class DatabaseManager:
             self.conn.commit()
 
         except sqlite3.Error:
-            self.conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             raise
 
-    def log_chat_message(self, player_id: int, message: str, channel: str):
-        """Log a chat message.
+    def log_chat_message(self, player_id: int, message: str, channel: str) -> None:
+        """Log a chat message to the database.
 
         Args:
-            player_id: Player's ID
-            message: Chat message
-            channel: Chat channel
+            player_id (int): The sender's ID.
+            message (str): The message content.
+            channel (str): The channel name.
         """
         try:
+            if not self.cursor or not self.conn:
+                return
             self.cursor.execute(
                 """
                 INSERT INTO chat_logs (player_id, message, channel)
@@ -325,7 +373,8 @@ class DatabaseManager:
             self.conn.commit()
 
         except sqlite3.Error:
-            self.conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             raise
 
     def log_trade(
@@ -334,16 +383,18 @@ class DatabaseManager:
         player2_id: int,
         items_given: Dict[int, int],
         items_received: Dict[int, int],
-    ):
-        """Log a trade between players.
+    ) -> None:
+        """Log a trade transaction between two players.
 
         Args:
-            player1_id: First player's ID
-            player2_id: Second player's ID
-            items_given: Dictionary of {item_id: quantity} given
-            items_received: Dictionary of {item_id: quantity} received
+            player1_id (int): ID of the first player (initiator).
+            player2_id (int): ID of the second player.
+            items_given (Dict[int, int]): Items transferred from p1 to p2.
+            items_received (Dict[int, int]): Items transferred from p2 to p1.
         """
         try:
+            if not self.cursor or not self.conn:
+                return
             self.cursor.execute(
                 """
                 INSERT INTO trade_logs 
@@ -356,21 +407,22 @@ class DatabaseManager:
             self.conn.commit()
 
         except sqlite3.Error:
-            self.conn.rollback()
+            if self.conn:
+                self.conn.rollback()
             raise
 
-    def close(self):
-        """Close database connection."""
+    def close(self) -> None:
+        """Close the database connection and perform final backup if configured."""
         if self.config.auto_backup:
             self.backup_database()
 
         if self.conn:
             self.conn.close()
 
-    def __enter__(self):
-        """Context manager enter."""
+    def __enter__(self) -> "DatabaseManager":
+        """Context manager entry point."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        """Context manager exit."""
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        """Context manager exit point. Ensures database closure."""
         self.close()
