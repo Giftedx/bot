@@ -18,7 +18,12 @@ logger = logging.getLogger(__name__)
 
 
 class BaseBot(commands.Bot):
-    """Base bot class with shared functionality."""
+    """Base bot class extending discord.ext.commands.Bot.
+
+    This class initializes the bot, manages configuration, database connections,
+    and handles the loading of extensions (cogs). It also integrates metrics
+    collection and error handling.
+    """
 
     def __init__(
         self,
@@ -27,7 +32,14 @@ class BaseBot(commands.Bot):
         description: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
-        """Initialize bot with configuration."""
+        """Initialize the bot with the given configuration.
+
+        Args:
+            config_manager (ConfigManager): The configuration manager instance.
+            command_prefix (str, optional): The prefix for commands. Defaults to "!".
+            description (Optional[str], optional): The bot's description. Defaults to None.
+            **kwargs (Any): Additional keyword arguments passed to commands.Bot.
+        """
         # Set up intents
         intents = discord.Intents.default()
         intents.message_content = True
@@ -66,7 +78,11 @@ class BaseBot(commands.Bot):
         self.extensions_path = Path("src/bot/cogs")
 
     async def setup_hook(self) -> None:
-        """Set up the bot before it starts running."""
+        """Perform asynchronous setup before the bot runs.
+
+        This method loads extensions, sets up metrics tasks, and starts the
+        metrics server.
+        """
         try:
             # Load extensions
             await self.load_extensions()
@@ -83,7 +99,11 @@ class BaseBot(commands.Bot):
             raise
 
     async def load_extensions(self) -> None:
-        """Load all extensions from the cogs and commands directories."""
+        """Load all extensions from the cogs and commands directories.
+
+        Scans `src/bot/cogs`, `src/cogs`, and `src/app/commands` for Python
+        files and loads them as extensions.
+        """
         legacy_cogs_dir = self.extensions_path
         modern_cogs_dir = Path("src/cogs")
         commands_dir = Path("src/app/commands")
@@ -122,7 +142,11 @@ class BaseBot(commands.Bot):
                     logger.error(f"Failed to load app command {f.stem}: {e}", exc_info=True)
 
     def _setup_metrics_tasks(self) -> None:
-        """Set up background tasks for metrics collection."""
+        """Initialize background tasks for collecting periodic metrics.
+
+        Starts a loop that updates gauges for latency, guild count, user count,
+        and database statistics.
+        """
 
         async def collect_metrics():
             while True:
@@ -150,12 +174,20 @@ class BaseBot(commands.Bot):
         task.add_done_callback(self._cleanup_tasks.discard)
 
     async def on_ready(self) -> None:
-        """Called when the bot is ready."""
+        """Event handler called when the bot has successfully connected.
+
+        Sets the internal ready event.
+        """
         logger.info(f"Logged in as {self.user}")
         self._ready.set()
 
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
-        """Handle command errors."""
+        """Global error handler for text commands.
+
+        Args:
+            ctx (commands.Context): The context where the error occurred.
+            error (commands.CommandError): The error raised.
+        """
         error_type = type(error).__name__
         self.metrics.counter("bot_errors_total").labels(type=error_type).inc()
 
@@ -173,7 +205,12 @@ class BaseBot(commands.Bot):
     async def on_app_command_error(
         self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError
     ) -> None:
-        """Handle application command errors."""
+        """Global error handler for application (slash) commands.
+
+        Args:
+            interaction (discord.Interaction): The interaction where the error occurred.
+            error (discord.app_commands.AppCommandError): The error raised.
+        """
         error_type = type(error).__name__
         self.metrics.counter("bot_errors_total").labels(type=error_type).inc()
 
@@ -192,7 +229,10 @@ class BaseBot(commands.Bot):
             logger.error(f"Application command error: {error}", exc_info=True)
 
     async def close(self) -> None:
-        """Clean up and close the bot."""
+        """Shut down the bot and cleanup resources.
+
+        Cancels background tasks and closes the database connection.
+        """
         logger.info("Shutting down bot...")
 
         # Cancel cleanup tasks
@@ -209,16 +249,24 @@ class BaseBot(commands.Bot):
         await super().close()
 
     def add_cleanup_task(self, task: asyncio.Task) -> None:
-        """Add a task to be cleaned up on shutdown."""
+        """Register a task to be cancelled during shutdown.
+
+        Args:
+            task (asyncio.Task): The task to monitor.
+        """
         self._cleanup_tasks.add(task)
         task.add_done_callback(self._cleanup_tasks.discard)
 
     async def wait_until_ready(self) -> None:
-        """Wait until the bot is ready."""
+        """Block execution until the bot is ready."""
         await self._ready.wait()
 
     def get_database_stats(self) -> Dict[str, Any]:
-        """Get database statistics."""
+        """Retrieve current database statistics.
+
+        Returns:
+            Dict[str, Any]: A dictionary of database stats, or an error message.
+        """
         if hasattr(self.db_manager, "get_database_stats"):
             return self.db_manager.get_database_stats()
         return {"error": "Database statistics not available"}
