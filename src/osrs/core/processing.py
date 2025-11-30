@@ -3,7 +3,8 @@ from enum import Enum, auto
 from typing import Dict, List, Optional, Tuple
 import random
 
-from .skills import SkillType, SkillManager
+from .constants import SkillType
+from .skill_manager import SkillManager
 from .skilling import ResourceType
 
 
