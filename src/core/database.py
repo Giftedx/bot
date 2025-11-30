@@ -1,7 +1,8 @@
+"""Database management module for the application."""
 import sqlite3
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-from datetime import datetime
+from typing import Dict, List, Any, Optional, Union
+from datetime import datetime, timedelta
 import json
 import logging
 
@@ -12,16 +13,37 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseManager:
-    """Manages persistent storage for all system data"""
+    """Manages persistent storage for all system data.
+
+    This class handles all interactions with the SQLite database, including
+    table creation, data retrieval, and updates for players, pets, watch history,
+    achievements, events, chat logs, and effects.
+    """
 
     def __init__(self, db_path: str = "data/bot.db"):
+        """Initialize the DatabaseManager.
+
+        Args:
+            db_path (str): The path to the SQLite database file. Defaults to "data/bot.db".
+        """
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = None
+        self.conn: Optional[sqlite3.Connection] = None
         self.setup_database()
 
     def setup_database(self) -> None:
-        """Set up database tables"""
+        """Initialize the database connection and create tables if they don't exist.
+
+        Sets up tables for:
+        - players
+        - pets
+        - watch_history
+        - achievements
+        - events
+        - chat_logs
+        - roasts
+        - active_effects
+        """
         self.conn = sqlite3.connect(self.db_path)
         cursor = self.conn.cursor()
 
@@ -148,27 +170,15 @@ class DatabaseManager:
 
         self.conn.commit()
 
-    def save_player(self, player_id: str, username: str, data: Dict[str, Any]) -> None:
-        """Save or update player data"""
-        cursor = self.conn.cursor()
-        now = datetime.now().isoformat()
-
-        cursor.execute(
-            """
-            INSERT INTO players (player_id, username, data, last_seen, created_at)
-            VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(player_id) DO UPDATE SET
-                username = excluded.username,
-                data = excluded.data,
-                last_seen = excluded.last_seen
-        """,
-            (player_id, username, json.dumps(data), now, now),
-        )
-
-        self.conn.commit()
-
     def get_player(self, player_id: str) -> Optional[Dict[str, Any]]:
-        """Get player data"""
+        """Retrieve player data by ID.
+
+        Args:
+            player_id (str): The unique identifier of the player.
+
+        Returns:
+            Optional[Dict[str, Any]]: A dictionary containing player details if found, else None.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM players WHERE player_id = ?", (player_id,))
         row = cursor.fetchone()
@@ -184,7 +194,11 @@ class DatabaseManager:
         return None
 
     def save_pet(self, pet: Pet) -> None:
-        """Save or update pet data"""
+        """Save or update pet data.
+
+        Args:
+            pet (Pet): The Pet object to save.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -217,7 +231,14 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_player_pets(self, player_id: str) -> List[Pet]:
-        """Get all pets for a player"""
+        """Retrieve all pets owned by a specific player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            List[Pet]: A list of Pet objects.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             "SELECT pet_id, owner_id, name, type, data, created_at FROM pets WHERE owner_id = ?",
@@ -239,7 +260,12 @@ class DatabaseManager:
         return pets
 
     def add_watch_record(self, player_id: str, content_data: Dict[str, Any]) -> None:
-        """Add a watch history record"""
+        """Record a watch history entry.
+
+        Args:
+            player_id (str): The player's unique identifier.
+            content_data (Dict[str, Any]): Dictionary containing content metadata (id, type, title, duration).
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -264,7 +290,15 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_watch_history(self, player_id: str, limit: int = 100) -> List[Dict[str, Any]]:
-        """Get watch history for a player"""
+        """Retrieve recent watch history for a player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+            limit (int, optional): The maximum number of records to retrieve. Defaults to 100.
+
+        Returns:
+            List[Dict[str, Any]]: A list of watch history records.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -293,7 +327,14 @@ class DatabaseManager:
     def unlock_achievement(
         self, player_id: str, achievement_type: str, name: str, data: Dict[str, Any]
     ) -> None:
-        """Record an achievement unlock"""
+        """Record an unlocked achievement.
+
+        Args:
+            player_id (str): The player's unique identifier.
+            achievement_type (str): The category of the achievement.
+            name (str): The name of the achievement.
+            data (Dict[str, Any]): Additional data associated with the achievement.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -309,7 +350,14 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_player_achievements(self, player_id: str) -> List[Dict[str, Any]]:
-        """Get all achievements for a player"""
+        """Retrieve all achievements unlocked by a player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            List[Dict[str, Any]]: A list of achievement records.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM achievements WHERE player_id = ?", (player_id,))
 
@@ -326,7 +374,15 @@ class DatabaseManager:
         ]
 
     def start_event(self, event_type: str, data: Dict[str, Any]) -> int:
-        """Start a new event"""
+        """Start a new system event.
+
+        Args:
+            event_type (str): The type/name of the event.
+            data (Dict[str, Any]): Configuration data for the event.
+
+        Returns:
+            int: The ID of the newly created event.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -344,7 +400,11 @@ class DatabaseManager:
         return event_id
 
     def end_event(self, event_id: int) -> None:
-        """End an active event"""
+        """Mark an event as ended.
+
+        Args:
+            event_id (int): The ID of the event to end.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -360,7 +420,11 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_active_events(self) -> List[Dict[str, Any]]:
-        """Get all currently active events"""
+        """Retrieve all currently active events.
+
+        Returns:
+            List[Dict[str, Any]]: A list of active event records.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM events WHERE active = TRUE")
 
@@ -380,7 +444,17 @@ class DatabaseManager:
     def log_chat_message(
         self, player_id: str, channel_id: str, message: str, score: Optional[float] = None
     ) -> int:
-        """Log a chat message for potential roasts"""
+        """Log a chat message for potential roasting or analytics.
+
+        Args:
+            player_id (str): The ID of the player who sent the message.
+            channel_id (str): The ID of the channel where the message was sent.
+            message (str): The content of the message.
+            score (Optional[float], optional): A score representing "roastability" or sentiment. Defaults to None.
+
+        Returns:
+            int: The ID of the logged message.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -399,7 +473,12 @@ class DatabaseManager:
         return message_id
 
     def add_roast(self, message_id: int, roast_text: str) -> None:
-        """Record a roast for a message"""
+        """Record a generated roast for a specific message.
+
+        Args:
+            message_id (int): The ID of the original message being roasted.
+            roast_text (str): The content of the roast.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -425,7 +504,15 @@ class DatabaseManager:
     def get_roastable_messages(
         self, min_score: float = 0.5, limit: int = 100
     ) -> List[Dict[str, Any]]:
-        """Get messages that could be roasted"""
+        """Retrieve messages eligible for roasting.
+
+        Args:
+            min_score (float, optional): The minimum roastability score. Defaults to 0.5.
+            limit (int, optional): The maximum number of messages to retrieve. Defaults to 100.
+
+        Returns:
+            List[Dict[str, Any]]: A list of message records.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -458,7 +545,15 @@ class DatabaseManager:
         data: Dict[str, Any],
         duration_seconds: Optional[int] = None,
     ) -> None:
-        """Add an active effect for a player"""
+        """Apply an active effect to a player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+            effect_type (str): The type of effect (e.g., 'buff', 'debuff').
+            source (str): The source of the effect.
+            data (Dict[str, Any]): Metadata about the effect.
+            duration_seconds (Optional[int], optional): Duration in seconds. If None, effect is permanent until removed. Defaults to None.
+        """
         cursor = self.conn.cursor()
         now = datetime.now()
         started_at = now.isoformat()
@@ -478,7 +573,14 @@ class DatabaseManager:
         self.conn.commit()
 
     def get_active_effects(self, player_id: str) -> List[Dict[str, Any]]:
-        """Get all active effects for a player"""
+        """Retrieve all currently active effects for a player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            List[Dict[str, Any]]: A list of active effect records.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -507,7 +609,7 @@ class DatabaseManager:
         ]
 
     def cleanup_expired_effects(self) -> None:
-        """Clean up expired effects"""
+        """Mark expired effects as inactive in the database."""
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -525,13 +627,20 @@ class DatabaseManager:
         self.conn.commit()
 
     def close(self) -> None:
-        """Close the database connection"""
+        """Close the database connection if open."""
         if self.conn:
             self.conn.close()
             self.conn = None
 
     def get_top_achievement_points(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by achievement points"""
+        """Retrieve top players ranked by achievement points.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id, achievement_count, and achievement_points.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -551,7 +660,14 @@ class DatabaseManager:
         ]
 
     def get_top_pet_counts(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by number of pets"""
+        """Retrieve top players ranked by number of pets.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id and pet_count.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -567,7 +683,14 @@ class DatabaseManager:
         return [{"player_id": row[0], "pet_count": row[1]} for row in cursor.fetchall()]
 
     def get_top_watch_times(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by watch time"""
+        """Retrieve top players ranked by total watch time.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id, watch_count, and watch_time (in hours).
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -591,7 +714,16 @@ class DatabaseManager:
         ]
 
     def get_top_roast_scores(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by average roast score"""
+        """Retrieve top players ranked by average roast score.
+
+        Only considers players with at least 5 roasts.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id, roast_count, avg_score, and max_score.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -614,7 +746,14 @@ class DatabaseManager:
         ]
 
     def get_top_event_participants(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by event participation"""
+        """Retrieve top players ranked by event participation.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id, event_count, and completed_count.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -634,7 +773,14 @@ class DatabaseManager:
         ]
 
     def get_top_effect_counts(self, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get top players by active effects"""
+        """Retrieve top players ranked by number of active effects.
+
+        Args:
+            limit (int, optional): The number of players to return. Defaults to 10.
+
+        Returns:
+            List[Dict[str, Any]]: A list of dictionaries containing player_id, effect_count, and permanent_count.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -655,7 +801,14 @@ class DatabaseManager:
         ]
 
     def get_player_roasts(self, player_id: str) -> List[Dict[str, Any]]:
-        """Get all roasts for a player"""
+        """Retrieve all roasts associated with a player's messages.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            List[Dict[str, Any]]: A list of roast records.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -684,7 +837,14 @@ class DatabaseManager:
         ]
 
     def get_player_events(self, player_id: str) -> List[Dict[str, Any]]:
-        """Get all events a player participated in"""
+        """Retrieve all events a player has participated in.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            List[Dict[str, Any]]: A list of event records, including role and join time.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -713,7 +873,14 @@ class DatabaseManager:
         ]
 
     def get_effect(self, effect_id: int) -> Optional[Dict[str, Any]]:
-        """Get a specific effect"""
+        """Retrieve a specific effect by its ID.
+
+        Args:
+            effect_id (int): The unique identifier of the effect.
+
+        Returns:
+            Optional[Dict[str, Any]]: The effect record if found, else None.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -738,7 +905,11 @@ class DatabaseManager:
         return None
 
     def remove_effect(self, effect_id: int) -> None:
-        """Remove an effect"""
+        """Mark a specific effect as inactive.
+
+        Args:
+            effect_id (int): The unique identifier of the effect to remove.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -752,7 +923,14 @@ class DatabaseManager:
         self.conn.commit()
 
     def clear_effects(self, player_id: str) -> int:
-        """Clear all effects for a player. Returns number of effects cleared."""
+        """Clear all active effects for a player.
+
+        Args:
+            player_id (str): The player's unique identifier.
+
+        Returns:
+            int: The number of effects that were cleared.
+        """
         cursor = self.conn.cursor()
         cursor.execute(
             """
@@ -767,8 +945,16 @@ class DatabaseManager:
         self.conn.commit()
         return count
 
-    def create_player(self, player_id: int, username: str) -> Player:
-        """Create a new player and save them to the database."""
+    def create_player(self, player_id: Union[int, str], username: str) -> Player:
+        """Create a new player with default skills and save to the database.
+
+        Args:
+            player_id (Union[int, str]): The unique identifier for the player.
+            username (str): The username of the player.
+
+        Returns:
+            Player: The newly created Player object.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
@@ -783,32 +969,75 @@ class DatabaseManager:
             "prayer": Skill(),
         }
 
-        new_player = Player(user_id=player_id, username=username, skills=default_skills)
+        # Ensure player_id is string if needed, depending on Model requirements
+        # Assuming Player model handles int or str
+        new_player = Player(user_id=str(player_id), username=username, skills=default_skills)
 
         player_data = new_player.to_dict()
 
         cursor.execute(
             "INSERT INTO players (player_id, username, data, last_seen, created_at) VALUES (?, ?, ?, ?, ?)",
-            (player_id, username, json.dumps(player_data), now, now),
+            (str(player_id), username, json.dumps(player_data), now, now),
         )
         self.conn.commit()
         return new_player
 
-    def save_player(self, player: Player) -> None:
-        """Save or update a player's data."""
+    def save_player(self, player_id: Union[Player, str], username: Optional[str] = None, data: Optional[Dict[str, Any]] = None) -> None:
+        """Save or update player data.
+
+        Accepts either a Player object or explicit arguments (legacy compatibility).
+
+        Args:
+            player_id (Union[Player, str]): Player object OR player_id string.
+            username (Optional[str], optional): Username (if player_id is string). Defaults to None.
+            data (Optional[Dict[str, Any]], optional): Player data (if player_id is string). Defaults to None.
+        """
         cursor = self.conn.cursor()
         now = datetime.now().isoformat()
 
-        player_data = player.to_dict()
+        if isinstance(player_id, Player):
+            # Object mode
+            player_obj = player_id
+            player_data = player_obj.to_dict()
+            cursor.execute(
+                """
+                INSERT INTO players (player_id, username, data, last_seen, created_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(player_id) DO UPDATE SET
+                    username = excluded.username,
+                    data = excluded.data,
+                    last_seen = excluded.last_seen
+                """,
+                (player_obj.user_id, player_obj.username, json.dumps(player_data), now, now),
+            )
+        else:
+            # Legacy/Manual mode
+            if username is None or data is None:
+                raise ValueError("username and data must be provided when player is an ID")
 
-        cursor.execute(
-            "UPDATE players SET data = ?, last_seen = ? WHERE player_id = ?",
-            (json.dumps(player_data), now, player.user_id),
-        )
+            cursor.execute(
+                """
+                INSERT INTO players (player_id, username, data, last_seen, created_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(player_id) DO UPDATE SET
+                    username = excluded.username,
+                    data = excluded.data,
+                    last_seen = excluded.last_seen
+                """,
+                (player_id, username, json.dumps(data), now, now),
+            )
+
         self.conn.commit()
 
     def get_player_by_name(self, username: str) -> Optional[Dict[str, Any]]:
-        """Retrieve a player by their username."""
+        """Retrieve a player by their username.
+
+        Args:
+            username (str): The username to search for.
+
+        Returns:
+            Optional[Dict[str, Any]]: Player data if found, else None.
+        """
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM players WHERE username = ?", (username,))
         row = cursor.fetchone()
