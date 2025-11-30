@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
-from ..core.skills import SkillType
+from ..core.constants import SkillType
 from ..core.processing import ProcessingManager, ProcessedItemType
 from ..models import Player
 
@@ -45,8 +45,26 @@ class ProcessingCommands(commands.Cog):
             )
             return
 
-        # TODO: Check if player has raw fish in inventory
-        has_ingredients = True  # Placeholder until inventory system is implemented
+        # Check if player has raw fish in inventory
+        ingredients = self.processing_manager.get_required_ingredients(item_type)
+        ingredient_counts = {}
+        for ing in ingredients:
+            ing_name = ing.name.lower().replace("_", " ")
+            ingredient_counts[ing_name] = ingredient_counts.get(ing_name, 0) + 1
+
+        missing_ingredients = []
+        for ing_name, count in ingredient_counts.items():
+            if not player.has_item_in_inventory(ing_name, count):
+                missing_ingredients.append(f"{count}x {ing_name}" if count > 1 else ing_name)
+
+        has_ingredients = len(missing_ingredients) == 0
+
+        if not has_ingredients:
+            await interaction.response.send_message(
+                f"You don't have enough ingredients. Missing: {', '.join(missing_ingredients)}",
+                ephemeral=True
+            )
+            return
 
         # Attempt to cook
         success, xp = self.processing_manager.attempt_process(
@@ -99,8 +117,25 @@ class ProcessingCommands(commands.Cog):
         ingredients = self.processing_manager.get_required_ingredients(item_type)
         ingredient_names = [ing.name.lower().replace("_", " ") for ing in ingredients]
 
-        # TODO: Check if player has required ores in inventory
-        has_ingredients = True  # Placeholder until inventory system is implemented
+        # Check if player has required ores in inventory
+        ingredient_counts = {}
+        for ing in ingredients:
+            ing_name = ing.name.lower().replace("_", " ")
+            ingredient_counts[ing_name] = ingredient_counts.get(ing_name, 0) + 1
+
+        missing_ingredients = []
+        for ing_name, count in ingredient_counts.items():
+            if not player.has_item_in_inventory(ing_name, count):
+                missing_ingredients.append(f"{count}x {ing_name}" if count > 1 else ing_name)
+
+        has_ingredients = len(missing_ingredients) == 0
+
+        if not has_ingredients:
+            await interaction.response.send_message(
+                f"You don't have enough ingredients. Missing: {', '.join(missing_ingredients)}",
+                ephemeral=True
+            )
+            return
 
         # Attempt to smelt
         success, xp = self.processing_manager.attempt_process(

@@ -6,7 +6,7 @@ from typing import Dict
 
 from .base_skill_task import BaseSkillTask
 from ..task import TaskRequirements, TaskRewards
-from ..skills import SkillType
+from ..constants import SkillType
 from ...models.user import User
 
 
