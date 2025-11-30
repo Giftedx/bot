@@ -1,32 +1,38 @@
 """Configuration management for the bot."""
 import os
 from pathlib import Path
-from typing import Any, Dict
-import yaml  # Changed from json to yaml
+from typing import Any, Dict, List
+import yaml
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Import _SENTINEL from unified_database to fix undefined variable error
 from .unified_database import _SENTINEL
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# Removed PlexConfig, DiscordConfig, RedisConfig, WebConfig, and Config dataclasses
-# Removed top-level load_config() function
-
 
 class ConfigManager:
-    """Manages configuration settings and secrets"""
+    """Manages configuration settings and secrets for the application.
+
+    This class handles loading, saving, validating, and retrieving configuration
+    parameters and secret keys from YAML files and environment variables.
+    """
 
     def __init__(self, config_dir: str = "config"):
+        """Initialize the ConfigManager.
+
+        Args:
+            config_dir (str): The directory where configuration files are stored.
+                              Defaults to "config".
+        """
         self.config_dir = Path(config_dir)
         self.config_dir.mkdir(parents=True, exist_ok=True)
 
-        self.config_path = self.config_dir / "config.yaml"  # Changed file extension
-        self.secrets_path = self.config_dir / "secrets.yaml"  # Changed file extension
+        self.config_path = self.config_dir / "config.yaml"
+        self.secrets_path = self.config_dir / "secrets.yaml"
 
         # Default configuration
         self.default_config = {
@@ -81,11 +87,15 @@ class ConfigManager:
         self.secrets = self.load_secrets()
 
     def load_config(self) -> Dict[str, Any]:
-        """Load configuration from file or create default"""
+        """Load configuration from file or create default if not exists.
+
+        Returns:
+            Dict[str, Any]: The loaded configuration dictionary.
+        """
         try:
             if self.config_path.exists():
                 with open(self.config_path) as f:
-                    loaded_config = yaml.safe_load(f)  # Changed from json.load to yaml.safe_load
+                    loaded_config = yaml.safe_load(f)
                 # Merge with defaults to ensure all keys exist
                 return self.merge_configs(self.default_config, loaded_config)
             else:
@@ -97,7 +107,13 @@ class ConfigManager:
             return self.default_config
 
     def load_secrets(self) -> Dict[str, Any]:
-        """Load secrets from environment or file"""
+        """Load secrets from environment variables or file.
+
+        Environment variables take precedence over file values.
+
+        Returns:
+            Dict[str, Any]: The loaded secrets dictionary.
+        """
         secrets = self.default_secrets.copy()
 
         # Try to load from environment first
@@ -114,72 +130,116 @@ class ConfigManager:
             try:
                 if self.secrets_path.exists():
                     with open(self.secrets_path) as f:
-                        file_secrets = yaml.safe_load(f)  # Changed from json.load to yaml.safe_load
+                        file_secrets = yaml.safe_load(f)
                     secrets = self.merge_configs(secrets, file_secrets)
             except Exception as e:
                 logger.error(f"Error loading secrets: {e}")
 
-        # Save secrets file if it doesn't exist (similar to load_config behavior)
+        # Save secrets file if it doesn't exist
         if not self.secrets_path.exists():
             self.save_secrets(secrets)
 
         return secrets
 
     def save_config(self, config: Dict[str, Any]) -> None:
-        """Save configuration to file"""
+        """Save configuration to the config file.
+
+        Args:
+            config (Dict[str, Any]): The configuration dictionary to save.
+        """
         try:
             with open(self.config_path, "w") as f:
-                yaml.dump(config, f, indent=4)  # Changed from json.dump to yaml.dump
+                yaml.dump(config, f, indent=4)
         except Exception as e:
             logger.error(f"Error saving config: {e}")
 
     def save_secrets(self, secrets: Dict[str, Any]) -> None:
-        """Save secrets to file"""
+        """Save secrets to the secrets file.
+
+        Args:
+            secrets (Dict[str, Any]): The secrets dictionary to save.
+        """
         try:
             with open(self.secrets_path, "w") as f:
-                yaml.dump(secrets, f, indent=4)  # Changed from json.dump to yaml.dump
+                yaml.dump(secrets, f, indent=4)
         except Exception as e:
             logger.error(f"Error saving secrets: {e}")
 
     def update_config(self, updates: Dict[str, Any]) -> None:
-        """Update configuration with new values"""
+        """Update configuration with new values and save to disk.
+
+        Args:
+            updates (Dict[str, Any]): A dictionary containing the configuration updates.
+        """
         self.config = self.merge_configs(self.config, updates)
         self.save_config(self.config)
 
     def update_secrets(self, updates: Dict[str, Any]) -> None:
-        """Update secrets with new values"""
+        """Update secrets with new values and save to disk.
+
+        Args:
+            updates (Dict[str, Any]): A dictionary containing the secret updates.
+        """
         self.secrets = self.merge_configs(self.secrets, updates)
         self.save_secrets(self.secrets)
 
     def get_config(self, key: str, default: Any = None) -> Any:
-        """Get configuration value by key path"""
+        """Get configuration value by dot-notation key path.
+
+        Args:
+            key (str): The configuration key (e.g., "bot.command_prefix").
+            default (Any, optional): The default value if the key is not found. Defaults to None.
+
+        Returns:
+            Any: The configuration value.
+        """
         return self.get_nested_value(self.config, key.split("."), default)
 
     def get_secret(self, key: str, default: Any = None) -> Any:
-        """Get secret value by key path"""
+        """Get secret value by dot-notation key path.
+
+        Args:
+            key (str): The secret key (e.g., "discord.token").
+            default (Any, optional): The default value if the key is not found. Defaults to None.
+
+        Returns:
+            Any: The secret value.
+        """
         return self.get_nested_value(self.secrets, key.split("."), default)
 
     def get(self, key: str, default: Any = None) -> Any:
-        """Get configuration value by key path, checking secrets first."""
+        """Get configuration value by key path, checking secrets first, then config.
+
+        Args:
+            key (str): The key to look up (e.g., "discord.token" or "bot.prefix").
+            default (Any, optional): The default value to return if not found. Defaults to None.
+
+        Returns:
+            Any: The found value, or the default.
+        """
         # Try to get from secrets
-        # Assuming that if get_secret returns its own default, the key wasn't found.
-        # A more robust way might involve a unique sentinel default value for get_secret
-        # if None is a valid secret value that needs to be distinguished from "not found".
-        secret_value = self.get_secret(key, default=_SENTINEL)  # Use a unique sentinel
+        secret_value = self.get_secret(key, default=_SENTINEL)
         if secret_value is not _SENTINEL:
             return secret_value
 
         # If not in secrets, try to get from config
-        config_value = self.get_config(key, default=_SENTINEL)  # Use a unique sentinel
+        config_value = self.get_config(key, default=_SENTINEL)
         if config_value is not _SENTINEL:
             return config_value
 
-        # If not in config either, return the provided default
         return default
 
     @staticmethod
     def merge_configs(base: Dict[str, Any], update: Dict[str, Any]) -> Dict[str, Any]:
-        """Deep merge two configurations"""
+        """Deep merge two configuration dictionaries.
+
+        Args:
+            base (Dict[str, Any]): The base dictionary.
+            update (Dict[str, Any]): The dictionary with updates.
+
+        Returns:
+            Dict[str, Any]: The merged dictionary.
+        """
         merged = base.copy()
 
         for key, value in update.items():
@@ -191,8 +251,17 @@ class ConfigManager:
         return merged
 
     @staticmethod
-    def get_nested_value(data: Dict[str, Any], key_path: list, default: Any = None) -> Any:
-        """Get value from nested dictionary using key path"""
+    def get_nested_value(data: Dict[str, Any], key_path: List[str], default: Any = None) -> Any:
+        """Retrieve a value from a nested dictionary using a list of keys.
+
+        Args:
+            data (Dict[str, Any]): The dictionary to search.
+            key_path (List[str]): The list of keys representing the path.
+            default (Any, optional): The default value if not found. Defaults to None.
+
+        Returns:
+            Any: The retrieved value or default.
+        """
         current = data
 
         for key in key_path:
@@ -207,7 +276,16 @@ class ConfigManager:
 
     @staticmethod
     def flatten_dict(d: Dict[str, Any], parent_key: str = "", sep: str = ".") -> Dict[str, Any]:
-        """Flatten nested dictionary"""
+        """Flatten a nested dictionary into a single level dictionary with dot-notation keys.
+
+        Args:
+            d (Dict[str, Any]): The dictionary to flatten.
+            parent_key (str, optional): The prefix for the current keys. Defaults to "".
+            sep (str, optional): The separator to use between keys. Defaults to ".".
+
+        Returns:
+            Dict[str, Any]: The flattened dictionary.
+        """
         items = []
 
         for k, v in d.items():
@@ -221,7 +299,11 @@ class ConfigManager:
         return dict(items)
 
     def validate_config(self) -> bool:
-        """Validate configuration values"""
+        """Validate configuration values against logical constraints.
+
+        Returns:
+            bool: True if configuration is valid, False otherwise.
+        """
         try:
             # Check required channels
             if not self.get_config("channels.event_channel_id"):
@@ -254,7 +336,11 @@ class ConfigManager:
             return False
 
     def validate_secrets(self) -> bool:
-        """Validate secret values"""
+        """Validate that essential secrets are present.
+
+        Returns:
+            bool: True if secrets are valid, False otherwise.
+        """
         try:
             # Check required secrets
             if not self.get_secret("discord.token"):
@@ -276,7 +362,7 @@ class ConfigManager:
             return False
 
     def backup_config(self) -> None:
-        """Create backup of current configuration"""
+        """Create a timestamped backup of the current configuration and secrets."""
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup_dir = self.config_dir / "backups"
@@ -284,24 +370,24 @@ class ConfigManager:
 
             # Backup config
             if self.config_path.exists():
-                backup_path = backup_dir / f"config_{timestamp}.yaml"  # Changed file extension
+                backup_path = backup_dir / f"config_{timestamp}.yaml"
                 with open(self.config_path) as f:
-                    config_data = yaml.safe_load(f)  # Changed from json.load to yaml.safe_load
+                    config_data = yaml.safe_load(f)
                 with open(backup_path, "w") as f:
-                    yaml.dump(config_data, f, indent=4)  # Changed from json.dump to yaml.dump
+                    yaml.dump(config_data, f, indent=4)
 
             # Backup secrets
             if self.secrets_path.exists():
-                backup_path = backup_dir / f"secrets_{timestamp}.yaml"  # Changed file extension
+                backup_path = backup_dir / f"secrets_{timestamp}.yaml"
                 with open(self.secrets_path) as f:
-                    secrets_data = yaml.safe_load(f)  # Changed from json.load to yaml.safe_load
+                    secrets_data = yaml.safe_load(f)
                 with open(backup_path, "w") as f:
-                    yaml.dump(secrets_data, f, indent=4)  # Changed from json.dump to yaml.dump
+                    yaml.dump(secrets_data, f, indent=4)
 
             # Clean up old backups
             max_backups = self.get_config("database.max_backups", 7)
-            config_backups = sorted(backup_dir.glob("config_*.yaml"))  # Changed glob pattern
-            secrets_backups = sorted(backup_dir.glob("secrets_*.yaml"))  # Changed glob pattern
+            config_backups = sorted(backup_dir.glob("config_*.yaml"))
+            secrets_backups = sorted(backup_dir.glob("secrets_*.yaml"))
 
             while len(config_backups) > max_backups:
                 config_backups[0].unlink()
@@ -314,8 +400,12 @@ class ConfigManager:
         except Exception as e:
             logger.error(f"Error backing up config: {e}")
 
-    def get_backup_list(self) -> Dict[str, list]:
-        """Get list of available backups"""
+    def get_backup_list(self) -> Dict[str, List[str]]:
+        """Retrieve a list of available configuration backups.
+
+        Returns:
+            Dict[str, List[str]]: A dictionary containing lists of config and secrets backup file paths.
+        """
         try:
             backup_dir = self.config_dir / "backups"
             if not backup_dir.exists():
@@ -324,10 +414,10 @@ class ConfigManager:
             return {
                 "config": sorted(
                     str(p) for p in backup_dir.glob("config_*.yaml")
-                ),  # Changed glob pattern
+                ),
                 "secrets": sorted(
                     str(p) for p in backup_dir.glob("secrets_*.yaml")
-                ),  # Changed glob pattern
+                ),
             }
         except Exception as e:
             logger.error(f"Error listing backups: {e}")
