@@ -1,19 +1,35 @@
 # Discord Bot Project
 
-This repository contains a feature-rich Discord bot built with Python.
+This repository contains a feature-rich Discord bot built with Python, integrating Old School RuneScape (OSRS) mechanics, Plex media streaming, and various interactive features.
 
 ## Architecture Overview
 
-- **Python Backend**:
-  - Built using `discord.py` for Discord integration.
-  - Slash command based architecture for modular and extensible commands.
-  - SQLite for data persistence.
+The project is structured into several key components:
 
-- **Discord Integration**:
-  - Command handling via slash commands.
-  - Rich embed messages for clean display.
+-   **`src/`**: The main source code directory.
+    -   **`src/bot/`**: Contains the Discord bot implementation using `discord.py`. It manages commands, events (cogs), and interactions.
+    -   **`src/core/`**: The core logic and systems. This includes configuration management, database interactions, battle systems, media player logic, and other shared utilities.
+    -   **`src/osrs/`**: A dedicated module for the OSRS RPG simulation. It handles player stats, items, combat, skilling, and the game economy.
+    -   **`src/server/`**: A TypeScript-based WebSocket game server (`GameServer.ts`) that likely powers real-time interactions or a separate game client.
+    -   **`src/web_server/`**: A lightweight Flask web server, potentially for health checks, dashboards, or webhooks.
+
+-   **Data Persistence**:
+    -   SQLite is used for local data storage (`data/bot.db`), managed via `UnifiedDatabaseManager`.
+    -   Redis is used for caching and potentially for managing state in distributed setups.
+
+-   **Configuration**:
+    -   Configuration is managed by `ConfigManager` in `src/core/config.py`.
+    -   Settings are stored in YAML files (`config/config.yaml`, `config/secrets.yaml`) and environment variables.
 
 ## Setup and Running the Bot
+
+### Prerequisites
+
+-   Python 3.11 or higher
+-   Node.js and npm (for the TypeScript server)
+-   Redis (optional, but recommended for full feature set)
+
+### Installation
 
 1.  **Clone the repository:**
     ```bash
@@ -21,69 +37,71 @@ This repository contains a feature-rich Discord bot built with Python.
     cd <repository-directory>
     ```
 
-2.  **Install dependencies:**
-    This project uses `make` to streamline the development process. To install all necessary production and development dependencies, simply run:
+2.  **Install Python dependencies:**
+    ```bash
+    pip install -e .[dev]
+    ```
+    Or use the Makefile:
     ```bash
     make dev-install
     ```
-    This command uses `pip` to install all packages defined in the `pyproject.toml` file.
 
-3.  **Configuration:**
-    -   Create a `.env` file in the project root.
-    -   Add your Discord bot token to the `.env` file:
-        ```
-        DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
-        ```
-
-4.  **Run the bot:**
-    To run the bot in development mode, use the following command:
+3.  **Install Node.js dependencies (if running the game server):**
     ```bash
-    make run-dev
+    cd src/server
+    npm install
     ```
-    This will launch the bot and its services in Docker with live-reloading via watchdog.
+
+4.  **Configuration:**
+    -   Create a `.env` file in the project root based on the example.
+    -   Set `DISCORD_TOKEN` and other secrets.
+    -   Alternatively, populate `config/secrets.yaml`.
+
+### Running the Application
+
+-   **Run the Discord Bot:**
+    ```bash
+    python src/main.py
+    ```
+
+-   **Run the Game Server (TypeScript):**
+    ```bash
+    cd src/server
+    npm start
+    ```
 
 ## Repository Layout
 
-- `src/`: Python source code
-  - `src/bot/`: Discord bot implementation (cogs, commands)
-  - `src/core/`: core systems (battle, economy, config, persistence)
-  - `src/services/`: external integrations (e.g., Plex)
-  - `src/web_server/`: lightweight Flask API and Socket.IO events
-  - `src/server/`: TypeScript-based game server (Node.js). Build/run with `npm run build` / `npm start`.
-- `docs/`: MkDocs documentation (see `mkdocs.yml`). Serve with `make docs-serve`.
-- `docker/`: Dockerfiles and compose configurations for dev/prod/monitoring
-- `tests/`: automated tests
-- `prometheus/`, `grafana/`: monitoring configuration
+-   `src/bot/`: Discord bot cogs and event handlers.
+-   `src/core/`: Core business logic (Config, DB, Battle, Plex).
+-   `src/osrs/`: OSRS game mechanics implementation.
+-   `src/server/`: Real-time game server (TypeScript).
+-   `tests/`: Unit and integration tests.
+-   `docs/`: Documentation.
 
 ## Features
 
 ### OSRS Module
-A full-featured Old School RuneScape RPG experience right in your Discord server.
+Simulates the Old School RuneScape experience.
+-   **Skilling**: Train skills like Woodcutting, Mining, etc.
+-   **Combat**: Fight monsters and bosses.
+-   **Economy**: Trade items via a Grand Exchange system.
 
-- **Grand Exchange**: A server-wide marketplace to buy and sell items using the `/osrs_ge` command group.
-- **Quests**: Check available quests and your progress with `/osrs_quest`.
+### Plex Integration
+Control your Plex server from Discord.
+-   **Search & Play**: Search for media and control playback.
+-   **Status**: View current activity.
 
-### Plex Module
-- **Search**: Search for media on your Plex server with `/plex_search`.
-- **Playback**: Play, pause, resume, and stop media with `/plex_play`, `/plex_pause`, `/plex_resume`, and `/plex_stop`.
-- **Status**: Check the status of the current playback with `/plex_status`.
-- **Libraries**: List available libraries with `/plex_libraries`.
-
-### Pokémon Module
-- **Info**: Get information on Pokémon, abilities, moves, items, types, and natures with the `/pokemon` command group.
-
-## Command Documentation
-
-For a full list of commands and their usage, please see the [Command Reference](./docs/commands/command-reference.md).
+### Pokemon
+Catch and battle Pokemon (if enabled/implemented).
 
 ## Contributing
 
 1.  Fork the repository.
 2.  Create a feature branch.
-3.  Implement your changes.
-4.  Test thoroughly.
-5.  Submit a pull request.
+3.  Ensure code is documented and tested.
+4.  Submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT License. See `LICENSE` for details.

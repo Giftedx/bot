@@ -1,12 +1,18 @@
-"""OSRS Combat System"""
+"""OSRS Combat System implementation.
+
+This module manages combat mechanics including attack rolls, defence rolls,
+max hit calculations, and the combat loop for player-versus-monster interactions.
+"""
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from enum import Enum
 import random
 import math
 
 
 class CombatStyle(Enum):
+    """Enumeration of combat styles."""
+
     ACCURATE = "accurate"
     AGGRESSIVE = "aggressive"
     DEFENSIVE = "defensive"
@@ -16,6 +22,8 @@ class CombatStyle(Enum):
 
 
 class AttackType(Enum):
+    """Enumeration of attack types."""
+
     STAB = "stab"
     SLASH = "slash"
     CRUSH = "crush"
@@ -25,7 +33,19 @@ class AttackType(Enum):
 
 @dataclass
 class CombatStats:
-    """Combat stats for a character"""
+    """Combat stats for a character.
+
+    Attributes:
+        attack (int): Attack skill level.
+        strength (int): Strength skill level.
+        defence (int): Defence skill level.
+        ranged (int): Ranged skill level.
+        magic (int): Magic skill level.
+        prayer (int): Prayer skill level.
+        hitpoints (int): Maximum hitpoints.
+        current_hitpoints (int): Current hitpoints.
+        prayer_points (int): Current prayer points.
+    """
 
     attack: int
     strength: int
@@ -40,7 +60,22 @@ class CombatStats:
 
 @dataclass
 class Monster:
-    """Represents a monster that can be fought"""
+    """Represents a monster that can be fought.
+
+    Attributes:
+        name (str): Name of the monster.
+        combat_level (int): The combat level of the monster.
+        hitpoints (int): Total health points.
+        max_hit (int): Maximum damage the monster can deal.
+        attack_level (int): Attack skill level.
+        strength_level (int): Strength skill level.
+        defence_level (int): Defence skill level.
+        attack_bonus (int): Attack bonus stat.
+        strength_bonus (int): Strength bonus stat.
+        attack_type (AttackType): The type of attack used by the monster.
+        aggressive (bool): Whether the monster attacks players on sight.
+        drops (Dict[str, float]): Dictionary mapping item names to drop probabilities (0.0 to 1.0).
+    """
 
     name: str
     combat_level: int
@@ -53,18 +88,27 @@ class Monster:
     strength_bonus: int
     attack_type: AttackType
     aggressive: bool
-    drops: Dict[str, float]  # item -> drop rate
+    drops: Dict[str, float]
 
 
 class CombatManager:
-    """Manages combat interactions"""
+    """Manages combat interactions and calculations.
 
-    def __init__(self):
+    Handles monster loading, combat calculations (max hit, accuracy, defence),
+    and the combat processing loop.
+    """
+
+    def __init__(self) -> None:
+        """Initialize the CombatManager."""
         self.monsters = self._load_monsters()
         self.active_fights: Dict[str, Monster] = {}  # player_id -> monster
 
     def _load_monsters(self) -> Dict[str, Monster]:
-        """Load all monster definitions"""
+        """Load all monster definitions.
+
+        Returns:
+            Dict[str, Monster]: A dictionary mapping monster names to Monster objects.
+        """
         return {
             "Goblin": Monster(
                 name="Goblin",
@@ -104,14 +148,34 @@ class CombatManager:
         style_bonus: int = 0,
         prayer_bonus: float = 1.0,
     ) -> int:
-        """Calculate maximum melee hit"""
+        """Calculate maximum melee hit.
+
+        Args:
+            strength_level (int): The player's strength level.
+            strength_bonus (int): Equipment strength bonus.
+            style_bonus (int, optional): Bonus from attack style (e.g., Aggressive gives +3). Defaults to 0.
+            prayer_bonus (float, optional): Multiplier from active prayers. Defaults to 1.0.
+
+        Returns:
+            int: The calculated maximum hit.
+        """
         effective = math.floor(strength_level * prayer_bonus) + style_bonus + 8
         return math.floor(0.5 + effective * (strength_bonus + 64) / 640)
 
     def calculate_accuracy_roll(
         self, attack_level: int, attack_bonus: int, style_bonus: int = 0, prayer_bonus: float = 1.0
     ) -> int:
-        """Calculate accuracy roll for attack"""
+        """Calculate accuracy roll for attack.
+
+        Args:
+            attack_level (int): The player's attack level.
+            attack_bonus (int): Equipment attack bonus.
+            style_bonus (int, optional): Bonus from attack style. Defaults to 0.
+            prayer_bonus (float, optional): Multiplier from active prayers. Defaults to 1.0.
+
+        Returns:
+            int: The calculated accuracy roll.
+        """
         effective = math.floor(attack_level * prayer_bonus) + style_bonus + 8
         return math.floor(effective * (attack_bonus + 64))
 
@@ -122,7 +186,17 @@ class CombatManager:
         style_bonus: int = 0,
         prayer_bonus: float = 1.0,
     ) -> int:
-        """Calculate defence roll against attack"""
+        """Calculate defence roll against attack.
+
+        Args:
+            defence_level (int): The defender's defence level.
+            defence_bonus (int): Equipment defence bonus.
+            style_bonus (int, optional): Bonus from defence style. Defaults to 0.
+            prayer_bonus (float, optional): Multiplier from active prayers. Defaults to 1.0.
+
+        Returns:
+            int: The calculated defence roll.
+        """
         effective = math.floor(defence_level * prayer_bonus) + style_bonus + 8
         return math.floor(effective * (defence_bonus + 64))
 
@@ -131,11 +205,23 @@ class CombatManager:
         player_id: str,
         monster_name: str,
         player_stats: CombatStats,
-        equipment_stats: ItemStats,
+        equipment_stats: Any,
         combat_style: CombatStyle,
         attack_type: AttackType,
     ) -> Optional[Monster]:
-        """Start combat with a monster"""
+        """Start combat with a monster.
+
+        Args:
+            player_id (str): The ID of the player initiating combat.
+            monster_name (str): The name of the monster to fight.
+            player_stats (CombatStats): The player's current stats.
+            equipment_stats (ItemStats): The player's equipment stats.
+            combat_style (CombatStyle): The chosen combat style.
+            attack_type (AttackType): The chosen attack type.
+
+        Returns:
+            Optional[Monster]: The monster instance if combat starts successfully, else None.
+        """
         monster = self.monsters.get(monster_name)
         if not monster:
             return None
@@ -150,11 +236,24 @@ class CombatManager:
         self,
         player_id: str,
         player_stats: CombatStats,
-        equipment_stats: ItemStats,
+        equipment_stats: Any,
         combat_style: CombatStyle,
         attack_type: AttackType,
     ) -> Optional[Dict[str, int]]:
-        """Process one tick of combat, returns drops if monster died"""
+        """Process one tick of combat.
+
+        Calculates player and monster attacks for the current turn.
+
+        Args:
+            player_id (str): The player's ID.
+            player_stats (CombatStats): The player's current stats.
+            equipment_stats (ItemStats): The player's equipment stats.
+            combat_style (CombatStyle): The chosen combat style.
+            attack_type (AttackType): The chosen attack type.
+
+        Returns:
+            Optional[Dict[str, int]]: Dictionary of drops if the monster died, else None.
+        """
         monster = self.active_fights.get(player_id)
         if not monster:
             return None
@@ -211,7 +310,7 @@ class CombatManager:
             del self.active_fights[player_id]
 
             # Roll for drops
-            drops = {}
+            drops: Dict[str, int] = {}
             for item, rate in monster.drops.items():
                 if random.random() < rate:
                     drops[item] = 1
@@ -224,15 +323,33 @@ class CombatManager:
         # Return None to indicate combat continues
         return None
 
-    def end_combat(self, player_id: str):
-        """End combat with current monster"""
+    def end_combat(self, player_id: str) -> None:
+        """End combat with current monster.
+
+        Args:
+            player_id (str): The player's ID.
+        """
         if player_id in self.active_fights:
             del self.active_fights[player_id]
 
     def is_in_combat(self, player_id: str) -> bool:
-        """Check if player is in combat"""
+        """Check if player is in combat.
+
+        Args:
+            player_id (str): The player's ID.
+
+        Returns:
+            bool: True if the player is currently fighting, else False.
+        """
         return player_id in self.active_fights
 
     def get_current_monster(self, player_id: str) -> Optional[Monster]:
-        """Get monster player is fighting"""
+        """Get monster player is fighting.
+
+        Args:
+            player_id (str): The player's ID.
+
+        Returns:
+            Optional[Monster]: The active monster instance, or None.
+        """
         return self.active_fights.get(player_id)

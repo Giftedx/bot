@@ -17,23 +17,40 @@ logger = logging.getLogger(__name__)
 
 
 class PlaybackResult:
-    """Result of a playback operation."""
+    """Result of a playback operation.
+
+    Attributes:
+        status (str): The status of the operation (e.g., 'success', 'error').
+        media_id (str): The ID of the media item involved.
+        title (Optional[str]): The title of the media, if available.
+    """
 
     def __init__(self, status: str, media_id: str, title: Optional[str] = None) -> None:
+        """Initialize the playback result.
+
+        Args:
+            status (str): The outcome status.
+            media_id (str): The media identifier.
+            title (Optional[str], optional): The media title. Defaults to None.
+        """
         self.status = status
         self.media_id = media_id
         self.title = title
 
 
 class PlexService:
-    """Core service for Plex media server interactions."""
+    """Core service for Plex media server interactions.
+
+    Handles connection initialization, health checks, media searching,
+    playback requests, and session monitoring.
+    """
 
     def __init__(self, base_url: str, token: str) -> None:
         """Initialize the Plex service.
 
         Args:
-            base_url: Base URL of the Plex server
-            token: Authentication token for Plex API
+            base_url (str): Base URL of the Plex server.
+            token (str): Authentication token for the Plex API.
         """
         self._base_url = base_url
         self._token = token
@@ -43,11 +60,14 @@ class PlexService:
         self._active_sessions: Dict[str, Any] = {}
 
     async def initialize(self) -> None:
-        """Initialize connection to Plex server.
+        """Initialize connection to the Plex server.
+
+        Attempts to connect to the Plex server using the provided credentials.
+        Retries up to `_max_retries` times on failure.
 
         Raises:
-            PlexConnectionError: If connection fails
-            PlexAuthError: If authentication fails
+            PlexAuthError: If authentication fails (invalid token/credentials).
+            PlexConnectionError: If the connection fails after max retries.
         """
         try:
             self._server = PlexServer(self._base_url, self._token)
@@ -65,13 +85,16 @@ class PlexService:
             await self.initialize()
 
     async def health_check(self) -> bool:
-        """Check if Plex server is responding.
+        """Check if the Plex server is responding.
+
+        Ensures the `_server` object is initialized and performs a basic
+        API call (`server.library`).
 
         Returns:
-            True if server is healthy
+            bool: True if the server is reachable and healthy.
 
         Raises:
-            PlexConnectionError: If server is not responding
+            PlexConnectionError: If the server is unreachable or throws an error.
         """
         try:
             if not self._server:
@@ -87,14 +110,14 @@ class PlexService:
         """Search for media across all libraries.
 
         Args:
-            query: Search term to find media
+            query (str): The search term.
 
         Returns:
-            List of matching media items
+            List[Union[Video, Track, Photo]]: A list of matching media items.
 
         Raises:
-            MediaNotFoundError: If no results found
-            PlexConnectionError: If search fails
+            MediaNotFoundError: If no results are found.
+            PlexConnectionError: If the search operation fails.
         """
         try:
             if not self._server:
@@ -114,15 +137,15 @@ class PlexService:
         """Start playback of specified media.
 
         Args:
-            media_id: ID of media to play
-            client_id: Optional client device ID
+            media_id (str): The unique ID of the media item.
+            client_id (Optional[str], optional): The target client identifier. Defaults to None.
 
         Returns:
-            PlaybackResult object with playback status
+            PlaybackResult: An object containing the status and details of the operation.
 
         Raises:
-            MediaNotFoundError: If media_id is invalid
-            PlexConnectionError: If playback fails
+            MediaNotFoundError: If the media ID does not exist.
+            PlexConnectionError: If the playback request fails.
         """
         try:
             if not self._server:
@@ -141,10 +164,11 @@ class PlexService:
             raise PlexConnectionError(f"Playback failed: {e}")
 
     async def get_active_sessions(self) -> List[Dict[str, Any]]:
-        """Get information about currently playing media sessions.
+        """Retrieve information about currently playing media sessions.
 
         Returns:
-            List of active playback session details
+            List[Dict[str, Any]]: A list of dictionaries containing session details
+            (username, title, type, device, state). Returns empty list on error.
         """
         try:
             if not self._server:
