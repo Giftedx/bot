@@ -30,6 +30,7 @@ class ConfigManager:
 
         # Default configuration
         self.default_config = {
+            "plex": {"quality": "1080p"},
             "bot": {
                 "command_prefix": "!",
                 "description": "Personal content and cross-game features bot",

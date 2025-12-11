@@ -59,6 +59,7 @@ class PlexClient:
     # def __init__(self, url: str, token: str, redis_client: redis.Redis): # Old __init__
     def __init__(self, config_manager: ConfigManager, redis_client: redis.Redis):  # New __init__
         """Initialize Plex client."""
+        self.config_manager = config_manager
         self.url = config_manager.get("plex.url")
         self.token = config_manager.get("plex.token")
 
@@ -139,9 +140,10 @@ class PlexClient:
             logger.error(f"Error searching media: {e}")
             raise
 
-    async def get_stream_url(self, media_id: str) -> StreamInfo:
+    async def get_stream_url(self, media_id: str, quality: Optional[str] = None) -> StreamInfo:
         """Get streaming URL for media."""
-        cache_key = f"stream:{media_id}"
+        quality = quality or self.config_manager.get("plex.quality", "1080p")
+        cache_key = f"stream:{media_id}:{quality}"
         cached = self.cache.get(cache_key)
 
         if cached:
@@ -151,7 +153,7 @@ class PlexClient:
             media = self.server.fetchItem(int(media_id))
             stream_info = StreamInfo(
                 url=media.getStreamURL(),
-                quality="1080p",  # TODO: Make configurable
+                quality=quality,
                 direct_play=True,
                 expires_at=datetime.now() + timedelta(minutes=15),
             )
