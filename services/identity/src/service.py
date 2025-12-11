@@ -6,6 +6,7 @@ from shared.utils.service_interface import BaseService
 from shared.security.security_service import SecurityService, TokenType
 from infrastructure.database.database_service import DatabaseService
 from infrastructure.cache.cache_service import CacheService
+from infrastructure.storage.storage_service import StorageService
 from infrastructure.database.models import User, Role, APIKey
 from .models import UserProfile, AuthenticationResult, PermissionSet, RoleDefinition, SYSTEM_ROLES
 
@@ -15,11 +16,13 @@ class IdentityService(BaseService):
     def __init__(self,
                  security_service: SecurityService,
                  database_service: DatabaseService,
-                 cache_service: CacheService):
+                 cache_service: CacheService,
+                 storage_service: Optional[StorageService] = None):
         super().__init__("identity", "1.0.0")
         self.security = security_service
         self.db = database_service
         self.cache = cache_service
+        self.storage = storage_service
         self.logger = logging.getLogger(__name__)
         
         # Cache settings
@@ -261,7 +264,7 @@ class IdentityService(BaseService):
         # Create profile
         profile = UserProfile(
             display_name=user.username,
-            avatar_url=None,  # TODO: Implement avatar storage
+            avatar_url=user.avatar_url,
             bio=None,
             social_links={},
             preferences={}
@@ -278,6 +281,10 @@ class IdentityService(BaseService):
             user = self.db.get_by_id(User, int(user_id))
             if not user:
                 return False
+
+            # Update user fields if needed (e.g. avatar_url is stored in User model)
+            if profile.avatar_url:
+                self.db.update(user, {"avatar_url": profile.avatar_url})
                 
             # Update cache
             cache_key = f"profile:{user_id}"
@@ -288,6 +295,37 @@ class IdentityService(BaseService):
         except Exception as e:
             self.logger.error(f"Error updating profile: {e}")
             return False
+
+    async def upload_avatar(self, user_id: str, file_data: bytes, filename: str) -> Optional[str]:
+        """Upload a user avatar"""
+        if not self.storage:
+            self.logger.error("Storage service not initialized")
+            return None
+
+        try:
+            user = self.db.get_by_id(User, int(user_id))
+            if not user:
+                return None
+
+            # Save file using storage service
+            # Store in 'avatars' subfolder
+            relative_path = self.storage.save_file(file_data, filename, "avatars")
+
+            if relative_path:
+                # Update user profile with new avatar URL/path
+                self.db.update(user, {"avatar_url": relative_path})
+
+                # Invalidate cache
+                cache_key = f"profile:{user_id}"
+                self.cache.delete(cache_key)
+
+                return relative_path
+
+            return None
+
+        except Exception as e:
+            self.logger.error(f"Error uploading avatar: {e}")
+            return None
     
     async def get_user_permissions(self, user_id: str) -> PermissionSet:
         """Get combined permissions for a user"""
