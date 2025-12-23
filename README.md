@@ -2,6 +2,19 @@
 
 This repository contains a feature-rich Discord bot built with Python.
 
+## Project Goals
+
+This project aims to provide a modular, high-performance Discord platform that bridges the gap between gaming utilities, media streaming, and community interaction.
+
+*   **Primary Goals**:
+    *   **OSRS Integration**: Deliver a comprehensive Old School RuneScape experience (Grand Exchange, Quests, Stats) directly within Discord.
+    *   **Media Streaming**: seamless integration with Plex for searching and controlling media playback.
+    *   **Community Engagement**: Foster interaction through social features, events, and utility commands (e.g., Pokémon data).
+*   **Key Features**:
+    *   **Microservices Architecture**: Built on Docker for scalability, separating the Bot, Game Server, and Web Dashboard.
+    *   **Modern Stack**: Python 3.11+ (FastAPI, Discord.py), TypeScript (Node.js), and Redis for caching.
+    *   **Dashboard**: A web interface for managing bot settings and viewing statistics.
+
 ## Architecture Overview
 
 - **Python Backend**:
@@ -13,7 +26,14 @@ This repository contains a feature-rich Discord bot built with Python.
   - Command handling via slash commands.
   - Rich embed messages for clean display.
 
-## Setup and Running the Bot
+## Installation
+
+### Prerequisites
+*   **Python 3.11+**
+*   **Docker & Docker Compose** (Recommended for full feature set)
+*   **Make** (for build automation)
+
+### Quick Start (Development)
 
 1.  **Clone the repository:**
     ```bash
@@ -21,26 +41,41 @@ This repository contains a feature-rich Discord bot built with Python.
     cd <repository-directory>
     ```
 
-2.  **Install dependencies:**
-    This project uses `make` to streamline the development process. To install all necessary production and development dependencies, simply run:
+2.  **Install Dependencies:**
+    Initialize the virtual environment and install Python dependencies:
     ```bash
     make dev-install
     ```
-    This command uses `pip` to install all packages defined in the `pyproject.toml` file.
 
-3.  **Configuration:**
-    -   Create a `.env` file in the project root.
-    -   Add your Discord bot token to the `.env` file:
-        ```
-        DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE
-        ```
-
-4.  **Run the bot:**
-    To run the bot in development mode, use the following command:
+3.  **Setup Environment:**
+    Run the setup script to generate configuration files (`config/config.yaml`, `config/secrets.yaml`) and your `.env` file:
     ```bash
-    make run-dev
+    make setup
     ```
-    This will launch the bot and its services in Docker with live-reloading via watchdog.
+
+4.  **Configuration:**
+    *   Edit `.env` to add your **DISCORD_TOKEN** and other environment variables.
+    *   Edit `config/secrets.yaml` for sensitive API keys (Plex, OpenAI, etc.).
+
+5.  **Run the Project:**
+
+    *   **Option A: Docker (Recommended)**
+        Launches the Bot, Redis, Prometheus, and Grafana with hot-reloading.
+        ```bash
+        make run-dev
+        ```
+
+    *   **Option B: Local (Python only)**
+        Requires a local Redis instance running on port 6379.
+        ```bash
+        python -m src.main
+        ```
+
+6.  **Verify Installation:**
+    Run the test suite to ensure everything is working correctly:
+    ```bash
+    make test
+    ```
 
 ## Repository Layout
 
