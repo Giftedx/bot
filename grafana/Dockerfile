@@ -1,5 +1,5 @@
 # Use official Grafana image as base
-FROM grafana/grafana:latest
+FROM grafana/grafana:12.3.0-18578466485
 
 # Switch to root to install additional dependencies
 USER root
