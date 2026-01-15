@@ -39,6 +39,7 @@ class CombatEntity:
     special_attack_energy: float = 100.0
     combat_style: Optional[CombatStyle] = None
     status_effects: Set[str] = None
+    weapon_name: Optional[str] = None
 
     @property
     def is_alive(self) -> bool:
@@ -245,8 +246,8 @@ class CombatManager:
         accuracy_multiplier = 1.0
         damage_multiplier = 1.0
         if is_special:
-            weapon_name = "dragon_dagger"  # TODO: Get from equipment
-            if weapon_name in self.special_attacks:
+            weapon_name = attacker.weapon_name
+            if weapon_name and weapon_name in self.special_attacks:
                 special = self.special_attacks[weapon_name]
                 accuracy_multiplier = special.accuracy_multiplier
                 damage_multiplier = special.damage_multiplier
@@ -292,8 +293,8 @@ class CombatManager:
                         damage = int(damage * effect_data["damage_multiplier"])
 
         # Apply weapon effects
-        weapon_name = "dragon_dagger"  # TODO: Get from equipment
-        if weapon_name in self.weapon_stats:
+        weapon_name = attacker.weapon_name
+        if weapon_name and weapon_name in self.weapon_stats:
             weapon = self.weapon_stats[weapon_name]
             if weapon.can_poison and random.random() < 0.25:  # 25% chance to poison
                 if "poison" not in defender.status_effects:
@@ -312,8 +313,8 @@ class CombatManager:
         # Handle special attacks
         is_special = False
         if state.is_special_attack:
-            weapon_name = "dragon_dagger"  # TODO: Get from equipment
-            if weapon_name in self.special_attacks:
+            weapon_name = state.attacker.weapon_name
+            if weapon_name and weapon_name in self.special_attacks:
                 special = self.special_attacks[weapon_name]
                 if state.attacker.special_attack_energy >= special.energy_cost:
                     is_special = True
